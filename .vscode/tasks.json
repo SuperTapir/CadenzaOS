@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Cadenza OS: 编译（T-Embed）",
+      "type": "shell",
+      "command": "${workspaceFolder}/../.platformio-env/bin/pio",
+      "args": ["run"],
+      "options": {"env": {"SSL_CERT_FILE": "/etc/ssl/cert.pem"}},
+      "group": {"kind": "build", "isDefault": true},
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Cadenza OS: 烧录（T-Embed）",
+      "type": "shell",
+      "command": "${workspaceFolder}/../.platformio-env/bin/pio",
+      "args": ["run", "--target", "upload"],
+      "options": {"env": {"SSL_CERT_FILE": "/etc/ssl/cert.pem"}},
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Cadenza OS: 串口日志（T-Embed）",
+      "type": "shell",
+      "command": "${workspaceFolder}/../.platformio-env/bin/pio",
+      "args": ["device", "monitor", "--baud", "115200"],
+      "options": {"env": {"SSL_CERT_FILE": "/etc/ssl/cert.pem"}},
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}
