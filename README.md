@@ -32,6 +32,19 @@ cmake --build build/host --parallel
 ./build/host/cadenza_desktop --profile t-embed --scale 2 --overlay
 ```
 
+开发时可使用零额外依赖的模拟器脚本。`dev` 会监听 C/C++ 与 CMake 文件，
+增量编译成功后自动重启模拟器；编译失败时保留当前进程并继续等待修改：
+
+```bash
+./tools/simulator.py dev --profile t-embed --scale 2 --overlay
+./tools/simulator.py build
+./tools/simulator.py run --profile sharp --device-frame
+./tools/simulator.py package
+```
+
+`package` 在 `dist/` 下生成包含 SDL3 的 macOS `.app` 和 zip。它适合本机运行
+和同架构 Mac 的开发构建，不是经过 Developer ID 签名、公证的正式发行包。
+
 旋钮可用鼠标滚轮或左右方向键；空格/回车模拟按键。F1 切换 HUD，F2
 暂停，F3 单帧，F4 切换 fixed/real step，F5 循环时间倍率，F6 截图，F7
 开始/停止录制。完整构建、测试和控制说明见

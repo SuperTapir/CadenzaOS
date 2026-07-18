@@ -20,6 +20,21 @@ ctest --test-dir build/host --output-on-failure
 ./build/host/cadenza_desktop
 ```
 
+For the usual simulator development loop, use the repository's dependency-free
+helper:
+
+```bash
+./tools/simulator.py dev --profile t-embed --scale 2 --overlay
+```
+
+It watches desktop/core C, C++, headers, and CMake inputs. A successful
+incremental build restarts the SDL process; a failed build leaves the previous
+process alive and waits for the next save. This is process-level live reload,
+not in-process C++ hot module replacement, so runtime state resets after a
+reload. Other commands are `build`, `run`, and `package`. The package command
+creates a self-contained, ad-hoc-signed macOS app and zip under `dist/`; it is a
+development package rather than a notarized release.
+
 The top-level targets have deliberately narrow ownership:
 
 - `cadenza_core`: standard C++17 shared runtime code;
