@@ -141,7 +141,8 @@ float launchProgress(float progress) noexcept {
 Rect centeredLaunchCover(const MonoCanvas& canvas) noexcept {
   const int width = std::min(350, canvas.width() * 7 / 8);
   const int height = width * 155 / 350;
-  return {(canvas.width() - width) / 2, (canvas.height() - height) / 2,
+  return {(canvas.width() - width) / 2,
+          (canvas.height() - height + 1) / 2,
           width, height};
 }
 

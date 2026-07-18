@@ -161,7 +161,7 @@ bool AppRuntime::renderHandoffFrame(
       std::min<std::int32_t>(350, canvas.width() * 7 / 8);
   const std::int32_t contentHeight = contentWidth * 155 / 350;
   const Rect bounds{(canvas.width() - contentWidth) / 2,
-                    (canvas.height() - contentHeight) / 2,
+                    (canvas.height() - contentHeight + 1) / 2,
                     contentWidth, contentHeight};
   if (catalog.renderLauncherCover(id, canvas, bounds)) return false;
 

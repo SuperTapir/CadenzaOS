@@ -70,6 +70,8 @@
 
 这不是简单倒放：启动需要 anticipation 和 App 自我介绍，返回则应响应更快并明确落回原卡片。未统一使用较长时长，因为系统返回会显得迟钝；未继续使用 0.32 秒，因为三段参考视频都显示 App 专属 sequence 是被感知到的完整阶段，而不是一次短 crossfade。
 
+返回逐帧审阅进一步发现两个离散问题：`inOutQuad` 会把 App → Cover 的 ordered-dither threshold 挤在中间两帧，双 profile 峰值达到约 21–23%；Sharp 的 155 px 高 Cover 若使用整数向下居中则落在 `y=42`，而 Launcher/Playdate card 契约位于 `y=43`。修订后前半段使用匀速 threshold 交接，把 30 FPS 相邻变化限制在 16% 内；Cover bridge 与 launch renderer 对奇数剩余空间统一向下视觉居中（整数坐标向上取整），使 400×240 内容矩形精确保持 `(25,43,350,155)`，中点后 Cover 区域不再移动或重绘。
+
 ### 4. 1-bit ordered dither 负责层间混合，App renderer 负责内容运动
 
 Handoff 不引入灰阶或 alpha。系统层按现有 8×8 ordered threshold table 逐像素选择 Launcher、launch frame、Cover bridge 或 App 首屏；App renderer 在自己的全屏 frame 内用整数几何、裁剪和固定 pattern 表达独立运动。dither 相位固定在屏幕坐标，避免 pattern crawling；端点精确复制 framebuffer。

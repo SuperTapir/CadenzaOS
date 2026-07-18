@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <filesystem>
@@ -15,6 +16,39 @@ struct SnapshotCase {
   cadenza::AppId app;
   std::uint64_t expected;
 };
+
+std::size_t changedPixels(const cadenza::MonoFramebuffer& first,
+                          const cadenza::MonoFramebuffer& second) {
+  std::size_t changed = 0;
+  for (std::size_t index = 0; index < first.sizeBytes(); ++index) {
+    std::uint8_t bits = static_cast<std::uint8_t>(
+        first.data()[index] ^ second.data()[index]);
+    while (bits != 0) {
+      changed += bits & 1U;
+      bits >>= 1U;
+    }
+  }
+  return changed;
+}
+
+bool sameFrame(const cadenza::MonoFramebuffer& first,
+               const cadenza::MonoFramebuffer& second) {
+  return first.width() == second.width() &&
+         first.height() == second.height() &&
+         std::equal(first.data(), first.data() + first.sizeBytes(),
+                    second.data());
+}
+
+bool sameRect(const cadenza::MonoFramebuffer& first,
+              const cadenza::MonoFramebuffer& second,
+              cadenza::Rect bounds) {
+  for (int y = bounds.y; y < bounds.y + bounds.height; ++y) {
+    for (int x = bounds.x; x < bounds.x + bounds.width; ++x) {
+      if (first.pixel(x, y) != second.pixel(x, y)) return false;
+    }
+  }
+  return true;
+}
 
 enum class HandoffScene : std::uint8_t {
   ClockLaunch,
@@ -265,12 +299,12 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
       {{2978872973827686259ULL, 9220982418828621297ULL,
         1468151701910592970ULL, 14891017424807287687ULL,
-        9650148204554733528ULL, 10620415418877875313ULL,
+        9650148204554733528ULL, 3276157608869946292ULL,
         16680032181822085337ULL,
         2789452226294592942ULL}},
-      {{17805705126676167683ULL, 2438810636140423116ULL,
-        381654916734470956ULL, 6285301564810435015ULL,
-        9756231723368371849ULL, 18150222162577020456ULL,
+      {{6174256849267322839ULL, 9523255443439037511ULL,
+        419754723397813682ULL, 5530436456025056936ULL,
+        12400022947900115971ULL, 6508265349418756835ULL,
         10253295035054357084ULL,
         11715812992187396753ULL}},
   }};
@@ -282,6 +316,70 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
           profiles[profileIndex], scenes[sceneIndex],
           expected[profileIndex][sceneIndex]);
       CHECK(actual == expected[profileIndex][sceneIndex]);
+    }
+  }
+}
+
+TEST_CASE("built-in returns keep the Cover fixed and bound 30 FPS changes") {
+  constexpr std::array<cadenza::FramebufferProfile, 2> profiles{
+      cadenza::FramebufferProfile::TEmbed,
+      cadenza::FramebufferProfile::Sharp};
+  constexpr std::array<cadenza::AppId, 4> apps{
+      cadenza::apps::kClockAppId, cadenza::apps::kMotionAppId,
+      cadenza::apps::kSettingsAppId, cadenza::apps::kGalleryAppId};
+  constexpr float kMaximumChangedRatio = 0.16F;
+
+  for (const cadenza::FramebufferProfile profile : profiles) {
+    for (std::size_t appIndex = 0; appIndex < apps.size(); ++appIndex) {
+      CAPTURE(static_cast<int>(profile));
+      CAPTURE(appIndex);
+      cadenza::host::HeadlessHost host{profile};
+      if (appIndex > 0) {
+        cadenza::InputFrame select;
+        select.turn = static_cast<std::int16_t>(appIndex);
+        host.step(select);
+        host.advance(0.5F);
+      }
+      REQUIRE(host.runtime().open(apps[appIndex]));
+      settle(host);
+      const cadenza::MonoFramebuffer appFrame = host.framebuffer();
+
+      REQUIRE(host.runtime().open(cadenza::apps::kLauncherAppId));
+      host.advance(0.0F);
+      CHECK(sameFrame(host.framebuffer(), appFrame));
+
+      const int coverWidth = std::min(350, host.framebuffer().width() * 7 / 8);
+      const int coverHeight = coverWidth * 155 / 350;
+      const cadenza::Rect coverBounds{
+          (host.framebuffer().width() - coverWidth) / 2,
+          (host.framebuffer().height() - coverHeight + 1) / 2,
+          coverWidth, coverHeight};
+      cadenza::MonoFramebuffer cover{profile};
+      cadenza::MonoCanvas coverCanvas{cover};
+      cover.clear(true);
+      REQUIRE(host.runtime().catalogView().renderLauncherCover(
+          apps[appIndex], coverCanvas, coverBounds));
+
+      cadenza::MonoFramebuffer previous = host.framebuffer();
+      const std::size_t pixelCount =
+          static_cast<std::size_t>(previous.width()) * previous.height();
+      for (int sample = 1; sample <= 14; ++sample) {
+        host.advance(1.0F / 30.0F);
+        const std::size_t changed = changedPixels(previous, host.framebuffer());
+        CHECK(static_cast<float>(changed) /
+                  static_cast<float>(pixelCount) <=
+              kMaximumChangedRatio);
+        if (sample >= 7) {
+          CHECK(sameRect(host.framebuffer(), cover, coverBounds));
+        }
+        previous = host.framebuffer();
+      }
+      CHECK_FALSE(host.runtime().transitioning());
+      CHECK(host.runtime().currentId() == cadenza::apps::kLauncherAppId);
+
+      const cadenza::MonoFramebuffer stableLauncher = host.framebuffer();
+      host.advance(0.0F);
+      CHECK(sameFrame(host.framebuffer(), stableLauncher));
     }
   }
 }

@@ -294,7 +294,7 @@ TEST_CASE("built-in launch endpoints match Cover and first App frame") {
       cadenza::MonoCanvas firstAppCanvas{firstAppFrame};
       REQUIRE(app->renderLauncherCover(
           coverCanvas, {(cover.width() - width) / 2,
-                        (cover.height() - height) / 2, width, height}));
+                        (cover.height() - height + 1) / 2, width, height}));
       REQUIRE(app->renderLaunchFrame(startCanvas, 0.0F, context));
       REQUIRE(app->renderLaunchFrame(endCanvas, 1.0F, context));
       app->onEnter();

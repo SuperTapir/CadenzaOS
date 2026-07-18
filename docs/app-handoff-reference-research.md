@@ -52,15 +52,18 @@
 
 首轮视觉审阅指出 Cover、独立概念动画与真实 App UI 仍是三段不连续构图。连续版因此取消中间海报：progress 0 逐像素等于居中 Cover，progress 1 逐像素等于同一 App 状态和 SystemSnapshot 在 `onEnter` 后的真实首屏，中间以固定相位 ordered-dither 单调交接像素。Settings launch renderer 接收只读 AppRenderContext，避免 Motion/Sound/Connectivity 非默认状态在中点跳变；Clock、Motion、Settings 抽取与普通 render 共用的首屏 helper，Gallery 使用与 page 0/Easing 完全一致的初始帧 helper。
 
+返回动画的完整 30 FPS 审阅又发现：原 `inOutQuad` 把 App → Cover 的 dither 变化集中到中间两帧，T-Embed 的 Clock/Gallery 峰值为 20.96%/21.50%，Sharp 最坏达到 22.90%；同时 Sharp 的 bridge 使用整数向下居中落在 `y=42`，与 Launcher 和 Playdate card 契约的 `(25,43,350,155)` 相差 1 px。修订后前半段改为匀速 threshold 交接，奇数剩余空间统一用向上取整的视觉中心；中点后 Cover 内容矩形逐像素保持不动，只让边框、scanline 与相邻卡片恢复。新版 T-Embed 四 App 峰值依次为 11.70%、7.07%、8.02%、12.23%，Sharp 为 12.17%、7.92%、8.49%、13.05%，均低于 16% 回归上限。
+
 自动化验证结果：
 
 - `cmake --build build -j4`：通过；
 - `ctest --test-dir build --output-on-failure`：71/71 通过；
 - 独立 `-Wall -Wextra -Wpedantic -Werror` 构建与 handoff/allocation/apps/snapshot/desktop focused suite：通过；
-- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；四 App 另以固定 30 FPS 生成完整 26 帧 PNG/GIF 时间轴；
+- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；四 App 另以固定 30 FPS 生成完整进入与返回 PNG/GIF 时间轴；
 - endpoint regression 证明四 App `p0 == Cover`、`p1 == first App frame`；30 FPS 相邻帧变化不超过 framebuffer 像素的 20%；
+- return regression 证明四 App 在双 profile 下 `p0 == outgoing App frame`，生命周期中点后的 Cover 矩形与 Launcher 逐像素一致且固定，`p1` 后下一帧不跳变；30 FPS 相邻变化不超过 16%；
 - 完整进入 → Menu 开合 → 返回路径的 `operator new/new[]` 计数保持不变；host `AppRuntime` 为 24,928 B，其中两张固定 framebuffer 为 24,048 B，没有第三张全屏 buffer；
-- PlatformIO T-Embed compile：RAM 99,248 / 327,680 B（30.3%），Flash 412,445 / 3,145,728 B（13.1%）。相对 WIP 前的 `HEAD` 基线增加 64 B RAM、3,448 B Flash；连续版相对首轮海报式 WIP 减少 1,052 B Flash；
+- PlatformIO T-Embed compile：RAM 99,248 / 327,680 B（30.3%），Flash 412,449 / 3,145,728 B（13.1%）。相对 WIP 前的 `HEAD` 基线增加 64 B RAM、3,452 B Flash；连续进入/返回版相对首轮海报式 WIP 减少 1,048 B Flash；
 - Sharp launch renderer 的一次性 host 微基准平均约 1.74 ms/帧；它只用于发现明显退化，不替代 ESP32 真机 frame-time；
 - 两 profile SDL dummy 各运行 180 帧、desktop input smoke、共享源码审计、OpenSpec strict 与 `git diff --check` 均通过。
 

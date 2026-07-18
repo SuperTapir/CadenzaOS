@@ -219,7 +219,11 @@ void AppReturnHandoffTransition::compose(
   }
   const float phase = progress < 0.5F ? progress * 2.0F
                                       : (progress - 0.5F) * 2.0F;
-  dissolveFrames(outgoing, incoming, output, inOutQuad(phase));
+  // Keep the App-to-Cover phase perceptually even. An in/out curve bunches
+  // ordered-dither thresholds into the middle frames and reads as a flash at
+  // 30 FPS. Launcher chrome can still ease in after the shared Cover locks.
+  dissolveFrames(outgoing, incoming, output,
+                 progress < 0.5F ? phase : inOutQuad(phase));
 }
 
 }  // namespace cadenza

@@ -40,6 +40,10 @@ Normal motion SHALL use a longer Launcher-to-App handoff that presents the App l
 - **WHEN** the default transition targets Home from an App
 - **THEN** the App frame resolves to that App's Cover bridge and Launcher chrome returns without replaying the launch loading interval
 
+#### Scenario: Return preserves shared Cover geometry and frame cadence
+- **WHEN** each built-in App returns at fixed 30 FPS on either framebuffer profile
+- **THEN** the transition starts at the exact outgoing App frame, keeps the selected Cover pixels fixed at the Launcher's content rectangle from the lifecycle midpoint onward, ends at a stable Launcher frame, and changes no more than 16% of framebuffer pixels between adjacent samples
+
 #### Scenario: Reduced Motion is active
 - **WHEN** either directional handoff begins under Reduced Motion
 - **THEN** source, bridge, and destination remain visually ordered while pure wait time is no greater than under Normal motion

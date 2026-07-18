@@ -14,6 +14,7 @@
 - System Menu 增加显式 closing 状态、右侧面板的 ease-out/ease-in 侧滑与短暂斜向压缩变形；关闭动画期间继续冻结 App、吞掉输入，并在面板完全离屏后释放 surface。
 - 为 Normal/Reduced Motion、双 profile、中点连续性、端点精确性、输入冻结和 lifecycle 顺序增加自动化验证，并保留 Memory LCD 真机观感验收。
 - 根据首轮视觉审阅，收紧逐 App launch sequence 的连续性：序列首帧逐像素等于居中 Cover bridge，末帧逐像素等于同一 snapshot 下 lifecycle 交接后的 App 首屏；中间不得硬切到与两端无共享构图的独立海报。
+- 根据返回时间线审阅，统一 Sharp Cover bridge 与 Launcher 的 `(25,43,350,155)` 几何，并把 App → Cover 的阈值交接改为稳定节奏，避免中间帧闪变。
 
 ## Capabilities
 
