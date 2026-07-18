@@ -12,6 +12,7 @@
 - 重做 Launcher 视觉层级：应用内容成为卡片主体，系统 chrome 收敛为轻量轮廓和简洁标题栏，移除笨重双层大框、通用巨字、重复页码 footer 和抢眼移动纹理。
 - Normal motion 使用轻微受控 overshoot，Reduced Motion 取消 overshoot 但保留连续导航反馈。
 - 保持背景纹理在屏幕坐标中稳定，避免卡片移动引发高频 1-bit 相位闪烁；对 320×170 与 400×240 profile 定义一致的比例布局和裁剪边界。
+- Mac SDL 模拟器默认以 Playdate 1.12.3 参考色板近似反射式 Memory LCD 的暖灰 ink/paper，并保留显式纯黑白模式；该呈现选项不得改变 canonical 1-bit framebuffer、截图或固件。
 - 增加连续中间帧、快速输入、循环边界、横纵布局、设置传播、点击语义、reduced-motion、文本边界和双分辨率回归验证。
 
 ## Capabilities

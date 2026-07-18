@@ -22,6 +22,9 @@ TEST_CASE("desktop profile and integer scale accept only supported values") {
 
 TEST_CASE("desktop display palette matches reflective reference and keeps pure mode") {
   using cadenza::desktop::DisplayPalette;
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  framebuffer.setPixel(4, 7);
+  const auto framebufferBefore = cadenza::host::framebufferHash(framebuffer);
   DisplayPalette palette = DisplayPalette::Pure;
   CHECK(cadenza::desktop::parseDisplayPalette(palette, "reflective"));
   CHECK(palette == DisplayPalette::Reflective);
@@ -51,6 +54,7 @@ TEST_CASE("desktop display palette matches reflective reference and keeps pure m
   CHECK_FALSE(cadenza::desktop::parseDisplayPalette(palette, "sepia"));
   CHECK(palette == DisplayPalette::Pure);
   CHECK_FALSE(cadenza::desktop::parseDisplayPalette(palette, nullptr));
+  CHECK(cadenza::host::framebufferHash(framebuffer) == framebufferBefore);
 }
 
 TEST_CASE("desktop mapper emits raw turn and aggregate button semantics") {

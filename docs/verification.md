@@ -103,11 +103,20 @@ fresh gate 为准：
 - `cadenza_apps_tests`、`cadenza_launcher_snapshot_tests` 与
   `cadenza_desktop_smoke_tests` 定向门禁 3/3 通过；Clock 启动捕获与 neutral Cover
   hash 相同，Motion press 捕获与 neutral Cover hash 相同；
-- host 全部 target 编译成功；62/62 项 CTest 通过。八个 Cover asset check 证明
-  packed header 与 canonical PBM 一致；`cadenza_app_snapshot_tests` 与新增的
+- host 全部 target 编译成功；使用带 Pillow 的项目 Python 时 70/70 项 CTest
+  通过。八个母图来源检查证明各 profile PBM 直接来自对应 PNG，八个 Cover
+  asset check 证明 packed header 与 PBM 一致；`cadenza_app_snapshot_tests` 与新增的
   `cadenza_launcher_snapshot_tests` 均已逐图审阅并批准固定比例完整画面；
+- 两个 profile 的八个 PBM 均通过高分辨率母图→目标尺寸的像素级检查；T-Embed
+  不再从已二值化的 350×155 PBM 二次缩小。Motion 的黑色连通块由 78 降至 56，
+  ≤4 像素碎片由 43 降至 23，Settings 的对应计数由 36/17 降至 32/13；
 - SDL 3.4.12 可执行文件分别以全新 dummy-driver 进程运行 320×170 与 400×240，
   `--frames 3 --overlay` 均正常退出；desktop smoke 的当前帧诊断审计通过；
+- SDL 默认 `reflective` 呈现将 ink/paper 映射为 `#322F28`/`#B1AEA7`，显式
+  `--palette pure` 保留 `#000000`/`#FFFFFF`；解析、精确 RGBA 值、非法 palette
+  拒绝和双模式全新进程均通过。palette 不进入 framebuffer 与截图 hash；
+- Retina Mac 的真实 SDL 进程报告 logical 640×340、backing 1280×680、density
+  2.00x；texture 仍使用 nearest-neighbor 与 integer logical presentation；
 - PlatformIO `cadenza-t-embed` release 编译成功：RAM 99,184 / 327,680 B
   (30.3%)，Flash 408,997 / 3,145,728 B (13.0%)；双 profile Cover 相比前一版
   增加 43,084 B flash，未增加静态 RAM；
@@ -115,8 +124,9 @@ fresh gate 为准：
   `openspec validate add-continuous-launcher-navigation --strict` 与
   `git diff --check` 通过。
 
-软件证据不能证明 T-Embed 的 30 FPS、TFT 撕裂、拖影或高频 1-bit 相位闪烁。实体
-步骤见 `launcher-card-reference-research.md`。当前状态为
+反射色板只是对良好环境光下 Memory LCD 的近似，不能模拟无背光、观看角度、环境
+亮度或真实黑白反差。软件证据也不能证明 T-Embed 的 30 FPS、TFT 撕裂、拖影或
+高频 1-bit 相位闪烁。实体步骤见 `launcher-card-reference-research.md`。当前状态为
 `fixed-ratio Cover artwork and platform gates complete / hardware motion acceptance pending`。
 
 ## Delta-spec completion audit

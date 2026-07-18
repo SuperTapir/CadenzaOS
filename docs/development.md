@@ -65,8 +65,19 @@ sources.
 - F7: start/stop PNG sequence plus convenience GIF recording.
 
 Useful launch options are `--profile t-embed|sharp`, `--scale 1..4`,
-`--overlay`, `--device-frame`, and `--frames N`. The last option is used by the
-SDL dummy-driver smoke gate.
+`--palette reflective|pure`, `--overlay`, `--device-frame`, and `--frames N`.
+`reflective` is the default and maps 1-bit ink/paper to `#322F28`/`#B1AEA7`,
+matching the two-color palette extracted from the Playdate SDK 1.12.3 design
+reference captures. `pure` maps to `#000000`/`#FFFFFF`. This is presentation
+only: lossless screenshots, recordings, framebuffer hashes, headless output,
+and firmware remain canonical 1-bit. `--frames` is used by the SDL dummy-driver
+smoke gate.
+
+On macOS the SDL window requests a high-pixel-density backing surface. Startup
+prints logical window size, backing pixel size, and density; a Retina display
+should normally report `2.00x`. The renderer still uses integer logical
+presentation and nearest-neighbor texture scaling, so Retina adds backing
+detail without smoothing the emulated framebuffer pixels.
 
 The headless PBM dumper supports reproducible Gallery visual review without an
 SDL window. App id `4` is Gallery; the first trailing number selects its page.
@@ -96,7 +107,9 @@ the changing visible slice. A future launch animation is a separate resource,
 not another Cover state. Apps without a Cover use the bounded-name fallback.
 
 The four built-in Covers use complete fixed-ratio packed bitmaps: 350x155 for
-Sharp and a no-crop 280x124 derivative for T-Embed. Horizontal and vertical
+Sharp and 280x124 for T-Embed. Both are generated directly from the same
+high-resolution PNG master at their target size; never resize an already
+thresholded PBM, because that fragments thin geometry. Horizontal and vertical
 Launcher layouts use the same image size for a profile; only the track axis and
 pitch change. Editable PNG sources, canonical PBMs, generation provenance, and
 rebuild commands live in `assets/launcher-covers/`.

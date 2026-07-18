@@ -17,6 +17,7 @@
 - [x] 3.3 为 Clock、Motion、Settings、Gallery 实现可区分的原创代码原生 Cover，并验证双 profile 无越界/无分配
 - [x] 3.4 验证按钮按下、长按和 Runtime outgoing 启动捕获不会改变 Cover 像素
 - [x] 3.5 将确认后的 Clock、Motion、Settings、Gallery 插图离线转换为 350×155 与无裁切等比 280×124 的 1-bit packed bitmap，接入整图 renderer，并增加转换可复现性与 flash 体积验证
+- [x] 3.6 修正 T-Embed Cover 的二次缩放损失：两个 profile 均直接从高分辨率母图生成目标尺寸，并以像素级来源检查锁定转换参数
 
 ## 4. 横纵卡片轨道与视觉重构
 
@@ -29,6 +30,8 @@
 - [x] 5.1 为两个 framebuffer profile 增加两种 settled orientation、确定性动画中间帧、每个内置 Cover、fallback 与按下/启动像素不变代表快照并逐图审阅
 - [x] 5.2 扩展 headless/desktop 真实流程，覆盖 Settings 切换方向、返回 Launcher、快速选择、按下 Cover 不变并在移动中打开
 - [x] 5.3 更新开发与验证文档，记录 Launcher/Cover 操作、会话级设置边界、Playdate 参考采用/不采用决策和 30 FPS/1-bit 真机验收步骤
+- [x] 5.4 从 Playdate 1.12.3 参考图锁定 reflective ink/paper 色板，在 SDL 呈现边界实现默认暖灰与显式 pure 模式，并验证不改变 canonical 1-bit 输出
+- [x] 5.5 为 SDL 窗口启用 macOS 高像素密度 backing，启动时报告逻辑尺寸、实际像素尺寸与 density，并保持最近邻整数放大
 
 ## 6. 完整验证
 

@@ -107,13 +107,38 @@ if(CADENZA_BUILD_TESTS)
   enable_testing()
   find_package(Threads REQUIRED)
   find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  execute_process(
+    COMMAND ${Python3_EXECUTABLE} -c "import PIL"
+    RESULT_VARIABLE CADENZA_PYTHON_HAS_PILLOW
+    OUTPUT_QUIET ERROR_QUIET
+  )
 
   foreach(launcher_cover IN ITEMS clock motion settings gallery)
+    if(launcher_cover STREQUAL "clock")
+      set(launcher_cover_threshold 150)
+    elseif(launcher_cover STREQUAL "motion")
+      set(launcher_cover_threshold 170)
+    elseif(launcher_cover STREQUAL "settings")
+      set(launcher_cover_threshold 165)
+    else()
+      set(launcher_cover_threshold 155)
+    endif()
     string(SUBSTRING "${launcher_cover}" 0 1 launcher_cover_initial)
     string(TOUPPER "${launcher_cover_initial}" launcher_cover_initial)
     string(SUBSTRING "${launcher_cover}" 1 -1 launcher_cover_tail)
     set(launcher_cover_symbol
       "k${launcher_cover_initial}${launcher_cover_tail}Cover")
+    if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
+      add_test(
+        NAME cadenza_launcher_${launcher_cover}_cover_source_check
+        COMMAND ${Python3_EXECUTABLE}
+          ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
+          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
+          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}.pbm
+          --width 350 --height 155 --threshold ${launcher_cover_threshold}
+          --check
+      )
+    endif()
     add_test(
       NAME cadenza_launcher_${launcher_cover}_cover_asset_check
       COMMAND ${Python3_EXECUTABLE}
@@ -125,6 +150,17 @@ if(CADENZA_BUILD_TESTS)
           "Cadenza original AI-assisted artwork, user-approved 2026-07-18; canonical PBM in assets/launcher-covers/${launcher_cover}.pbm"
         --check
     )
+    if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
+      add_test(
+        NAME cadenza_launcher_${launcher_cover}_t_embed_cover_source_check
+        COMMAND ${Python3_EXECUTABLE}
+          ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
+          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
+          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}_t_embed.pbm
+          --width 280 --height 124 --threshold ${launcher_cover_threshold}
+          --check
+      )
+    endif()
     add_test(
       NAME cadenza_launcher_${launcher_cover}_t_embed_cover_asset_check
       COMMAND ${Python3_EXECUTABLE}
@@ -133,7 +169,7 @@ if(CADENZA_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/src/generated/${launcher_cover}_t_embed_cover.h
         --symbol "k${launcher_cover_initial}${launcher_cover_tail}TEmbedCover"
         --provenance
-          "Cadenza original AI-assisted artwork; no-crop 280x124 derivative of assets/launcher-covers/${launcher_cover}.pbm"
+          "Cadenza original AI-assisted artwork; direct 280x124 derivative of assets/launcher-covers/source/${launcher_cover}.png"
         --check
     )
   endforeach()

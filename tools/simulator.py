@@ -70,7 +70,11 @@ def build(*, reconfigure: bool = True) -> None:
 
 
 def simulator_arguments(args: argparse.Namespace) -> list[str]:
-    result = ["--profile", args.profile, "--scale", str(args.scale)]
+    result = [
+        "--profile", args.profile,
+        "--scale", str(args.scale),
+        "--palette", args.palette,
+    ]
     if args.overlay:
         result.append("--overlay")
     if args.device_frame:
@@ -255,6 +259,8 @@ def package() -> Path:
 def add_simulator_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--profile", choices=("t-embed", "sharp"), default="t-embed")
     parser.add_argument("--scale", type=int, choices=range(1, 5), default=2)
+    parser.add_argument("--palette", choices=("reflective", "pure"),
+                        default="reflective")
     parser.add_argument("--overlay", action="store_true")
     parser.add_argument("--device-frame", action="store_true")
     parser.add_argument("--frames", type=int, help=argparse.SUPPRESS)

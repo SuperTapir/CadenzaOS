@@ -128,8 +128,9 @@ int main(int argc, char** argv) {
 
   const auto layout = cadenza::desktop::DevicePreviewLayout::make(
       config.width, config.height, config.scale, options.deviceFrame);
-  SDL_Window* window =
-      SDL_CreateWindow("Cadenza OS", layout.windowWidth, layout.windowHeight, 0);
+  SDL_Window* window = SDL_CreateWindow(
+      "Cadenza OS", layout.windowWidth, layout.windowHeight,
+      SDL_WINDOW_HIGH_PIXEL_DENSITY);
   SDL_Renderer* renderer = window ? SDL_CreateRenderer(window, nullptr) : nullptr;
   SDL_Texture* texture = renderer
                              ? SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32,
@@ -149,12 +150,19 @@ int main(int argc, char** argv) {
     return 4;
   }
 
+  int backingWidth = 0;
+  int backingHeight = 0;
+  SDL_GetWindowSizeInPixels(window, &backingWidth, &backingHeight);
+  const float pixelDensity = SDL_GetWindowPixelDensity(window);
   std::printf("Cadenza desktop %s (SDL %d.%d.%d), %dx%d @ %dx, %s palette\n",
               cadenza::coreVersion(), SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
               SDL_MICRO_VERSION, config.width, config.height, config.scale,
               options.palette == cadenza::desktop::DisplayPalette::Reflective
                   ? "reflective"
                   : "pure");
+  std::printf("Window logical %dx%d, backing %dx%d, pixel density %.2fx\n",
+              layout.windowWidth, layout.windowHeight, backingWidth,
+              backingHeight, static_cast<double>(pixelDensity));
   std::printf(
       "Connectivity debug: F8 WiFi, F9 link loss, F10 BLE advertise, "
       "F11 provisioning, F12 BLE scan\n");

@@ -65,7 +65,7 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       3278954239642223294ULL},
+       5609633100608380107ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
        2172376209712558838ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
@@ -96,8 +96,8 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               10510090133264282098ULL) ==
-        10510090133264282098ULL);
+                               10381184867980651961ULL) ==
+        10381184867980651961ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
                                10395072706391661531ULL) ==
         10395072706391661531ULL);

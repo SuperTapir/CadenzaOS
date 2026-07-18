@@ -12,7 +12,8 @@
 
 - 320×170 T-Embed 与 400×240 Sharp profile 共用的 1-bit framebuffer；
 - Launcher、Clock、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
-- SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入和设备外框；
+- SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入、设备外框与近似
+  反射式 Memory LCD 的暖灰预览色板；
 - 旋转选择、短按进入、长按打开系统菜单并显式返回 Launcher 的输入模型；
 - Input、Action、Outcome、System 四家族 15 项语义音效，桌面 SDL callback
   与 T-Embed I²S task 共用 44.1 kHz 四声部核心；
@@ -37,6 +38,12 @@ cmake --preset host-debug
 cmake --build build/host --parallel
 ./build/host/cadenza_desktop --profile t-embed --scale 2 --overlay
 ```
+
+模拟器默认使用 Playdate 1.12.3 设计参考中的暖灰反射屏近似色板；需要检查
+纯 1-bit 黑白输出时增加 `--palette pure`。该选项只改变 SDL 窗口呈现，不改变
+framebuffer、PNG/GIF、快照 hash 或固件输出。
+macOS 窗口会请求 Retina backing；启动日志会打印 logical/backing 尺寸与 density。
+在 2× 屏上应看到 `2.00x`，同时 1-bit framebuffer 仍只做最近邻整数放大。
 
 开发时可使用零额外依赖的模拟器脚本。`dev` 会监听 C/C++ 与 CMake 文件，
 增量编译成功后自动重启模拟器；编译失败时保留当前进程并继续等待修改：

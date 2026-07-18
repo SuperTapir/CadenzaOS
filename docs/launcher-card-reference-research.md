@@ -38,12 +38,21 @@ T-Embed 的 1-bit 运动观感仍待真机验收。
 - 不把部分可见矩形当成新的 Cover 画布；它会让横向移动时标题、圆和曲线每帧缩放
   或重排。
 - 不在运行时缩放或裁切当前 Cover 内容。Sharp 使用完整 350×155，T-Embed 使用
-  从同一 canonical 画布离线等比生成的 280×124；横纵布局由 Launcher 适配同一
+  从同一高分辨率母图直接生成的 280×124；不得缩放已 1-bit 化的 350×155 PBM。
+  横纵布局由 Launcher 适配同一
   profile 尺寸。外部 App 的资源加载、缩放和安装契约仍未冻结。
 - 不为将来预留 Highlighted/Pressed/Launching Cover 参数；这种预留已经诱发内容
   在点击瞬间变异。需要动态启动体验时单独设计 launch animation。
 - 不复制 Playdate 的启动转场实现，也不声称 host 60 Hz 确定性快照证明 Memory
   LCD/TFT 真机观感。
+
+## Desktop 反射屏近似
+
+Playdate 1.12.3 的 Simulator appearance 指南允许把纯黑白映射为接近良好照明下
+Memory LCD 的灰色，但明确说明这只是近似。本地 `dfp-font-legible.png` 与
+`dfp-dither-1.png` 的两色像素一致：ink `#322F28`、paper `#B1AEA7`。Cadenza
+Desktop 默认只在 SDL texture 上传边界使用这对颜色，并保留 `--palette pure`；
+canonical framebuffer、PNG/GIF、PBM、hash 和 firmware 不接受灰阶输入。
 
 ## 实体设备验收
 
