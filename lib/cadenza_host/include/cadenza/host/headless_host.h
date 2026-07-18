@@ -54,6 +54,7 @@ class DeterministicRunner {
 
   void render() noexcept;
   void step(const InputFrame& input = {}) noexcept;
+  void advance(Seconds delta, const InputFrame& input = {}) noexcept;
 
   template <std::size_t Capacity>
   void runFrames(FrameIndex count,
@@ -82,9 +83,13 @@ class DeterministicRunner {
 class HeadlessHost {
  public:
   explicit HeadlessHost(FramebufferProfile profile,
-                        Seconds fixedDelta = 1.0F / 60.0F) noexcept;
+                        Seconds fixedDelta = 1.0F / 60.0F,
+                        DiagnosticSink* diagnostics = nullptr) noexcept;
 
   void step(const InputFrame& input = {}) noexcept { runner_.step(input); }
+  void advance(Seconds delta, const InputFrame& input = {}) noexcept {
+    runner_.advance(delta, input);
+  }
   std::uint64_t framebufferHash() const noexcept {
     return runner_.framebufferHash();
   }

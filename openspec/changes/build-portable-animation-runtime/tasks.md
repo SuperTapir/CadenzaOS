@@ -57,15 +57,15 @@
 
 ## 7. Simulator Debugging and Capture
 
-- [ ] 7.1 Write SimulationController tests for pause/resume, exact single-step, 0.25×/0.5×/1×/2× speed, and fixed/real-step switching
-- [ ] 7.2 Implement debugger controls and ensure wall-time input continues while simulation is paused
-- [ ] 7.3 Write PNG encoder/output tests for exact dimensions, colors, naming metadata, and decode round-trip
-- [ ] 7.4 Implement lossless PNG screenshots from the canonical framebuffer
-- [ ] 7.5 Write recording tests for frame ordering, pause behavior, stop/finalize, and partial cleanup
-- [ ] 7.6 Implement PNG frame-sequence recording and convenience GIF recording
-- [ ] 7.7 Implement debug HUD fields for App, InputFrame, simulation state, capacities/overflows, heap estimate, FPS, and frame time
-- [ ] 7.8 Write device-preview invariance tests and implement an optional frame that preserves framebuffer hashes and converted input coordinates
-- [ ] 7.9 Add inspectable canvas/atlas/pool misuse diagnostics to the simulator and tests
+- [x] 7.1 Write SimulationController tests for pause/resume, exact single-step, 0.25×/0.5×/1×/2× speed, and fixed/real-step switching
+- [x] 7.2 Implement debugger controls and ensure wall-time input continues while simulation is paused
+- [x] 7.3 Write PNG encoder/output tests for exact dimensions, colors, naming metadata, and decode round-trip
+- [x] 7.4 Implement lossless PNG screenshots from the canonical framebuffer
+- [x] 7.5 Write recording tests for frame ordering, pause behavior, stop/finalize, and partial cleanup
+- [x] 7.6 Implement PNG frame-sequence recording and convenience GIF recording
+- [x] 7.7 Implement debug HUD fields for App, InputFrame, simulation state, capacities/overflows, heap estimate, FPS, and frame time
+- [x] 7.8 Write device-preview invariance tests and implement an optional frame that preserves framebuffer hashes and converted input coordinates
+- [x] 7.9 Add inspectable canvas/atlas/pool misuse diagnostics to the simulator and tests
 
 ## 8. Animation Core
 

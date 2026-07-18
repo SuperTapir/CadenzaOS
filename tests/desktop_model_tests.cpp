@@ -3,6 +3,7 @@
 
 #include "cadenza/desktop/desktop_model.h"
 #include "cadenza/host/headless_host.h"
+#include "cadenza/core/sprite_atlas.h"
 
 TEST_CASE("desktop profile and integer scale accept only supported values") {
   cadenza::desktop::DesktopConfig config;
@@ -53,7 +54,47 @@ TEST_CASE("overlay metadata never changes canonical framebuffer truth") {
   overlay.toggle();
   overlay.update(59.9F, 16.7F, cadenza::AppId::Motion, {2, false, false,
                                                        true, false, 0});
+  overlay.updateResources(6800, 12000, 3, 123456);
   CHECK(overlay.visible);
   CHECK(overlay.app == cadenza::AppId::Motion);
+  CHECK(overlay.framebufferBytes == 6800);
+  CHECK(overlay.framebufferCapacity == 12000);
+  CHECK(overlay.capacityOverflows == 3);
+  CHECK(overlay.heapEstimateBytes == 123456);
   CHECK(cadenza::host::framebufferHash(framebuffer) == before);
+}
+
+TEST_CASE("optional device preview preserves hash and converts scaled coordinates") {
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  framebuffer.setPixel(9, 7);
+  const auto before = cadenza::host::framebufferHash(framebuffer);
+  const auto plain = cadenza::desktop::DevicePreviewLayout::make(320, 170, 3, false);
+  const auto framed = cadenza::desktop::DevicePreviewLayout::make(320, 170, 3, true);
+  CHECK(plain.windowWidth == 960);
+  CHECK(framed.windowWidth > plain.windowWidth);
+  std::int32_t x = -1;
+  std::int32_t y = -1;
+  REQUIRE(framed.toFramebuffer((framed.screenX + 9) * 3,
+                               (framed.screenY + 7) * 3, x, y));
+  CHECK(x == 9);
+  CHECK(y == 7);
+  CHECK_FALSE(framed.toFramebuffer(0, 0, x, y));
+  CHECK(cadenza::host::framebufferHash(framebuffer) == before);
+}
+
+TEST_CASE("simulator diagnostics expose canvas and capacity misuse") {
+  cadenza::desktop::DesktopDiagnosticLog diagnostics;
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer, &diagnostics};
+  canvas.fillRect(0, 0, 0, 2);
+  const std::uint8_t pixels[] = {0x80};
+  cadenza::SpriteAtlas<0> atlas{{pixels, 1, 1, 1}, &diagnostics};
+  CHECK_FALSE(atlas.add("full", {0, 0, 1, 1}));
+
+  CHECK(diagnostics.totalEvents() == 2);
+  CHECK(diagnostics.capacityOverflows() == 1);
+  REQUIRE(diagnostics.recent(0) != nullptr);
+  CHECK(diagnostics.recent(0)->code == cadenza::DiagnosticCode::CapacityExceeded);
+  REQUIRE(diagnostics.recent(1) != nullptr);
+  CHECK(diagnostics.recent(1)->code == cadenza::DiagnosticCode::InvalidGeometry);
 }

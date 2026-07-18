@@ -59,10 +59,17 @@ target_compile_features(cadenza_host PUBLIC cxx_std_17)
 
 add_library(cadenza_desktop_model STATIC
   lib/cadenza_desktop/src/desktop_model.cpp
+  lib/cadenza_desktop/src/png_writer.cpp
+  lib/cadenza_desktop/src/recording.cpp
+  lib/cadenza_desktop/src/simulation_controller.cpp
 )
 add_library(cadenza::desktop_model ALIAS cadenza_desktop_model)
 target_include_directories(cadenza_desktop_model PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_desktop/include>
+)
+target_include_directories(cadenza_desktop_model PRIVATE
+  third_party/gif
+  third_party/stb
 )
 target_link_libraries(cadenza_desktop_model PUBLIC cadenza::core)
 target_compile_features(cadenza_desktop_model PUBLIC cxx_std_17)
@@ -152,6 +159,32 @@ if(CADENZA_BUILD_TESTS)
   )
   target_include_directories(cadenza_desktop_smoke_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_desktop_smoke_tests COMMAND cadenza_desktop_smoke_tests)
+
+  add_executable(cadenza_simulation_controller_tests
+    tests/simulation_controller_tests.cpp
+  )
+  target_link_libraries(cadenza_simulation_controller_tests PRIVATE
+    cadenza::desktop_model
+  )
+  target_include_directories(cadenza_simulation_controller_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_simulation_controller_tests
+    COMMAND cadenza_simulation_controller_tests
+  )
+
+  find_package(PNG REQUIRED)
+  add_executable(cadenza_png_writer_tests tests/png_writer_tests.cpp)
+  target_link_libraries(cadenza_png_writer_tests PRIVATE
+    cadenza::desktop_model PNG::PNG
+  )
+  target_include_directories(cadenza_png_writer_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_png_writer_tests COMMAND cadenza_png_writer_tests)
+
+  add_executable(cadenza_recording_tests tests/recording_tests.cpp)
+  target_link_libraries(cadenza_recording_tests PRIVATE cadenza::desktop_model)
+  target_include_directories(cadenza_recording_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_recording_tests COMMAND cadenza_recording_tests)
 
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)

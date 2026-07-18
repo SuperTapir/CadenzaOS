@@ -32,18 +32,26 @@ DeterministicRunner::DeterministicRunner(AppRuntime& runtime,
 void DeterministicRunner::render() noexcept { runtime_.render(canvas_); }
 
 void DeterministicRunner::step(const InputFrame& input) noexcept {
-  runtime_.update(fixedDelta_, input);
+  advance(fixedDelta_, input);
+}
+
+void DeterministicRunner::advance(Seconds delta,
+                                  const InputFrame& input) noexcept {
+  if (delta < 0.0F) delta = 0.0F;
+  runtime_.update(delta, input);
   render();
-  simulationSeconds_ += fixedDelta_;
+  simulationSeconds_ += delta;
   ++frameIndex_;
 }
 
 HeadlessHost::HeadlessHost(FramebufferProfile profile,
-                           Seconds fixedDelta) noexcept
+                           Seconds fixedDelta,
+                           DiagnosticSink* diagnostics) noexcept
     : runtime_(profile),
       framebuffer_(profile),
-      canvas_(framebuffer_),
+      canvas_(framebuffer_, diagnostics),
       runner_(runtime_, canvas_, framebuffer_, fixedDelta) {
+  runtime_.setDiagnosticSink(diagnostics);
   runtime_.registerApp(AppId::Launcher, launcher_, false);
   runtime_.registerApp(AppId::Clock, clock_);
   runtime_.registerApp(AppId::Motion, motion_);
