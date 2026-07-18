@@ -1,6 +1,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
+#include <array>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -13,6 +15,18 @@ constexpr cadenza::AppId kHomeAppId{1};
 constexpr cadenza::AppId kClockAppId{2};
 constexpr cadenza::AppId kMotionAppId{3};
 constexpr cadenza::AppId kMissingAppId{4};
+
+std::uint64_t pcmHash(const std::int16_t* samples, std::size_t count) {
+  std::uint64_t hash = 1469598103934665603ULL;
+  for (std::size_t index = 0; index < count; ++index) {
+    const auto value = static_cast<std::uint16_t>(samples[index]);
+    hash = (hash ^ static_cast<std::uint8_t>(value & 0xFFU)) *
+           1099511628211ULL;
+    hash = (hash ^ static_cast<std::uint8_t>(value >> 8U)) *
+           1099511628211ULL;
+  }
+  return hash;
+}
 
 class FakeApp final : public cadenza::App {
  public:
@@ -216,4 +230,29 @@ TEST_CASE("long press starts system return without updating active App") {
   CHECK(fixture.runtime.currentId() == kHomeAppId);
   CHECK(fixture.events ==
         std::vector<std::string>{"Clock:enter", "Clock:exit", "Launcher:enter"});
+}
+
+TEST_CASE("App open and long press render approved Confirm and Back PCM") {
+  constexpr std::size_t kSamples = 44100;
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kHomeAppId));
+
+  REQUIRE(fixture.runtime.open(kClockAppId));
+  fixture.update(0.01F);
+  CHECK(fixture.services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Confirm);
+  std::array<std::int16_t, kSamples> pcm{};
+  fixture.services.renderAudio(pcm.data(), pcm.size());
+  CHECK(pcmHash(pcm.data(), pcm.size()) == 0x718BD5DCD3F36003ULL);
+
+  fixture.update(0.32F);
+  REQUIRE(fixture.runtime.currentId() == kClockAppId);
+  cadenza::InputFrame input;
+  input.longPressed = true;
+  fixture.update(0.01F, input);
+  CHECK(fixture.services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Back);
+  pcm.fill(0);
+  fixture.services.renderAudio(pcm.data(), pcm.size());
+  CHECK(pcmHash(pcm.data(), pcm.size()) == 0x1AA4B6B726F7D759ULL);
 }

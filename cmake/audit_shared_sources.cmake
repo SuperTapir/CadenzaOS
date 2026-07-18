@@ -30,6 +30,16 @@ foreach(duplicate IN ITEMS src/app_runtime.cpp src/apps.cpp src/mono_canvas.cpp)
   endif()
 endforeach()
 
+file(GLOB_RECURSE prohibited_reference_audio
+  "${PROJECT_ROOT}/*Select.wav"
+  "${PROJECT_ROOT}/*Turn On.wav"
+  "${PROJECT_ROOT}/*Turn Off.wav")
+if(prohibited_reference_audio)
+  message(FATAL_ERROR
+    "Local calibration reference audio must not enter the repository: "
+    "${prohibited_reference_audio}")
+endif()
+
 file(GLOB_RECURSE portable_files
   "${PROJECT_ROOT}/lib/cadenza_core/include/*.h"
   "${PROJECT_ROOT}/lib/cadenza_core/src/*.cpp"

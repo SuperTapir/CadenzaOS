@@ -91,6 +91,38 @@ TEST_CASE("noise rendering is deterministic from a fixed seed") {
   CHECK(a == b);
 }
 
+TEST_CASE("wavetable sine with exponential decay is deterministic and fades") {
+  cadenza::audio::ToneSpec spec =
+      tone(cadenza::audio::Waveform::Sine, 2290.0F, 0.012F);
+  spec.envelopeCurve = cadenza::audio::EnvelopeCurve::Exponential;
+  spec.decaySeconds = 0.0015F;
+  spec.initialPhaseCycles = 0.25F;
+  spec.attackSeconds = 1.0F / cadenza::audio::kSampleRate;
+  spec.releaseSeconds = 8.0F / cadenza::audio::kSampleRate;
+
+  cadenza::audio::AudioEngine first;
+  cadenza::audio::AudioEngine second;
+  REQUIRE(first.play(spec));
+  REQUIRE(second.play(spec));
+  std::array<std::int16_t, 700> a{};
+  std::array<std::int16_t, 700> b{};
+  first.render(a.data(), a.size());
+  second.render(b.data(), b.size());
+  CHECK(a == b);
+
+  std::int64_t earlyEnergy = 0;
+  std::int64_t lateEnergy = 0;
+  for (std::size_t index = 1; index < 80; ++index) {
+    earlyEnergy += std::abs(static_cast<int>(a[index]));
+  }
+  for (std::size_t index = 300; index < 380; ++index) {
+    lateEnergy += std::abs(static_cast<int>(a[index]));
+  }
+  CHECK(earlyEnergy > lateEnergy * 4);
+  CHECK(std::all_of(a.begin() + 530, a.end(),
+                    [](std::int16_t sample) { return sample == 0; }));
+}
+
 TEST_CASE("invalid tone parameters cannot reach the sample loop") {
   cadenza::audio::AudioEngine engine;
   auto invalid = tone(cadenza::audio::Waveform::Triangle);
@@ -102,13 +134,20 @@ TEST_CASE("invalid tone parameters cannot reach the sample loop") {
   invalid = tone(cadenza::audio::Waveform::Triangle);
   invalid.durationSeconds = std::numeric_limits<float>::infinity();
   CHECK_FALSE(engine.play(invalid));
+  invalid = tone(cadenza::audio::Waveform::Sine);
+  invalid.envelopeCurve = cadenza::audio::EnvelopeCurve::Exponential;
+  invalid.decaySeconds = -1.0F;
+  CHECK_FALSE(engine.play(invalid));
+  invalid.decaySeconds = std::numeric_limits<float>::quiet_NaN();
+  CHECK_FALSE(engine.play(invalid));
   CHECK(engine.activeVoiceCount() == 0);
 }
 
-TEST_CASE("three high gain voices saturate without integer wrap") {
+TEST_CASE("four high gain voices saturate without integer wrap") {
   cadenza::audio::AudioEngine engine;
   auto spec = tone(cadenza::audio::Waveform::Triangle, 220.5F, 0.05F, 1);
   spec.gain = 4.0F;
+  REQUIRE(engine.play(spec));
   REQUIRE(engine.play(spec));
   REQUIRE(engine.play(spec));
   REQUIRE(engine.play(spec));
@@ -125,6 +164,7 @@ TEST_CASE("voice stealing chooses oldest lowest priority and releases it") {
   REQUIRE(engine.play(tone(cadenza::audio::Waveform::Triangle, 400.0F, 0.2F, 2)));
   REQUIRE(engine.play(tone(cadenza::audio::Waveform::Triangle, 500.0F, 0.2F, 1)));
   REQUIRE(engine.play(tone(cadenza::audio::Waveform::Triangle, 600.0F, 0.2F, 1)));
+  REQUIRE(engine.play(tone(cadenza::audio::Waveform::Triangle, 650.0F, 0.2F, 1)));
   std::array<std::int16_t, 32> warmup{};
   engine.render(warmup.data(), warmup.size());
 
@@ -134,9 +174,11 @@ TEST_CASE("voice stealing chooses oldest lowest priority and releases it") {
   const auto first = engine.voiceInfo(0);
   const auto second = engine.voiceInfo(1);
   const auto third = engine.voiceInfo(2);
+  const auto fourth = engine.voiceInfo(3);
   CHECK_FALSE(first.pending);
   CHECK(second.pending);
   CHECK_FALSE(third.pending);
+  CHECK_FALSE(fourth.pending);
   CHECK(second.priority == 1);
 
   std::array<std::int16_t, 160> transition{};
@@ -153,6 +195,7 @@ TEST_CASE("voice steal release keeps the outgoing tone gain") {
   auto silent = tone(cadenza::audio::Waveform::Triangle, 500.0F, 0.2F, 1);
   silent.gain = 0.0F;
   REQUIRE(engine.play(outgoing));
+  REQUIRE(engine.play(silent));
   REQUIRE(engine.play(silent));
   REQUIRE(engine.play(silent));
   std::array<std::int16_t, 25> warmup{};

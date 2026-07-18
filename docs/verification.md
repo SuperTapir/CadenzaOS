@@ -40,23 +40,27 @@ contract were added:
 | Gate | Evidence |
 | --- | --- |
 | Research/adoption | 16 fixed repositories with commit/license/source boundaries, official Playdate docs, public-device recording analysis, and explicit adopt/reject decisions in the three `audio-*-research.md` documents |
-| Portable synth | triangle, PolyBLEP square, deterministic xorshift noise, finite parameter rejection, minimum ramps, saturating mix, exact ending silence and three-voice priority/age/smooth-steal tests |
+| Portable synth | wavetable sine, triangle, PolyBLEP square, deterministic xorshift noise, precomputed exponential envelope, finite parameter rejection, minimum ramps, saturating mix, exact ending silence and four-voice priority/age/smooth-steal tests |
 | Concurrency/control | fixed 16-slot SPSC FIFO, four critical slots, no producer overwrite, Navigate cooldown, full-queue overflow evidence, and out-of-band Muted/StopAll safety mailbox; a saturated 16-critical-cue queue still renders immediate zero |
-| Semantic integration | Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes in Launcher, Clock, Motion, Settings, Gallery, app-open and long-press-return tests; Settings snapshots pass at 320×170 and 400×240 |
-| Headless PCM | a real Launcher turn renders 2,048 deterministic samples, hash `9821519019372894971`, nonzero bounded peak, paired Confirm-up/Back-down profile checks |
+| Semantic integration | Input/Action/Outcome/System expose 15 stable cues; existing Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes remain covered in Launcher, Clock, Motion, Settings, Gallery, app-open and long-press-return tests; actual App open/return PCM is locked to the approved Confirm/Back goldens |
+| Headless PCM | a real Launcher turn renders 2,048 deterministic samples, hash `14994789996363689834`, nonzero bounded peak; every cue also has a 44,100-sample golden and exact silent tail |
 | SDL | SDL3 3.4.12 dummy callback consumes independently of App updates, no-device failure preserves portable service, stop prevents later callbacks; real executable passes three frames at both profiles with dummy video+audio drivers |
 | T-Embed adapter | host test locks GPIO 7/5/6 and right-left mono duplication; the real adapter is compiled against ESP-IDF/FreeRTOS stubs and injected with install, pin, task, partial-write and fatal-write failures; locked PlatformIO Arduino-ESP32 2.0.17 release compiles and links the independent core-0 legacy-I²S task |
-| Asset workflow | current seven cues export as valid 44.1 kHz, 16-bit mono RIFF/WAVE; future lossless-master/Event/platform-conversion/provenance contract and manifest are checked in |
+| Asset workflow | all 15 cues plus four family demos export as valid 44.1 kHz, 16-bit mono RIFF/WAVE; local Select/Turn On/Turn Off references are rejected by the shared-source audit and are not build inputs |
 
-Fresh audio-era gates:
+Fresh gates after integration with the system-service foundation and the
+Confirm/Back calibration fix:
 
-- normal host: 39/39;
-- AppleClang warnings-as-errors: 39/39;
-- ASan+UBSan: 39/39;
+- normal host: 50/50;
+- AppleClang warnings-as-errors: 50/50;
+- ASan+UBSan: 50/50;
 - SDL dummy executable: T-Embed and Sharp profiles pass;
-- PlatformIO firmware: 83,736 B RAM (25.6%), 339,669 B Flash (10.8%);
-- optimized host three-voice probe: 400 seconds PCM in 0.922 seconds (433.8×
-  realtime; host evidence only);
+- PlatformIO firmware: 98,808 B RAM (30.2%), 358,805 B Flash (11.4%);
+- four-voice ABI: `AudioEngine` 592 B, `InteractionSoundService` 1,728 B;
+  no per-sample transcendental function or allocation; ESP32 runtime timing is
+  still a physical-board measurement;
+- approved-prototype correlation: Confirm 0.984379, Back 0.979893; the real App
+  open/long-press-return path renders their matching deterministic goldens;
 - OpenSpec strict validation, source-manifest audit, platform-leakage audit and
   `git diff --check`: pass.
 
@@ -72,11 +76,11 @@ single broad green build:
 | T-Embed I²S task | configuration/frame tests, injected driver/task/write failures against the real adapter source, locked firmware link | automated pass; electrical output pending hardware |
 | verification/truthful declaration | normal/strict/sanitized/SDL/firmware/OpenSpec gates plus the physical script below | automated pass; listening explicitly pending |
 | fixed realtime render | idle/nonzero/end-zero tests, fixed arrays and source audit, no allocation in voice/command/sample path | automated pass |
-| bounded primitives | triangle, PolyBLEP edge, seeded noise, finite rejection/clamping, pitch/envelope and all-cue ramp tests | automated pass |
-| three voices/smooth steal | priority, oldest-age selection, low-priority rejection, 64-sample release and outgoing-gain regression | automated pass |
-| saturating mix | three over-gain voices reach int16 bounds without wrapping; ASan/UBSan pass | automated pass |
+| bounded primitives | wavetable sine, triangle, PolyBLEP edge, seeded noise, exponential/linear envelope, finite rejection/clamping and all-cue ramp tests | automated pass |
+| four voices/smooth steal | priority, oldest-age selection, low-priority rejection, 64-sample release and outgoing-gain regression | automated pass |
+| saturating mix | four over-gain voices reach int16 bounds without wrapping; ASan/UBSan pass | automated pass |
 | fixed SPSC queue | FIFO, reserve, overflow/no-replay and saturated-critical-queue immediate mute tests | automated pass |
-| semantic vocabulary | Runtime/App tests cover all seven cues, successful open/return and non-success boundary/reject routes | automated pass |
+| semantic vocabulary | 15 stable names/definitions/goldens across four families; Runtime/App tests preserve all seven existing business routes | automated pass |
 | restrained directional language | per-cue duration/tone-count/ramp tests; Confirm/ToggleOn up and Back/ToggleOff down | automated pass; taste pending hardware |
 | high-frequency suppression | one cue for large-turn frame, 25 ms cooldown, drop/no-later-play and post-cooldown tests | automated pass |
 | volume/mute/visual equivalence | four-level cycle/order, active and saturated-queue mute, Settings immediate framebuffer change at both profiles and muted visual interaction | automated pass |

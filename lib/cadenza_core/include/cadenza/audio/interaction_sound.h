@@ -1,11 +1,12 @@
 #pragma once
 
+#include <array>
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
 
 #include "cadenza/audio/audio_command_queue.h"
-#include "cadenza/audio/audio_engine.h"
+#include "cadenza/audio/sound_cue_library.h"
 #include "cadenza/core/core_types.h"
 
 namespace cadenza::audio {
@@ -37,6 +38,7 @@ const char* soundVolumeName(SoundVolume volume) noexcept;
 class InteractionSoundService {
  public:
   static constexpr Seconds kNavigateCooldownSeconds = 0.025F;
+  static constexpr std::size_t kScheduledEventCapacity = 16;
 
   InteractionSoundService() noexcept;
 
@@ -50,6 +52,7 @@ class InteractionSoundService {
   std::size_t activeVoiceCount() const noexcept {
     return engine_.activeVoiceCount();
   }
+  std::size_t scheduledEventCount() const noexcept;
 
   SoundVolume volume() const noexcept { return volume_; }
   SoundCue lastAcceptedCue() const noexcept { return lastAcceptedCue_; }
@@ -64,11 +67,21 @@ class InteractionSoundService {
   static SoundCueProfile profile(SoundCue cue) noexcept;
 
  private:
+  struct ScheduledEvent {
+    ToneSpec tone{};
+    std::uint32_t remainingSamples = 0;
+    bool active = false;
+  };
+
   void consumeCommands() noexcept;
+  bool schedule(const SoundEvent& event) noexcept;
+  void clearScheduled() noexcept;
+  void startDueEvents() noexcept;
   static float volumeGain(SoundVolume volume) noexcept;
 
   AudioCommandQueue commands_;
   AudioEngine engine_;
+  std::array<ScheduledEvent, kScheduledEventCapacity> scheduled_{};
   SoundVolume volume_ = SoundVolume::Medium;
   SoundVolume consumerVolume_ = SoundVolume::Medium;
   SoundCue lastAcceptedCue_ = SoundCue::Navigate;

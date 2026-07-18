@@ -8,7 +8,9 @@
 
 namespace cadenza::audio {
 
-enum class Waveform : std::uint8_t { Triangle, Square, Noise };
+enum class Waveform : std::uint8_t { Triangle, Sine, Square, Noise };
+
+enum class EnvelopeCurve : std::uint8_t { Linear, Exponential };
 
 struct ToneSpec {
   Waveform waveform = Waveform::Triangle;
@@ -17,8 +19,13 @@ struct ToneSpec {
   float attackSeconds = 0.002F;
   float durationSeconds = 0.05F;
   float releaseSeconds = 0.005F;
+  float decaySeconds = 0.02F;
+  float initialPhaseCycles = 0.0F;
+  float secondHarmonicGain = 0.0F;
+  float secondHarmonicPhaseCycles = 0.0F;
   float gain = 0.25F;
   std::uint8_t priority = 1;
+  EnvelopeCurve envelopeCurve = EnvelopeCurve::Linear;
 };
 
 struct VoiceInfo {
@@ -30,7 +37,7 @@ struct VoiceInfo {
 
 class AudioEngine {
  public:
-  static constexpr std::size_t kVoiceCount = 3;
+  static constexpr std::size_t kVoiceCount = 4;
   static constexpr std::uint32_t kStealReleaseSamples = 64;
 
   explicit AudioEngine(std::uint32_t noiseSeed = 0xCADA1234U) noexcept
@@ -50,16 +57,24 @@ class AudioEngine {
     float startFrequencyHz = 440.0F;
     float endFrequencyHz = 440.0F;
     float gain = 0.25F;
+    float initialPhaseCycles = 0.0F;
+    float secondHarmonicGain = 0.0F;
+    float secondHarmonicPhaseCycles = 0.0F;
+    float attackMultiplier = 0.0F;
+    float decayMultiplier = 1.0F;
     std::uint32_t totalSamples = 0;
     std::uint32_t attackSamples = 0;
     std::uint32_t releaseSamples = 0;
     std::uint8_t priority = 1;
+    EnvelopeCurve envelopeCurve = EnvelopeCurve::Linear;
   };
 
   struct Voice {
     PreparedTone tone;
     PreparedTone pendingTone;
     float phase = 0.0F;
+    float attackComplement = 1.0F;
+    float decayEnvelope = 1.0F;
     std::uint32_t ageSamples = 0;
     std::uint32_t noiseState = 1;
     std::uint32_t stealSamplesRemaining = 0;

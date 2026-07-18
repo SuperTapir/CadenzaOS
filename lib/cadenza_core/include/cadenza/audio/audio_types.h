@@ -14,6 +14,14 @@ enum class SoundCue : std::uint8_t {
   ToggleOn,
   ToggleOff,
   Reject,
+  Complete,
+  Warning,
+  Failure,
+  Notification,
+  Connect,
+  Disconnect,
+  PowerOn,
+  PowerOff,
   Count,
 };
 

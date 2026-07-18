@@ -126,7 +126,7 @@ TEST_CASE("headless interaction produces deterministic PCM golden") {
   second.renderAudio(b.data(), b.size());
   CHECK(a == b);
   const auto hash = cadenza::host::pcmHash(a.data(), a.size());
-  CHECK(hash == 9821519019372894971ULL);
+  CHECK(hash == 14994789996363689834ULL);
   const auto peak = *std::max_element(
       a.begin(), a.end(), [](std::int16_t left, std::int16_t right) {
         return std::abs(static_cast<int>(left)) <

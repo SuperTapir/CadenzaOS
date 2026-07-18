@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -11,7 +12,8 @@
 #include "cadenza/audio/sound_cue_library.h"
 
 namespace {
-constexpr std::size_t kPreviewSamples = 11025;  // 250 ms at 44.1 kHz.
+constexpr std::size_t kTailSamples = 1024;
+constexpr std::size_t kDemoGapSamples = 6615;  // 150 ms at 44.1 kHz.
 
 void write16(std::ostream& stream, std::uint16_t value) {
   stream.put(static_cast<char>(value & 0xFFU));
@@ -46,12 +48,23 @@ bool writeWav(const std::filesystem::path& path,
   return output.good();
 }
 
+std::vector<std::int16_t> renderCueSamples(cadenza::audio::SoundCue cue) {
+  cadenza::audio::InteractionSoundService service;
+  if (!service.play(cue)) return {};
+  const auto profile = cadenza::audio::InteractionSoundService::profile(cue);
+  const std::size_t sampleCount = static_cast<std::size_t>(
+                                      std::ceil(profile.durationSeconds *
+                                                cadenza::audio::kSampleRate)) +
+                                  kTailSamples;
+  std::vector<std::int16_t> samples(sampleCount);
+  service.render(samples.data(), samples.size());
+  return samples;
+}
+
 bool renderCue(cadenza::audio::SoundCue cue,
                const std::filesystem::path& path) {
-  cadenza::audio::InteractionSoundService service;
-  if (!service.play(cue)) return false;
-  std::vector<std::int16_t> samples(kPreviewSamples);
-  service.render(samples.data(), samples.size());
+  const auto samples = renderCueSamples(cue);
+  if (samples.empty()) return false;
   const auto peakSample = *std::max_element(
       samples.begin(), samples.end(), [](std::int16_t left, std::int16_t right) {
         return std::abs(static_cast<int>(left)) <
@@ -61,6 +74,36 @@ bool renderCue(cadenza::audio::SoundCue cue,
   std::cout << cadenza::audio::soundCueName(cue) << ", peak="
             << std::abs(static_cast<int>(peakSample)) << ", " << path << '\n';
   return true;
+}
+
+bool renderDemo(const std::filesystem::path& path,
+                const std::vector<cadenza::audio::SoundCue>& cues) {
+  std::vector<std::int16_t> output(kDemoGapSamples / 2U, 0);
+  for (const auto cue : cues) {
+    const auto samples = renderCueSamples(cue);
+    if (samples.empty()) return false;
+    output.insert(output.end(), samples.begin(), samples.end());
+    output.insert(output.end(), kDemoGapSamples, 0);
+  }
+  return writeWav(path, output);
+}
+
+bool renderDemos(const std::filesystem::path& directory) {
+  using cadenza::audio::SoundCue;
+  return renderDemo(directory / "demo-input.wav",
+                    {SoundCue::Navigate, SoundCue::Navigate,
+                     SoundCue::Navigate, SoundCue::Navigate,
+                     SoundCue::Boundary}) &&
+         renderDemo(directory / "demo-action.wav",
+                    {SoundCue::Confirm, SoundCue::Back, SoundCue::ToggleOn,
+                     SoundCue::ToggleOff, SoundCue::Reject}) &&
+         renderDemo(directory / "demo-outcome.wav",
+                    {SoundCue::Complete, SoundCue::Warning,
+                     SoundCue::Failure}) &&
+         renderDemo(directory / "demo-system.wav",
+                    {SoundCue::Notification, SoundCue::Connect,
+                     SoundCue::Disconnect, SoundCue::PowerOn,
+                     SoundCue::PowerOff});
 }
 
 bool cueFromName(const std::string& name, cadenza::audio::SoundCue& cue) {
@@ -97,7 +140,7 @@ int main(int argc, char** argv) {
         return 1;
       }
     }
-    return 0;
+    return renderDemos(directory) ? 0 : 1;
   }
 
   if (argc == 3) {

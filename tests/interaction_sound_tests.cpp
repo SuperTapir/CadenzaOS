@@ -3,12 +3,26 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstdint>
+#include <string>
 
 #include "cadenza/audio/interaction_sound.h"
 #include "cadenza/audio/sound_cue_library.h"
 
 namespace {
+std::uint64_t pcmHash(const std::int16_t* samples, std::size_t count) {
+  std::uint64_t hash = 1469598103934665603ULL;
+  for (std::size_t index = 0; index < count; ++index) {
+    const auto value = static_cast<std::uint16_t>(samples[index]);
+    hash = (hash ^ static_cast<std::uint8_t>(value & 0xFFU)) *
+           1099511628211ULL;
+    hash = (hash ^ static_cast<std::uint8_t>(value >> 8U)) *
+           1099511628211ULL;
+  }
+  return hash;
+}
+
 std::int16_t peakFor(cadenza::audio::SoundVolume volume) {
   cadenza::audio::InteractionSoundService service;
   REQUIRE(service.setVolume(volume));
@@ -37,14 +51,71 @@ TEST_CASE("sound language exposes stable directional cue profiles") {
   const auto toggleOff = cadenza::audio::InteractionSoundService::profile(
       cadenza::audio::SoundCue::ToggleOff);
 
-  CHECK(navigate.durationSeconds <= 0.04F);
-  CHECK(navigate.toneCount == 1);
+  CHECK(navigate.durationSeconds <= 0.012F);
+  CHECK(navigate.toneCount == 4);
   CHECK(confirm.startFrequencyHz < confirm.endFrequencyHz);
   CHECK(back.startFrequencyHz > back.endFrequencyHz);
   CHECK(toggleOn.startFrequencyHz < toggleOn.endFrequencyHz);
   CHECK(toggleOff.startFrequencyHz > toggleOff.endFrequencyHz);
-  CHECK(confirm.durationSeconds < 0.15F);
-  CHECK(back.durationSeconds < 0.15F);
+  CHECK(confirm.durationSeconds < 0.30F);
+  CHECK(back.durationSeconds < 0.26F);
+}
+
+TEST_CASE("confirm and back preserve approved two-strike calibration") {
+  const auto& confirm = cadenza::audio::soundCueDefinition(
+      cadenza::audio::SoundCue::Confirm);
+  const auto& back = cadenza::audio::soundCueDefinition(
+      cadenza::audio::SoundCue::Back);
+  REQUIRE(confirm.count == 2);
+  REQUIRE(back.count == 2);
+
+  const auto& confirmFirst = confirm.events[0];
+  const auto& confirmSecond = confirm.events[1];
+  CHECK(confirmFirst.delaySeconds == doctest::Approx(0.0F));
+  CHECK(confirmSecond.delaySeconds >= 0.055F);
+  CHECK(confirmSecond.delaySeconds <= 0.070F);
+  CHECK(confirmFirst.tone.startFrequencyHz == doctest::Approx(660.0F).epsilon(0.04));
+  CHECK(std::abs(confirmFirst.tone.endFrequencyHz -
+                 confirmFirst.tone.startFrequencyHz) <= 12.0F);
+  CHECK(confirmSecond.tone.startFrequencyHz == doctest::Approx(990.0F).epsilon(0.04));
+  CHECK(std::abs(confirmSecond.tone.endFrequencyHz -
+                 confirmSecond.tone.startFrequencyHz) <= 16.0F);
+  CHECK(confirmFirst.tone.durationSeconds >= 0.155F);
+  CHECK(confirmSecond.tone.durationSeconds >= 0.170F);
+  CHECK(confirmSecond.delaySeconds + confirmSecond.tone.durationSeconds ==
+        doctest::Approx(0.245F).epsilon(0.02));
+
+  const auto& backFirst = back.events[0];
+  const auto& backSecond = back.events[1];
+  CHECK(backFirst.delaySeconds == doctest::Approx(0.0F));
+  CHECK(backSecond.delaySeconds >= 0.035F);
+  CHECK(backSecond.delaySeconds <= 0.050F);
+  CHECK(backFirst.tone.startFrequencyHz == doctest::Approx(990.0F).epsilon(0.04));
+  CHECK(std::abs(backFirst.tone.endFrequencyHz -
+                 backFirst.tone.startFrequencyHz) <= 16.0F);
+  CHECK(backSecond.tone.startFrequencyHz == doctest::Approx(590.0F).epsilon(0.05));
+  CHECK(std::abs(backSecond.tone.endFrequencyHz -
+                 backSecond.tone.startFrequencyHz) <= 12.0F);
+  CHECK(backFirst.tone.durationSeconds >= 0.120F);
+  CHECK(backSecond.tone.durationSeconds >= 0.155F);
+  CHECK(backSecond.delaySeconds + backSecond.tone.durationSeconds ==
+        doctest::Approx(0.210F).epsilon(0.02));
+}
+
+TEST_CASE("semantic hierarchy exposes all fifteen stable cue names") {
+  constexpr std::array<const char*, 15> expected{{
+      "navigate",     "boundary",     "confirm",    "back",
+      "toggle-on",    "toggle-off",   "reject",     "complete",
+      "warning",      "failure",      "notification", "connect",
+      "disconnect",   "power-on",     "power-off",
+  }};
+  CHECK(static_cast<std::size_t>(cadenza::audio::SoundCue::Count) ==
+        expected.size());
+  for (std::size_t index = 0; index < expected.size(); ++index) {
+    CAPTURE(index);
+    CHECK(std::string(cadenza::audio::soundCueName(
+              static_cast<cadenza::audio::SoundCue>(index))) == expected[index]);
+  }
 }
 
 TEST_CASE("every authored cue has bounded nonzero edge ramps") {
@@ -57,10 +128,13 @@ TEST_CASE("every authored cue has bounded nonzero edge ramps") {
     REQUIRE(definition.count > 0);
     REQUIRE(definition.count <= cadenza::audio::kMaximumTonesPerCue);
     for (std::size_t toneIndex = 0; toneIndex < definition.count; ++toneIndex) {
-      const auto& tone = definition.tones[toneIndex];
+      const auto& event = definition.events[toneIndex];
+      const auto& tone = event.tone;
+      CHECK(event.delaySeconds >= 0.0F);
       CHECK(tone.attackSeconds > 0.0F);
       CHECK(tone.releaseSeconds > 0.0F);
-      CHECK(tone.durationSeconds <= 0.18F);
+      CHECK(tone.durationSeconds <= 0.80F);
+      CHECK(event.delaySeconds + tone.durationSeconds <= 0.82F);
     }
   }
 
@@ -70,6 +144,57 @@ TEST_CASE("every authored cue has bounded nonzero edge ramps") {
       cadenza::audio::SoundCue::Reject);
   CHECK(boundary.toneCount != reject.toneCount);
   CHECK(boundary.durationSeconds != reject.durationSeconds);
+}
+
+TEST_CASE("delayed cue events start on schedule and are cleared by stop") {
+  cadenza::audio::InteractionSoundService service;
+  REQUIRE(service.play(cadenza::audio::SoundCue::Confirm));
+  std::array<std::int16_t, 64> samples{};
+  service.render(samples.data(), samples.size());
+  CHECK(service.scheduledEventCount() > 0);
+  service.stopAll();
+  samples.fill(1234);
+  service.render(samples.data(), samples.size());
+  CHECK(service.scheduledEventCount() == 0);
+  CHECK(service.activeVoiceCount() == 0);
+  CHECK(std::all_of(samples.begin(), samples.end(),
+                    [](std::int16_t sample) { return sample == 0; }));
+}
+
+TEST_CASE("all semantic hierarchy cues render deterministically and end silent") {
+  constexpr std::size_t kSamples = 44100;
+  constexpr std::array<std::uint64_t, 15> kGolden{{
+      0x42ECB646DBC2F138ULL, 0x4DA394CE9C2148C2ULL,
+      0x718BD5DCD3F36003ULL, 0x1AA4B6B726F7D759ULL,
+      0x093E015B6B49C061ULL, 0xE184E7C5DF4F77CFULL,
+      0x5B1F379B57A0775CULL, 0xA81782D63B7A0F48ULL,
+      0x13E57E34362B7C70ULL, 0xF85F91ED8053C0ACULL,
+      0x1E33454BC817A8F4ULL, 0x544F48552963AB96ULL,
+      0xE18B997BCB79D023ULL, 0xCAB9268E54DCD0EEULL,
+      0xFF77B74687A40111ULL,
+  }};
+  for (std::size_t cueIndex = 0;
+       cueIndex < static_cast<std::size_t>(cadenza::audio::SoundCue::Count);
+       ++cueIndex) {
+    const auto cue = static_cast<cadenza::audio::SoundCue>(cueIndex);
+    cadenza::audio::InteractionSoundService first;
+    cadenza::audio::InteractionSoundService second;
+    REQUIRE(first.play(cue));
+    REQUIRE(second.play(cue));
+    std::array<std::int16_t, kSamples> a{};
+    std::array<std::int16_t, kSamples> b{};
+    first.render(a.data(), a.size());
+    second.render(b.data(), b.size());
+    CAPTURE(cadenza::audio::soundCueName(cue));
+    CHECK(a == b);
+    CHECK(pcmHash(a.data(), a.size()) == kGolden[cueIndex]);
+    CHECK(std::any_of(a.begin(), a.end(),
+                      [](std::int16_t sample) { return sample != 0; }));
+    CHECK(std::all_of(a.end() - 512, a.end(),
+                      [](std::int16_t sample) { return sample == 0; }));
+    CHECK(first.activeVoiceCount() == 0);
+    CHECK(first.scheduledEventCount() == 0);
+  }
 }
 
 TEST_CASE("navigate cooldown drops repeats without delayed playback") {
@@ -105,6 +230,7 @@ TEST_CASE("muting immediately clears active and queued sound") {
   CHECK(std::all_of(samples.begin(), samples.end(),
                     [](std::int16_t sample) { return sample == 0; }));
   CHECK(service.activeVoiceCount() == 0);
+  CHECK(service.scheduledEventCount() == 0);
   CHECK_FALSE(service.play(cadenza::audio::SoundCue::Reject));
 }
 

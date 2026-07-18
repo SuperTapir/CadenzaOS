@@ -91,8 +91,9 @@ cmake --build build/host --target cadenza_dump_sound_cues
 ./build/host/cadenza_dump_sound_cues confirm /tmp/confirm.wav
 ```
 
-The exporter is an audition aid, not an aesthetic approval test. A PCM golden
-is updated only after a sound is deliberately accepted.
+The exporter writes all 15 Input/Action/Outcome/System cues and four family
+context demos. It is an audition aid, not an aesthetic approval test. A PCM
+golden is updated only after a sound is deliberately accepted.
 
 For externally generated or recorded replacements, keep the lossless master
 and follow `docs/audio-asset-contract.md`. The preferred handoff is 48 kHz,

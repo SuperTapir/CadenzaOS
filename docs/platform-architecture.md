@@ -106,9 +106,12 @@ App 与 Runtime 只在状态实际变化时提交 `SoundCue`。16 项固定 SPSC
 44.1 kHz、S16、mono PCM。T-Embed adapter 只负责将 mono 复制为 right-left
 I²S frame；任何平台 adapter 都不得另写一套音色。
 
-当前音色是集中在 `sound_cue_library.cpp` 的参数合成 palette，不是不可替换的
-产品资产。未来 WAV 仍映射到相同 `SoundCue` Event；母版、平台转换、来源权利
-和真机验收遵循 [`audio-asset-contract.md`](audio-asset-contract.md)。
+当前音色是集中在 `sound_cue_library.cpp` 的 15 项参数合成 palette。四声部
+`AudioEngine` 提供 wavetable Sine、预计算指数包络与二次谐波；固定容量的
+consumer-owned event 调度器支持 sample-offset 延迟，Muted/StopAll 会同时清空
+当前声部和未来 event。它不是不可替换的产品资产；未来 WAV 仍映射到相同
+`SoundCue` Event，母版、平台转换、来源权利和真机验收遵循
+[`audio-asset-contract.md`](audio-asset-contract.md)。
 
 ### 帧事务与异步回调
 

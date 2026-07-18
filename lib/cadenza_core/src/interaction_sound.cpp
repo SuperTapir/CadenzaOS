@@ -1,6 +1,7 @@
 #include "cadenza/audio/interaction_sound.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "cadenza/audio/sound_cue_library.h"
 
@@ -86,6 +87,42 @@ float InteractionSoundService::volumeGain(SoundVolume volume) noexcept {
   return 0.0F;
 }
 
+bool InteractionSoundService::schedule(const SoundEvent& event) noexcept {
+  if (!std::isfinite(event.delaySeconds) || event.delaySeconds < 0.0F) {
+    return false;
+  }
+  if (event.delaySeconds <= 0.0F) return engine_.play(event.tone);
+  for (auto& scheduled : scheduled_) {
+    if (!scheduled.active) {
+      scheduled.tone = event.tone;
+      scheduled.remainingSamples = static_cast<std::uint32_t>(
+          event.delaySeconds * kSampleRate + 0.5F);
+      scheduled.active = true;
+      return true;
+    }
+  }
+  return false;
+}
+
+void InteractionSoundService::clearScheduled() noexcept {
+  for (auto& event : scheduled_) event = {};
+}
+
+void InteractionSoundService::startDueEvents() noexcept {
+  for (auto& event : scheduled_) {
+    if (event.active && event.remainingSamples == 0U) {
+      engine_.play(event.tone);
+      event = {};
+    }
+  }
+}
+
+std::size_t InteractionSoundService::scheduledEventCount() const noexcept {
+  return static_cast<std::size_t>(std::count_if(
+      scheduled_.begin(), scheduled_.end(),
+      [](const ScheduledEvent& event) { return event.active; }));
+}
+
 void InteractionSoundService::consumeCommands() noexcept {
   AudioCommand command;
   while (commands_.tryPop(command)) {
@@ -94,17 +131,21 @@ void InteractionSoundService::consumeCommands() noexcept {
         if (consumerVolume_ == SoundVolume::Muted) break;
         const SoundCueDefinition& cue = soundCueDefinition(command.cue);
         for (std::uint8_t index = 0; index < cue.count; ++index) {
-          engine_.play(cue.tones[index]);
+          schedule(cue.events[index]);
         }
         break;
       }
       case AudioCommandKind::SetVolume:
         consumerVolume_ = command.volume;
         engine_.setMasterGain(volumeGain(consumerVolume_));
-        if (consumerVolume_ == SoundVolume::Muted) engine_.stopAll();
+        if (consumerVolume_ == SoundVolume::Muted) {
+          engine_.stopAll();
+          clearScheduled();
+        }
         break;
       case AudioCommandKind::StopAll:
         engine_.stopAll();
+        clearScheduled();
         break;
     }
   }
@@ -117,17 +158,58 @@ void InteractionSoundService::render(std::int16_t* samples,
     consumerVolume_ = SoundVolume::Muted;
     engine_.setMasterGain(0.0F);
     engine_.stopAll();
+    clearScheduled();
   }
   if (stopRequested_.exchange(false, std::memory_order_acq_rel)) {
     engine_.stopAll();
+    clearScheduled();
   }
-  engine_.render(samples, count);
+
+  std::size_t rendered = 0;
+  while (rendered < count) {
+    startDueEvents();
+    std::size_t chunk = count - rendered;
+    for (const auto& event : scheduled_) {
+      if (event.active) {
+        chunk = std::min<std::size_t>(chunk, event.remainingSamples);
+      }
+    }
+    if (chunk == 0U) continue;
+    engine_.render(samples + rendered, chunk);
+    for (auto& event : scheduled_) {
+      if (event.active) {
+        event.remainingSamples -= static_cast<std::uint32_t>(chunk);
+      }
+    }
+    rendered += chunk;
+  }
 }
 
 SoundCueProfile InteractionSoundService::profile(SoundCue cue) noexcept {
   const SoundCueDefinition& value = soundCueDefinition(cue);
-  return {value.tones[0].startFrequencyHz, value.tones[0].endFrequencyHz,
-          value.tones[0].durationSeconds, value.count};
+  if (value.count == 0U) return {};
+  std::size_t last = 0;
+  float endSeconds = value.events[0].delaySeconds +
+                     value.events[0].tone.durationSeconds;
+  for (std::size_t index = 1; index < value.count; ++index) {
+    const float candidateEnd = value.events[index].delaySeconds +
+                               value.events[index].tone.durationSeconds;
+    if (candidateEnd > endSeconds) {
+      endSeconds = candidateEnd;
+      last = index;
+    }
+  }
+  // The event that resolves the cue carries its semantic direction. Earlier
+  // events may be shared mechanical contacts (notably Toggle On/Off).
+  float startFrequencyHz = value.events[last].tone.startFrequencyHz;
+  const float endFrequencyHz = value.events[last].tone.endFrequencyHz;
+  // Fixed-pitch multi-strike cues express direction across events rather than
+  // by sweeping the resolving strike (Confirm 659 -> 988, Back 988 -> 587).
+  if (value.count > 1U &&
+      std::abs(endFrequencyHz - startFrequencyHz) < 1.0F) {
+    startFrequencyHz = value.events[0].tone.startFrequencyHz;
+  }
+  return {startFrequencyHz, endFrequencyHz, endSeconds, value.count};
 }
 
 }  // namespace cadenza::audio

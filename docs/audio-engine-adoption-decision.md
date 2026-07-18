@@ -47,7 +47,7 @@ Only the consumer owns voices, phase, envelope and noise state.
 
 - Core PCM：44,100 Hz、signed 16-bit、mono。
 - I²S wire：44,100 Hz、16-bit、right-left stereo frames；左右复制 core sample。
-- 首版 voice：3 个，而不是初稿的 4 个。两声组成 Confirm/Back，第三声允许短 Navigate 与其重叠；更高数量对系统 cue 没有证据，只增加峰值和 CPU。
+- 原首版 voice：3 个。该约束已被 15 项 Semantic Hierarchy 变更取代；获批 Select 的四共振器模型提供了增加到固定 4 声部的直接证据，其余 cue 仍不得超过该上限。
 - Command queue：固定 16 个命令，其中普通 Navigate/Boundary 最多占 12 项，预留 4 项给 Confirm/Back/Reject/音量/StopAll。生产者不覆盖消费者可能正在读取的 slot；不得在停止操作后补播被抑制的重复输入。Muted/StopAll 另有原子安全邮箱，在消费旧命令后最终应用，因而 16 个关键 cue 填满队列也不能阻塞静音。
 - 每声 attack 至少 8 samples，产品 cue 实际采用 1–4 ms；release 至少 2–8 ms。抢占时对旧 voice 做极短 release，不能硬切相位。
 - 混音先使用 float accumulator，再限制 master peak 并转换为 int16；不让整数求和溢出。

@@ -41,7 +41,11 @@ TEST_CASE("SDL dummy callback consumes audio independently of App updates") {
 
   // No App/simulation update occurs here. The device callback owns real audio
   // time and must still finish the existing cue naturally.
-  SDL_Delay(180);
+  const auto cueDuration =
+      cadenza::audio::InteractionSoundService::profile(
+          cadenza::audio::SoundCue::Confirm)
+          .durationSeconds;
+  SDL_Delay(static_cast<std::uint32_t>(cueDuration * 1000.0F) + 100U);
 
   output.stop();
   CHECK_FALSE(output.active());

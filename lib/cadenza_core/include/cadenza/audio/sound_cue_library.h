@@ -8,10 +8,15 @@
 
 namespace cadenza::audio {
 
-constexpr std::size_t kMaximumTonesPerCue = 2;
+constexpr std::size_t kMaximumTonesPerCue = 4;
+
+struct SoundEvent {
+  ToneSpec tone{};
+  float delaySeconds = 0.0F;
+};
 
 struct SoundCueDefinition {
-  std::array<ToneSpec, kMaximumTonesPerCue> tones{};
+  std::array<SoundEvent, kMaximumTonesPerCue> events{};
   std::uint8_t count = 0;
 };
 

@@ -9,8 +9,18 @@ namespace {
 constexpr float kMinimumFrequencyHz = 20.0F;
 constexpr float kMaximumFrequencyHz = 16000.0F;
 constexpr float kMaximumDurationSeconds = 2.0F;
-constexpr std::uint32_t kMinimumRampSamples = 8;
+constexpr std::uint32_t kMinimumRampSamples = 1;
 constexpr std::uint32_t kMinimumToneSamples = kMinimumRampSamples * 2;
+
+constexpr std::array<std::int16_t, 65> kQuarterSine{{
+    0,     804,   1608,  2410,  3212,  4011,  4808,  5602,  6393,  7179,
+    7962,  8739,  9512,  10278, 11039, 11793, 12539, 13279, 14010, 14732,
+    15446, 16151, 16846, 17530, 18204, 18868, 19519, 20159, 20787, 21403,
+    22005, 22594, 23170, 23731, 24279, 24811, 25329, 25832, 26319, 26790,
+    27245, 27683, 28105, 28510, 28898, 29268, 29621, 29956, 30273, 30571,
+    30852, 31113, 31356, 31580, 31785, 31971, 32137, 32285, 32412, 32521,
+    32609, 32678, 32728, 32757, 32767,
+}};
 
 float clamp01(float value) noexcept {
   return std::max(0.0F, std::min(1.0F, value));
@@ -31,6 +41,37 @@ float polyBlep(float phase, float phaseIncrement) noexcept {
 std::uint32_t secondsToSamples(float seconds) noexcept {
   return static_cast<std::uint32_t>(seconds * kSampleRate + 0.5F);
 }
+
+float sineSample(std::uint32_t index) noexcept {
+  index &= 255U;
+  const std::uint32_t quadrant = index >> 6U;
+  const std::uint32_t offset = index & 63U;
+  std::int32_t value = 0;
+  switch (quadrant) {
+    case 0:
+      value = kQuarterSine[offset];
+      break;
+    case 1:
+      value = kQuarterSine[64U - offset];
+      break;
+    case 2:
+      value = -kQuarterSine[offset];
+      break;
+    default:
+      value = -kQuarterSine[64U - offset];
+      break;
+  }
+  return static_cast<float>(value) / 32767.0F;
+}
+
+float wavetableSine(float phase) noexcept {
+  const float position = phase * 256.0F;
+  const auto index = static_cast<std::uint32_t>(position);
+  const float fraction = position - static_cast<float>(index);
+  const float a = sineSample(index);
+  const float b = sineSample(index + 1U);
+  return a + (b - a) * fraction;
+}
 }  // namespace
 
 bool AudioEngine::prepare(const ToneSpec& input,
@@ -39,10 +80,17 @@ bool AudioEngine::prepare(const ToneSpec& input,
       !std::isfinite(input.endFrequencyHz) ||
       !std::isfinite(input.attackSeconds) ||
       !std::isfinite(input.durationSeconds) ||
-      !std::isfinite(input.releaseSeconds) || !std::isfinite(input.gain) ||
+      !std::isfinite(input.releaseSeconds) ||
+      !std::isfinite(input.decaySeconds) ||
+      !std::isfinite(input.initialPhaseCycles) ||
+      !std::isfinite(input.secondHarmonicGain) ||
+      !std::isfinite(input.secondHarmonicPhaseCycles) ||
+      !std::isfinite(input.gain) ||
       input.startFrequencyHz <= 0.0F || input.endFrequencyHz <= 0.0F ||
       input.attackSeconds < 0.0F || input.releaseSeconds < 0.0F ||
-      input.durationSeconds <= 0.0F) {
+      input.durationSeconds <= 0.0F ||
+      (input.envelopeCurve == EnvelopeCurve::Exponential &&
+       input.decaySeconds <= 0.0F)) {
     return false;
   }
 
@@ -52,6 +100,23 @@ bool AudioEngine::prepare(const ToneSpec& input,
   output.endFrequencyHz = std::max(
       kMinimumFrequencyHz, std::min(kMaximumFrequencyHz, input.endFrequencyHz));
   output.gain = clamp01(input.gain);
+  output.initialPhaseCycles =
+      input.initialPhaseCycles - std::floor(input.initialPhaseCycles);
+  output.secondHarmonicGain =
+      std::max(-1.0F, std::min(1.0F, input.secondHarmonicGain));
+  output.secondHarmonicPhaseCycles = input.secondHarmonicPhaseCycles -
+                                     std::floor(input.secondHarmonicPhaseCycles);
+  output.envelopeCurve = input.envelopeCurve;
+  output.attackMultiplier =
+      input.envelopeCurve == EnvelopeCurve::Exponential
+          ? std::exp(-1.0F /
+                     (std::max(input.attackSeconds, 0.00000001F) *
+                      kSampleRate))
+          : 0.0F;
+  output.decayMultiplier =
+      input.envelopeCurve == EnvelopeCurve::Exponential
+          ? std::exp(-1.0F / (input.decaySeconds * kSampleRate))
+          : 1.0F;
   output.totalSamples = std::max(
       kMinimumToneSamples,
       secondsToSamples(std::min(kMaximumDurationSeconds, input.durationSeconds)));
@@ -69,7 +134,9 @@ bool AudioEngine::prepare(const ToneSpec& input,
 
 void AudioEngine::start(Voice& voice, const PreparedTone& tone) noexcept {
   voice.tone = tone;
-  voice.phase = 0.0F;
+  voice.phase = tone.initialPhaseCycles;
+  voice.attackComplement = 1.0F;
+  voice.decayEnvelope = 1.0F;
   voice.ageSamples = 0;
   voice.noiseState = noiseSeed_ ^
                      static_cast<std::uint32_t>(nextSequence_) ^ 0x9E3779B9U;
@@ -133,6 +200,15 @@ float AudioEngine::renderVoice(Voice& voice) noexcept {
     case Waveform::Triangle:
       wave = 1.0F - 4.0F * std::abs(voice.phase - 0.5F);
       break;
+    case Waveform::Sine:
+      wave = wavetableSine(voice.phase);
+      if (tone.secondHarmonicGain != 0.0F) {
+        float harmonicPhase =
+            voice.phase * 2.0F + tone.secondHarmonicPhaseCycles;
+        while (harmonicPhase >= 1.0F) harmonicPhase -= 1.0F;
+        wave += tone.secondHarmonicGain * wavetableSine(harmonicPhase);
+      }
+      break;
     case Waveform::Square: {
       wave = voice.phase < 0.5F ? 1.0F : -1.0F;
       wave += polyBlep(voice.phase, phaseIncrement);
@@ -151,16 +227,19 @@ float AudioEngine::renderVoice(Voice& voice) noexcept {
   }
 
   float envelope = 1.0F;
-  if (voice.ageSamples < tone.attackSamples) {
+  if (tone.envelopeCurve == EnvelopeCurve::Exponential) {
+    envelope = (1.0F - voice.attackComplement) * voice.decayEnvelope;
+  } else if (voice.ageSamples < tone.attackSamples) {
     envelope = static_cast<float>(voice.ageSamples) /
                static_cast<float>(tone.attackSamples);
-  } else if (voice.ageSamples >= tone.totalSamples - tone.releaseSamples) {
+  }
+  if (voice.ageSamples >= tone.totalSamples - tone.releaseSamples) {
     const std::uint32_t remaining =
         tone.totalSamples - 1U - voice.ageSamples;
-    envelope = tone.releaseSamples > 1U
-                   ? static_cast<float>(remaining) /
-                         static_cast<float>(tone.releaseSamples - 1U)
-                   : 0.0F;
+    envelope *= tone.releaseSamples > 1U
+                    ? static_cast<float>(remaining) /
+                          static_cast<float>(tone.releaseSamples - 1U)
+                    : 0.0F;
   }
   if (voice.stealSamplesRemaining > 0U) {
     envelope *= static_cast<float>(voice.stealSamplesRemaining) /
@@ -170,6 +249,10 @@ float AudioEngine::renderVoice(Voice& voice) noexcept {
 
   voice.phase += phaseIncrement;
   if (voice.phase >= 1.0F) voice.phase -= 1.0F;
+  if (tone.envelopeCurve == EnvelopeCurve::Exponential) {
+    voice.attackComplement *= tone.attackMultiplier;
+    voice.decayEnvelope *= tone.decayMultiplier;
+  }
   ++voice.ageSamples;
   const float output = wave * envelope * tone.gain;
 
