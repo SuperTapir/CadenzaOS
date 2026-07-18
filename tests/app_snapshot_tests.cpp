@@ -3,7 +3,10 @@
 
 #include <array>
 #include <cstdint>
+#include <filesystem>
+#include <string>
 
+#include "cadenza/desktop/png_writer.h"
 #include "cadenza/host/headless_host.h"
 
 namespace {
@@ -14,7 +17,7 @@ struct SnapshotCase {
 };
 
 std::uint64_t capture(cadenza::FramebufferProfile profile,
-                      cadenza::AppId app) {
+                      cadenza::AppId app, std::uint64_t expected) {
   cadenza::host::HeadlessHost host{profile};
   if (app != cadenza::AppId::Launcher) {
     REQUIRE(host.runtime().open(app));
@@ -24,7 +27,18 @@ std::uint64_t capture(cadenza::FramebufferProfile profile,
     REQUIRE_FALSE(host.runtime().transitioning());
     REQUIRE(host.runtime().currentId() == app);
   }
-  return host.framebufferHash();
+  const std::uint64_t actual = host.framebufferHash();
+  const auto directory = std::filesystem::current_path() / "snapshot-failures";
+  const auto path = directory /
+      ("app-p" + std::to_string(static_cast<int>(profile)) + "-a" +
+       std::to_string(static_cast<int>(app)) + ".png");
+  if (actual != expected) {
+    std::filesystem::create_directories(directory);
+    CHECK(cadenza::desktop::writePng(path.string(), host.framebuffer()));
+  } else {
+    std::filesystem::remove(path);
+  }
+  return actual;
 }
 }  // namespace
 
@@ -55,6 +69,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
   for (const SnapshotCase& snapshot : cases) {
     CAPTURE(static_cast<int>(snapshot.profile));
     CAPTURE(static_cast<int>(snapshot.app));
-    CHECK(capture(snapshot.profile, snapshot.app) == snapshot.expected);
+    CHECK(capture(snapshot.profile, snapshot.app, snapshot.expected) ==
+          snapshot.expected);
   }
 }

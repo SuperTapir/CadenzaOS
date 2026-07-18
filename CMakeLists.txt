@@ -139,7 +139,9 @@ if(CADENZA_BUILD_TESTS)
   add_test(NAME cadenza_headless_host_tests COMMAND cadenza_headless_host_tests)
 
   add_executable(cadenza_app_snapshot_tests tests/app_snapshot_tests.cpp)
-  target_link_libraries(cadenza_app_snapshot_tests PRIVATE cadenza::host)
+  target_link_libraries(cadenza_app_snapshot_tests PRIVATE
+    cadenza::host cadenza::desktop_model
+  )
   target_include_directories(cadenza_app_snapshot_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_app_snapshot_tests COMMAND cadenza_app_snapshot_tests)
 
@@ -255,7 +257,9 @@ if(CADENZA_BUILD_TESTS)
   add_executable(cadenza_gallery_snapshot_tests
     tests/gallery_snapshot_tests.cpp
   )
-  target_link_libraries(cadenza_gallery_snapshot_tests PRIVATE cadenza::host)
+  target_link_libraries(cadenza_gallery_snapshot_tests PRIVATE
+    cadenza::host cadenza::desktop_model
+  )
   target_include_directories(cadenza_gallery_snapshot_tests PRIVATE
     third_party/doctest
   )

@@ -112,10 +112,10 @@
 
 ## 12. P7 Full Regression and Handoff
 
-- [ ] 12.1 Complete and run the full App lifecycle, input, transition, Tween, reverse/repeat, graph, and debugging unit/integration suites
-- [ ] 12.2 Run deterministic replay and all approved 320×170/400×240 framebuffer snapshots with inspectable PNG failure artifacts
-- [ ] 12.3 Run the macOS SDL3 E2E path for every App, long-press return, pause/single-step, screenshot, recording, and progress scrub
-- [ ] 12.4 Run a clean PlatformIO T-Embed compile and confirm host/simulator tests require no attached hardware
-- [ ] 12.5 Run warnings-as-errors where supported, sanitizer host tests, `git diff --check`, and repository Arduino/platform-coupling audits
-- [ ] 12.6 Update README, architecture, controls, build/test instructions, research references, third-party notices, memory budgets, and explicit P8 deferrals
-- [ ] 12.7 Audit every P0–P7 requirement against authoritative test/build/runtime evidence and leave only P8 unexecuted
+- [x] 12.1 Complete and run the full App lifecycle, input, transition, Tween, reverse/repeat, graph, and debugging unit/integration suites
+- [x] 12.2 Run deterministic replay and all approved 320×170/400×240 framebuffer snapshots with inspectable PNG failure artifacts
+- [x] 12.3 Run the macOS SDL3 E2E path for every App, long-press return, pause/single-step, screenshot, recording, and progress scrub
+- [x] 12.4 Run a clean PlatformIO T-Embed compile and confirm host/simulator tests require no attached hardware
+- [x] 12.5 Run warnings-as-errors where supported, sanitizer host tests, `git diff --check`, and repository Arduino/platform-coupling audits
+- [x] 12.6 Update README, architecture, controls, build/test instructions, research references, third-party notices, memory budgets, and explicit P8 deferrals
+- [x] 12.7 Audit every P0–P7 requirement against authoritative test/build/runtime evidence and leave only P8 unexecuted

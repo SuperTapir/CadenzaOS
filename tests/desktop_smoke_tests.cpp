@@ -83,4 +83,15 @@ TEST_CASE("desktop input path visits every bundled App and returns home") {
   CHECK(harness.host.runtime().currentId() == cadenza::AppId::Settings);
   harness.holdSpaceHome();
   CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+
+  harness.turnRight();
+  harness.tapEnter();
+  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Gallery);
+  const std::uint64_t galleryStart = harness.host.framebufferHash();
+  harness.turnRight();
+  harness.tapEnter();
+  harness.turnRight();
+  CHECK(harness.host.framebufferHash() != galleryStart);
+  harness.holdSpaceHome();
+  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
 }

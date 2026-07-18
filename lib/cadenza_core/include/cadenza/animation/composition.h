@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "cadenza/core/core_types.h"
+#include "cadenza/core/diagnostics.h"
 
 namespace cadenza {
 
@@ -41,9 +42,15 @@ class PlayableRef {
 template <std::size_t Capacity>
 class Sequence {
  public:
+  explicit Sequence(DiagnosticSink* diagnostics = nullptr) noexcept
+      : diagnostics_(diagnostics) {}
+
   template <typename Playable>
   bool add(Playable& playable) noexcept {
-    if (size_ >= Capacity) return false;
+    if (size_ >= Capacity) {
+      emitCapacity("sequence is full");
+      return false;
+    }
     children_[size_++] = PlayableRef{playable};
     return true;
   }
@@ -55,6 +62,11 @@ class Sequence {
     return result;
   }
   Seconds totalDuration() const noexcept { return duration(); }
+  Sequence& onComplete(CompletionCallback callback, void* context) noexcept {
+    callback_ = callback;
+    callbackContext_ = context;
+    return *this;
+  }
   void seekTime(Seconds time) noexcept {
     playhead_ = std::max(0.0F, std::min(duration(), time));
     Seconds offset = 0.0F;
@@ -65,22 +77,56 @@ class Sequence {
       offset += childDuration;
     }
   }
-  void update(Seconds delta) noexcept { seekTime(playhead_ + std::max(0.0F, delta)); }
-  void reset() noexcept { seekTime(0.0F); }
+  void update(Seconds delta) noexcept {
+    if (completed_) return;
+    seekTime(playhead_ + std::max(0.0F, delta));
+    if (playhead_ >= duration()) {
+      completed_ = true;
+      notifyCompletion();
+    }
+  }
+  void reset() noexcept {
+    completed_ = false;
+    callbackSent_ = false;
+    seekTime(0.0F);
+  }
   std::size_t size() const noexcept { return size_; }
+  bool completed() const noexcept { return completed_; }
 
  private:
+  void emitCapacity(const char* message) const noexcept {
+    if (diagnostics_) {
+      diagnostics_->emit({DiagnosticCategory::Capacity,
+                          DiagnosticCode::CapacityExceeded, message,
+                          static_cast<std::int32_t>(Capacity)});
+    }
+  }
+  void notifyCompletion() noexcept {
+    if (!callbackSent_ && callback_) callback_(callbackContext_);
+    callbackSent_ = true;
+  }
   std::array<PlayableRef, Capacity> children_{};
   std::size_t size_ = 0;
   Seconds playhead_ = 0.0F;
+  DiagnosticSink* diagnostics_ = nullptr;
+  CompletionCallback callback_ = nullptr;
+  void* callbackContext_ = nullptr;
+  bool completed_ = false;
+  bool callbackSent_ = false;
 };
 
 template <std::size_t Capacity>
 class Parallel {
  public:
+  explicit Parallel(DiagnosticSink* diagnostics = nullptr) noexcept
+      : diagnostics_(diagnostics) {}
+
   template <typename Playable>
   bool add(Playable& playable) noexcept {
-    if (size_ >= Capacity) return false;
+    if (size_ >= Capacity) {
+      emitCapacity("parallel group is full");
+      return false;
+    }
     children_[size_++] = PlayableRef{playable};
     return true;
   }
@@ -92,6 +138,11 @@ class Parallel {
     return result;
   }
   Seconds totalDuration() const noexcept { return duration(); }
+  Parallel& onComplete(CompletionCallback callback, void* context) noexcept {
+    callback_ = callback;
+    callbackContext_ = context;
+    return *this;
+  }
   void seekTime(Seconds time) noexcept {
     playhead_ = std::max(0.0F, std::min(duration(), time));
     for (std::size_t index = 0; index < size_; ++index) {
@@ -99,22 +150,62 @@ class Parallel {
           std::min(children_[index].duration(), playhead_));
     }
   }
-  void update(Seconds delta) noexcept { seekTime(playhead_ + std::max(0.0F, delta)); }
-  void reset() noexcept { seekTime(0.0F); }
+  void update(Seconds delta) noexcept {
+    if (completed_) return;
+    seekTime(playhead_ + std::max(0.0F, delta));
+    if (playhead_ >= duration()) {
+      completed_ = true;
+      notifyCompletion();
+    }
+  }
+  void reset() noexcept {
+    completed_ = false;
+    callbackSent_ = false;
+    seekTime(0.0F);
+  }
   std::size_t size() const noexcept { return size_; }
+  bool completed() const noexcept { return completed_; }
 
  private:
+  void emitCapacity(const char* message) const noexcept {
+    if (diagnostics_) {
+      diagnostics_->emit({DiagnosticCategory::Capacity,
+                          DiagnosticCode::CapacityExceeded, message,
+                          static_cast<std::int32_t>(Capacity)});
+    }
+  }
+  void notifyCompletion() noexcept {
+    if (!callbackSent_ && callback_) callback_(callbackContext_);
+    callbackSent_ = true;
+  }
   std::array<PlayableRef, Capacity> children_{};
   std::size_t size_ = 0;
   Seconds playhead_ = 0.0F;
+  DiagnosticSink* diagnostics_ = nullptr;
+  CompletionCallback callback_ = nullptr;
+  void* callbackContext_ = nullptr;
+  bool completed_ = false;
+  bool callbackSent_ = false;
 };
 
 template <std::size_t Capacity>
 class Timeline {
  public:
+  explicit Timeline(DiagnosticSink* diagnostics = nullptr) noexcept
+      : diagnostics_(diagnostics) {}
+
   template <typename Playable>
   bool add(Playable& playable, Seconds offset) noexcept {
-    if (size_ >= Capacity || offset < 0.0F) return false;
+    if (size_ >= Capacity) {
+      emit(DiagnosticCategory::Capacity, DiagnosticCode::CapacityExceeded,
+           "timeline is full");
+      return false;
+    }
+    if (offset < 0.0F) {
+      emit(DiagnosticCategory::Animation, DiagnosticCode::InvalidOperation,
+           "negative timeline offset");
+      return false;
+    }
     entries_[size_++] = {PlayableRef{playable}, offset};
     return true;
   }
@@ -135,18 +226,30 @@ class Timeline {
     return result;
   }
   Seconds totalDuration() const noexcept { return duration(); }
+  Timeline& onComplete(CompletionCallback callback, void* context) noexcept {
+    callback_ = callback;
+    callbackContext_ = context;
+    return *this;
+  }
   void seekTime(Seconds time) noexcept {
     playhead_ = std::max(0.0F, std::min(duration(), time));
+    elapsed_ = reversed_ ? duration() - playhead_ : playhead_;
+    completed_ = false;
     applyPlayhead();
   }
+  void seek(float progress) noexcept {
+    const float clamped = std::max(0.0F, std::min(1.0F, progress));
+    seekTime(duration() * clamped);
+  }
   void update(Seconds delta) noexcept {
-    if (completed_ || duration() <= 0.0F) return;
+    if (paused_ || completed_ || duration() <= 0.0F) return;
     elapsed_ += std::max(0.0F, delta);
     const Seconds total = duration() * static_cast<float>(repeatCount_ + 1U);
     if (elapsed_ >= total) {
       elapsed_ = total;
       completed_ = true;
       playhead_ = reversed_ ? 0.0F : duration();
+      notifyCompletion();
     } else {
       const Seconds local = std::fmod(elapsed_, duration());
       playhead_ = reversed_ ? duration() - local : local;
@@ -156,10 +259,17 @@ class Timeline {
   void reset() noexcept {
     elapsed_ = 0.0F;
     completed_ = false;
+    callbackSent_ = false;
     playhead_ = reversed_ ? duration() : 0.0F;
     applyPlayhead();
   }
   Seconds playhead() const noexcept { return playhead_; }
+  float progress() const noexcept {
+    return duration() <= 0.0F ? 0.0F : playhead_ / duration();
+  }
+  void pause() noexcept { paused_ = true; }
+  void resume() noexcept { paused_ = false; }
+  bool paused() const noexcept { return paused_; }
   bool completed() const noexcept { return completed_; }
   std::size_t size() const noexcept { return size_; }
 
@@ -168,6 +278,17 @@ class Timeline {
     PlayableRef playable;
     Seconds offset = 0.0F;
   };
+  void emit(DiagnosticCategory category, DiagnosticCode code,
+            const char* message) const noexcept {
+    if (diagnostics_) {
+      diagnostics_->emit({category, code, message,
+                          static_cast<std::int32_t>(Capacity)});
+    }
+  }
+  void notifyCompletion() noexcept {
+    if (!callbackSent_ && callback_) callback_(callbackContext_);
+    callbackSent_ = true;
+  }
   void applyPlayhead() noexcept {
     for (std::size_t index = 0; index < size_; ++index) {
       const Seconds local = playhead_ - entries_[index].offset;
@@ -183,6 +304,11 @@ class Timeline {
   std::uint32_t repeatCount_ = 0;
   bool reversed_ = false;
   bool completed_ = false;
+  bool paused_ = false;
+  DiagnosticSink* diagnostics_ = nullptr;
+  CompletionCallback callback_ = nullptr;
+  void* callbackContext_ = nullptr;
+  bool callbackSent_ = false;
 };
 
 }  // namespace cadenza

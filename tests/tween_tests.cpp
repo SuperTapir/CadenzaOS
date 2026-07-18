@@ -76,3 +76,32 @@ TEST_CASE("completion callback fires once and seek has no side effects") {
   CHECK(tween.state() == cadenza::TweenState::Completed);
   CHECK(callbacks == 1);
 }
+
+TEST_CASE("infinite repeat handles huge deltas in constant traversal work") {
+  int callbacks = 0;
+  cadenza::Tween<float> tween{0.0F, 10.0F, 1.0F};
+  tween.setRepeatForever().setYoyo(true).onComplete(increment, &callbacks);
+  CHECK(tween.infinite());
+  CHECK(std::isinf(tween.totalDuration()));
+  tween.update(1000001.25F);
+  CHECK(tween.state() == cadenza::TweenState::Running);
+  CHECK(tween.value() == doctest::Approx(7.5F));
+  CHECK(callbacks == 0);
+}
+
+TEST_CASE("infinite repeat delay and zero-duration cycles remain safe") {
+  cadenza::Tween<float> delayed{0.0F, 1.0F, 1.0F};
+  delayed.setRepeatForever(0.5F).setYoyo(true);
+  delayed.update(1.25F);
+  CHECK(delayed.state() == cadenza::TweenState::Delayed);
+  CHECK(delayed.value() == 1.0F);
+  delayed.update(0.25F);
+  CHECK(delayed.state() == cadenza::TweenState::Running);
+  CHECK(delayed.value() == 1.0F);
+
+  cadenza::Tween<float> instant{2.0F, 3.0F, 0.0F};
+  instant.setRepeatForever();
+  instant.update(1000000.0F);
+  CHECK(instant.state() == cadenza::TweenState::Running);
+  CHECK_FALSE(std::isnan(instant.value()));
+}

@@ -4,6 +4,9 @@ The repository vendors only the files needed for deterministic host and
 firmware builds. Commit pins below are authoritative; local research clones
 are not build inputs.
 
+SDL3 is a system-provided desktop build dependency and is not vendored or
+linked into `cadenza_core`. The verified macOS build used SDL 3.4.12.
+
 ## U8g2
 
 - Upstream: <https://github.com/olikraus/u8g2>

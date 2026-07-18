@@ -22,9 +22,16 @@ class CutTransition final : public Transition {
 
 class VenetianBlindsTransition final : public Transition {
  public:
+  explicit constexpr VenetianBlindsTransition(
+      std::uint8_t bladeCount = 8) noexcept
+      : bladeCount_(bladeCount < 1 ? 1 : (bladeCount > 32 ? 32 : bladeCount)) {}
   void compose(const MonoFramebuffer& outgoing,
                const MonoFramebuffer& incoming, MonoCanvas& output,
                float progress) const noexcept override;
+  std::uint8_t bladeCount() const noexcept { return bladeCount_; }
+
+ private:
+  std::uint8_t bladeCount_ = 8;
 };
 
 class DipTransition final : public Transition {

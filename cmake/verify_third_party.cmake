@@ -1,5 +1,6 @@
 set(required_files
   "THIRD_PARTY_NOTICES.md"
+  "docs/visual-assets.md"
   "third_party/u8g2/licenses/LICENSE"
   "third_party/licenses/doctest-LICENSE.txt"
   "third_party/licenses/stb-LICENSE.txt"
@@ -12,6 +13,17 @@ set(required_files
 foreach(relative_path IN LISTS required_files)
   if(NOT EXISTS "${PROJECT_ROOT}/${relative_path}")
     message(FATAL_ERROR "Missing vendored dependency or license: ${relative_path}")
+  endif()
+endforeach()
+
+file(READ "${PROJECT_ROOT}/docs/visual-assets.md" asset_manifest)
+foreach(asset IN ITEMS
+    "u8g2_font_6x10_tf"
+    "ordered 8×8 threshold table"
+    "Gallery four-frame 2×4 sprite")
+  string(FIND "${asset_manifest}" "${asset}" asset_position)
+  if(asset_position EQUAL -1)
+    message(FATAL_ERROR "Visual asset manifest is missing ${asset}")
   endif()
 endforeach()
 

@@ -78,3 +78,24 @@ TEST_CASE("required transitions have exact endpoints immutable inputs and golden
     }
   }
 }
+
+TEST_CASE("venetian blinds blade count is configurable without changing endpoints") {
+  cadenza::VenetianBlindsTransition four{4};
+  cadenza::VenetianBlindsTransition twelve{12};
+  CHECK(four.bladeCount() == 4);
+  CHECK(twelve.bladeCount() == 12);
+  cadenza::MonoFramebuffer outgoing{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer incoming{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer fourOutput{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer twelveOutput{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas fourCanvas{fourOutput};
+  cadenza::MonoCanvas twelveCanvas{twelveOutput};
+  incoming.clear(true);
+  four.compose(outgoing, incoming, fourCanvas, 0.25F);
+  twelve.compose(outgoing, incoming, twelveCanvas, 0.25F);
+  CHECK(cadenza::host::framebufferHash(fourOutput) !=
+        cadenza::host::framebufferHash(twelveOutput));
+  four.compose(outgoing, incoming, fourCanvas, 1.0F);
+  CHECK(cadenza::host::framebufferHash(fourOutput) ==
+        cadenza::host::framebufferHash(incoming));
+}

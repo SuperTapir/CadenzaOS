@@ -23,18 +23,35 @@ ctest --test-dir build/host --output-on-failure
 The top-level targets have deliberately narrow ownership:
 
 - `cadenza_core`: standard C++17 shared runtime code;
-- `cadenza_core_smoke`: host-only test entry point, to be replaced by the
-  vendored test framework in the next foundation task;
+- `cadenza_host`: deterministic, window-free composition root and replay;
+- doctest executables: focused unit/integration/snapshot regression targets;
 - `cadenza_desktop`: SDL3 host adapter; it must not become a second App/UI
   implementation.
 
 For a core/test-only environment without SDL3, configure with
 `-DCADENZA_BUILD_DESKTOP=OFF`.
 
-`cadenza_legacy_core_is_not_portable_yet` is a temporary characterization
-test: it passes only while the legacy public headers fail host compilation on
-their direct Arduino/TFT dependency. The platform-decoupling milestone must
-invert it into a normal successful compile test; it is not a permanent waiver.
+`cadenza_portable_core_compile_probe` includes the public core headers in a
+normal host target. `cadenza_shared_source_audit` also rejects Arduino,
+TFT_eSPI, SDL, GPIO, `millis`, `micros`, and `Serial` leakage from the portable
+core/host tree and verifies that CMake and PlatformIO discover the same core
+sources.
+
+## Desktop controls
+
+- mouse wheel or Left/Right: encoder rotation;
+- Space or Enter: button (tap for click, hold for system Home);
+- F1: debug HUD;
+- F2: pause/resume;
+- F3: one exact fixed step while paused;
+- F4: fixed-step/real-step mode;
+- F5: cycle 0.25×, 0.5×, 1×, 2×;
+- F6: lossless PNG screenshot;
+- F7: start/stop PNG sequence plus convenience GIF recording.
+
+Useful launch options are `--profile t-embed|sharp`, `--scale 1..4`,
+`--overlay`, `--device-frame`, and `--frames N`. The last option is used by the
+SDL dummy-driver smoke gate.
 
 ## Red-green-refactor loop
 
@@ -57,3 +74,21 @@ list changes; run `all` before a WIP milestone commit.
 The firmware command defaults to `../.platformio-env/bin/pio`. Override it with
 the task-specific `CADENZA_PIO` environment variable when PlatformIO is installed
 elsewhere.
+
+Snapshot hash failures write inspectable PNGs under the active build
+directory's `snapshot-failures/` folder. Accepted hashes and capture points are
+documented in `tests/snapshots/`.
+
+Strict and sanitizer verification can use disposable build directories:
+
+```bash
+cmake -S . -B /tmp/cadenza-strict -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations"
+cmake --build /tmp/cadenza-strict --parallel
+ctest --test-dir /tmp/cadenza-strict --output-on-failure
+
+cmake -S . -B /tmp/cadenza-sanitize \
+  -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+cmake --build /tmp/cadenza-sanitize --parallel
+ctest --test-dir /tmp/cadenza-sanitize --output-on-failure
+```
