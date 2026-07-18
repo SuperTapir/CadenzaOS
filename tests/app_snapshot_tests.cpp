@@ -40,6 +40,26 @@ std::uint64_t capture(cadenza::FramebufferProfile profile,
   }
   return actual;
 }
+
+std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
+                                     std::uint64_t expected) {
+  cadenza::host::HeadlessHost host{profile};
+  cadenza::InputFrame selectGallery;
+  selectGallery.turn = 3;
+  host.step(selectGallery);
+  const std::uint64_t actual = host.framebufferHash();
+  const auto directory = std::filesystem::current_path() / "snapshot-failures";
+  const auto path = directory /
+      ("launcher-gallery-p" + std::to_string(static_cast<int>(profile)) +
+       ".png");
+  if (actual != expected) {
+    std::filesystem::create_directories(directory);
+    CHECK(cadenza::desktop::writePng(path.string(), host.framebuffer()));
+  } else {
+    std::filesystem::remove(path);
+  }
+  return actual;
+}
 }  // namespace
 
 TEST_CASE("approved bundled App framebuffer snapshots") {
@@ -72,4 +92,13 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
     CHECK(capture(snapshot.profile, snapshot.app, snapshot.expected) ==
           snapshot.expected);
   }
+}
+
+TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
+  CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
+                               16937710498554101448ULL) ==
+        16937710498554101448ULL);
+  CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
+                               5912879823780594669ULL) ==
+        5912879823780594669ULL);
 }

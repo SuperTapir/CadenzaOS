@@ -108,6 +108,11 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_canvas_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_canvas_tests COMMAND cadenza_canvas_tests)
 
+  add_executable(cadenza_bounded_text_tests tests/bounded_text_tests.cpp)
+  target_link_libraries(cadenza_bounded_text_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_bounded_text_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_bounded_text_tests COMMAND cadenza_bounded_text_tests)
+
   add_executable(cadenza_sprite_atlas_tests tests/sprite_atlas_tests.cpp)
   target_link_libraries(cadenza_sprite_atlas_tests PRIVATE cadenza::core)
   target_include_directories(cadenza_sprite_atlas_tests PRIVATE third_party/doctest)

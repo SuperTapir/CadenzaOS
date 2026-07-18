@@ -10,6 +10,21 @@ int wrap(int value, int count) noexcept {
   value %= count;
   return value < 0 ? value + count : value;
 }
+
+BoundedTextRequest menuLabel(const char* value, Rect bounds,
+                             std::uint8_t preferredScale,
+                             std::uint8_t minimumScale,
+                             TextAlign align) noexcept {
+  BoundedTextRequest request;
+  request.value = value;
+  request.bounds = bounds;
+  request.preferredScale = preferredScale;
+  request.minimumScale = minimumScale;
+  request.align = align;
+  request.overflow = TextOverflowPolicy::Ellipsis;
+  request.maximumLines = 1;
+  return request;
+}
 }  // namespace
 
 void LauncherApp::onEnter() noexcept {
@@ -62,20 +77,47 @@ void LauncherApp::render(MonoCanvas& canvas,
                   cardWidth - 26 + kick * 2, cardHeight - 29, true);
   const int appCount = runtime.launcherAppCount();
   if (appCount == 0) {
-    canvas.text("NO APPS", centerX, cardY + cardHeight / 2, 4, false,
-                TextAlign::MiddleCenter);
+    const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
+                           cardHeight - 37};
+    canvas.boundedText(menuLabel("NO APPS", titleBounds, 4, 1,
+                                 TextAlign::MiddleCenter),
+                       false);
     return;
   }
-  canvas.text(runtime.appName(runtime.launcherAppAt(selected_)), centerX,
-              cardY + cardHeight / 2, 4, false, TextAlign::MiddleCenter);
+  // The title is constrained to the smallest black card interior (kick == 0),
+  // with four pixels of text padding on every side. The animated kick may
+  // expand the background but never changes the text contract.
+  const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
+                         cardHeight - 37};
+  canvas.boundedText(
+      menuLabel(runtime.appName(runtime.launcherAppAt(selected_)),
+                titleBounds, 4, 1, TextAlign::MiddleCenter),
+      false);
 
   const int previous = wrap(selected_ - 1, appCount);
   const int next = wrap(selected_ + 1, appCount);
   const int footerY = height - 17;
-  canvas.text(runtime.appName(runtime.launcherAppAt(previous)), 12, footerY, 1,
-              true, TextAlign::MiddleLeft);
-  canvas.text(runtime.appName(runtime.launcherAppAt(next)), width - 12,
-              footerY, 1, true, TextAlign::MiddleRight);
+  // Reserve a stable 64-pixel navigation slot. Dynamic neighbor names are
+  // isolated in the remaining left and right regions and cannot reach dots.
+  constexpr int kFooterMargin = 12;
+  constexpr int kNavigationWidth = 64;
+  constexpr int kFooterLabelHeight = 13;
+  const int navigationLeft = centerX - kNavigationWidth / 2;
+  const Rect previousBounds{kFooterMargin,
+                            footerY - kFooterLabelHeight / 2,
+                            navigationLeft - kFooterMargin,
+                            kFooterLabelHeight};
+  const Rect nextBounds{navigationLeft + kNavigationWidth,
+                        footerY - kFooterLabelHeight / 2,
+                        width - kFooterMargin -
+                            (navigationLeft + kNavigationWidth),
+                        kFooterLabelHeight};
+  canvas.boundedText(
+      menuLabel(runtime.appName(runtime.launcherAppAt(previous)),
+                previousBounds, 1, 1, TextAlign::MiddleLeft));
+  canvas.boundedText(menuLabel(runtime.appName(runtime.launcherAppAt(next)),
+                               nextBounds, 1, 1,
+                               TextAlign::MiddleRight));
   const int dotsLeft = centerX - ((appCount - 1) * 9) / 2;
   for (int index = 0; index < appCount; ++index) {
     if (index == selected_) {

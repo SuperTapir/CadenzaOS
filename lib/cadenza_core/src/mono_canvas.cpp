@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <new>
 
 extern "C" {
@@ -44,6 +46,60 @@ bool sameRect(Rect a, Rect b) noexcept {
 
 bool empty(Rect rectangle) noexcept {
   return rectangle.width <= 0 || rectangle.height <= 0;
+}
+
+bool contains(Rect outer, Rect inner) noexcept {
+  if (empty(outer) || empty(inner)) return false;
+  const std::int64_t outerRight =
+      static_cast<std::int64_t>(outer.x) + outer.width;
+  const std::int64_t outerBottom =
+      static_cast<std::int64_t>(outer.y) + outer.height;
+  const std::int64_t innerRight =
+      static_cast<std::int64_t>(inner.x) + inner.width;
+  const std::int64_t innerBottom =
+      static_cast<std::int64_t>(inner.y) + inner.height;
+  return inner.x >= outer.x && inner.y >= outer.y &&
+         innerRight <= outerRight && innerBottom <= outerBottom;
+}
+
+Rect unite(Rect first, Rect second) noexcept {
+  if (empty(first)) return second;
+  if (empty(second)) return first;
+  const std::int64_t left = std::min<std::int64_t>(first.x, second.x);
+  const std::int64_t top = std::min<std::int64_t>(first.y, second.y);
+  const std::int64_t right = std::max<std::int64_t>(
+      static_cast<std::int64_t>(first.x) + first.width,
+      static_cast<std::int64_t>(second.x) + second.width);
+  const std::int64_t bottom = std::max<std::int64_t>(
+      static_cast<std::int64_t>(first.y) + first.height,
+      static_cast<std::int64_t>(second.y) + second.height);
+  return {static_cast<std::int32_t>(left), static_cast<std::int32_t>(top),
+          static_cast<std::int32_t>(right - left),
+          static_cast<std::int32_t>(bottom - top)};
+}
+
+std::size_t boundedLength(const char* value, std::size_t limit) noexcept {
+  if (!value) return 0;
+  std::size_t length = 0;
+  while (length < limit && value[length] != '\0') ++length;
+  return length;
+}
+
+bool leftAligned(TextAlign align) noexcept {
+  return align == TextAlign::TopLeft || align == TextAlign::MiddleLeft ||
+         align == TextAlign::BottomLeft;
+}
+
+bool rightAligned(TextAlign align) noexcept {
+  return align == TextAlign::MiddleRight || align == TextAlign::BottomRight;
+}
+
+bool topAligned(TextAlign align) noexcept {
+  return align == TextAlign::TopLeft;
+}
+
+bool bottomAligned(TextAlign align) noexcept {
+  return align == TextAlign::BottomLeft || align == TextAlign::BottomRight;
 }
 
 struct ScaledTextDraw {
@@ -304,8 +360,293 @@ void MonoCanvas::text(const char* value, std::int32_t x, std::int32_t y,
     emit(DiagnosticCode::ClippedGeometry, "text clipped");
   }
 
+  drawTextRaster(value, left, top, scale, black, clip_);
+}
+
+BoundedTextResult MonoCanvas::layoutText(
+    const BoundedTextRequest& request) noexcept {
+  BoundedTextResult result;
+  result.bounds = request.bounds;
+  if (!request.value || request.bounds.width <= 0 ||
+      request.bounds.height <= 0 || request.preferredScale == 0 ||
+      request.minimumScale == 0 ||
+      request.minimumScale > request.preferredScale ||
+      request.maximumLines == 0 || !std::isfinite(request.phase) ||
+      !contains(clip_, request.bounds)) {
+    emit(DiagnosticCode::InvalidGeometry, "invalid bounded text request");
+    return result;
+  }
+
+  if (request.value[0] == '\0') {
+    result.status = BoundedTextStatus::NoFit;
+    return result;
+  }
+
+  const std::size_t inputLength =
+      boundedLength(request.value, kBoundedTextLineCapacity + 1);
+  const bool inputFitsStorage = inputLength <= kBoundedTextLineCapacity;
+
+  auto copyRange = [](BoundedTextLine& line, const char* source,
+                      std::size_t length) noexcept {
+    length = std::min(length, kBoundedTextLineCapacity);
+    if (length > 0) std::memcpy(line.value.data(), source, length);
+    line.value[length] = '\0';
+  };
+
+  auto placeLines = [&](std::uint8_t lineCount, std::uint8_t scale,
+                        bool marquee = false) noexcept {
+    result.lineCount = lineCount;
+    result.scale = scale;
+    const TextMetrics baseMetrics = measureText("A", scale);
+    const std::int32_t lineHeight = baseMetrics.height;
+    const std::int32_t blockHeight = lineHeight * lineCount;
+    std::int32_t top = request.bounds.y;
+    if (bottomAligned(request.align)) {
+      top = request.bounds.y + request.bounds.height - blockHeight;
+    } else if (!topAligned(request.align)) {
+      top = request.bounds.y + (request.bounds.height - blockHeight) / 2;
+    }
+    result.renderedBounds = {};
+    for (std::uint8_t index = 0; index < lineCount; ++index) {
+      BoundedTextLine& line = result.lines[index];
+      const TextMetrics metrics = measureText(line.value.data(), scale);
+      std::int32_t left = request.bounds.x;
+      if (rightAligned(request.align)) {
+        left = request.bounds.x + request.bounds.width - metrics.width;
+      } else if (!leftAligned(request.align)) {
+        left = request.bounds.x + (request.bounds.width - metrics.width) / 2;
+      }
+      if (marquee) {
+        const float phase = std::max(0.0F, std::min(1.0F, request.phase));
+        const std::int32_t travel =
+            std::max(0, metrics.width - request.bounds.width);
+        left = request.bounds.x -
+               static_cast<std::int32_t>(std::lround(phase * travel));
+      }
+      line.bounds = {left, top + index * lineHeight, metrics.width,
+                     metrics.height};
+      result.renderedBounds =
+          unite(result.renderedBounds, intersection(line.bounds, request.bounds));
+    }
+  };
+
+  if (inputFitsStorage) {
+    for (std::int32_t scale = request.preferredScale;
+         scale >= request.minimumScale; --scale) {
+      const TextMetrics metrics =
+          measureText(request.value, static_cast<std::uint8_t>(scale));
+      if (metrics.width <= request.bounds.width &&
+          metrics.height <= request.bounds.height) {
+        copyRange(result.lines[0], request.value, inputLength);
+        placeLines(1, static_cast<std::uint8_t>(scale));
+        result.status = scale == request.preferredScale
+                            ? BoundedTextStatus::Complete
+                            : BoundedTextStatus::Scaled;
+        return result;
+      }
+    }
+  }
+
+  const std::uint8_t fallbackScale = request.minimumScale;
+  const TextMetrics fallbackMetrics = measureText("A", fallbackScale);
+  if (fallbackMetrics.height > request.bounds.height) {
+    result.status = BoundedTextStatus::NoFit;
+    return result;
+  }
+
+  auto ellipsize = [&](BoundedTextLine& line, const char* source,
+                       std::size_t sourceLength) noexcept -> bool {
+    constexpr char kEllipsis[] = "...";
+    const std::int32_t ellipsisWidth =
+        measureText(kEllipsis, fallbackScale).width;
+    if (ellipsisWidth > request.bounds.width) return false;
+    const std::size_t maximumPrefix =
+        std::min(sourceLength, kBoundedTextLineCapacity - 3);
+    std::size_t chosen = 0;
+    for (std::size_t length = 0; length <= maximumPrefix; ++length) {
+      copyRange(line, source, length);
+      std::memcpy(line.value.data() + length, kEllipsis, 4);
+      if (measureText(line.value.data(), fallbackScale).width <=
+          request.bounds.width) {
+        chosen = length;
+      } else {
+        break;
+      }
+    }
+    copyRange(line, source, chosen);
+    std::memcpy(line.value.data() + chosen, kEllipsis, 4);
+    return true;
+  };
+
+  if (request.overflow == TextOverflowPolicy::Ellipsis) {
+    if (!ellipsize(result.lines[0], request.value, inputLength)) {
+      result.status = BoundedTextStatus::NoFit;
+      return result;
+    }
+    result.truncated = true;
+    placeLines(1, fallbackScale);
+    result.status = BoundedTextStatus::Truncated;
+    return result;
+  }
+
+  if (request.overflow == TextOverflowPolicy::Marquee) {
+    if (!inputFitsStorage) {
+      emit(DiagnosticCode::CapacityExceeded,
+           "bounded marquee text exceeds fixed storage");
+      result.status = BoundedTextStatus::NoFit;
+      return result;
+    }
+    const TextMetrics metrics = measureText(request.value, request.preferredScale);
+    if (metrics.height > request.bounds.height) {
+      result.status = BoundedTextStatus::NoFit;
+      return result;
+    }
+    copyRange(result.lines[0], request.value, inputLength);
+    placeLines(1, request.preferredScale, true);
+    result.status = BoundedTextStatus::Marquee;
+    return result;
+  }
+
+  const std::uint8_t verticalLines = static_cast<std::uint8_t>(
+      request.bounds.height / std::max(1, fallbackMetrics.height));
+  const std::uint8_t lineLimit = std::min<std::uint8_t>(
+      {request.maximumLines, verticalLines,
+       static_cast<std::uint8_t>(kBoundedTextMaxLines)});
+  if (lineLimit == 0) {
+    result.status = BoundedTextStatus::NoFit;
+    return result;
+  }
+
+  // Wrapping scans a bounded prefix. Inputs beyond the fixed result capacity
+  // are still represented safely by ellipsizing the final visible line.
+  constexpr std::size_t kWrapScanCapacity = 512;
+  const std::size_t scannedLength = boundedLength(request.value, kWrapScanCapacity);
+  const bool scanTruncated = scannedLength == kWrapScanCapacity &&
+                             request.value[scannedLength] != '\0';
+  std::size_t position = 0;
+  std::uint8_t lineCount = 0;
+  bool contentRemaining = scanTruncated;
+  while (position < scannedLength && lineCount < lineLimit) {
+    while (position < scannedLength && request.value[position] == ' ') ++position;
+    if (position >= scannedLength) break;
+    if (lineCount + 1 == lineLimit) {
+      const std::size_t remaining = scannedLength - position;
+      if (!scanTruncated && remaining <= kBoundedTextLineCapacity &&
+          measureText(request.value + position, fallbackScale).width <=
+              request.bounds.width) {
+        copyRange(result.lines[lineCount], request.value + position, remaining);
+        position = scannedLength;
+      } else {
+        if (!ellipsize(result.lines[lineCount], request.value + position,
+                       remaining)) {
+          result.status = BoundedTextStatus::NoFit;
+          return result;
+        }
+        contentRemaining = true;
+      }
+      ++lineCount;
+      break;
+    }
+
+    std::array<char, kBoundedTextLineCapacity + 1> candidate{};
+    std::size_t fitted = 0;
+    std::size_t lastSpace = 0;
+    bool sawSpace = false;
+    bool explicitBreak = false;
+    while (position + fitted < scannedLength &&
+           fitted < kBoundedTextLineCapacity) {
+      const char next = request.value[position + fitted];
+      if (next == '\n') {
+        explicitBreak = true;
+        break;
+      }
+      candidate[fitted] = next;
+      candidate[fitted + 1] = '\0';
+      if (measureText(candidate.data(), fallbackScale).width >
+          request.bounds.width) {
+        candidate[fitted] = '\0';
+        break;
+      }
+      ++fitted;
+      if (next == ' ') {
+        lastSpace = fitted - 1;
+        sawSpace = true;
+      }
+    }
+    if (fitted == 0 && !explicitBreak) {
+      result.status = BoundedTextStatus::NoFit;
+      return result;
+    }
+    std::size_t take = fitted;
+    std::size_t nextPosition = position + fitted;
+    if (explicitBreak) {
+      nextPosition = position + fitted + 1;
+    } else if (position + fitted < scannedLength && sawSpace && lastSpace > 0) {
+      take = lastSpace;
+      nextPosition = position + lastSpace + 1;
+    }
+    while (take > 0 && request.value[position + take - 1] == ' ') --take;
+    copyRange(result.lines[lineCount], request.value + position, take);
+    ++lineCount;
+    position = nextPosition;
+  }
+  while (position < scannedLength && request.value[position] == ' ') ++position;
+  contentRemaining = contentRemaining || position < scannedLength;
+  if (lineCount == 0) {
+    result.status = BoundedTextStatus::NoFit;
+    return result;
+  }
+  if (contentRemaining) {
+    BoundedTextLine& finalLine = result.lines[lineCount - 1];
+    const std::size_t finalLength = std::strlen(finalLine.value.data());
+    std::array<char, kBoundedTextLineCapacity + 1> original = finalLine.value;
+    if (!ellipsize(finalLine, original.data(), finalLength)) {
+      result.status = BoundedTextStatus::NoFit;
+      return result;
+    }
+  }
+  result.truncated = contentRemaining;
+  placeLines(lineCount, fallbackScale);
+  result.status = BoundedTextStatus::Wrapped;
+  return result;
+}
+
+bool MonoCanvas::drawBoundedText(const BoundedTextResult& result,
+                                 bool black) noexcept {
+  if (!result.drawable()) return false;
+  if (!contains(clip_, result.bounds) || result.lineCount > kBoundedTextMaxLines ||
+      !contains(result.bounds, result.renderedBounds)) {
+    emit(DiagnosticCode::InvalidGeometry, "invalid bounded text result");
+    return false;
+  }
+  for (std::uint8_t index = 0; index < result.lineCount; ++index) {
+    const BoundedTextLine& line = result.lines[index];
+    if (line.value[0] == '\0') continue;
+    if (result.status != BoundedTextStatus::Marquee &&
+        !contains(result.bounds, line.bounds)) {
+      emit(DiagnosticCode::InvalidGeometry, "bounded text line escaped bounds");
+      return false;
+    }
+    drawTextRaster(line.value.data(), line.bounds.x, line.bounds.y,
+                   result.scale, black, result.bounds);
+  }
+  return true;
+}
+
+BoundedTextResult MonoCanvas::boundedText(const BoundedTextRequest& request,
+                                          bool black) noexcept {
+  BoundedTextResult result = layoutText(request);
+  drawBoundedText(result, black);
+  return result;
+}
+
+void MonoCanvas::drawTextRaster(const char* value, std::int32_t left,
+                                std::int32_t top, std::uint8_t scale,
+                                bool black, Rect clip) noexcept {
+  if (!value || scale == 0 || empty(clip)) return;
+
   auto& context = raster().context;
-  ScaledTextDraw draw{&framebuffer_, clip_, left, top, scale};
+  ScaledTextDraw draw{&framebuffer_, clip, left, top, scale};
   const auto previousLine = context.ll_hvline;
   void* previousUser = u8g2_GetUserPtr(&context);
   context.ll_hvline = scaledTextLine;

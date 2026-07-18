@@ -32,6 +32,59 @@ struct TextMetrics {
   std::int32_t descent = 0;
 };
 
+enum class TextOverflowPolicy : std::uint8_t {
+  Ellipsis,
+  Wrap,
+  Marquee,
+};
+
+enum class BoundedTextStatus : std::uint8_t {
+  Invalid,
+  NoFit,
+  Complete,
+  Scaled,
+  Truncated,
+  Wrapped,
+  Marquee,
+};
+
+constexpr std::size_t kBoundedTextMaxLines = 4;
+constexpr std::size_t kBoundedTextLineCapacity = 96;
+
+struct BoundedTextRequest {
+  const char* value = nullptr;
+  Rect bounds;
+  std::uint8_t preferredScale = 1;
+  std::uint8_t minimumScale = 1;
+  TextAlign align = TextAlign::TopLeft;
+  TextOverflowPolicy overflow = TextOverflowPolicy::Ellipsis;
+  std::uint8_t maximumLines = 1;
+  float phase = 0.0F;
+};
+
+struct BoundedTextLine {
+  // Layout results own their rendered ASCII fragments, so they remain valid
+  // after the request object goes out of scope. Longer inputs use an explicit
+  // overflow policy instead of growing storage dynamically.
+  std::array<char, kBoundedTextLineCapacity + 1> value{};
+  Rect bounds;
+};
+
+struct BoundedTextResult {
+  BoundedTextStatus status = BoundedTextStatus::Invalid;
+  Rect bounds;
+  Rect renderedBounds;
+  std::uint8_t scale = 0;
+  std::uint8_t lineCount = 0;
+  bool truncated = false;
+  std::array<BoundedTextLine, kBoundedTextMaxLines> lines{};
+
+  bool drawable() const noexcept {
+    return status != BoundedTextStatus::Invalid &&
+           status != BoundedTextStatus::NoFit && lineCount > 0 && scale > 0;
+  }
+};
+
 struct BitmapView {
   const std::uint8_t* data = nullptr;
   std::int32_t width = 0;
@@ -101,6 +154,11 @@ class MonoCanvas {
   void text(const char* value, std::int32_t x, std::int32_t y,
             std::uint8_t scale = 1, bool black = true,
             TextAlign align = TextAlign::TopLeft) noexcept;
+  BoundedTextResult layoutText(const BoundedTextRequest& request) noexcept;
+  bool drawBoundedText(const BoundedTextResult& result,
+                       bool black = true) noexcept;
+  BoundedTextResult boundedText(const BoundedTextRequest& request,
+                                bool black = true) noexcept;
   void drawBitmap(const BitmapView& bitmap, Rect source,
                   std::int32_t destinationX, std::int32_t destinationY,
                   BitmapBlit options = {}) noexcept;
@@ -125,6 +183,9 @@ class MonoCanvas {
                        std::int32_t y1, bool black) noexcept;
   void drawCircle(std::int32_t x, std::int32_t y, std::int32_t radius,
                   bool filled, bool black) noexcept;
+  void drawTextRaster(const char* value, std::int32_t left,
+                      std::int32_t top, std::uint8_t scale, bool black,
+                      Rect clip) noexcept;
 
   MonoFramebuffer& framebuffer_;
   DiagnosticSink* diagnostics_ = nullptr;

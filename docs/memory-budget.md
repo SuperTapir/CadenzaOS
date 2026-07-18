@@ -9,17 +9,20 @@ profiles use fixed storage so an object's cost does not change at runtime.
 | `AppRuntime` | 24,000 B | immutable outgoing/incoming transition captures |
 | `AnimationGalleryApp` | 24,000 B | transition source/destination demo scenes |
 
-Particle, atlas, state, Tween, graph, and diagnostic tables have fixed compile-
-time capacities and do not allocate in frame updates. Desktop PNG/GIF/RGBA
-conversion may allocate because it is outside the embedded core.
+Particle, atlas, state, Tween, graph, diagnostic, and bounded-text result tables
+have fixed compile-time capacities and do not allocate in frame updates. A
+`BoundedTextResult` owns at most four 96-byte line fragments and is compile-time
+guarded to remain within 512 bytes. Desktop PNG/GIF/RGBA conversion may allocate
+because it is outside the embedded core.
 
 The clean T-Embed release link on 2026-07-18 reported:
 
 - RAM: 82,616 / 327,680 B (25.2%);
-- Flash: 316,409 / 3,145,728 B (10.1%);
+- Flash: 319,433 / 3,145,728 B (10.2%);
 - pre-Gallery baseline: RAM 55,824 B, Flash 302,717 B;
-- current delta from the pre-Gallery baseline: +26,792 B RAM and +13,692 B
-  Flash (Gallery plus final repeat/Timeline/transition audit fixes).
+- current delta from the pre-Gallery baseline: +26,792 B RAM and +16,716 B
+  Flash (Gallery, final repeat/Timeline/transition audit fixes, and bounded
+  text layout).
 
 The framebuffer ownership is intentionally explicit for correctness and
 snapshot determinism. P8 must measure real FPS/slowest frame and decide whether
