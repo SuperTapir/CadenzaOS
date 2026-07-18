@@ -13,12 +13,13 @@ bool AppCatalogView::renderLauncherCover(
 }
 
 bool AppCatalogView::renderLaunchFrame(
-    AppId id, MonoCanvas& canvas, float progress) const noexcept {
+    AppId id, MonoCanvas& canvas, float progress,
+    const AppRenderContext& context) const noexcept {
   if (!id.valid()) return false;
   const AppCatalogEntry* entry = catalog_->find(id);
   return entry && entry->app &&
          entry->app->renderLaunchFrame(
-             canvas, std::max(0.0F, std::min(1.0F, progress)));
+             canvas, std::max(0.0F, std::min(1.0F, progress)), context);
 }
 
 AppRuntime::AppRuntime(FramebufferProfile profile) noexcept
@@ -149,8 +150,9 @@ bool AppRuntime::renderHandoffFrame(
   incomingFrame_.clear(true);
   MonoCanvas canvas{incomingFrame_, diagnosticSink_};
   const AppCatalogView catalog{catalog_};
+  const AppRenderContext context{catalog, frameSnapshot_};
   if (preferLaunchSequence &&
-      catalog.renderLaunchFrame(id, canvas, progress)) {
+      catalog.renderLaunchFrame(id, canvas, progress, context)) {
     return true;
   }
 

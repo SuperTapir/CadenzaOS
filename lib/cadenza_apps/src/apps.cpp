@@ -150,6 +150,191 @@ std::uint8_t ditherCoverage(float progress) noexcept {
       std::max(0.0F, std::min(64.0F, progress * 64.0F)));
 }
 
+float smoothStep(float progress) noexcept {
+  const float p = launchProgress(progress);
+  return p * p * (3.0F - 2.0F * p);
+}
+
+void blendCenteredCoverIntoTarget(
+    MonoCanvas& canvas, float progress, const BitmapView& tEmbedBitmap,
+    const BitmapView& sharpBitmap, bool blackBackground) noexcept {
+  constexpr float kCoverHold = 0.22F;
+  const float blend = progress <= kCoverHold
+                          ? 0.0F
+                          : smoothStep((progress - kCoverHold) /
+                                       (1.0F - kCoverHold));
+  const std::uint8_t coverage = ditherCoverage(blend);
+  if (coverage >= 64) return;
+
+  const Rect bounds = centeredLaunchCover(canvas);
+  const BitmapView& bitmap = bounds.width <= tEmbedBitmap.width
+                                 ? tEmbedBitmap
+                                 : sharpBitmap;
+  const int copyWidth = std::min(bounds.width, bitmap.width);
+  const int copyHeight = std::min(bounds.height, bitmap.height);
+  const Rect source{(bitmap.width - copyWidth) / 2,
+                    (bitmap.height - copyHeight) / 2,
+                    copyWidth, copyHeight};
+  const int bitmapLeft = bounds.x + (bounds.width - copyWidth) / 2;
+  const int bitmapTop = bounds.y + (bounds.height - copyHeight) / 2;
+  for (int y = 0; y < canvas.height(); ++y) {
+    for (int x = 0; x < canvas.width(); ++x) {
+      if (kOrderedDither8x8.thresholds[(y & 7) * 8 + (x & 7)] <
+          coverage) {
+        continue;
+      }
+      bool coverPixel = true;
+      if (x >= bounds.x && x < bounds.x + bounds.width &&
+          y >= bounds.y && y < bounds.y + bounds.height) {
+        coverPixel = blackBackground;
+        if (x >= bitmapLeft && x < bitmapLeft + copyWidth &&
+            y >= bitmapTop && y < bitmapTop + copyHeight) {
+          coverPixel = bitmap.pixel(source.x + x - bitmapLeft,
+                                    source.y + y - bitmapTop);
+        }
+      }
+      canvas.pixel(x, y, coverPixel);
+    }
+  }
+}
+
+void renderClockScreen(MonoCanvas& canvas, float elapsed, float phase,
+                       bool running) noexcept {
+  canvas.clear(false);
+  const int width = canvas.width();
+  const int height = canvas.height();
+  const int seconds = static_cast<int>(elapsed);
+  char value[16];
+  std::snprintf(value, sizeof(value), "%02d:%02d", (seconds / 60) % 100,
+                seconds % 60);
+  const int sweep = static_cast<int>(std::fmod(elapsed, 1.0F) * width);
+  canvas.fillRect(0, 0, sweep, 9, true);
+  canvas.text("CHRONO 01", 12, 24, 2, true);
+  canvas.text(value, width / 2, height / 2, 4, true,
+              TextAlign::MiddleCenter);
+  for (int x = -10; x < width + 10; x += 16) {
+    const int wobble =
+        static_cast<int>(std::sin(phase * 5.0F + x * 0.08F) * 5.0F);
+    canvas.fillCircle(x, height - 35 + wobble, 3, true);
+  }
+  canvas.text(running ? "PRESS TO PAUSE" : "PRESS TO RUN", 12,
+              height - 12, 1, true, TextAlign::BottomLeft);
+  canvas.text("HOLD: HOME", width - 12, height - 12, 1, true,
+              TextAlign::BottomRight);
+}
+
+void renderMotionScreen(MonoCanvas& canvas, float position, float target,
+                        float velocity) noexcept {
+  canvas.clear(false);
+  const int width = canvas.width();
+  const int height = canvas.height();
+  const int ballX = static_cast<int>(position * width);
+  const int targetX = static_cast<int>(target * width);
+  const int centerY = height / 2;
+  for (int x = 0; x < width; x += 16) canvas.line(x, 30, x, height - 25);
+  for (int y = 30; y <= height - 25; y += 16) canvas.line(0, y, width, y);
+  canvas.fillRect(0, 0, width, 27, true);
+  canvas.text("MOTION STUDY", 10, 14, 2, false, TextAlign::MiddleLeft);
+  canvas.fillCircle(ballX, centerY, 28, false);
+  canvas.circle(ballX, centerY, 28, true);
+  canvas.fillCircle(ballX, centerY, 19, true);
+  canvas.fillCircle(targetX, centerY, 4, true);
+  const int tail = velocity > 0 ? -1 : 1;
+  for (int index = 1; index <= 4; ++index) {
+    canvas.line(ballX + tail * (30 + index * 8),
+                centerY - 18 + index * 7,
+                ballX + tail * (40 + index * 11),
+                centerY - 18 + index * 7, true);
+  }
+  canvas.fillRect(0, height - 22, width, 22, false);
+  canvas.text("TURN / PRESS TO THROW", 9, height - 11, 1, true,
+              TextAlign::MiddleLeft);
+  canvas.text("HOLD: HOME", width - 9, height - 11, 1, true,
+              TextAlign::MiddleRight);
+}
+
+void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
+                          int selected, float time,
+                          bool resetConfirmArmed) noexcept {
+  canvas.clear(false);
+  const int width = canvas.width();
+  const int height = canvas.height();
+  const bool energetic = system.motionProfile == MotionProfile::Normal;
+  const int bar = energetic
+                      ? static_cast<int>((std::sin(time * 8.0F) + 1.0F) *
+                                         35.0F)
+                      : 18;
+  canvas.fillRect(0, 0, width * 28 / 100 + bar, height, true);
+  canvas.text("SET", 12, 18, 4, false);
+  canvas.text("TINGS", 12, 50, 4, false);
+  char soundRow[24];
+  std::snprintf(soundRow, sizeof(soundRow), "SOUND: %s",
+                audio::soundVolumeName(system.soundVolume));
+  char wifiRow[24];
+  const auto& wifi = system.connectivity.wifi;
+  const char* wifiState = wifi.networkOnline()
+                              ? "ONLINE"
+                              : wifi.needsUserAction()
+                                    ? "ACTION"
+                                    : wifi.desired ==
+                                              WiFiDesiredPolicy::OnlineRequested
+                                          ? "CONNECT"
+                                          : "OFF";
+  std::snprintf(wifiRow, sizeof(wifiRow), "WIFI: %s", wifiState);
+  char provisioningRow[28];
+  const auto provisioning = system.connectivity.provisioning.state;
+  const char* provisioningState =
+      resetConfirmArmed
+          ? "CONFIRM RESET"
+          : provisioning == ProvisioningState::Advertising
+                ? "ADVERTISING"
+                : provisioning == ProvisioningState::Negotiating
+                      ? "PAIRING"
+                      : provisioning == ProvisioningState::Applying ||
+                                provisioning == ProvisioningState::Verifying
+                            ? "APPLYING"
+                            : provisioning == ProvisioningState::Stopping
+                                  ? "STOPPING"
+                                  : provisioning == ProvisioningState::Failed
+                                        ? "FAILED"
+                                        : "START";
+  std::snprintf(provisioningRow, sizeof(provisioningRow), "SETUP: %s",
+                provisioningState);
+  const char* launcherRow =
+      system.launcherOrientation == LauncherOrientation::Vertical
+          ? "LAUNCHER: VERTICAL"
+          : "LAUNCHER: HORIZONTAL";
+  const char* rows[6] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
+                         soundRow, wifiRow, provisioningRow, launcherRow,
+                         "ABOUT: CADENZA OS"};
+  const int rowHeight = height < 200 ? 20 : 24;
+  const int rowStep = height < 200 ? 22 : 27;
+  const int rowsHeight = rowHeight + rowStep * 5;
+  const int rowsTop = std::max(24, (height - rowsHeight) / 2);
+  const int rowsLeft = width * 43 / 100;
+  const int rowsWidth = width * 53 / 100;
+  for (int index = 0; index < 6; ++index) {
+    const int y = rowsTop + index * rowStep;
+    if (index == selected) {
+      canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
+      canvas.boundedText(
+          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
+                                  rowHeight - 4},
+                    2, 1, TextAlign::MiddleLeft),
+          false);
+    } else {
+      canvas.rect(rowsLeft, y, rowsWidth, rowHeight, true);
+      canvas.boundedText(
+          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
+                                  rowHeight - 4},
+                    2, 1, TextAlign::MiddleLeft),
+          true);
+    }
+  }
+  canvas.text("HOLD: HOME", 12, height - 8, 1, false,
+              TextAlign::BottomLeft);
+}
+
 void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
                         AppId appId, const char* title,
                         const AppCatalogView& catalog) noexcept {
@@ -323,27 +508,7 @@ void ClockApp::update(const AppUpdateContext& context) noexcept {
 }
 
 void ClockApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
-  canvas.clear(false);
-  const int width = canvas.width();
-  const int height = canvas.height();
-  const int seconds = static_cast<int>(elapsed_);
-  char value[16];
-  std::snprintf(value, sizeof(value), "%02d:%02d", (seconds / 60) % 100,
-                seconds % 60);
-  const int sweep = static_cast<int>(std::fmod(elapsed_, 1.0F) * width);
-  canvas.fillRect(0, 0, sweep, 9, true);
-  canvas.text("CHRONO 01", 12, 24, 2, true);
-  canvas.text(value, width / 2, height / 2, 4, true,
-              TextAlign::MiddleCenter);
-  for (int x = -10; x < width + 10; x += 16) {
-    const int wobble =
-        static_cast<int>(std::sin(phase_ * 5.0F + x * 0.08F) * 5.0F);
-    canvas.fillCircle(x, height - 35 + wobble, 3, true);
-  }
-  canvas.text(running_ ? "PRESS TO PAUSE" : "PRESS TO RUN", 12,
-              height - 12, 1, true, TextAlign::BottomLeft);
-  canvas.text("HOLD: HOME", width - 12, height - 12, 1, true,
-              TextAlign::BottomRight);
+  renderClockScreen(canvas, elapsed_, phase_, running_);
 }
 
 bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
@@ -353,44 +518,12 @@ bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
 }
 
 bool ClockApp::renderLaunchFrame(MonoCanvas& canvas,
-                                 float progress) const noexcept {
+                                 float progress,
+                                 const AppRenderContext&) const noexcept {
   const float p = launchProgress(progress);
-  canvas.clear(true);
-  if (p < 0.18F) {
-    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
-                             kClockTEmbedCover, kClockCover, true);
-  }
-  const float phase = (p - 0.18F) / 0.82F;
-  canvas.clear(false);
-  const int centerX = canvas.width() / 2;
-  const int centerY = canvas.height() / 2;
-  const int radius = std::max(18, std::min(canvas.width(), canvas.height()) /
-                                     2 - 12);
-  canvas.fillDither({0, 0, canvas.width(), canvas.height()},
-                    kOrderedDither8x8,
-                    ditherCoverage(0.10F + phase * 0.20F));
-  for (int tick = 0; tick < 24; ++tick) {
-    const float angle = static_cast<float>(tick) * 6.2831853F / 24.0F;
-    const int outerX = centerX + static_cast<int>(std::cos(angle) * radius);
-    const int outerY = centerY + static_cast<int>(std::sin(angle) * radius);
-    const int innerRadius = radius - (tick % 6 == 0 ? 11 : 5);
-    const int innerX =
-        centerX + static_cast<int>(std::cos(angle) * innerRadius);
-    const int innerY =
-        centerY + static_cast<int>(std::sin(angle) * innerRadius);
-    canvas.line(innerX, innerY, outerX, outerY, true);
-  }
-  const float handAngle = -1.5707963F + phase * 5.6F;
-  canvas.line(centerX, centerY,
-              centerX + static_cast<int>(std::cos(handAngle) * (radius - 16)),
-              centerY + static_cast<int>(std::sin(handAngle) * (radius - 16)),
-              true);
-  canvas.fillCircle(centerX, centerY, 4, true);
-  const int scanY = std::min(canvas.height() - 2,
-                             static_cast<int>(phase * canvas.height()));
-  canvas.line(0, scanY, canvas.width() - 1, scanY, true);
-  canvas.text("CHRONO", centerX, centerY + radius / 2, 2, true,
-              TextAlign::MiddleCenter);
+  renderClockScreen(canvas, elapsed_, 0.0F, running_);
+  blendCenteredCoverIntoTarget(canvas, p, kClockTEmbedCover, kClockCover,
+                               true);
   return true;
 }
 
@@ -419,31 +552,7 @@ void MotionApp::update(const AppUpdateContext& context) noexcept {
 }
 
 void MotionApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
-  canvas.clear(false);
-  const int width = canvas.width();
-  const int height = canvas.height();
-  const int ballX = static_cast<int>(x_ * width);
-  const int targetX = static_cast<int>(target_ * width);
-  const int centerY = height / 2;
-  for (int x = 0; x < width; x += 16) canvas.line(x, 30, x, height - 25);
-  for (int y = 30; y <= height - 25; y += 16) canvas.line(0, y, width, y);
-  canvas.fillRect(0, 0, width, 27, true);
-  canvas.text("MOTION STUDY", 10, 14, 2, false, TextAlign::MiddleLeft);
-  canvas.fillCircle(ballX, centerY, 28, false);
-  canvas.circle(ballX, centerY, 28, true);
-  canvas.fillCircle(ballX, centerY, 19, true);
-  canvas.fillCircle(targetX, centerY, 4, true);
-  const int tail = velocity_ > 0 ? -1 : 1;
-  for (int index = 1; index <= 4; ++index) {
-    canvas.line(ballX + tail * (30 + index * 8), centerY - 18 + index * 7,
-                ballX + tail * (40 + index * 11),
-                centerY - 18 + index * 7, true);
-  }
-  canvas.fillRect(0, height - 22, width, 22, false);
-  canvas.text("TURN / PRESS TO THROW", 9, height - 11, 1, true,
-              TextAlign::MiddleLeft);
-  canvas.text("HOLD: HOME", width - 9, height - 11, 1, true,
-              TextAlign::MiddleRight);
+  renderMotionScreen(canvas, x_, target_, velocity_);
 }
 
 bool MotionApp::renderLauncherCover(MonoCanvas& canvas,
@@ -453,37 +562,12 @@ bool MotionApp::renderLauncherCover(MonoCanvas& canvas,
 }
 
 bool MotionApp::renderLaunchFrame(MonoCanvas& canvas,
-                                  float progress) const noexcept {
+                                  float progress,
+                                  const AppRenderContext&) const noexcept {
   const float p = launchProgress(progress);
-  canvas.clear(true);
-  if (p < 0.18F) {
-    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
-                             kMotionTEmbedCover, kMotionCover, false);
-  }
-  const float phase = (p - 0.18F) / 0.82F;
-  const int centerY = canvas.height() / 2;
-  const int startX = std::max(18, canvas.width() / 9);
-  const int endX = canvas.width() * 3 / 4;
-  const int ballX = startX + static_cast<int>((endX - startX) * phase);
-  canvas.clear(true);
-  for (int lane = -3; lane <= 3; ++lane) {
-    const int y = centerY + lane * std::max(8, canvas.height() / 12);
-    if (y >= 0 && y < canvas.height()) {
-      canvas.line(0, y, canvas.width() - 1, y, false);
-    }
-  }
-  const int tail = std::max(10, static_cast<int>(phase * canvas.width() / 2));
-  for (int streak = 0; streak < 6; ++streak) {
-    const int y = centerY - 18 + streak * 7;
-    canvas.line(std::max(0, ballX - tail - streak * 5), y,
-                std::max(0, ballX - 22 - streak * 2), y, false);
-  }
-  const int radius = 12 + static_cast<int>(phase * 18.0F);
-  canvas.fillCircle(ballX, centerY, radius, false);
-  canvas.circle(ballX, centerY, radius, true);
-  canvas.fillCircle(ballX, centerY, std::max(4, radius / 2), true);
-  canvas.text("VECTOR ACQUIRED", canvas.width() / 2,
-              canvas.height() - 10, 1, false, TextAlign::MiddleCenter);
+  renderMotionScreen(canvas, x_, target_, 0.0F);
+  blendCenteredCoverIntoTarget(canvas, p, kMotionTEmbedCover, kMotionCover,
+                               false);
   return true;
 }
 
@@ -561,82 +645,8 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
 
 void SettingsApp::render(MonoCanvas& canvas,
                          const AppRenderContext& context) noexcept {
-  canvas.clear(false);
-  const int width = canvas.width();
-  const int height = canvas.height();
-  const bool energetic = context.system.motionProfile == MotionProfile::Normal;
-  const int bar = energetic
-                      ? static_cast<int>((std::sin(time_ * 8.0F) + 1.0F) * 35.0F)
-                      : 18;
-  canvas.fillRect(0, 0, width * 28 / 100 + bar, height, true);
-  canvas.text("SET", 12, 18, 4, false);
-  canvas.text("TINGS", 12, 50, 4, false);
-  char soundRow[24];
-  std::snprintf(soundRow, sizeof(soundRow), "SOUND: %s",
-                audio::soundVolumeName(context.system.soundVolume));
-  char wifiRow[24];
-  const auto& wifi = context.system.connectivity.wifi;
-  const char* wifiState = wifi.networkOnline()
-                              ? "ONLINE"
-                              : wifi.needsUserAction()
-                                    ? "ACTION"
-                                    : wifi.desired ==
-                                              WiFiDesiredPolicy::OnlineRequested
-                                          ? "CONNECT"
-                                          : "OFF";
-  std::snprintf(wifiRow, sizeof(wifiRow), "WIFI: %s", wifiState);
-  char provisioningRow[28];
-  const auto provisioning = context.system.connectivity.provisioning.state;
-  const char* provisioningState =
-      resetConfirmArmed_
-          ? "CONFIRM RESET"
-          : provisioning == ProvisioningState::Advertising
-                ? "ADVERTISING"
-                : provisioning == ProvisioningState::Negotiating
-                      ? "PAIRING"
-                      : provisioning == ProvisioningState::Applying ||
-                                provisioning == ProvisioningState::Verifying
-                            ? "APPLYING"
-                            : provisioning == ProvisioningState::Stopping
-                                  ? "STOPPING"
-                                  : provisioning == ProvisioningState::Failed
-                                        ? "FAILED"
-                                        : "START";
-  std::snprintf(provisioningRow, sizeof(provisioningRow), "SETUP: %s",
-                provisioningState);
-  const char* launcherRow =
-      context.system.launcherOrientation == LauncherOrientation::Vertical
-          ? "LAUNCHER: VERTICAL"
-          : "LAUNCHER: HORIZONTAL";
-  const char* rows[6] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
-                         soundRow, wifiRow, provisioningRow, launcherRow,
-                         "ABOUT: CADENZA OS"};
-  const int rowHeight = height < 200 ? 20 : 24;
-  const int rowStep = height < 200 ? 22 : 27;
-  const int rowsHeight = rowHeight + rowStep * 5;
-  const int rowsTop = std::max(24, (height - rowsHeight) / 2);
-  const int rowsLeft = width * 43 / 100;
-  const int rowsWidth = width * 53 / 100;
-  for (int index = 0; index < 6; ++index) {
-    const int y = rowsTop + index * rowStep;
-    if (index == selected_) {
-      canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
-      canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
-                                  rowHeight - 4},
-                    2, 1, TextAlign::MiddleLeft),
-          false);
-    } else {
-      canvas.rect(rowsLeft, y, rowsWidth, rowHeight, true);
-      canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
-                                  rowHeight - 4},
-                    2, 1, TextAlign::MiddleLeft),
-          true);
-    }
-  }
-  canvas.text("HOLD: HOME", 12, height - 8, 1, false,
-              TextAlign::BottomLeft);
+  renderSettingsScreen(canvas, context.system, selected_, time_,
+                       resetConfirmArmed_);
 }
 
 bool SettingsApp::renderLauncherCover(MonoCanvas& canvas,
@@ -646,34 +656,13 @@ bool SettingsApp::renderLauncherCover(MonoCanvas& canvas,
 }
 
 bool SettingsApp::renderLaunchFrame(MonoCanvas& canvas,
-                                    float progress) const noexcept {
+                                    float progress,
+                                    const AppRenderContext& context) const noexcept {
   const float p = launchProgress(progress);
-  canvas.clear(true);
-  if (p < 0.18F) {
-    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
-                             kSettingsTEmbedCover, kSettingsCover, true);
-  }
-  const float phase = (p - 0.18F) / 0.82F;
-  canvas.clear(false);
-  const int band = std::max(2, static_cast<int>(canvas.width() *
-                                                (0.08F + phase * 0.28F)));
-  canvas.fillRect(0, 0, band, canvas.height(), true);
-  const int gridLeft = band + 8;
-  for (int x = gridLeft; x < canvas.width(); x += 18) {
-    canvas.line(x, 0, x, canvas.height() - 1, true);
-  }
-  for (int y = 0; y < canvas.height(); y += 18) {
-    canvas.line(gridLeft, y, canvas.width() - 1, y, true);
-  }
-  const int crossX = gridLeft + static_cast<int>(
-      phase * std::max(0, canvas.width() - gridLeft - 10));
-  const int crossY = canvas.height() / 2;
-  canvas.line(crossX - 12, crossY, crossX + 12, crossY, true);
-  canvas.line(crossX, crossY - 12, crossX, crossY + 12, true);
-  canvas.rect(crossX - 5, crossY - 5, 11, 11, true);
-  canvas.text("CAL", 8, 8, 3, false);
-  canvas.text("SYSTEM ALIGN", canvas.width() - 8, canvas.height() - 8,
-              1, true, TextAlign::BottomRight);
+  renderSettingsScreen(canvas, context.system, selected_, time_,
+                       resetConfirmArmed_);
+  blendCenteredCoverIntoTarget(canvas, p, kSettingsTEmbedCover,
+                               kSettingsCover, false);
   return true;
 }
 
@@ -684,41 +673,12 @@ bool AnimationGalleryApp::renderLauncherCover(
 }
 
 bool AnimationGalleryApp::renderLaunchFrame(
-    MonoCanvas& canvas, float progress) const noexcept {
+    MonoCanvas& canvas, float progress,
+    const AppRenderContext&) const noexcept {
   const float p = launchProgress(progress);
-  canvas.clear(true);
-  if (p < 0.18F) {
-    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
-                             kGalleryTEmbedCover, kGalleryCover, true);
-  }
-  const float phase = (p - 0.18F) / 0.82F;
-  canvas.clear(false);
-  canvas.fillDither({0, 0, canvas.width(), canvas.height()},
-                    kOrderedDither8x8, ditherCoverage(phase * 0.75F),
-                    static_cast<int>(phase * 7.0F), 0);
-  const int frameCount = 4;
-  const int gap = std::max(4, canvas.width() / 40);
-  const int frameWidth = (canvas.width() - gap * (frameCount + 1)) /
-                         frameCount;
-  const int top = canvas.height() / 4;
-  const int frameHeight = canvas.height() / 2;
-  const int active = std::min(frameCount - 1,
-                              static_cast<int>(phase * frameCount));
-  for (int index = 0; index < frameCount; ++index) {
-    const int x = gap + index * (frameWidth + gap);
-    canvas.fillRect(x, top, frameWidth, frameHeight,
-                    index == active);
-    canvas.rect(x, top, frameWidth, frameHeight, true);
-    if (index == active) {
-      canvas.text("PLAY", x + frameWidth / 2, top + frameHeight / 2,
-                  1, false, TextAlign::MiddleCenter);
-    } else {
-      canvas.text("FRAME", x + frameWidth / 2, top + frameHeight / 2,
-                  1, true, TextAlign::MiddleCenter);
-    }
-  }
-  canvas.text("ANIMATION / LAB", canvas.width() / 2, 10, 2, true,
-              TextAlign::MiddleCenter);
+  renderInitialFrame(canvas);
+  blendCenteredCoverIntoTarget(canvas, p, kGalleryTEmbedCover, kGalleryCover,
+                               true);
   return true;
 }
 

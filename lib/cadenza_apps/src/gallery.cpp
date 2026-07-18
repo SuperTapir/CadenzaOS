@@ -352,6 +352,43 @@ void AnimationGalleryApp::renderDither(MonoCanvas& canvas) noexcept {
   canvas.rect(region.x, region.y, region.width, region.height, true);
 }
 
+void AnimationGalleryApp::renderInitialFrame(
+    MonoCanvas& canvas) const noexcept {
+  canvas.clear(false);
+  const int width = canvas.width();
+  const int height = canvas.height();
+  const int left = 20;
+  const int right = width - 20;
+  const int top = 48;
+  const int bottom = height - 32;
+  canvas.rect(left, top, right - left, bottom - top, true);
+  int previousX = left;
+  int previousY = bottom;
+  for (int x = left + 1; x < right; ++x) {
+    const float p = static_cast<float>(x - left) / (right - left - 1);
+    const float value = ease(Easing::OutBack, p);
+    const int y = bottom - static_cast<int>(value * (bottom - top - 5));
+    canvas.line(previousX, previousY, x, y, true);
+    previousX = x;
+    previousY = y;
+  }
+  canvas.line(left, top, left, bottom, true);
+
+  canvas.fillRect(0, 0, width, 25, true);
+  canvas.fillRect(0, height - 20, width, 20, false);
+  canvas.line(0, height - 20, width - 1, height - 20, true);
+  canvas.text("TURN: PAGE  PRESS: SCRUB", 8, height - 10, 1, true,
+              TextAlign::MiddleLeft);
+  canvas.rect(width - 70, height - 14, 62, 7, true);
+  canvas.fillRect(0, 25, width, 20, false);
+  canvas.text("EASING", width / 2, 35, 1, true,
+              TextAlign::MiddleCenter);
+  canvas.text("ANIMATION GALLERY", 8, 13, 1, false,
+              TextAlign::MiddleLeft);
+  canvas.text("01/14", width - 8, 13, 1, false,
+              TextAlign::MiddleRight);
+}
+
 void AnimationGalleryApp::render(MonoCanvas& canvas,
                                  const AppRenderContext&) noexcept {
   canvas.clear(false);

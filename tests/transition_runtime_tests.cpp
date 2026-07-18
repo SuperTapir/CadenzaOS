@@ -67,7 +67,8 @@ class LaunchProbeApp final : public cadenza::App {
     return true;
   }
   bool renderLaunchFrame(cadenza::MonoCanvas& canvas,
-                         float progress) const noexcept override {
+                         float progress,
+                         const cadenza::AppRenderContext&) const noexcept override {
     ++launchCalls;
     lastLaunchProgress = progress;
     if (!hasLaunch_) return false;

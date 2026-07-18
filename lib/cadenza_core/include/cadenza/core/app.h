@@ -17,7 +17,8 @@ class App {
   virtual bool renderLauncherCover(MonoCanvas&, Rect) const noexcept {
     return false;
   }
-  virtual bool renderLaunchFrame(MonoCanvas&, float) const noexcept {
+  virtual bool renderLaunchFrame(
+      MonoCanvas&, float, const AppRenderContext&) const noexcept {
     return false;
   }
 };

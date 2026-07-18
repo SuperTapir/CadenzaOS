@@ -50,12 +50,18 @@
 
 实现采用两阶段 handoff：默认 Launcher → App 为 0.80 秒，App → Launcher 为 0.44 秒；Reduced Motion 分别为 0.56 秒和 0.28 秒。Clock、Motion、Settings、Animation Gallery 均提供独立的代码原生全屏 launch renderer；未实现该能力的 App 使用居中的静态 Cover/受约束名称卡。System Menu 在右边缘锚定，逐 scanline 形成斜向前缘，并把完整面板横向重采样进当前可见宽度；Resume 关闭期间仍冻结 App、消费输入，Home 则直接交给 return handoff，避免叠加两条系统动画。
 
+首轮视觉审阅指出 Cover、独立概念动画与真实 App UI 仍是三段不连续构图。连续版因此取消中间海报：progress 0 逐像素等于居中 Cover，progress 1 逐像素等于同一 App 状态和 SystemSnapshot 在 `onEnter` 后的真实首屏，中间以固定相位 ordered-dither 单调交接像素。Settings launch renderer 接收只读 AppRenderContext，避免 Motion/Sound/Connectivity 非默认状态在中点跳变；Clock、Motion、Settings 抽取与普通 render 共用的首屏 helper，Gallery 使用与 page 0/Easing 完全一致的初始帧 helper。
+
 自动化验证结果：
 
 - `cmake --build build -j4`：通过；
-- `ctest --test-dir build --output-on-failure`：70/70 通过；
-- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；
-- `sizeof(AppRuntime) < 25,000`、两 framebuffer 复用、lifecycle 中点、输入冻结、一次性 sound/diagnostic、共享源码审计和 `git diff --check` 均由测试或审计通过；
-- PlatformIO compile 与独立 strict configure 在本轮被 macOS 以 `SIGKILL`/无法启动 Python 终止，系统同时存在多个 0.4–2.3 GB 常驻进程；没有编译诊断可归因于本 change，释放主机内存后仍须复跑，不能记为通过。
+- `ctest --test-dir build --output-on-failure`：71/71 通过；
+- 独立 `-Wall -Wextra -Wpedantic -Werror` 构建与 handoff/allocation/apps/snapshot/desktop focused suite：通过；
+- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；四 App 另以固定 30 FPS 生成完整 26 帧 PNG/GIF 时间轴；
+- endpoint regression 证明四 App `p0 == Cover`、`p1 == first App frame`；30 FPS 相邻帧变化不超过 framebuffer 像素的 20%；
+- 完整进入 → Menu 开合 → 返回路径的 `operator new/new[]` 计数保持不变；host `AppRuntime` 为 24,928 B，其中两张固定 framebuffer 为 24,048 B，没有第三张全屏 buffer；
+- PlatformIO T-Embed compile：RAM 99,248 / 327,680 B（30.3%），Flash 412,445 / 3,145,728 B（13.1%）。相对 WIP 前的 `HEAD` 基线增加 64 B RAM、3,448 B Flash；连续版相对首轮海报式 WIP 减少 1,052 B Flash；
+- Sharp launch renderer 的一次性 host 微基准平均约 1.74 ms/帧；它只用于发现明显退化，不替代 ESP32 真机 frame-time；
+- 两 profile SDL dummy 各运行 180 帧、desktop input smoke、共享源码审计、OpenSpec strict 与 `git diff --check` 均通过。
 
 自动化只批准像素确定性和系统语义。T-Embed 真机仍需以 30 FPS 检查 Memory LCD 的 dither 闪烁、拖影、0.80 秒入场是否拖沓、0.44 秒返回是否干脆，以及菜单 0.16 秒形变是否与参考视频一致；这些是 P8 人工视觉批准边界，host PNG 不能代替。

@@ -48,7 +48,8 @@ class ClockApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   bool running_ = true;
@@ -66,7 +67,8 @@ class MotionApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   float target_ = 0.5F;
@@ -84,7 +86,8 @@ class SettingsApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   int selected_ = 0;
@@ -107,7 +110,8 @@ class AnimationGalleryApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
   constexpr std::size_t pageCount() const noexcept { return kPageCount; }
   const char* pageName(std::size_t index) const noexcept;
@@ -136,6 +140,7 @@ class AnimationGalleryApp final : public App {
   void renderParticles(MonoCanvas& canvas) noexcept;
   void renderSpriteState(MonoCanvas& canvas) noexcept;
   void renderDither(MonoCanvas& canvas) noexcept;
+  void renderInitialFrame(MonoCanvas& canvas) const noexcept;
 
   std::size_t page_ = 0;
   GalleryMode mode_ = GalleryMode::AutoPlay;

@@ -13,6 +13,7 @@
 - 自定义 transition 仍保留原有单段 source/destination 语义；只有显式声明 staged handoff 的策略使用 bridge buffer 协议。
 - System Menu 增加显式 closing 状态、右侧面板的 ease-out/ease-in 侧滑与短暂斜向压缩变形；关闭动画期间继续冻结 App、吞掉输入，并在面板完全离屏后释放 surface。
 - 为 Normal/Reduced Motion、双 profile、中点连续性、端点精确性、输入冻结和 lifecycle 顺序增加自动化验证，并保留 Memory LCD 真机观感验收。
+- 根据首轮视觉审阅，收紧逐 App launch sequence 的连续性：序列首帧逐像素等于居中 Cover bridge，末帧逐像素等于同一 snapshot 下 lifecycle 交接后的 App 首屏；中间不得硬切到与两端无共享构图的独立海报。
 
 ## Capabilities
 
