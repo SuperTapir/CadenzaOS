@@ -93,12 +93,12 @@
 
 ## 10. Particles and Sprite Animation
 
-- [ ] 10.1 Write particle spawn/update/expiry/seed/full-pool-policy/overflow tests
-- [ ] 10.2 Implement fixed-capacity particle pool, emitters, primitive/sprite rendering, and deterministic PRNG
-- [ ] 10.3 Write once/loop/ping-pong frame animation and large-delta tests
-- [ ] 10.4 Implement atlas-backed frame animation with query and seek support
-- [ ] 10.5 Write fixed-capacity state/trigger/reset/invalid-transition tests
-- [ ] 10.6 Implement animation state machine with explicit transition results and diagnostics
+- [x] 10.1 Write particle spawn/update/expiry/seed/full-pool-policy/overflow tests
+- [x] 10.2 Implement fixed-capacity particle pool, emitters, primitive/sprite rendering, and deterministic PRNG
+- [x] 10.3 Write once/loop/ping-pong frame animation and large-delta tests
+- [x] 10.4 Implement atlas-backed frame animation with query and seek support
+- [x] 10.5 Write fixed-capacity state/trigger/reset/invalid-transition tests
+- [x] 10.6 Implement animation state machine with explicit transition results and diagnostics
 
 ## 11. Animation Gallery and Visual QA
 
