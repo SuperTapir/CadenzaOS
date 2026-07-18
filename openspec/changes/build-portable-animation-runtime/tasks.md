@@ -18,17 +18,17 @@
 
 ## 3. Canonical Framebuffer and Rasterizer
 
-- [ ] 3.1 Write guarded-buffer tests for dimensions, stride, MSB-first bit addressing, clear, and out-of-bounds safety
-- [ ] 3.2 Implement fixed-capacity MonoFramebuffer for 320×170 and 400×240 profiles
-- [ ] 3.3 Write exact golden tests for pixel, line, rect, fillRect, circle, fillCircle, clipping, and invalid geometry diagnostics
-- [ ] 3.4 Implement deterministic MonoCanvas contract and half-open clip/diagnostic wrapper over the curated U8g2 raster subset
-- [ ] 3.5 Select or author a legally reusable bitmap font, record provenance, and write glyph metric/alignment/integer-scale golden tests
-- [ ] 3.6 Integrate approved U8g2 font data behind platform-independent text measurement, alignment, baseline, and rasterization APIs
-- [ ] 3.7 Write bitmap composition, source clipping, translation, flip, XOR/inversion, and overlap tests
-- [ ] 3.8 Implement BitmapView, sprite drawing, transforms, composition modes, and region inversion
-- [ ] 3.9 Write fixed-capacity SpriteAtlas lookup/capacity tests and implement atlas descriptors plus the offline conversion entry point
-- [ ] 3.10 Write dither coverage/phase determinism tests and implement pattern/dither fills with explicit animated phase
-- [ ] 3.11 Write source/destination immutability tests and implement first-class off-screen framebuffer/canvas usage
+- [x] 3.1 Write guarded-buffer tests for dimensions, stride, MSB-first bit addressing, clear, and out-of-bounds safety
+- [x] 3.2 Implement fixed-capacity MonoFramebuffer for 320×170 and 400×240 profiles
+- [x] 3.3 Write exact golden tests for pixel, line, rect, fillRect, circle, fillCircle, clipping, and invalid geometry diagnostics
+- [x] 3.4 Implement deterministic MonoCanvas contract and half-open clip/diagnostic wrapper over the curated U8g2 raster subset
+- [x] 3.5 Select or author a legally reusable bitmap font, record provenance, and write glyph metric/alignment/integer-scale golden tests
+- [x] 3.6 Integrate approved U8g2 font data behind platform-independent text measurement, alignment, baseline, and rasterization APIs
+- [x] 3.7 Write bitmap composition, source clipping, translation, flip, XOR/inversion, and overlap tests
+- [x] 3.8 Implement BitmapView, sprite drawing, transforms, composition modes, and region inversion
+- [x] 3.9 Write fixed-capacity SpriteAtlas lookup/capacity tests and implement atlas descriptors plus the offline conversion entry point
+- [x] 3.10 Write dither coverage/phase determinism tests and implement pattern/dither fills with explicit animated phase
+- [x] 3.11 Write source/destination immutability tests and implement first-class off-screen framebuffer/canvas usage
 
 ## 4. Runtime and Firmware Migration
 

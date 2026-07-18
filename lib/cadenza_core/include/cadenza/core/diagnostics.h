@@ -17,6 +17,7 @@ enum class DiagnosticCode : std::uint8_t {
   SelectionChanged,
   InvalidOperation,
   InvalidGeometry,
+  ClippedGeometry,
   FullyClipped,
   CapacityExceeded,
 };

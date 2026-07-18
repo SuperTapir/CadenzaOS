@@ -32,10 +32,15 @@ add_library(cadenza_u8g2 STATIC
 )
 add_library(cadenza::u8g2 ALIAS cadenza_u8g2)
 target_include_directories(cadenza_u8g2 PUBLIC third_party/u8g2/include)
-target_compile_definitions(cadenza_u8g2 PUBLIC U8G2_WITHOUT_FONT_ROTATION)
+target_compile_definitions(cadenza_u8g2 PUBLIC
+  U8G2_WITHOUT_FONT_ROTATION
+  U8X8_WITH_USER_PTR
+)
 
 add_library(cadenza_core STATIC
   lib/cadenza_core/src/input.cpp
+  lib/cadenza_core/src/mono_canvas.cpp
+  lib/cadenza_core/src/mono_framebuffer.cpp
   lib/cadenza_core/src/simulation_clock.cpp
   lib/cadenza_core/src/version.cpp
 )
@@ -70,6 +75,21 @@ if(CADENZA_BUILD_TESTS)
   target_link_libraries(cadenza_input_tests PRIVATE cadenza::core)
   target_include_directories(cadenza_input_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_input_tests COMMAND cadenza_input_tests)
+
+  add_executable(cadenza_framebuffer_tests tests/framebuffer_tests.cpp)
+  target_link_libraries(cadenza_framebuffer_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_framebuffer_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_framebuffer_tests COMMAND cadenza_framebuffer_tests)
+
+  add_executable(cadenza_canvas_tests tests/mono_canvas_tests.cpp)
+  target_link_libraries(cadenza_canvas_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_canvas_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_canvas_tests COMMAND cadenza_canvas_tests)
+
+  add_executable(cadenza_sprite_atlas_tests tests/sprite_atlas_tests.cpp)
+  target_link_libraries(cadenza_sprite_atlas_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_sprite_atlas_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_sprite_atlas_tests COMMAND cadenza_sprite_atlas_tests)
 
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
