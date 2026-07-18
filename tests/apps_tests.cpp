@@ -22,17 +22,19 @@ TEST_CASE("all bundled Apps render through the portable canvas at both profiles"
     cadenza::ClockApp clock;
     cadenza::MotionApp motion;
     cadenza::SettingsApp settings;
+    cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
     REQUIRE(runtime.registerApp(cadenza::AppId::Clock, clock));
     REQUIRE(runtime.registerApp(cadenza::AppId::Motion, motion));
     REQUIRE(runtime.registerApp(cadenza::AppId::Settings, settings));
+    REQUIRE(runtime.registerApp(cadenza::AppId::Gallery, gallery));
     REQUIRE(runtime.begin(cadenza::AppId::Launcher));
 
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer};
-    for (cadenza::App* app : std::array<cadenza::App*, 4>{
-             &launcher, &clock, &motion, &settings}) {
+    for (cadenza::App* app : std::array<cadenza::App*, 5>{
+             &launcher, &clock, &motion, &settings, &gallery}) {
       framebuffer.clear(false);
       app->render(canvas, runtime);
       CHECK(hasBlackPixel(framebuffer));

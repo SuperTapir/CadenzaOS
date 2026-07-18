@@ -107,6 +107,7 @@ class HeadlessHost {
   ClockApp clock_;
   MotionApp motion_;
   SettingsApp settings_;
+  AnimationGalleryApp gallery_;
   AppRuntime runtime_;
   MonoFramebuffer framebuffer_;
   MonoCanvas canvas_;

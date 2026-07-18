@@ -11,11 +11,13 @@ other App is opened directly and captured on the first stable render after the
 
 | Profile | App | Hash (decimal) |
 | --- | --- | ---: |
-| 320×170 | Launcher | 15479386324999666307 |
+| 320×170 | Launcher | 2968281691757874956 |
 | 320×170 | Clock | 2172376209712558838 |
 | 320×170 | Motion | 11046562126395087774 |
 | 320×170 | Settings | 16015422347803220551 |
-| 400×240 | Launcher | 5367135371095058079 |
+| 320×170 | Animation Gallery | 14139291840108583961 |
+| 400×240 | Launcher | 5421283046709258962 |
 | 400×240 | Clock | 8667913246713477979 |
 | 400×240 | Motion | 2956592992690758759 |
 | 400×240 | Settings | 16871251489666615369 |
+| 400×240 | Animation Gallery | 13234575752027769465 |

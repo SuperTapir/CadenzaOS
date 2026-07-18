@@ -162,23 +162,29 @@ void MotionApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
 }
 
 void SettingsApp::update(Seconds dt, const InputFrame& input,
-                         AppRuntime&) noexcept {
+                         AppRuntime& runtime) noexcept {
   time_ += dt;
   if (input.turn) selected_ = wrap(selected_ + input.turn, 2);
-  if (input.clicked && selected_ == 0) energetic_ = !energetic_;
+  if (input.clicked && selected_ == 0) {
+    runtime.setMotionProfile(runtime.motionProfile() == MotionProfile::Normal
+                                 ? MotionProfile::Reduced
+                                 : MotionProfile::Normal);
+  }
 }
 
-void SettingsApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
+void SettingsApp::render(MonoCanvas& canvas,
+                         const AppRuntime& runtime) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
-  const int bar = energetic_
+  const bool energetic = runtime.motionProfile() == MotionProfile::Normal;
+  const int bar = energetic
                       ? static_cast<int>((std::sin(time_ * 8.0F) + 1.0F) * 35.0F)
                       : 18;
   canvas.fillRect(0, 0, width * 28 / 100 + bar, height, true);
   canvas.text("SET", 12, 18, 4, false);
   canvas.text("TINGS", 12, 50, 4, false);
-  const char* rows[2] = {energetic_ ? "MOTION: FULL" : "MOTION: QUIET",
+  const char* rows[2] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
                          "CADENZA OS"};
   for (int index = 0; index < 2; ++index) {
     const int y = 53 + index * 48;

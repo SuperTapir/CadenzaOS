@@ -247,6 +247,22 @@ if(CADENZA_BUILD_TESTS)
     COMMAND cadenza_animation_state_machine_tests
   )
 
+  add_executable(cadenza_gallery_tests tests/gallery_tests.cpp)
+  target_link_libraries(cadenza_gallery_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_gallery_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_gallery_tests COMMAND cadenza_gallery_tests)
+
+  add_executable(cadenza_gallery_snapshot_tests
+    tests/gallery_snapshot_tests.cpp
+  )
+  target_link_libraries(cadenza_gallery_snapshot_tests PRIVATE cadenza::host)
+  target_include_directories(cadenza_gallery_snapshot_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_gallery_snapshot_tests
+    COMMAND cadenza_gallery_snapshot_tests
+  )
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)

@@ -24,16 +24,16 @@ class FrameAnimation {
                  FramePlayback playback = FramePlayback::Loop) noexcept
       : atlas_(&atlas),
         frameAt_(&atlasFrame<Capacity>),
-        atlasSize_(atlas.size()),
+        atlasSize_(&atlasSize<Capacity>),
         firstFrame_(firstFrame),
         frameCount_(frameCount),
         frameDuration_(frameDuration),
         playback_(playback) {}
 
   bool valid() const noexcept {
-    return atlas_ != nullptr && frameAt_ != nullptr && frameCount_ > 0 &&
-           frameDuration_ > 0.0F && firstFrame_ <= atlasSize_ &&
-           frameCount_ <= atlasSize_ - firstFrame_;
+    const std::size_t size = atlas_ && atlasSize_ ? atlasSize_(atlas_) : 0;
+    return frameAt_ != nullptr && frameCount_ > 0 && frameDuration_ > 0.0F &&
+           firstFrame_ <= size && frameCount_ <= size - firstFrame_;
   }
 
   void reset() noexcept {
@@ -85,11 +85,17 @@ class FrameAnimation {
 
  private:
   using FrameAt = const SpriteFrame* (*)(const void*, std::size_t) noexcept;
+  using AtlasSize = std::size_t (*)(const void*) noexcept;
 
   template <std::size_t Capacity>
   static const SpriteFrame* atlasFrame(const void* atlas,
                                        std::size_t index) noexcept {
     return static_cast<const SpriteAtlas<Capacity>*>(atlas)->frame(index);
+  }
+
+  template <std::size_t Capacity>
+  static std::size_t atlasSize(const void* atlas) noexcept {
+    return static_cast<const SpriteAtlas<Capacity>*>(atlas)->size();
   }
 
   Seconds traversalDuration() const noexcept {
@@ -132,7 +138,7 @@ class FrameAnimation {
 
   const void* atlas_ = nullptr;
   FrameAt frameAt_ = nullptr;
-  std::size_t atlasSize_ = 0;
+  AtlasSize atlasSize_ = nullptr;
   std::size_t firstFrame_ = 0;
   std::size_t frameCount_ = 0;
   Seconds frameDuration_ = 0.0F;

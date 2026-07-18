@@ -56,6 +56,7 @@ HeadlessHost::HeadlessHost(FramebufferProfile profile,
   runtime_.registerApp(AppId::Clock, clock_);
   runtime_.registerApp(AppId::Motion, motion_);
   runtime_.registerApp(AppId::Settings, settings_);
+  runtime_.registerApp(AppId::Gallery, gallery_);
   runtime_.begin(AppId::Launcher);
   runner_.render();
 }

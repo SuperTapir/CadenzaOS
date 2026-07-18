@@ -102,13 +102,13 @@
 
 ## 11. Animation Gallery and Visual QA
 
-- [ ] 11.1 Write Gallery lifecycle/navigation/page-registry and knob-scrub tests
-- [ ] 11.2 Implement Gallery pages for easing, Tween composition, Spring, and all transitions
-- [ ] 11.3 Implement Gallery pages for selection feedback, camera effects, particles, sprite/state animation, and dither/patterns
-- [ ] 11.4 Add paused progress scrubbing controls that seek Gallery Playables without completion side effects
-- [ ] 11.5 Connect Settings motion mode to normal/reduced-motion effect profiles and test propagation
-- [ ] 11.6 Perform desktop visual QA at both profiles, centralize comfortable duration/amplitude defaults, and record accepted trade-offs
-- [ ] 11.7 Approve Gallery and representative effect snapshots at 320×170 and 400×240
+- [x] 11.1 Write Gallery lifecycle/navigation/page-registry and knob-scrub tests
+- [x] 11.2 Implement Gallery pages for easing, Tween composition, Spring, and all transitions
+- [x] 11.3 Implement Gallery pages for selection feedback, camera effects, particles, sprite/state animation, and dither/patterns
+- [x] 11.4 Add paused progress scrubbing controls that seek Gallery Playables without completion side effects
+- [x] 11.5 Connect Settings motion mode to normal/reduced-motion effect profiles and test propagation
+- [x] 11.6 Perform desktop visual QA at both profiles, centralize comfortable duration/amplitude defaults, and record accepted trade-offs
+- [x] 11.7 Approve Gallery and representative effect snapshots at 320×170 and 400×240
 
 ## 12. P7 Full Regression and Handoff
 

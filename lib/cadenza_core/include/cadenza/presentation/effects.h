@@ -7,8 +7,6 @@
 
 namespace cadenza {
 
-enum class MotionProfile : std::uint8_t { Normal, Reduced };
-
 class SelectionFeedback {
  public:
   explicit SelectionFeedback(MotionProfile profile) noexcept;

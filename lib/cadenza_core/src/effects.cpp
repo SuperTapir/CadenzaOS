@@ -3,16 +3,21 @@
 #include <algorithm>
 #include <cmath>
 
+#include "cadenza/presentation/defaults.h"
+
 namespace cadenza {
 namespace {
 float profileScale(MotionProfile profile) noexcept {
-  return profile == MotionProfile::Reduced ? 0.35F : 1.0F;
+  return profile == MotionProfile::Reduced
+             ? presentation_defaults::kReducedMotionScale
+             : 1.0F;
 }
 }  // namespace
 
 SelectionFeedback::SelectionFeedback(MotionProfile profile) noexcept
     : spring_(1.0F, {240.0F, 22.0F, 1.0F}),
-      amplitude_(0.10F * profileScale(profile)) {}
+      amplitude_(presentation_defaults::kSelectionOvershoot *
+                 profileScale(profile)) {}
 
 void SelectionFeedback::trigger() noexcept {
   elapsed_ = 0.0F;

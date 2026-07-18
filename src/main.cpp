@@ -24,6 +24,7 @@ cadenza::LauncherApp launcher;
 cadenza::ClockApp clockApp;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
+cadenza::AnimationGalleryApp gallery;
 uint32_t lastFrameUs = 0;
 
 struct LcdCommand {
@@ -73,6 +74,7 @@ void setup() {
   runtime.registerApp(cadenza::AppId::Clock, clockApp);
   runtime.registerApp(cadenza::AppId::Motion, motion);
   runtime.registerApp(cadenza::AppId::Settings, settings);
+  runtime.registerApp(cadenza::AppId::Gallery, gallery);
   runtime.begin(cadenza::AppId::Launcher);
   lastFrameUs = micros();
 }

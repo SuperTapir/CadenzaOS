@@ -9,6 +9,7 @@
 #include "cadenza/core/input.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/transition.h"
+#include "cadenza/presentation/defaults.h"
 
 namespace cadenza {
 
@@ -40,7 +41,8 @@ class AppRuntime {
   explicit AppRuntime(
       FramebufferProfile profile = FramebufferProfile::TEmbed,
       const Transition& transition = kVenetianBlindsTransition,
-      Seconds transitionDuration = 0.32F) noexcept;
+      Seconds transitionDuration =
+          presentation_defaults::kAppTransitionDuration) noexcept;
 
   bool registerApp(AppId id, App& app,
                    bool visibleInLauncher = true) noexcept;
@@ -62,6 +64,10 @@ class AppRuntime {
   float transitionProgress() const noexcept { return transition_; }
   void setTransition(const Transition& transition,
                      Seconds duration) noexcept;
+  void setMotionProfile(MotionProfile profile) noexcept {
+    motionProfile_ = profile;
+  }
+  MotionProfile motionProfile() const noexcept { return motionProfile_; }
 
  private:
   static constexpr std::size_t kAppCapacity =
@@ -79,7 +85,8 @@ class AppRuntime {
   MonoFramebuffer outgoingFrame_;
   MonoFramebuffer incomingFrame_;
   const Transition* transitionStrategy_ = nullptr;
-  Seconds transitionDuration_ = 0.32F;
+  Seconds transitionDuration_ = presentation_defaults::kAppTransitionDuration;
+  MotionProfile motionProfile_ = MotionProfile::Normal;
 };
 
 }  // namespace cadenza

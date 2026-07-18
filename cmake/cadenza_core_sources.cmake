@@ -3,6 +3,7 @@ set(CADENZA_CORE_SOURCES
   lib/cadenza_core/src/apps.cpp
   lib/cadenza_core/src/easing.cpp
   lib/cadenza_core/src/effects.cpp
+  lib/cadenza_core/src/gallery.cpp
   lib/cadenza_core/src/input.cpp
   lib/cadenza_core/src/mono_canvas.cpp
   lib/cadenza_core/src/mono_framebuffer.cpp

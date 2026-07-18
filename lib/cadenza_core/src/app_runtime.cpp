@@ -19,7 +19,7 @@ AppRuntime::AppRuntime(FramebufferProfile profile, const Transition& transition,
       incomingFrame_(profile),
       transitionStrategy_(&transition),
       transitionDuration_(transitionDuration > 0.0F ? transitionDuration
-                                                    : 0.32F) {}
+          : presentation_defaults::kAppTransitionDuration) {}
 
 void AppRuntime::setTransition(const Transition& transition,
                                Seconds duration) noexcept {
