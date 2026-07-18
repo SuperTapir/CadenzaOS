@@ -1,10 +1,12 @@
 set(CADENZA_CORE_SOURCES
   lib/cadenza_core/src/app_runtime.cpp
   lib/cadenza_core/src/apps.cpp
+  lib/cadenza_core/src/easing.cpp
   lib/cadenza_core/src/input.cpp
   lib/cadenza_core/src/mono_canvas.cpp
   lib/cadenza_core/src/mono_framebuffer.cpp
   lib/cadenza_core/src/simulation_clock.cpp
+  lib/cadenza_core/src/spring.cpp
   lib/cadenza_core/src/transition.cpp
   lib/cadenza_core/src/version.cpp
 )

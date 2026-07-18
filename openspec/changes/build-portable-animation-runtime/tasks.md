@@ -69,16 +69,16 @@
 
 ## 8. Animation Core
 
-- [ ] 8.1 Write exact endpoint and golden interior-vector tests for all required easing functions
-- [ ] 8.2 Implement normalized Easing functions with clamped input and exact endpoints
-- [ ] 8.3 Write typed Tween tests for update, value, reset, state, progress query, seek, and large-delta boundary crossing
-- [ ] 8.4 Implement allocation-free Tween<T> with delay, repeat delay/count, yoyo/reverse, and non-allocating completion callback
-- [ ] 8.5 Write callback tests proving one-shot traversal behavior and side-effect-free seek
-- [ ] 8.6 Write Sequence local-time/seek/capacity tests and implement fixed-capacity non-owning Sequence
-- [ ] 8.7 Write Parallel duration/local-time/seek/capacity tests and implement fixed-capacity non-owning Parallel
-- [ ] 8.8 Write overlapping-offset Timeline update/reverse/repeat/seek/capacity tests and implement fixed-capacity Timeline
-- [ ] 8.9 Write Spring overshoot/settling/stability/large-delta tests and implement bounded fixed-substep Spring
-- [ ] 8.10 Compile golden animation vectors for host and ESP32-compatible targets and document numeric tolerances
+- [x] 8.1 Write exact endpoint and golden interior-vector tests for all required easing functions
+- [x] 8.2 Implement normalized Easing functions with clamped input and exact endpoints
+- [x] 8.3 Write typed Tween tests for update, value, reset, state, progress query, seek, and large-delta boundary crossing
+- [x] 8.4 Implement allocation-free Tween<T> with delay, repeat delay/count, yoyo/reverse, and non-allocating completion callback
+- [x] 8.5 Write callback tests proving one-shot traversal behavior and side-effect-free seek
+- [x] 8.6 Write Sequence local-time/seek/capacity tests and implement fixed-capacity non-owning Sequence
+- [x] 8.7 Write Parallel duration/local-time/seek/capacity tests and implement fixed-capacity non-owning Parallel
+- [x] 8.8 Write overlapping-offset Timeline update/reverse/repeat/seek/capacity tests and implement fixed-capacity Timeline
+- [x] 8.9 Write Spring overshoot/settling/stability/large-delta tests and implement bounded fixed-substep Spring
+- [x] 8.10 Compile golden animation vectors for host and ESP32-compatible targets and document numeric tolerances
 
 ## 9. Transition and Motion Presentation
 

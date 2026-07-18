@@ -186,6 +186,26 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_recording_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_recording_tests COMMAND cadenza_recording_tests)
 
+  add_executable(cadenza_easing_tests tests/easing_tests.cpp)
+  target_link_libraries(cadenza_easing_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_easing_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_easing_tests COMMAND cadenza_easing_tests)
+
+  add_executable(cadenza_tween_tests tests/tween_tests.cpp)
+  target_link_libraries(cadenza_tween_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_tween_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_tween_tests COMMAND cadenza_tween_tests)
+
+  add_executable(cadenza_composition_tests tests/composition_tests.cpp)
+  target_link_libraries(cadenza_composition_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_composition_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_composition_tests COMMAND cadenza_composition_tests)
+
+  add_executable(cadenza_spring_tests tests/spring_tests.cpp)
+  target_link_libraries(cadenza_spring_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_spring_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_spring_tests COMMAND cadenza_spring_tests)
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)
