@@ -15,7 +15,7 @@ Target a strict 350:155 landscape composition. Generate masters at 1400×620 or
 Append this text to every App prompt:
 
 ```text
-retro-futurist portable instrument interface, 1980s scientific field manual, Swiss editorial composition, bold geometric bitmap-inspired typography, strong app title integrated into the artwork, large readable silhouettes, sparse intentional details, playful but precise, high-contrast composition designed for later 1-bit conversion, only flat black white and limited mid-gray, no gradients, no antialiasing, no card border, no rounded container, landscape 350:155 aspect ratio, title fully inside safe margins
+retro-futurist portable instrument interface, 1980s scientific field manual, Swiss editorial composition, bold geometric display typography with smooth high-resolution contours, strong app title integrated into the artwork, large readable silhouettes, sparse intentional details, playful but precise, high-contrast composition designed for later 1-bit ordered-dither conversion, black white and three to five deliberate gray values, restrained planar shading rather than photographic gradients, clean antialiased master edges, no card border, no rounded container, landscape 350:155 aspect ratio, title fully inside safe margins
 ```
 
 ### Negative prompt
@@ -23,8 +23,25 @@ retro-futurist portable instrument interface, 1980s scientific field manual, Swi
 Apply these as explicit exclusions:
 
 ```text
-Exclude: photorealistic, 3D render, glossy UI, cyberpunk neon, colorful, soft shadows, gradients, blur, thin lines, tiny text, dense dashboard, generic mobile app UI, multiple panels, external frame, rounded card border, Playdate logo, copyrighted characters.
+Exclude: photorealistic, glossy UI, cyberpunk neon, colorful, soft drop shadows, continuous photographic gradients, blur, intentionally jagged pixel-font stair-steps in the master, thin lines, tiny text, dense dashboard, generic mobile app UI, multiple panels, external frame, rounded card border, Playdate logo, copyrighted characters.
 ```
+
+## Typography and grayscale
+
+- Design title glyphs as smooth high-resolution shapes first. Pixel hinting and
+  1-bit cleanup happen after reduction; do not confuse “bitmap-inspired” with
+  deliberately rough diagonal and curved outlines.
+- Keep final important strokes at least 2 pixels thick. Use generous cap height,
+  clear counters, distinguishable letters, and manual cleanup after conversion.
+- Use gray as a small material vocabulary, not generic noise: highlight face,
+  side plane, metal, atmosphere, or depth. A strong title treatment is a
+  dithered/light upper face over a solid black lower face or extrusion.
+- Preserve a solid silhouette around critical text. Gray may add volume but must
+  not be required to decipher the word.
+- Prefer ordered, repeatable patterns and 3–5 tonal bands. Avoid broad fields of
+  automatic error-diffusion noise, especially around titles and focal objects.
+- Because the whole Cover moves in Launcher, inspect gray patterns during
+  one-pixel animation. Reduce or coarsen patterns that shimmer or flash.
 
 ## App briefs
 
@@ -78,9 +95,16 @@ Reject or iterate unless every applicable item passes:
 - CLOCK/GALLERY read as dark and MOTION/SETTINGS read as light.
 - Typography, margins, contour weight and editorial rhythm form one family.
 - No external border, rounded card, page indicator, input hint or Launcher chrome.
-- No gradients, soft shadows, blur, antialiasing-dependent features or color.
+- Master contours are smooth and antialiased; final 1-bit contours are manually
+  hinted with no isolated stair-step noise.
+- Gray planes add intentional hierarchy or volume and survive as controlled
+  ordered dither; there are no broad fuzzy auto-dither fields.
+- Important final strokes are at least 2 pixels thick and counters remain open
+  at both 350×155 and 280×124.
 - No tiny labels or dense dashboard structures.
 - Important contours remain readable after a 4× reduction to 350×155.
 - MOTION's core circle is hollow; CLOCK has one main dial.
 - Image is a static identity Cover, not a pressed/selected/launch variant.
 - Original lossless PNG is retained separately from derived crops and 1-bit files.
+- Pure black/white and reflective-palette previews are reviewed at 1× size.
+- A short moving-track review shows no objectionable dither shimmer or flashing.

@@ -1,4 +1,4 @@
 interface:
-  display_name: "生成 Launcher 封面插图"
-  short_description: "生成统一的复古未来科学仪器风格 Launcher 封面"
-  default_prompt: "Use $generate-launcher-cover-art to generate a coherent set of CadenzaOS Launcher cover illustrations."
+  display_name: "生成并应用 Launcher Cover"
+  short_description: "从平滑母图生成、转换并接入 1-bit Cover"
+  default_prompt: "Use $generate-launcher-cover-art to generate, review, convert, and apply a CadenzaOS Launcher Cover."
