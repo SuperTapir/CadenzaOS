@@ -1,4 +1,4 @@
 interface:
   display_name: "生成并应用 Launcher Cover"
-  short_description: "从平滑母图生成、转换并接入 1-bit Cover"
-  default_prompt: "Use $generate-launcher-cover-art to generate, review, convert, and apply a CadenzaOS Launcher Cover."
+  short_description: "生成、精简并转换适合 1-bit 屏幕的 Launcher Cover"
+  default_prompt: "Use $generate-launcher-cover-art to simplify, review, convert, and apply a CadenzaOS Launcher Cover."
