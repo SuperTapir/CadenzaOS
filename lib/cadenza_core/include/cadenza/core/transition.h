@@ -27,7 +27,47 @@ class VenetianBlindsTransition final : public Transition {
                float progress) const noexcept override;
 };
 
+class DipTransition final : public Transition {
+ public:
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
+class HorizontalWipeTransition final : public Transition {
+ public:
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
+class DiagonalWipeTransition final : public Transition {
+ public:
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
+class IrisTransition final : public Transition {
+ public:
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
+class CheckerDissolveTransition final : public Transition {
+ public:
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
 extern const CutTransition kCutTransition;
 extern const VenetianBlindsTransition kVenetianBlindsTransition;
+extern const DipTransition kDipTransition;
+extern const HorizontalWipeTransition kHorizontalWipeTransition;
+extern const DiagonalWipeTransition kDiagonalWipeTransition;
+extern const IrisTransition kIrisTransition;
+extern const CheckerDissolveTransition kCheckerDissolveTransition;
 
 }  // namespace cadenza

@@ -82,14 +82,14 @@
 
 ## 9. Transition and Motion Presentation
 
-- [ ] 9.1 Write exact endpoint, representative midpoint, geometry, and immutability tests for every required transition at both profiles
-- [ ] 9.2 Implement Dip/Fade and horizontal wipe transition strategies
-- [ ] 9.3 Implement diagonal wipe, iris, and configurable venetian-blinds transition strategies
-- [ ] 9.4 Implement checker/dither dissolve with deterministic coverage and phase
-- [ ] 9.5 Replace the temporary runtime transition with selectable strategies and preserve lifecycle/input tests
-- [ ] 9.6 Write interruption/reduced-motion tests and implement reusable selection overshoot/pulse feedback
-- [ ] 9.7 Write deterministic seed, bounded amplitude, decay, and neutral-end tests for camera effects
-- [ ] 9.8 Implement camera punch and deterministic camera shake with normal/reduced-motion profiles
+- [x] 9.1 Write exact endpoint, representative midpoint, geometry, and immutability tests for every required transition at both profiles
+- [x] 9.2 Implement Dip/Fade and horizontal wipe transition strategies
+- [x] 9.3 Implement diagonal wipe, iris, and configurable venetian-blinds transition strategies
+- [x] 9.4 Implement checker/dither dissolve with deterministic coverage and phase
+- [x] 9.5 Replace the temporary runtime transition with selectable strategies and preserve lifecycle/input tests
+- [x] 9.6 Write interruption/reduced-motion tests and implement reusable selection overshoot/pulse feedback
+- [x] 9.7 Write deterministic seed, bounded amplitude, decay, and neutral-end tests for camera effects
+- [x] 9.8 Implement camera punch and deterministic camera shake with normal/reduced-motion profiles
 
 ## 10. Particles and Sprite Animation
 

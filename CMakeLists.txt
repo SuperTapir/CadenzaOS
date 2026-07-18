@@ -206,6 +206,22 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_spring_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_spring_tests COMMAND cadenza_spring_tests)
 
+  add_executable(cadenza_transition_set_tests tests/transition_set_tests.cpp)
+  target_link_libraries(cadenza_transition_set_tests PRIVATE cadenza::host)
+  target_include_directories(cadenza_transition_set_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_transition_set_tests COMMAND cadenza_transition_set_tests)
+
+  add_executable(cadenza_presentation_effects_tests
+    tests/presentation_effects_tests.cpp
+  )
+  target_link_libraries(cadenza_presentation_effects_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_presentation_effects_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_presentation_effects_tests
+    COMMAND cadenza_presentation_effects_tests
+  )
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)
