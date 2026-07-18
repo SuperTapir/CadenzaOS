@@ -5,9 +5,17 @@
 
 namespace cadenza {
 
+enum class TransitionFrameModel : std::uint8_t {
+  Direct,
+  Staged,
+};
+
 class Transition {
  public:
   virtual ~Transition() = default;
+  virtual TransitionFrameModel frameModel() const noexcept {
+    return TransitionFrameModel::Direct;
+  }
   virtual void compose(const MonoFramebuffer& outgoing,
                        const MonoFramebuffer& incoming, MonoCanvas& output,
                        float progress) const noexcept = 0;
@@ -69,6 +77,26 @@ class CheckerDissolveTransition final : public Transition {
                float progress) const noexcept override;
 };
 
+class AppLaunchHandoffTransition final : public Transition {
+ public:
+  TransitionFrameModel frameModel() const noexcept override {
+    return TransitionFrameModel::Staged;
+  }
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
+class AppReturnHandoffTransition final : public Transition {
+ public:
+  TransitionFrameModel frameModel() const noexcept override {
+    return TransitionFrameModel::Staged;
+  }
+  void compose(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) const noexcept override;
+};
+
 extern const CutTransition kCutTransition;
 extern const VenetianBlindsTransition kVenetianBlindsTransition;
 extern const DipTransition kDipTransition;
@@ -76,5 +104,7 @@ extern const HorizontalWipeTransition kHorizontalWipeTransition;
 extern const DiagonalWipeTransition kDiagonalWipeTransition;
 extern const IrisTransition kIrisTransition;
 extern const CheckerDissolveTransition kCheckerDissolveTransition;
+extern const AppLaunchHandoffTransition kAppLaunchHandoffTransition;
+extern const AppReturnHandoffTransition kAppReturnHandoffTransition;
 
 }  // namespace cadenza

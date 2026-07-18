@@ -134,6 +134,22 @@ bool renderBitmapCover(MonoCanvas& canvas, Rect bounds,
   return true;
 }
 
+float launchProgress(float progress) noexcept {
+  return std::max(0.0F, std::min(1.0F, progress));
+}
+
+Rect centeredLaunchCover(const MonoCanvas& canvas) noexcept {
+  const int width = std::min(350, canvas.width() * 7 / 8);
+  const int height = width * 155 / 350;
+  return {(canvas.width() - width) / 2, (canvas.height() - height) / 2,
+          width, height};
+}
+
+std::uint8_t ditherCoverage(float progress) noexcept {
+  return static_cast<std::uint8_t>(
+      std::max(0.0F, std::min(64.0F, progress * 64.0F)));
+}
+
 void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
                         AppId appId, const char* title,
                         const AppCatalogView& catalog) noexcept {
@@ -336,6 +352,48 @@ bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
                            kClockCover, true);
 }
 
+bool ClockApp::renderLaunchFrame(MonoCanvas& canvas,
+                                 float progress) const noexcept {
+  const float p = launchProgress(progress);
+  canvas.clear(true);
+  if (p < 0.18F) {
+    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
+                             kClockTEmbedCover, kClockCover, true);
+  }
+  const float phase = (p - 0.18F) / 0.82F;
+  canvas.clear(false);
+  const int centerX = canvas.width() / 2;
+  const int centerY = canvas.height() / 2;
+  const int radius = std::max(18, std::min(canvas.width(), canvas.height()) /
+                                     2 - 12);
+  canvas.fillDither({0, 0, canvas.width(), canvas.height()},
+                    kOrderedDither8x8,
+                    ditherCoverage(0.10F + phase * 0.20F));
+  for (int tick = 0; tick < 24; ++tick) {
+    const float angle = static_cast<float>(tick) * 6.2831853F / 24.0F;
+    const int outerX = centerX + static_cast<int>(std::cos(angle) * radius);
+    const int outerY = centerY + static_cast<int>(std::sin(angle) * radius);
+    const int innerRadius = radius - (tick % 6 == 0 ? 11 : 5);
+    const int innerX =
+        centerX + static_cast<int>(std::cos(angle) * innerRadius);
+    const int innerY =
+        centerY + static_cast<int>(std::sin(angle) * innerRadius);
+    canvas.line(innerX, innerY, outerX, outerY, true);
+  }
+  const float handAngle = -1.5707963F + phase * 5.6F;
+  canvas.line(centerX, centerY,
+              centerX + static_cast<int>(std::cos(handAngle) * (radius - 16)),
+              centerY + static_cast<int>(std::sin(handAngle) * (radius - 16)),
+              true);
+  canvas.fillCircle(centerX, centerY, 4, true);
+  const int scanY = std::min(canvas.height() - 2,
+                             static_cast<int>(phase * canvas.height()));
+  canvas.line(0, scanY, canvas.width() - 1, scanY, true);
+  canvas.text("CHRONO", centerX, centerY + radius / 2, 2, true,
+              TextAlign::MiddleCenter);
+  return true;
+}
+
 void MotionApp::onEnter() noexcept { velocity_ = 0.0F; }
 
 void MotionApp::update(const AppUpdateContext& context) noexcept {
@@ -392,6 +450,41 @@ bool MotionApp::renderLauncherCover(MonoCanvas& canvas,
                                     Rect bounds) const noexcept {
   return renderBitmapCover(canvas, bounds, kMotionTEmbedCover,
                            kMotionCover, false);
+}
+
+bool MotionApp::renderLaunchFrame(MonoCanvas& canvas,
+                                  float progress) const noexcept {
+  const float p = launchProgress(progress);
+  canvas.clear(true);
+  if (p < 0.18F) {
+    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
+                             kMotionTEmbedCover, kMotionCover, false);
+  }
+  const float phase = (p - 0.18F) / 0.82F;
+  const int centerY = canvas.height() / 2;
+  const int startX = std::max(18, canvas.width() / 9);
+  const int endX = canvas.width() * 3 / 4;
+  const int ballX = startX + static_cast<int>((endX - startX) * phase);
+  canvas.clear(true);
+  for (int lane = -3; lane <= 3; ++lane) {
+    const int y = centerY + lane * std::max(8, canvas.height() / 12);
+    if (y >= 0 && y < canvas.height()) {
+      canvas.line(0, y, canvas.width() - 1, y, false);
+    }
+  }
+  const int tail = std::max(10, static_cast<int>(phase * canvas.width() / 2));
+  for (int streak = 0; streak < 6; ++streak) {
+    const int y = centerY - 18 + streak * 7;
+    canvas.line(std::max(0, ballX - tail - streak * 5), y,
+                std::max(0, ballX - 22 - streak * 2), y, false);
+  }
+  const int radius = 12 + static_cast<int>(phase * 18.0F);
+  canvas.fillCircle(ballX, centerY, radius, false);
+  canvas.circle(ballX, centerY, radius, true);
+  canvas.fillCircle(ballX, centerY, std::max(4, radius / 2), true);
+  canvas.text("VECTOR ACQUIRED", canvas.width() / 2,
+              canvas.height() - 10, 1, false, TextAlign::MiddleCenter);
+  return true;
 }
 
 void SettingsApp::update(const AppUpdateContext& context) noexcept {
@@ -552,10 +645,81 @@ bool SettingsApp::renderLauncherCover(MonoCanvas& canvas,
                            kSettingsCover, false);
 }
 
+bool SettingsApp::renderLaunchFrame(MonoCanvas& canvas,
+                                    float progress) const noexcept {
+  const float p = launchProgress(progress);
+  canvas.clear(true);
+  if (p < 0.18F) {
+    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
+                             kSettingsTEmbedCover, kSettingsCover, true);
+  }
+  const float phase = (p - 0.18F) / 0.82F;
+  canvas.clear(false);
+  const int band = std::max(2, static_cast<int>(canvas.width() *
+                                                (0.08F + phase * 0.28F)));
+  canvas.fillRect(0, 0, band, canvas.height(), true);
+  const int gridLeft = band + 8;
+  for (int x = gridLeft; x < canvas.width(); x += 18) {
+    canvas.line(x, 0, x, canvas.height() - 1, true);
+  }
+  for (int y = 0; y < canvas.height(); y += 18) {
+    canvas.line(gridLeft, y, canvas.width() - 1, y, true);
+  }
+  const int crossX = gridLeft + static_cast<int>(
+      phase * std::max(0, canvas.width() - gridLeft - 10));
+  const int crossY = canvas.height() / 2;
+  canvas.line(crossX - 12, crossY, crossX + 12, crossY, true);
+  canvas.line(crossX, crossY - 12, crossX, crossY + 12, true);
+  canvas.rect(crossX - 5, crossY - 5, 11, 11, true);
+  canvas.text("CAL", 8, 8, 3, false);
+  canvas.text("SYSTEM ALIGN", canvas.width() - 8, canvas.height() - 8,
+              1, true, TextAlign::BottomRight);
+  return true;
+}
+
 bool AnimationGalleryApp::renderLauncherCover(
     MonoCanvas& canvas, Rect bounds) const noexcept {
   return renderBitmapCover(canvas, bounds, kGalleryTEmbedCover,
                            kGalleryCover, true);
+}
+
+bool AnimationGalleryApp::renderLaunchFrame(
+    MonoCanvas& canvas, float progress) const noexcept {
+  const float p = launchProgress(progress);
+  canvas.clear(true);
+  if (p < 0.18F) {
+    return renderBitmapCover(canvas, centeredLaunchCover(canvas),
+                             kGalleryTEmbedCover, kGalleryCover, true);
+  }
+  const float phase = (p - 0.18F) / 0.82F;
+  canvas.clear(false);
+  canvas.fillDither({0, 0, canvas.width(), canvas.height()},
+                    kOrderedDither8x8, ditherCoverage(phase * 0.75F),
+                    static_cast<int>(phase * 7.0F), 0);
+  const int frameCount = 4;
+  const int gap = std::max(4, canvas.width() / 40);
+  const int frameWidth = (canvas.width() - gap * (frameCount + 1)) /
+                         frameCount;
+  const int top = canvas.height() / 4;
+  const int frameHeight = canvas.height() / 2;
+  const int active = std::min(frameCount - 1,
+                              static_cast<int>(phase * frameCount));
+  for (int index = 0; index < frameCount; ++index) {
+    const int x = gap + index * (frameWidth + gap);
+    canvas.fillRect(x, top, frameWidth, frameHeight,
+                    index == active);
+    canvas.rect(x, top, frameWidth, frameHeight, true);
+    if (index == active) {
+      canvas.text("PLAY", x + frameWidth / 2, top + frameHeight / 2,
+                  1, false, TextAlign::MiddleCenter);
+    } else {
+      canvas.text("FRAME", x + frameWidth / 2, top + frameHeight / 2,
+                  1, true, TextAlign::MiddleCenter);
+    }
+  }
+  canvas.text("ANIMATION / LAB", canvas.width() / 2, 10, 2, true,
+              TextAlign::MiddleCenter);
+  return true;
 }
 
 }  // namespace cadenza

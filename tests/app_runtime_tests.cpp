@@ -201,7 +201,7 @@ TEST_CASE("transition orders exit before enter at the midpoint") {
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
   REQUIRE(fixture.runtime.open(kClockAppId));
-  fixture.update(0.15F);
+  fixture.update(0.39F);
   CHECK(fixture.events == std::vector<std::string>{"Launcher:enter"});
   fixture.update(0.02F);
   CHECK(fixture.events ==
@@ -220,7 +220,7 @@ TEST_CASE("only active App updates and transition input is frozen") {
   REQUIRE(fixture.runtime.open(kClockAppId));
   input.turn = 7;
   fixture.update(0.10F, input);
-  fixture.update(0.23F, input);
+  fixture.update(0.71F, input);
   CHECK_FALSE(fixture.runtime.transitioning());
   CHECK(fixture.launcher.updates == 1);
   CHECK(fixture.clock.updates == 0);
@@ -259,7 +259,7 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   fixture.services.renderAudio(pcm.data(), pcm.size());
   CHECK(pcmHash(pcm.data(), pcm.size()) == 0x718BD5DCD3F36003ULL);
 
-  fixture.update(0.32F);
+  fixture.update(0.79F);
   REQUIRE(fixture.runtime.currentId() == kClockAppId);
   cadenza::InputFrame input;
   input.longPressed = true;
@@ -271,9 +271,17 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   released.released = true;
   fixture.update(0.01F, released);
   fixture.update(0.01F, input);
-  CHECK_FALSE(fixture.runtime.systemMenuActive());
+  CHECK(fixture.runtime.systemMenuActive());
+  CHECK(fixture.runtime.systemSurfaces().menuClosing());
   CHECK(fixture.services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Back);
+  CHECK(fixture.runtime.systemSurfaces().diagnostics().closed == 1);
+  const auto pendingAfterClose =
+      fixture.services.sound().pendingCommandCount();
+  fixture.update(0.17F);
+  CHECK_FALSE(fixture.runtime.systemMenuActive());
+  CHECK(fixture.runtime.systemSurfaces().diagnostics().closed == 1);
+  CHECK(fixture.services.sound().pendingCommandCount() == pendingAfterClose);
 }
 
 TEST_CASE("system menu freezes App lifecycle while services keep advancing") {
@@ -318,7 +326,7 @@ TEST_CASE("menu request during transition opens on stable destination") {
   CHECK_FALSE(fixture.runtime.systemMenuActive());
   cadenza::InputFrame release;
   release.released = true;
-  fixture.update(0.23F, release);
+  fixture.update(0.71F, release);
   CHECK_FALSE(fixture.runtime.transitioning());
   CHECK(fixture.runtime.currentId() == kClockAppId);
   CHECK_FALSE(fixture.runtime.systemMenuActive());

@@ -66,7 +66,9 @@ class SystemSurfaceCoordinator {
 
   SystemSurfaceFrame update(Seconds dt, const InputFrame& input,
                             bool appTransitioning,
-                            bool homeCurrent = false) noexcept;
+                            bool homeCurrent = false,
+                            MotionProfile motionProfile =
+                                MotionProfile::Normal) noexcept;
   void notifyTransitionStable() noexcept;
 
   bool requestInteractive(SurfaceKind kind) noexcept;
@@ -79,6 +81,7 @@ class SystemSurfaceCoordinator {
   bool menuActive() const noexcept {
     return interactive_ == SurfaceKind::SystemMenu;
   }
+  bool menuClosing() const noexcept { return menuClosing_; }
   bool appSuspended() const noexcept {
     return menuActive() || deferredMenu_ || captureUntilRelease_;
   }
@@ -93,8 +96,11 @@ class SystemSurfaceCoordinator {
   const TransientFeedback* transientAt(std::size_t index) const noexcept;
 
  private:
-  SystemSurfaceFrame openMenu(bool captureFrame) noexcept;
+  SystemSurfaceFrame openMenu(bool captureFrame,
+                              MotionProfile motionProfile =
+                                  MotionProfile::Normal) noexcept;
   SystemSurfaceFrame closeMenu() noexcept;
+  void releaseMenu() noexcept;
   void reject(SurfaceRejection reason) noexcept;
   void expireTransients(Seconds dt) noexcept;
 
@@ -104,7 +110,9 @@ class SystemSurfaceCoordinator {
   bool captureUntilRelease_ = false;
   bool deferredMenu_ = false;
   bool openWhenStable_ = false;
+  bool menuClosing_ = false;
   float revealProgress_ = 0.0F;
+  MotionProfile menuMotionProfile_ = MotionProfile::Normal;
   std::array<TransientFeedback, kTransientCapacity> transients_{};
   std::size_t transientCount_ = 0;
   SystemSurfaceDiagnostics diagnostics_{};
@@ -145,6 +153,10 @@ class SystemUi {
 void renderSystemMenu(MonoCanvas& canvas, SystemMenuItem selection,
                       bool homeCurrent, const SystemSnapshot& snapshot,
                       float revealProgress = 1.0F) noexcept;
+void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
+                      SystemMenuItem selection, bool homeCurrent,
+                      const SystemSnapshot& snapshot, float revealProgress,
+                      bool closing) noexcept;
 void renderTransientFeedback(MonoCanvas& canvas,
                              const SystemSurfaceCoordinator& surfaces) noexcept;
 

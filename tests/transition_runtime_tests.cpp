@@ -45,6 +45,48 @@ class PatternApp final : public cadenza::App {
   int offset_;
 };
 
+class LaunchProbeApp final : public cadenza::App {
+ public:
+  explicit LaunchProbeApp(const char* value, bool hasLaunch = false)
+      : value_(value), hasLaunch_(hasLaunch) {}
+  const char* name() const noexcept override { return value_; }
+  void onEnter() noexcept override { ++enters; }
+  void onExit() noexcept override { ++exits; }
+  void update(const cadenza::AppUpdateContext&) noexcept override {
+    ++updates;
+  }
+  void render(cadenza::MonoCanvas& canvas,
+              const cadenza::AppRenderContext&) noexcept override {
+    canvas.clear(false);
+    canvas.pixel(7, 7, true);
+  }
+  bool renderLauncherCover(cadenza::MonoCanvas& canvas,
+                           cadenza::Rect bounds) const noexcept override {
+    canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, false);
+    canvas.rect(bounds.x, bounds.y, bounds.width, bounds.height, true);
+    return true;
+  }
+  bool renderLaunchFrame(cadenza::MonoCanvas& canvas,
+                         float progress) const noexcept override {
+    ++launchCalls;
+    lastLaunchProgress = progress;
+    if (!hasLaunch_) return false;
+    canvas.clear(true);
+    canvas.pixel(static_cast<int>(progress * 20.0F), 3, false);
+    return true;
+  }
+
+  int enters = 0;
+  int exits = 0;
+  int updates = 0;
+  mutable int launchCalls = 0;
+  mutable float lastLaunchProgress = -1.0F;
+
+ private:
+  const char* value_;
+  bool hasLaunch_ = false;
+};
+
 class CaptureTransition final : public cadenza::Transition {
  public:
   void compose(const cadenza::MonoFramebuffer& outgoing,
@@ -122,4 +164,99 @@ TEST_CASE("cut and blinds strategies have exact endpoints and immutable inputs")
     CHECK(equals(outgoing, outgoingBefore));
     CHECK(equals(incoming, incomingBefore));
   }
+}
+
+TEST_CASE("handoff transitions explicitly opt into staged midpoint frames") {
+  CHECK(cadenza::kCutTransition.frameModel() ==
+        cadenza::TransitionFrameModel::Direct);
+  CHECK(cadenza::kVenetianBlindsTransition.frameModel() ==
+        cadenza::TransitionFrameModel::Direct);
+  CHECK(cadenza::kAppLaunchHandoffTransition.frameModel() ==
+        cadenza::TransitionFrameModel::Staged);
+  CHECK(cadenza::kAppReturnHandoffTransition.frameModel() ==
+        cadenza::TransitionFrameModel::Staged);
+}
+
+TEST_CASE("staged handoff has exact phase endpoints around the midpoint") {
+  cadenza::MonoFramebuffer source{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer bridge{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer output{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas sourceCanvas{source};
+  cadenza::MonoCanvas bridgeCanvas{bridge};
+  cadenza::MonoCanvas outputCanvas{output};
+  sourceCanvas.fillDither({0, 0, source.width(), source.height()},
+                          cadenza::kOrderedDither8x8, 16);
+  bridgeCanvas.fillDither({0, 0, bridge.width(), bridge.height()},
+                          cadenza::kOrderedDither8x8, 48);
+  const BufferBytes sourceBytes = snapshot(source);
+  const BufferBytes bridgeBytes = snapshot(bridge);
+
+  cadenza::kAppLaunchHandoffTransition.compose(
+      source, bridge, outputCanvas, 0.0F);
+  CHECK(equals(output, sourceBytes));
+  cadenza::kAppLaunchHandoffTransition.compose(
+      bridge, source, outputCanvas, 0.5F);
+  CHECK(equals(output, bridgeBytes));
+  cadenza::kAppReturnHandoffTransition.compose(
+      source, bridge, outputCanvas, 0.0F);
+  CHECK(equals(output, sourceBytes));
+  cadenza::kAppReturnHandoffTransition.compose(
+      bridge, source, outputCanvas, 0.5F);
+  CHECK(equals(output, bridgeBytes));
+}
+
+TEST_CASE("default runtime routes launch and return through staged identities") {
+  LaunchProbeApp launcher{"Launcher"};
+  LaunchProbeApp app{"App", true};
+  cadenza::AppRuntime runtime;
+  REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
+  REQUIRE(runtime.registerApp(kClockAppId, app));
+  REQUIRE(runtime.configureHome(kHomeAppId));
+  REQUIRE(runtime.begin(kHomeAppId));
+
+  cadenza::MonoFramebuffer output{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{output};
+  REQUIRE(runtime.open(kClockAppId));
+  runtime.render(canvas);
+  CHECK(app.launchCalls >= 2);
+  CHECK(app.enters == 0);
+  runtime.update(0.39F, {});
+  runtime.render(canvas);
+  CHECK(app.lastLaunchProgress > 0.9F);
+  CHECK(runtime.currentId() == kHomeAppId);
+  runtime.update(0.02F, {});
+  runtime.render(canvas);
+  CHECK(runtime.currentId() == kClockAppId);
+  CHECK(app.enters == 1);
+  CHECK(launcher.exits == 1);
+  CHECK(app.updates == 0);
+  runtime.update(0.40F, {});
+  CHECK_FALSE(runtime.transitioning());
+
+  REQUIRE(runtime.open(kHomeAppId));
+  runtime.update(0.21F, {});
+  CHECK(runtime.currentId() == kClockAppId);
+  runtime.update(0.02F, {});
+  CHECK(runtime.currentId() == kHomeAppId);
+  runtime.update(0.22F, {});
+  CHECK_FALSE(runtime.transitioning());
+  CHECK(app.exits == 1);
+  CHECK(launcher.enters == 2);
+  CHECK(sizeof(cadenza::AppRuntime) < 25000);
+}
+
+TEST_CASE("missing launch renderer falls back without blocking lifecycle") {
+  LaunchProbeApp launcher{"Launcher"};
+  LaunchProbeApp app{"Fallback", false};
+  cadenza::AppRuntime runtime;
+  REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
+  REQUIRE(runtime.registerApp(kClockAppId, app));
+  REQUIRE(runtime.configureHome(kHomeAppId));
+  REQUIRE(runtime.begin(kHomeAppId));
+  REQUIRE(runtime.open(kClockAppId));
+  runtime.update(0.81F, {});
+  CHECK_FALSE(runtime.transitioning());
+  CHECK(runtime.currentId() == kClockAppId);
+  CHECK(app.enters == 1);
+  CHECK(app.launchCalls == 1);
 }

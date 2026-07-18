@@ -65,6 +65,7 @@ class SmokeHarness final : public cadenza::MonotonicClock {
     deliver();
     REQUIRE(host.runtime().systemMenuActive());
     tapEnter();
+    advanceFrames(12);
     REQUIRE_FALSE(host.runtime().systemMenuActive());
   }
 
@@ -84,7 +85,7 @@ class SmokeHarness final : public cadenza::MonotonicClock {
   }
 
   void settle() {
-    for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+    for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
       host.step();
     }
     REQUIRE_FALSE(host.runtime().transitioning());

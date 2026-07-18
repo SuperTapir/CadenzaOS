@@ -49,6 +49,35 @@ const HorizontalWipeTransition kHorizontalWipeTransition;
 const DiagonalWipeTransition kDiagonalWipeTransition;
 const IrisTransition kIrisTransition;
 const CheckerDissolveTransition kCheckerDissolveTransition;
+const AppLaunchHandoffTransition kAppLaunchHandoffTransition;
+const AppReturnHandoffTransition kAppReturnHandoffTransition;
+
+namespace {
+void dissolveFrames(const MonoFramebuffer& outgoing,
+                    const MonoFramebuffer& incoming, MonoCanvas& output,
+                    float progress) noexcept {
+  if (endpoint(outgoing, incoming, output, progress)) return;
+  const std::uint8_t coverage = static_cast<std::uint8_t>(
+      normalized(progress) * 64.0F);
+  selectPixels(outgoing, incoming, output,
+               [coverage](std::int32_t x, std::int32_t y) {
+                 return kOrderedDither8x8
+                            .thresholds[(y & 7) * 8 + (x & 7)] < coverage;
+               });
+}
+
+float outQuad(float progress) noexcept {
+  const float remaining = 1.0F - normalized(progress);
+  return 1.0F - remaining * remaining;
+}
+
+float inOutQuad(float progress) noexcept {
+  const float p = normalized(progress);
+  return p < 0.5F ? 2.0F * p * p
+                  : 1.0F - ((-2.0F * p + 2.0F) *
+                            (-2.0F * p + 2.0F)) / 2.0F;
+}
+}  // namespace
 
 void CutTransition::compose(const MonoFramebuffer& outgoing,
                             const MonoFramebuffer& incoming,
@@ -157,6 +186,40 @@ void CheckerDissolveTransition::compose(
                  return kOrderedDither8x8
                             .thresholds[(y & 7) * 8 + (x & 7)] < coverage;
                });
+}
+
+void AppLaunchHandoffTransition::compose(
+    const MonoFramebuffer& outgoing, const MonoFramebuffer& incoming,
+    MonoCanvas& output, float progress) const noexcept {
+  if (progress <= 0.0F) {
+    copyFrame(outgoing, output);
+    return;
+  }
+  if (progress >= 1.0F) {
+    copyFrame(incoming, output);
+    return;
+  }
+  const float phase = progress < 0.5F ? progress * 2.0F
+                                      : (progress - 0.5F) * 2.0F;
+  dissolveFrames(outgoing, incoming, output,
+                 progress < 0.5F ? outQuad(phase)
+                                 : inOutQuad(phase));
+}
+
+void AppReturnHandoffTransition::compose(
+    const MonoFramebuffer& outgoing, const MonoFramebuffer& incoming,
+    MonoCanvas& output, float progress) const noexcept {
+  if (progress <= 0.0F) {
+    copyFrame(outgoing, output);
+    return;
+  }
+  if (progress >= 1.0F) {
+    copyFrame(incoming, output);
+    return;
+  }
+  const float phase = progress < 0.5F ? progress * 2.0F
+                                      : (progress - 0.5F) * 2.0F;
+  dissolveFrames(outgoing, incoming, output, inOutQuad(phase));
 }
 
 }  // namespace cadenza

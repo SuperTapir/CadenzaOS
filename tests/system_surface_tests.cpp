@@ -68,11 +68,13 @@ TEST_CASE("long press close consumes held sequence through release") {
   cadenza::presentation::SystemSurfaceCoordinator surfaces;
   surfaces.update(0.01F, longPress(), false);
   surfaces.update(0.01F, release(), false);
+  surfaces.update(0.20F, {}, false);
   REQUIRE(surfaces.menuActive());
 
   const auto closed = surfaces.update(0.01F, longPress(), false);
   CHECK(closed.intent == cadenza::presentation::SystemSurfaceIntent::Closed);
-  CHECK_FALSE(surfaces.menuActive());
+  CHECK(surfaces.menuActive());
+  CHECK(surfaces.menuClosing());
   CHECK(surfaces.appSuspended());
 
   cadenza::InputFrame noisyRelease = release();
@@ -81,11 +83,50 @@ TEST_CASE("long press close consumes held sequence through release") {
   const auto captured = surfaces.update(0.01F, noisyRelease, false);
   CHECK(captured.consumeInput);
   CHECK(captured.intent == cadenza::presentation::SystemSurfaceIntent::None);
+  CHECK(surfaces.appSuspended());
+
+  const float before = surfaces.revealProgress();
+  cadenza::InputFrame ignored;
+  ignored.turn = 2;
+  ignored.clicked = true;
+  CHECK(surfaces.update(0.05F, ignored, false).consumeInput);
+  CHECK(surfaces.menuClosing());
+  CHECK(surfaces.revealProgress() < before);
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Resume);
+
+  surfaces.update(0.30F, {}, false);
+  CHECK_FALSE(surfaces.menuActive());
+  CHECK_FALSE(surfaces.menuClosing());
   CHECK_FALSE(surfaces.appSuspended());
 
   cadenza::InputFrame next;
   next.clicked = true;
   CHECK_FALSE(surfaces.update(0.01F, next, false).consumeInput);
+}
+
+TEST_CASE("menu closing progress is monotonic and releases only offscreen") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  surfaces.update(0.01F, longPress(), false);
+  surfaces.update(0.01F, release(), false);
+  surfaces.update(0.20F, {}, false);
+  REQUIRE(surfaces.revealProgress() == doctest::Approx(1.0F));
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  const auto closing = surfaces.update(0.0F, click, false);
+  CHECK(closing.intent ==
+        cadenza::presentation::SystemSurfaceIntent::Closed);
+  REQUIRE(surfaces.menuClosing());
+  float previous = surfaces.revealProgress();
+  for (int frame = 0; frame < 20 && surfaces.menuActive(); ++frame) {
+    const auto owned = surfaces.update(1.0F / 60.0F, {}, false);
+    CHECK(owned.consumeInput);
+    CHECK(surfaces.revealProgress() <= previous);
+    previous = surfaces.revealProgress();
+  }
+  CHECK_FALSE(surfaces.menuActive());
+  CHECK(previous == doctest::Approx(0.0F));
+  CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
 }
 
 TEST_CASE("Home menu omits Home from its navigation order") {
@@ -140,6 +181,8 @@ TEST_CASE("interactive and transient capacities reject deterministically") {
   CHECK(surfaces.diagnostics().transientHighWater ==
         surfaces.kTransientCapacity);
   REQUIRE(surfaces.requestInteractive(SurfaceKind::None));
+  CHECK(surfaces.update(0.01F, {}, false).consumeInput);
+  surfaces.update(0.20F, {}, false);
   CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
   surfaces.update(2.0F, {}, false);
   CHECK(surfaces.transientCount() == 0);
@@ -190,6 +233,52 @@ TEST_CASE("system menu mask preserves the frozen app instead of replacing it") {
     for (std::int32_t x = 0; x < layout.panel.x; x += 7) {
       CHECK(frame.pixel(x, y));
     }
+  }
+}
+
+TEST_CASE("warped menu is stable when open and deforms deterministically") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::MonoFramebuffer rigid{profile};
+    cadenza::MonoFramebuffer stable{profile};
+    cadenza::MonoFramebuffer openingFirst{profile};
+    cadenza::MonoFramebuffer openingSecond{profile};
+    cadenza::MonoFramebuffer closing{profile};
+    cadenza::MonoFramebuffer scratch{profile};
+    rigid.clear(true);
+    stable.clear(true);
+    openingFirst.clear(true);
+    openingSecond.clear(true);
+    closing.clear(true);
+    cadenza::MonoCanvas rigidCanvas{rigid};
+    cadenza::MonoCanvas stableCanvas{stable};
+    cadenza::MonoCanvas openingFirstCanvas{openingFirst};
+    cadenza::MonoCanvas openingSecondCanvas{openingSecond};
+    cadenza::MonoCanvas closingCanvas{closing};
+    cadenza::SystemSnapshot snapshot;
+
+    cadenza::presentation::renderSystemMenu(
+        rigidCanvas, cadenza::presentation::SystemMenuItem::Sound, false,
+        snapshot, 1.0F);
+    cadenza::presentation::renderSystemMenu(
+        stableCanvas, scratch, cadenza::presentation::SystemMenuItem::Sound,
+        false, snapshot, 1.0F, false);
+    CHECK(framebufferHash(rigid) == framebufferHash(stable));
+
+    cadenza::presentation::renderSystemMenu(
+        openingFirstCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        0.35F, false);
+    cadenza::presentation::renderSystemMenu(
+        openingSecondCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        0.35F, false);
+    cadenza::presentation::renderSystemMenu(
+        closingCanvas, scratch, cadenza::presentation::SystemMenuItem::Sound,
+        false, snapshot, 0.35F, true);
+    CHECK(framebufferHash(openingFirst) == framebufferHash(openingSecond));
+    CHECK(framebufferHash(openingFirst) != framebufferHash(closing));
+    CHECK(framebufferHash(openingFirst) != framebufferHash(stable));
   }
 }
 

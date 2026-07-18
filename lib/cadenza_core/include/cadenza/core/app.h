@@ -17,6 +17,9 @@ class App {
   virtual bool renderLauncherCover(MonoCanvas&, Rect) const noexcept {
     return false;
   }
+  virtual bool renderLaunchFrame(MonoCanvas&, float) const noexcept {
+    return false;
+  }
 };
 
 }  // namespace cadenza

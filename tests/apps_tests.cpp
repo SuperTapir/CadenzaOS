@@ -179,7 +179,7 @@ TEST_CASE("portable Launcher opens the selected registered App") {
   input.clicked = true;
   cadenza::test::updateRuntime(runtime, services, 1.0F / 60.0F, input);
   CHECK(runtime.transitioning());
-  cadenza::test::updateRuntime(runtime, services, 0.17F);
+  cadenza::test::updateRuntime(runtime, services, 0.41F);
   CHECK(runtime.currentId() == cadenza::apps::kClockAppId);
 }
 
@@ -200,9 +200,42 @@ TEST_CASE("App catalog forwards optional const Launcher Covers") {
   const cadenza::AppCatalogView catalog = runtime.catalogView();
   CHECK_FALSE(catalog.renderLauncherCover(
       cadenza::AppId{0x0201}, canvas, {8, 8, 80, 48}));
+  CHECK_FALSE(catalog.renderLaunchFrame(
+      cadenza::AppId{0x0201}, canvas, 0.5F));
   CHECK(catalog.renderLauncherCover(
       cadenza::AppId{0x0202}, canvas, {8, 8, 80, 48}));
   CHECK(covered.renderCount == 1);
+}
+
+TEST_CASE("built-in launch sequences are deterministic seekable and distinct") {
+  cadenza::ClockApp clock;
+  cadenza::MotionApp motion;
+  cadenza::SettingsApp settings;
+  cadenza::AnimationGalleryApp gallery;
+  const cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    std::array<std::uint64_t, 4> middleHashes{};
+    for (std::size_t index = 0; index < 4; ++index) {
+      cadenza::MonoFramebuffer first{profile};
+      cadenza::MonoFramebuffer earlier{profile};
+      cadenza::MonoFramebuffer repeated{profile};
+      cadenza::MonoCanvas firstCanvas{first};
+      cadenza::MonoCanvas earlierCanvas{earlier};
+      cadenza::MonoCanvas repeatedCanvas{repeated};
+      REQUIRE(apps[index]->renderLaunchFrame(firstCanvas, 0.65F));
+      REQUIRE(apps[index]->renderLaunchFrame(earlierCanvas, 0.25F));
+      REQUIRE(apps[index]->renderLaunchFrame(repeatedCanvas, 0.65F));
+      middleHashes[index] = framebufferHash(first);
+      CHECK(middleHashes[index] == framebufferHash(repeated));
+      CHECK(middleHashes[index] != framebufferHash(earlier));
+    }
+    for (std::size_t left = 0; left < 4; ++left) {
+      for (std::size_t right = left + 1; right < 4; ++right) {
+        CHECK(middleHashes[left] != middleHashes[right]);
+      }
+    }
+  }
 }
 
 TEST_CASE("Launcher input and launch never mutate Cover pixels") {
@@ -454,7 +487,7 @@ TEST_CASE("Launcher opens the latest logical selection before motion settles") {
   click.clicked = true;
   cadenza::test::updateRuntime(runtime, services, 0.0F, click);
   REQUIRE(runtime.transitioning());
-  cadenza::test::updateRuntime(runtime, services, 0.17F);
+  cadenza::test::updateRuntime(runtime, services, 0.41F);
   CHECK(runtime.currentId() == cadenza::apps::kMotionAppId);
 }
 

@@ -21,7 +21,7 @@ std::uint64_t capture(cadenza::FramebufferProfile profile,
                       std::int16_t page, std::uint64_t expected) {
   cadenza::host::HeadlessHost host{profile};
   REQUIRE(host.runtime().open(cadenza::apps::kGalleryAppId));
-  for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
     host.step();
   }
   REQUIRE_FALSE(host.runtime().transitioning());

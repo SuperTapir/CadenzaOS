@@ -16,8 +16,9 @@ namespace cadenza {
 class AppRuntime : public AppNavigator, public AppCapabilityResolver {
  public:
   explicit AppRuntime(
-      FramebufferProfile profile = FramebufferProfile::TEmbed,
-      const Transition& transition = kVenetianBlindsTransition,
+      FramebufferProfile profile = FramebufferProfile::TEmbed) noexcept;
+  AppRuntime(
+      FramebufferProfile profile, const Transition& transition,
       Seconds transitionDuration =
           presentation_defaults::kAppTransitionDuration) noexcept;
 
@@ -89,6 +90,9 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   };
 
   bool startTransition(AppId id, audio::SoundCue cue) noexcept;
+  void selectTransitionRoute(AppId destination) noexcept;
+  bool renderHandoffFrame(AppId id, float progress,
+                          bool preferLaunchSequence) noexcept;
   void captureFrozenApp(const SystemSnapshot& snapshot) noexcept;
   void handleSystemSurfaceIntent(
       presentation::SystemSurfaceIntent intent,
@@ -105,11 +109,18 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   bool transitioning_ = false;
   bool swapped_ = false;
   bool incomingRendered_ = false;
+  bool defaultTransitionRouting_ = true;
+  bool stagedTransition_ = false;
+  bool launchHandoff_ = false;
+  bool launchRendererAvailable_ = false;
   DiagnosticSink* diagnosticSink_ = nullptr;
   MonoFramebuffer outgoingFrame_;
   MonoFramebuffer incomingFrame_;
   const Transition* transitionStrategy_ = nullptr;
   Seconds transitionDuration_ = presentation_defaults::kAppTransitionDuration;
+  Seconds activeTransitionDuration_ =
+      presentation_defaults::kAppTransitionDuration;
+  MotionProfile transitionMotionProfile_ = MotionProfile::Normal;
   SystemSnapshot frameSnapshot_{};
   DiscardingSystemCommandSink fallbackCommandSink_{};
   SystemCommandSink* frameCommandSink_ = &fallbackCommandSink_;

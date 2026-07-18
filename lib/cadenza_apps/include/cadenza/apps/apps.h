@@ -47,6 +47,8 @@ class ClockApp final : public App {
               const AppRenderContext& context) noexcept override;
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
+  bool renderLaunchFrame(MonoCanvas& canvas,
+                         float progress) const noexcept override;
 
  private:
   bool running_ = true;
@@ -63,6 +65,8 @@ class MotionApp final : public App {
               const AppRenderContext& context) noexcept override;
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
+  bool renderLaunchFrame(MonoCanvas& canvas,
+                         float progress) const noexcept override;
 
  private:
   float target_ = 0.5F;
@@ -79,6 +83,8 @@ class SettingsApp final : public App {
               const AppRenderContext& context) noexcept override;
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
+  bool renderLaunchFrame(MonoCanvas& canvas,
+                         float progress) const noexcept override;
 
  private:
   int selected_ = 0;
@@ -100,6 +106,8 @@ class AnimationGalleryApp final : public App {
               const AppRenderContext& context) noexcept override;
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
+  bool renderLaunchFrame(MonoCanvas& canvas,
+                         float progress) const noexcept override;
 
   constexpr std::size_t pageCount() const noexcept { return kPageCount; }
   const char* pageName(std::size_t index) const noexcept;

@@ -16,12 +16,161 @@ struct SnapshotCase {
   std::uint64_t expected;
 };
 
+enum class HandoffScene : std::uint8_t {
+  ClockLaunch,
+  MotionLaunch,
+  SettingsLaunch,
+  GalleryLaunch,
+  FallbackLaunch,
+  ClockReturn,
+  MenuOpening,
+  MenuClosing,
+};
+
+const char* handoffSceneName(HandoffScene scene) {
+  switch (scene) {
+    case HandoffScene::ClockLaunch:
+      return "clock-launch";
+    case HandoffScene::MotionLaunch:
+      return "motion-launch";
+    case HandoffScene::SettingsLaunch:
+      return "settings-launch";
+    case HandoffScene::GalleryLaunch:
+      return "gallery-launch";
+    case HandoffScene::FallbackLaunch:
+      return "fallback-launch";
+    case HandoffScene::ClockReturn:
+      return "clock-return";
+    case HandoffScene::MenuOpening:
+      return "menu-opening";
+    case HandoffScene::MenuClosing:
+      return "menu-closing";
+  }
+  return "unknown";
+}
+
+void settle(cadenza::host::HeadlessHost& host) {
+  host.advance(0.81F);
+  REQUIRE_FALSE(host.runtime().transitioning());
+}
+
+void openMenu(cadenza::host::HeadlessHost& host) {
+  cadenza::InputFrame held;
+  held.longPressed = true;
+  held.heldMs = 650;
+  host.step(held);
+  cadenza::InputFrame released;
+  released.released = true;
+  host.step(released);
+  REQUIRE(host.runtime().systemMenuActive());
+}
+
+std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
+                             HandoffScene scene, std::uint64_t expected) {
+  class FallbackApp final : public cadenza::App {
+   public:
+    const char* name() const noexcept override { return "FALLBACK"; }
+    void update(const cadenza::AppUpdateContext&) noexcept override {}
+    void render(cadenza::MonoCanvas& canvas,
+                const cadenza::AppRenderContext&) noexcept override {
+      canvas.clear(false);
+      canvas.text("FALLBACK APP", canvas.width() / 2,
+                  canvas.height() / 2, 2, true,
+                  cadenza::TextAlign::MiddleCenter);
+    }
+  } fallback;
+  constexpr cadenza::AppId kFallbackAppId{91};
+  if (scene == HandoffScene::FallbackLaunch) {
+    cadenza::LauncherApp launcher;
+    cadenza::AppRuntime runtime{profile};
+    cadenza::system::SystemServiceHost services;
+    cadenza::MonoFramebuffer framebuffer{profile};
+    cadenza::MonoCanvas canvas{framebuffer};
+    REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, launcher));
+    REQUIRE(runtime.registerApp(kFallbackAppId, fallback));
+    runtime.configureHome(cadenza::apps::kLauncherAppId);
+    REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
+    runtime.bindSystem(services.snapshot(), services);
+    REQUIRE(runtime.open(kFallbackAppId));
+    runtime.updateWithSystem(0.24F, {}, services.snapshot(), services);
+    runtime.renderWithSystem(canvas, services.snapshot());
+    const std::uint64_t actual = cadenza::host::framebufferHash(framebuffer);
+    const auto directory =
+        std::filesystem::current_path() / "snapshot-failures";
+    const auto path = directory /
+        (std::string{"handoff-"} + handoffSceneName(scene) + "-p" +
+         std::to_string(static_cast<int>(profile)) + ".png");
+    if (actual != expected) {
+      std::filesystem::create_directories(directory);
+      CHECK(cadenza::desktop::writePng(path.string(), framebuffer));
+    } else {
+      std::filesystem::remove(path);
+    }
+    return actual;
+  }
+  cadenza::host::HeadlessHost host{profile};
+  cadenza::AppId target = cadenza::apps::kClockAppId;
+  switch (scene) {
+    case HandoffScene::MotionLaunch:
+      target = cadenza::apps::kMotionAppId;
+      break;
+    case HandoffScene::SettingsLaunch:
+      target = cadenza::apps::kSettingsAppId;
+      break;
+    case HandoffScene::GalleryLaunch:
+      target = cadenza::apps::kGalleryAppId;
+      break;
+    case HandoffScene::FallbackLaunch:
+      break;
+    default:
+      break;
+  }
+  REQUIRE(host.runtime().open(target));
+  if (scene == HandoffScene::ClockLaunch ||
+      scene == HandoffScene::MotionLaunch ||
+      scene == HandoffScene::SettingsLaunch ||
+      scene == HandoffScene::GalleryLaunch ||
+      scene == HandoffScene::FallbackLaunch) {
+    host.advance(0.24F);
+  } else {
+    settle(host);
+    if (scene == HandoffScene::ClockReturn) {
+      REQUIRE(host.runtime().open(cadenza::apps::kLauncherAppId));
+      host.advance(0.14F);
+    } else {
+      openMenu(host);
+      if (scene == HandoffScene::MenuOpening) {
+        host.advance(0.06F);
+      } else {
+        host.advance(0.20F);
+        cadenza::InputFrame resume;
+        resume.clicked = true;
+        host.step(resume);
+        host.advance(0.06F);
+      }
+    }
+  }
+
+  const std::uint64_t actual = host.framebufferHash();
+  const auto directory = std::filesystem::current_path() / "snapshot-failures";
+  const auto path = directory /
+      (std::string{"handoff-"} + handoffSceneName(scene) + "-p" +
+       std::to_string(static_cast<int>(profile)) + ".png");
+  if (actual != expected) {
+    std::filesystem::create_directories(directory);
+    CHECK(cadenza::desktop::writePng(path.string(), host.framebuffer()));
+  } else {
+    std::filesystem::remove(path);
+  }
+  return actual;
+}
+
 std::uint64_t capture(cadenza::FramebufferProfile profile,
                       cadenza::AppId app, std::uint64_t expected) {
   cadenza::host::HeadlessHost host{profile};
   if (app != cadenza::apps::kLauncherAppId) {
     REQUIRE(host.runtime().open(app));
-    for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+    for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
       host.step();
     }
     REQUIRE_FALSE(host.runtime().transitioning());
@@ -101,4 +250,38 @@ TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
                                10395072706391661531ULL) ==
         10395072706391661531ULL);
+}
+
+TEST_CASE("approved App handoff and warped Menu keyframes") {
+  constexpr std::array<HandoffScene, 8> scenes{
+      HandoffScene::ClockLaunch, HandoffScene::MotionLaunch,
+      HandoffScene::SettingsLaunch, HandoffScene::GalleryLaunch,
+      HandoffScene::FallbackLaunch, HandoffScene::ClockReturn,
+      HandoffScene::MenuOpening,
+      HandoffScene::MenuClosing};
+  constexpr std::array<cadenza::FramebufferProfile, 2> profiles{
+      cadenza::FramebufferProfile::TEmbed,
+      cadenza::FramebufferProfile::Sharp};
+  constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
+      {{2636948144671584762ULL, 2220986957663627415ULL,
+        2341049785401331514ULL, 17380819794847192855ULL,
+        9650148204554733528ULL, 10620415418877875313ULL,
+        16680032181822085337ULL,
+        2789452226294592942ULL}},
+      {{1623482382721019563ULL, 16166378414349366659ULL,
+        9361844745573499914ULL, 7537389031036977447ULL,
+        9756231723368371849ULL, 18150222162577020456ULL,
+        10253295035054357084ULL,
+        11715812992187396753ULL}},
+  }};
+  for (std::size_t profileIndex = 0; profileIndex < profiles.size();
+       ++profileIndex) {
+    for (std::size_t sceneIndex = 0; sceneIndex < scenes.size(); ++sceneIndex) {
+      CAPTURE(handoffSceneName(scenes[sceneIndex]));
+      const auto actual = captureHandoff(
+          profiles[profileIndex], scenes[sceneIndex],
+          expected[profileIndex][sceneIndex]);
+      CHECK(actual == expected[profileIndex][sceneIndex]);
+    }
+  }
 }

@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstring>
 
+#include "cadenza/animation/easing.h"
+
 namespace cadenza::presentation {
 namespace {
 
@@ -72,21 +74,29 @@ void SystemSurfaceCoordinator::reject(SurfaceRejection reason) noexcept {
 }
 
 SystemSurfaceFrame SystemSurfaceCoordinator::openMenu(
-    bool captureFrame) noexcept {
+    bool captureFrame, MotionProfile motionProfile) noexcept {
   interactive_ = SurfaceKind::SystemMenu;
   selection_ = SystemMenuItem::Resume;
   menuArmed_ = !captureUntilRelease_;
+  menuClosing_ = false;
   revealProgress_ = 0.0F;
+  menuMotionProfile_ = motionProfile;
   ++diagnostics_.opened;
   return {true, captureFrame, SystemSurfaceIntent::Opened};
 }
 
 SystemSurfaceFrame SystemSurfaceCoordinator::closeMenu() noexcept {
-  interactive_ = SurfaceKind::None;
   menuArmed_ = false;
-  revealProgress_ = 0.0F;
+  menuClosing_ = true;
   ++diagnostics_.closed;
   return {true, false, SystemSurfaceIntent::Closed};
+}
+
+void SystemSurfaceCoordinator::releaseMenu() noexcept {
+  interactive_ = SurfaceKind::None;
+  menuArmed_ = false;
+  menuClosing_ = false;
+  revealProgress_ = 0.0F;
 }
 
 void SystemSurfaceCoordinator::expireTransients(Seconds dt) noexcept {
@@ -104,10 +114,22 @@ void SystemSurfaceCoordinator::expireTransients(Seconds dt) noexcept {
 
 SystemSurfaceFrame SystemSurfaceCoordinator::update(
     Seconds dt, const InputFrame& input, bool appTransitioning,
-    bool homeCurrent) noexcept {
+    bool homeCurrent, MotionProfile motionProfile) noexcept {
   expireTransients(dt);
+  if (menuClosing_) {
+    if (captureUntilRelease_ && input.released) {
+      captureUntilRelease_ = false;
+    }
+    const float duration =
+        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.16F;
+    revealProgress_ = std::max(
+        0.0F, revealProgress_ - std::max(0.0F, dt) / duration);
+    if (revealProgress_ <= 0.0F) releaseMenu();
+    return {true, false, SystemSurfaceIntent::None};
+  }
   if (menuActive()) {
-    constexpr float kRevealDuration = 0.16F;
+    const float kRevealDuration =
+        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.16F;
     revealProgress_ = std::min(
         1.0F, revealProgress_ + std::max(0.0F, dt) / kRevealDuration);
   }
@@ -120,7 +142,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
       return {true, false, SystemSurfaceIntent::None};
     }
     if (menuActive()) return closeMenu();
-    return openMenu(true);
+    return openMenu(true, motionProfile);
   }
 
   if (captureUntilRelease_) {
@@ -134,7 +156,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
   if (openWhenStable_ && !appTransitioning) {
     openWhenStable_ = false;
     deferredMenu_ = false;
-    return openMenu(true);
+    return openMenu(true, motionProfile);
   }
 
   if (!menuActive()) return {};
@@ -164,8 +186,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
         frame.intent = SystemSurfaceIntent::Boundary;
         return frame;
       }
-      interactive_ = SurfaceKind::None;
-      menuArmed_ = false;
+      releaseMenu();
       ++diagnostics_.closed;
       frame.intent = SystemSurfaceIntent::Home;
       return frame;
@@ -197,7 +218,7 @@ bool SystemSurfaceCoordinator::requestInteractive(SurfaceKind kind) noexcept {
     reject(SurfaceRejection::Busy);
     return false;
   }
-  openMenu(true);
+  openMenu(true, MotionProfile::Normal);
   return true;
 }
 
@@ -399,6 +420,50 @@ void renderSystemMenu(MonoCanvas& canvas, SystemMenuItem selection,
       case SystemMenuItem::Resume:
       case SystemMenuItem::Home:
       case SystemMenuItem::Count: break;
+    }
+  }
+}
+
+void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
+                      SystemMenuItem selection, bool homeCurrent,
+                      const SystemSnapshot& snapshot, float revealProgress,
+                      bool closing) noexcept {
+  scratch.clear(false);
+  MonoCanvas scratchCanvas{scratch};
+  renderSystemMenu(scratchCanvas, selection, homeCurrent, snapshot, 1.0F);
+
+  const SystemMenuLayout layout =
+      SystemMenuLayout::forCanvas(canvas.width(), canvas.height());
+  const float raw = std::max(0.0F, std::min(1.0F, revealProgress));
+  const float eased = closing
+                          ? 1.0F - ease(Easing::InQuad, 1.0F - raw)
+                          : ease(Easing::OutQuad, raw);
+  overlayDitherMask(
+      canvas, {0, 0, layout.panel.x, canvas.height()},
+      static_cast<std::uint8_t>(8.0F * eased + 0.5F));
+
+  const int panelRight = layout.panel.x + layout.panel.width;
+  for (std::int32_t y = layout.panel.y;
+       y < layout.panel.y + layout.panel.height; ++y) {
+    const float row = layout.panel.height <= 1
+                          ? 0.0F
+                          : static_cast<float>(y - layout.panel.y) /
+                                static_cast<float>(layout.panel.height - 1);
+    const float stagger = 0.28F * row;
+    const float rowReveal = closing
+                                ? std::min(1.0F, eased / (1.0F - stagger))
+                                : std::max(0.0F, std::min(
+                                      1.0F, (eased - stagger) /
+                                                (1.0F - stagger)));
+    const int visibleWidth = static_cast<int>(
+        static_cast<float>(layout.panel.width) * rowReveal + 0.5F);
+    if (visibleWidth <= 0) continue;
+    const int destinationLeft = panelRight - visibleWidth;
+    for (int x = destinationLeft; x < panelRight; ++x) {
+      const int sourceX = layout.panel.x +
+          (x - destinationLeft) * layout.panel.width / visibleWidth;
+      canvas.pixel(x, y, scratch.pixel(
+          std::min(layout.panel.x + layout.panel.width - 1, sourceX), y));
     }
   }
 }

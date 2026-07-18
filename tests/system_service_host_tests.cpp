@@ -247,7 +247,7 @@ TEST_CASE("foreground voice analyzer lease is released when owning App exits") {
                                                {});
   REQUIRE(host.snapshot().voice.analyzerActive);
   REQUIRE(runtime.open(kPassive));
-  cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.17F,
+  cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.41F,
                                                {});
   REQUIRE(runtime.currentId() == kPassive);
 
@@ -315,7 +315,7 @@ TEST_CASE("App network lease drives idempotent radio actions and auto cleanup") 
   CHECK_FALSE(host.connectivityService().tryPopAction(action));
 
   REQUIRE(runtime.open(kPassive));
-  cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.17F,
+  cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.41F,
                                                {});
   CHECK_FALSE(host.leases().desired(cadenza::system::SystemResource::Network));
   CHECK(host.connectivityService().snapshot().wifi.desired ==

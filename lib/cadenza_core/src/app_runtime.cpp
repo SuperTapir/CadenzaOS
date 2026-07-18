@@ -12,19 +12,38 @@ bool AppCatalogView::renderLauncherCover(
          entry->app->renderLauncherCover(canvas, bounds);
 }
 
+bool AppCatalogView::renderLaunchFrame(
+    AppId id, MonoCanvas& canvas, float progress) const noexcept {
+  if (!id.valid()) return false;
+  const AppCatalogEntry* entry = catalog_->find(id);
+  return entry && entry->app &&
+         entry->app->renderLaunchFrame(
+             canvas, std::max(0.0F, std::min(1.0F, progress)));
+}
+
+AppRuntime::AppRuntime(FramebufferProfile profile) noexcept
+    : outgoingFrame_(profile),
+      incomingFrame_(profile),
+      transitionStrategy_(&kVenetianBlindsTransition) {}
+
 AppRuntime::AppRuntime(FramebufferProfile profile, const Transition& transition,
                        Seconds transitionDuration) noexcept
     : outgoingFrame_(profile),
       incomingFrame_(profile),
       transitionStrategy_(&transition),
       transitionDuration_(transitionDuration > 0.0F ? transitionDuration
-          : presentation_defaults::kAppTransitionDuration) {}
+          : presentation_defaults::kAppTransitionDuration),
+      activeTransitionDuration_(transitionDuration_) {
+  defaultTransitionRouting_ = false;
+}
 
 void AppRuntime::setTransition(const Transition& transition,
                                Seconds duration) noexcept {
   if (transitioning_) return;
   transitionStrategy_ = &transition;
   if (duration > 0.0F) transitionDuration_ = duration;
+  activeTransitionDuration_ = transitionDuration_;
+  defaultTransitionRouting_ = false;
 }
 
 bool AppRuntime::registerApp(AppId id, App& app,
@@ -90,6 +109,75 @@ bool AppRuntime::open(AppId id) noexcept {
   return startTransition(id, audio::SoundCue::Confirm);
 }
 
+void AppRuntime::selectTransitionRoute(AppId destination) noexcept {
+  transitionMotionProfile_ = frameSnapshot_.motionProfile;
+  if (!defaultTransitionRouting_) {
+    activeTransitionDuration_ = transitionDuration_;
+    stagedTransition_ =
+        transitionStrategy_->frameModel() == TransitionFrameModel::Staged;
+    launchHandoff_ = stagedTransition_ && currentId_ == homeId_ &&
+                     destination != homeId_;
+    return;
+  }
+
+  if (currentId_ == homeId_ && destination != homeId_) {
+    transitionStrategy_ = &kAppLaunchHandoffTransition;
+    launchHandoff_ = true;
+    activeTransitionDuration_ =
+        transitionMotionProfile_ == MotionProfile::Reduced
+            ? presentation_defaults::kReducedAppLaunchHandoffDuration
+            : presentation_defaults::kAppLaunchHandoffDuration;
+  } else if (currentId_ != homeId_ && destination == homeId_) {
+    transitionStrategy_ = &kAppReturnHandoffTransition;
+    launchHandoff_ = false;
+    activeTransitionDuration_ =
+        transitionMotionProfile_ == MotionProfile::Reduced
+            ? presentation_defaults::kReducedAppReturnHandoffDuration
+            : presentation_defaults::kAppReturnHandoffDuration;
+  } else {
+    transitionStrategy_ = &kDipTransition;
+    launchHandoff_ = false;
+    activeTransitionDuration_ =
+        presentation_defaults::kAppTransitionDuration;
+  }
+  stagedTransition_ =
+      transitionStrategy_->frameModel() == TransitionFrameModel::Staged;
+}
+
+bool AppRuntime::renderHandoffFrame(
+    AppId id, float progress, bool preferLaunchSequence) noexcept {
+  incomingFrame_.clear(true);
+  MonoCanvas canvas{incomingFrame_, diagnosticSink_};
+  const AppCatalogView catalog{catalog_};
+  if (preferLaunchSequence &&
+      catalog.renderLaunchFrame(id, canvas, progress)) {
+    return true;
+  }
+
+  incomingFrame_.clear(true);
+  const std::int32_t contentWidth =
+      std::min<std::int32_t>(350, canvas.width() * 7 / 8);
+  const std::int32_t contentHeight = contentWidth * 155 / 350;
+  const Rect bounds{(canvas.width() - contentWidth) / 2,
+                    (canvas.height() - contentHeight) / 2,
+                    contentWidth, contentHeight};
+  if (catalog.renderLauncherCover(id, canvas, bounds)) return false;
+
+  canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, false);
+  canvas.rect(bounds.x, bounds.y, bounds.width, bounds.height, true);
+  BoundedTextRequest request;
+  request.value = catalog.appName(id);
+  request.bounds = {bounds.x + 8, bounds.y + 8,
+                    std::max(0, bounds.width - 16),
+                    std::max(0, bounds.height - 16)};
+  request.preferredScale = 3;
+  request.minimumScale = 1;
+  request.align = TextAlign::MiddleCenter;
+  request.overflow = TextOverflowPolicy::Ellipsis;
+  canvas.boundedText(request, true);
+  return false;
+}
+
 void AppRuntime::renderAppWithContext(
     App& app, MonoCanvas& canvas, const SystemSnapshot& snapshot) noexcept {
   const AppCatalogView catalog{catalog_};
@@ -103,11 +191,19 @@ bool AppRuntime::startTransition(AppId id, audio::SoundCue cue) noexcept {
     return false;
   }
   pendingId_ = id;
+  selectTransitionRoute(id);
   outgoingFrame_.clear(false);
   MonoCanvas outgoingCanvas{outgoingFrame_, diagnosticSink_};
   renderAppWithContext(*catalog_.find(currentId_)->app, outgoingCanvas,
                        frameSnapshot_);
-  incomingFrame_ = outgoingFrame_;
+  if (stagedTransition_) {
+    const AppId identity = launchHandoff_ ? id : currentId_;
+    launchRendererAvailable_ =
+        renderHandoffFrame(identity, 0.0F, launchHandoff_);
+  } else {
+    incomingFrame_ = outgoingFrame_;
+    launchRendererAvailable_ = false;
+  }
   transition_ = 0.0F;
   transitioning_ = true;
   swapped_ = false;
@@ -198,7 +294,8 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
   if (!begun_ || !current) return;
   const bool deferredMenuBeforeUpdate = surfaces_.hasDeferredMenu();
   const presentation::SystemSurfaceFrame surfaceFrame =
-      surfaces_.update(dt, input, transitioning_, currentId_ == homeId_);
+      surfaces_.update(dt, input, transitioning_, currentId_ == homeId_,
+                       snapshot.motionProfile);
   if (surfaceFrame.captureFrozenFrame) {
     if (deferredMenuBeforeUpdate) {
       captureFrozenApp(snapshot);
@@ -218,8 +315,15 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
     return;
   }
 
-  transition_ += std::max(0.0F, dt) / transitionDuration_;
+  transition_ += std::max(0.0F, dt) / activeTransitionDuration_;
   if (!swapped_ && transition_ >= 0.5F) {
+    if (stagedTransition_) {
+      if (launchHandoff_) {
+        renderHandoffFrame(pendingId_, 1.0F,
+                           launchRendererAvailable_);
+      }
+      outgoingFrame_ = incomingFrame_;
+    }
     current->app->onExit();
     currentId_ = pendingId_;
     current = catalog_.find(currentId_);
@@ -249,6 +353,10 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
     return;
   }
   if (transitioning_) {
+    if (stagedTransition_ && launchHandoff_ && !swapped_) {
+      renderHandoffFrame(pendingId_, transition_ * 2.0F,
+                         launchRendererAvailable_);
+    }
     if (swapped_ && !incomingRendered_) {
       incomingFrame_.clear(false);
       MonoCanvas incomingCanvas{incomingFrame_, diagnosticSink_};
@@ -273,9 +381,10 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
   }
   presentation::renderTransientFeedback(canvas, surfaces_);
   if (surfaces_.menuActive()) {
-    presentation::renderSystemMenu(canvas, surfaces_.selection(),
-                                   currentId_ == homeId_, frameSnapshot_,
-                                   surfaces_.revealProgress());
+    presentation::renderSystemMenu(
+        canvas, incomingFrame_, surfaces_.selection(),
+        currentId_ == homeId_, frameSnapshot_, surfaces_.revealProgress(),
+        surfaces_.menuClosing());
   }
 }
 

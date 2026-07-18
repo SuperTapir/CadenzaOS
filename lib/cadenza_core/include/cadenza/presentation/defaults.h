@@ -5,6 +5,10 @@
 namespace cadenza::presentation_defaults {
 
 constexpr Seconds kAppTransitionDuration = 0.32F;
+constexpr Seconds kAppLaunchHandoffDuration = 0.80F;
+constexpr Seconds kAppReturnHandoffDuration = 0.44F;
+constexpr Seconds kReducedAppLaunchHandoffDuration = 0.56F;
+constexpr Seconds kReducedAppReturnHandoffDuration = 0.28F;
 constexpr Seconds kGalleryCycleDuration = 2.0F;
 constexpr float kSelectionOvershoot = 0.10F;
 constexpr float kCameraPunchAmplitude = 10.0F;

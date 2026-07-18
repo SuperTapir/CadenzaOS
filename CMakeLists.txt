@@ -286,6 +286,19 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_app_runtime_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_app_runtime_tests COMMAND cadenza_app_runtime_tests)
 
+  add_executable(cadenza_app_handoff_allocation_tests
+    tests/app_handoff_allocation_tests.cpp
+  )
+  target_link_libraries(cadenza_app_handoff_allocation_tests PRIVATE
+    cadenza::apps cadenza::core cadenza::system
+  )
+  target_include_directories(cadenza_app_handoff_allocation_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_app_handoff_allocation_tests
+    COMMAND cadenza_app_handoff_allocation_tests
+  )
+
   add_executable(cadenza_system_surface_tests tests/system_surface_tests.cpp)
   target_link_libraries(cadenza_system_surface_tests PRIVATE cadenza::core)
   target_include_directories(cadenza_system_surface_tests PRIVATE

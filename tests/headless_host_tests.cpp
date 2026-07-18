@@ -251,7 +251,7 @@ TEST_CASE("headless App transition releases only the foreground network owner") 
   cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
   host.step();
   REQUIRE(host.runtime().open(cadenza::apps::kSettingsAppId));
-  for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
     host.step();
   }
   REQUIRE_FALSE(host.runtime().transitioning());
@@ -268,7 +268,7 @@ TEST_CASE("headless App transition releases only the foreground network owner") 
   CHECK(host.services().leases().ownerCount(SystemResource::Network) == 2);
 
   REQUIRE(host.runtime().open(cadenza::apps::kLauncherAppId));
-  for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
     host.step();
   }
   REQUIRE_FALSE(host.runtime().transitioning());
