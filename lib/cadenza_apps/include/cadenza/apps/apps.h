@@ -8,7 +8,10 @@
 #include "cadenza/animation/spring.h"
 #include "cadenza/animation/state_machine.h"
 #include "cadenza/animation/tween.h"
-#include "cadenza/core/app_runtime.h"
+#include "cadenza/apps/builtin_app_ids.h"
+#include "cadenza/core/app.h"
+#include "cadenza/core/transition.h"
+#include "cadenza/presentation/defaults.h"
 #include "cadenza/presentation/effects.h"
 #include "cadenza/presentation/particles.h"
 
@@ -18,10 +21,9 @@ class LauncherApp final : public App {
  public:
   const char* name() const noexcept override { return "Launcher"; }
   void onEnter() noexcept override;
-  void update(Seconds dt, const InputFrame& input,
-              AppRuntime& runtime) noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
-              const AppRuntime& runtime) noexcept override;
+              const AppRenderContext& context) noexcept override;
 
  private:
   int selected_ = 0;
@@ -34,10 +36,9 @@ class ClockApp final : public App {
  public:
   const char* name() const noexcept override { return "Clock"; }
   void onEnter() noexcept override;
-  void update(Seconds dt, const InputFrame& input,
-              AppRuntime& runtime) noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
-              const AppRuntime& runtime) noexcept override;
+              const AppRenderContext& context) noexcept override;
 
  private:
   bool running_ = true;
@@ -49,10 +50,9 @@ class MotionApp final : public App {
  public:
   const char* name() const noexcept override { return "Motion"; }
   void onEnter() noexcept override;
-  void update(Seconds dt, const InputFrame& input,
-              AppRuntime& runtime) noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
-              const AppRuntime& runtime) noexcept override;
+              const AppRenderContext& context) noexcept override;
 
  private:
   float target_ = 0.5F;
@@ -64,14 +64,14 @@ class MotionApp final : public App {
 class SettingsApp final : public App {
  public:
   const char* name() const noexcept override { return "Settings"; }
-  void update(Seconds dt, const InputFrame& input,
-              AppRuntime& runtime) noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
-              const AppRuntime& runtime) noexcept override;
+              const AppRenderContext& context) noexcept override;
 
  private:
   int selected_ = 0;
   float time_ = 0.0F;
+  bool resetConfirmArmed_ = false;
 };
 
 enum class GalleryMode : std::uint8_t { AutoPlay, Scrub };
@@ -83,10 +83,9 @@ class AnimationGalleryApp final : public App {
   AnimationGalleryApp() noexcept;
   const char* name() const noexcept override { return "Animation Gallery"; }
   void onEnter() noexcept override;
-  void update(Seconds dt, const InputFrame& input,
-              AppRuntime& runtime) noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
-              const AppRuntime& runtime) noexcept override;
+              const AppRenderContext& context) noexcept override;
 
   constexpr std::size_t pageCount() const noexcept { return kPageCount; }
   const char* pageName(std::size_t index) const noexcept;

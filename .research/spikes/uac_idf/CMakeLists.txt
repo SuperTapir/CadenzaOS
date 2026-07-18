@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+set(EXTRA_COMPONENT_DIRS src)
+if(NOT DEFINED SDKCONFIG)
+  set(SDKCONFIG "${CMAKE_SOURCE_DIR}/sdkconfig.composite")
+endif()
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(cadenza_uac_spike)

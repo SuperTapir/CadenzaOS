@@ -52,11 +52,11 @@ TEST_CASE("overlay metadata never changes canonical framebuffer truth") {
   const auto before = cadenza::host::framebufferHash(framebuffer);
   cadenza::desktop::OverlayState overlay;
   overlay.toggle();
-  overlay.update(59.9F, 16.7F, cadenza::AppId::Motion, {2, false, false,
+  overlay.update(59.9F, 16.7F, cadenza::apps::kMotionAppId, {2, false, false,
                                                        true, false, 0});
   overlay.updateResources(6800, 12000, 3, 123456);
   CHECK(overlay.visible);
-  CHECK(overlay.app == cadenza::AppId::Motion);
+  CHECK(overlay.app == cadenza::apps::kMotionAppId);
   CHECK(overlay.framebufferBytes == 6800);
   CHECK(overlay.framebufferCapacity == 12000);
   CHECK(overlay.capacityOverflows == 3);

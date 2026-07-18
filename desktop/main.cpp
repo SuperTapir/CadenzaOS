@@ -106,7 +106,8 @@ int main(int argc, char** argv) {
       !cadenza::desktop::configure(config, options.profile, options.scale)) {
     std::fprintf(stderr,
                  "usage: cadenza_desktop [--profile t-embed|sharp] "
-                 "[--scale 1..4] [--overlay] [--frames N]\n");
+                 "[--scale 1..4] [--overlay] [--device-frame] "
+                 "[--frames N]\n");
     return 2;
   }
   if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -140,12 +141,15 @@ int main(int argc, char** argv) {
   std::printf("Cadenza desktop %s (SDL %d.%d.%d), %dx%d @ %dx\n",
               cadenza::coreVersion(), SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
               SDL_MICRO_VERSION, config.width, config.height, config.scale);
+  std::printf(
+      "Connectivity debug: F8 WiFi, F9 link loss, F10 BLE advertise, "
+      "F11 provisioning, F12 BLE scan\n");
   cadenza::desktop::DesktopDiagnosticLog diagnostics;
   cadenza::host::HeadlessHost host{config.profile, 1.0F / 60.0F,
                                     &diagnostics};
   cadenza::desktop::SdlAudioOutput audioOutput;
   if (!SDL_InitSubSystem(SDL_INIT_AUDIO) ||
-      !audioOutput.start(host.runtime().sound())) {
+      !audioOutput.start(host.services().sound())) {
     std::fprintf(stderr, "SDL audio disabled: %s\n", SDL_GetError());
   }
   cadenza::desktop::DesktopInputMapper mapper;
@@ -159,6 +163,9 @@ int main(int argc, char** argv) {
   bool running = true;
   bool screenshotRequested = false;
   bool recordingToggleRequested = false;
+  bool wifiRequested = false;
+  bool bluetoothAdvertisingRequested = false;
+  bool bluetoothScanningRequested = false;
   std::uint64_t nextFrameMs = SDL_GetTicks();
   std::uint64_t previousFrameMs = nextFrameMs;
   int renderedFrames = 0;
@@ -198,6 +205,49 @@ int main(int argc, char** argv) {
         } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
                    event.key.key == SDLK_F7) {
           recordingToggleRequested = true;
+        } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
+                   event.key.key == SDLK_F8) {
+          wifiRequested = !wifiRequested;
+          host.services().submit(
+              cadenza::SystemCommand::setNetworkOnlineRequested(
+                  wifiRequested));
+        } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
+                   event.key.key == SDLK_F9) {
+          const auto& wifi =
+              host.services().snapshot().connectivity.wifi;
+          if (wifi.generation != 0) {
+            host.services().postPlatformEvent(
+                cadenza::system::PlatformEvent::wifiDisconnected(
+                    wifi.generation, cadenza::WiFiFailure::Driver));
+          }
+        } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
+                   event.key.key == SDLK_F10) {
+          bluetoothAdvertisingRequested =
+              !bluetoothAdvertisingRequested;
+          host.services().submit(
+              cadenza::SystemCommand::setBluetoothAdvertisingRequested(
+                  bluetoothAdvertisingRequested));
+        } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
+                   event.key.key == SDLK_F11) {
+          const auto& provisioning =
+              host.services().snapshot().connectivity.provisioning;
+          if (provisioning.state == cadenza::ProvisioningState::Inactive ||
+              provisioning.state == cadenza::ProvisioningState::Failed ||
+              provisioning.state == cadenza::ProvisioningState::Succeeded) {
+            host.services().submit(
+                cadenza::SystemCommand::startProvisioning());
+          } else if (provisioning.generation != 0) {
+            host.services().postPlatformEvent(
+                cadenza::system::PlatformEvent::provisioningProgress(
+                    provisioning.generation,
+                    cadenza::ProvisioningState::Succeeded));
+          }
+        } else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat &&
+                   event.key.key == SDLK_F12) {
+          bluetoothScanningRequested = !bluetoothScanningRequested;
+          host.services().submit(
+              cadenza::SystemCommand::setBluetoothScanningRequested(
+                  bluetoothScanningRequested));
         } else {
           mapper.key(mapKey(event.key.key), event.type == SDL_EVENT_KEY_DOWN,
                      event.key.repeat, timestamp);
@@ -290,9 +340,21 @@ int main(int argc, char** argv) {
           overlay.framebufferBytes, overlay.framebufferCapacity,
           overlay.capacityOverflows,
           static_cast<unsigned long long>(overlay.heapEstimateBytes));
+      const auto& connectivity = host.services().snapshot().connectivity;
+      SDL_RenderDebugTextFormat(
+          renderer, 4.0F, 24.0F,
+          "WIFI %u/%u/%u BLE %u A%d S%d PROV %u/%u",
+          static_cast<unsigned>(connectivity.wifi.radio),
+          static_cast<unsigned>(connectivity.wifi.station),
+          static_cast<unsigned>(connectivity.wifi.failure),
+          static_cast<unsigned>(connectivity.bluetoothLe.radio),
+          connectivity.bluetoothLe.advertising,
+          connectivity.bluetoothLe.scanning,
+          static_cast<unsigned>(connectivity.provisioning.state),
+          static_cast<unsigned>(connectivity.provisioning.failure));
       if (const auto* diagnostic = diagnostics.recent(0)) {
         SDL_RenderDebugTextFormat(
-            renderer, 4.0F, 24.0F, "DIAG %u/%u %s (%d)",
+            renderer, 4.0F, 34.0F, "DIAG %u/%u %s (%d)",
             static_cast<unsigned>(diagnostic->category),
             static_cast<unsigned>(diagnostic->code),
             diagnostic->message ? diagnostic->message : "",

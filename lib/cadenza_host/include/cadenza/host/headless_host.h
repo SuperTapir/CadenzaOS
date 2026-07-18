@@ -4,11 +4,15 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "cadenza/core/apps.h"
+#include "cadenza/apps/apps.h"
+#include "cadenza/core/app_runtime.h"
 #include "cadenza/core/core_types.h"
 #include "cadenza/core/input.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/mono_framebuffer.h"
+#include "cadenza/system/frame_coordinator.h"
+#include "cadenza/host/headless_microphone.h"
+#include "cadenza/host/headless_connectivity_adapter.h"
 
 namespace cadenza::host {
 
@@ -52,7 +56,8 @@ class DeterministicRunner {
  public:
   DeterministicRunner(AppRuntime& runtime, MonoCanvas& canvas,
                       MonoFramebuffer& framebuffer,
-                      Seconds fixedDelta = 1.0F / 60.0F) noexcept;
+                      Seconds fixedDelta = 1.0F / 60.0F,
+                      system::SystemServiceHost* services = nullptr) noexcept;
 
   void render() noexcept;
   void step(const InputFrame& input = {}) noexcept;
@@ -77,6 +82,7 @@ class DeterministicRunner {
   AppRuntime& runtime_;
   MonoCanvas& canvas_;
   MonoFramebuffer& framebuffer_;
+  system::SystemServiceHost* services_ = nullptr;
   Seconds fixedDelta_ = 1.0F / 60.0F;
   Seconds simulationSeconds_ = 0.0F;
   FrameIndex frameIndex_ = 0;
@@ -88,12 +94,18 @@ class HeadlessHost {
                         Seconds fixedDelta = 1.0F / 60.0F,
                         DiagnosticSink* diagnostics = nullptr) noexcept;
 
-  void step(const InputFrame& input = {}) noexcept { runner_.step(input); }
+  void step(const InputFrame& input = {}) noexcept {
+    connectivity_.pump();
+    runner_.step(input);
+    connectivity_.pump();
+  }
   void advance(Seconds delta, const InputFrame& input = {}) noexcept {
+    connectivity_.pump();
     runner_.advance(delta, input);
+    connectivity_.pump();
   }
   void renderAudio(std::int16_t* samples, std::size_t count) noexcept {
-    runtime_.renderAudio(samples, count);
+    services_.renderAudio(samples, count);
   }
   std::uint64_t framebufferHash() const noexcept {
     return runner_.framebufferHash();
@@ -104,6 +116,16 @@ class HeadlessHost {
   }
   AppRuntime& runtime() noexcept { return runtime_; }
   const AppRuntime& runtime() const noexcept { return runtime_; }
+  system::SystemServiceHost& services() noexcept { return services_; }
+  const system::SystemServiceHost& services() const noexcept {
+    return services_;
+  }
+  HeadlessMicrophone& microphone() noexcept { return microphone_; }
+  const HeadlessMicrophone& microphone() const noexcept { return microphone_; }
+  HeadlessConnectivityAdapter& connectivity() noexcept { return connectivity_; }
+  const HeadlessConnectivityAdapter& connectivity() const noexcept {
+    return connectivity_;
+  }
   MonoFramebuffer& framebuffer() noexcept { return framebuffer_; }
   const MonoFramebuffer& framebuffer() const noexcept { return framebuffer_; }
 
@@ -113,6 +135,9 @@ class HeadlessHost {
   MotionApp motion_;
   SettingsApp settings_;
   AnimationGalleryApp gallery_;
+  system::SystemServiceHost services_;
+  HeadlessConnectivityAdapter connectivity_;
+  HeadlessMicrophone microphone_;
   AppRuntime runtime_;
   MonoFramebuffer framebuffer_;
   MonoCanvas canvas_;

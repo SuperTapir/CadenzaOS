@@ -5,9 +5,10 @@
 
 #include "board_pins.h"
 #include "cadenza/core/app_runtime.h"
-#include "cadenza/core/apps.h"
+#include "cadenza/apps/apps.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/mono_framebuffer.h"
+#include "cadenza/system/frame_coordinator.h"
 #include "input.h"
 #include "i2s_audio_output.h"
 #include "serial_diagnostic_sink.h"
@@ -19,6 +20,7 @@ cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
 cadenza::MonoCanvas canvas{framebuffer};
 TftPresenter presenter(display);
 InputController input;
+cadenza::system::SystemServiceHost services;
 cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed};
 SerialDiagnosticSink diagnosticSink;
 I2sAudioOutput audioOutput;
@@ -72,13 +74,25 @@ void setup() {
                 framebuffer.height());
   input.begin();
   runtime.setDiagnosticSink(&diagnosticSink);
-  runtime.registerApp(cadenza::AppId::Launcher, launcher, false);
-  runtime.registerApp(cadenza::AppId::Clock, clockApp);
-  runtime.registerApp(cadenza::AppId::Motion, motion);
-  runtime.registerApp(cadenza::AppId::Settings, settings);
-  runtime.registerApp(cadenza::AppId::Gallery, gallery);
-  runtime.begin(cadenza::AppId::Launcher);
-  if (!audioOutput.begin(runtime, &diagnosticSink)) {
+  services.setDiagnosticSink(&diagnosticSink);
+  runtime.registerApp(cadenza::apps::kLauncherAppId, launcher, false,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kLauncherAppId));
+  runtime.registerApp(cadenza::apps::kClockAppId, clockApp, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kClockAppId));
+  runtime.registerApp(cadenza::apps::kMotionAppId, motion, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kMotionAppId));
+  runtime.registerApp(cadenza::apps::kSettingsAppId, settings, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kSettingsAppId));
+  runtime.registerApp(cadenza::apps::kGalleryAppId, gallery, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kGalleryAppId));
+  runtime.configureHome(cadenza::apps::kLauncherAppId);
+  runtime.begin(cadenza::apps::kLauncherAppId);
+  runtime.bindSystem(services.snapshot(), services);
+  const bool audioAvailable =
+      audioOutput.begin(services.sound(), &diagnosticSink);
+  services.postPlatformEvent(
+      cadenza::system::PlatformEvent::soundOutputAvailability(audioAvailable));
+  if (!audioAvailable) {
     Serial.println("Audio disabled; graphics runtime remains active");
   }
   lastFrameUs = micros();
@@ -93,7 +107,7 @@ void loop() {
   }
   const float dt = std::min((now - lastFrameUs) / 1000000.0f, 0.05f);
   lastFrameUs = now;
-  runtime.update(dt, input.takeFrame());
-  runtime.render(canvas);
+  cadenza::system::FrameCoordinator::runFrame(
+      services, runtime, canvas, dt, input.takeFrame());
   presenter.present(framebuffer);
 }

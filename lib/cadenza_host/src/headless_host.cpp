@@ -39,13 +39,21 @@ std::uint64_t pcmHash(const std::int16_t* samples,
 DeterministicRunner::DeterministicRunner(AppRuntime& runtime,
                                          MonoCanvas& canvas,
                                          MonoFramebuffer& framebuffer,
-                                         Seconds fixedDelta) noexcept
+                                         Seconds fixedDelta,
+                                         system::SystemServiceHost* services) noexcept
     : runtime_(runtime),
       canvas_(canvas),
       framebuffer_(framebuffer),
+      services_(services),
       fixedDelta_(fixedDelta > 0.0F ? fixedDelta : 1.0F / 60.0F) {}
 
-void DeterministicRunner::render() noexcept { runtime_.render(canvas_); }
+void DeterministicRunner::render() noexcept {
+  if (services_) {
+    runtime_.renderWithSystem(canvas_, services_->snapshot());
+  } else {
+    runtime_.render(canvas_);
+  }
+}
 
 void DeterministicRunner::step(const InputFrame& input) noexcept {
   advance(fixedDelta_, input);
@@ -54,8 +62,13 @@ void DeterministicRunner::step(const InputFrame& input) noexcept {
 void DeterministicRunner::advance(Seconds delta,
                                   const InputFrame& input) noexcept {
   if (delta < 0.0F) delta = 0.0F;
-  runtime_.update(delta, input);
-  render();
+  if (services_) {
+    system::FrameCoordinator::runFrame(*services_, runtime_, canvas_, delta,
+                                       input);
+  } else {
+    runtime_.update(delta, input);
+    render();
+  }
   simulationSeconds_ += delta;
   ++frameIndex_;
 }
@@ -63,17 +76,27 @@ void DeterministicRunner::advance(Seconds delta,
 HeadlessHost::HeadlessHost(FramebufferProfile profile,
                            Seconds fixedDelta,
                            DiagnosticSink* diagnostics) noexcept
-    : runtime_(profile),
+    : connectivity_(services_),
+      microphone_(services_),
+      runtime_(profile),
       framebuffer_(profile),
       canvas_(framebuffer_, diagnostics),
-      runner_(runtime_, canvas_, framebuffer_, fixedDelta) {
+      runner_(runtime_, canvas_, framebuffer_, fixedDelta, &services_) {
   runtime_.setDiagnosticSink(diagnostics);
-  runtime_.registerApp(AppId::Launcher, launcher_, false);
-  runtime_.registerApp(AppId::Clock, clock_);
-  runtime_.registerApp(AppId::Motion, motion_);
-  runtime_.registerApp(AppId::Settings, settings_);
-  runtime_.registerApp(AppId::Gallery, gallery_);
-  runtime_.begin(AppId::Launcher);
+  services_.setDiagnosticSink(diagnostics);
+  runtime_.registerApp(apps::kLauncherAppId, launcher_, false,
+                       apps::builtinAppCapabilities(apps::kLauncherAppId));
+  runtime_.registerApp(apps::kClockAppId, clock_, true,
+                       apps::builtinAppCapabilities(apps::kClockAppId));
+  runtime_.registerApp(apps::kMotionAppId, motion_, true,
+                       apps::builtinAppCapabilities(apps::kMotionAppId));
+  runtime_.registerApp(apps::kSettingsAppId, settings_, true,
+                       apps::builtinAppCapabilities(apps::kSettingsAppId));
+  runtime_.registerApp(apps::kGalleryAppId, gallery_, true,
+                       apps::builtinAppCapabilities(apps::kGalleryAppId));
+  runtime_.configureHome(apps::kLauncherAppId);
+  runtime_.begin(apps::kLauncherAppId);
+  runtime_.bindSystem(services_.snapshot(), services_);
   runner_.render();
 }
 

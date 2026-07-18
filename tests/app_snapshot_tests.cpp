@@ -19,7 +19,7 @@ struct SnapshotCase {
 std::uint64_t capture(cadenza::FramebufferProfile profile,
                       cadenza::AppId app, std::uint64_t expected) {
   cadenza::host::HeadlessHost host{profile};
-  if (app != cadenza::AppId::Launcher) {
+  if (app != cadenza::apps::kLauncherAppId) {
     REQUIRE(host.runtime().open(app));
     for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
       host.step();
@@ -31,7 +31,7 @@ std::uint64_t capture(cadenza::FramebufferProfile profile,
   const auto directory = std::filesystem::current_path() / "snapshot-failures";
   const auto path = directory /
       ("app-p" + std::to_string(static_cast<int>(profile)) + "-a" +
-       std::to_string(static_cast<int>(app)) + ".png");
+       std::to_string(static_cast<int>(app.value())) + ".png");
   if (actual != expected) {
     std::filesystem::create_directories(directory);
     CHECK(cadenza::desktop::writePng(path.string(), host.framebuffer()));
@@ -64,31 +64,31 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
-      {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Launcher,
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
        2968281691757874956ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Clock,
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
        2172376209712558838ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Motion,
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11046562126395087774ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Settings,
-       16657356307816133356ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Gallery,
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
+       15594660916157055540ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        14139291840108583961ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Launcher,
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
        5421283046709258962ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Clock,
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kClockAppId,
        8667913246713477979ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Motion,
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        2956592992690758759ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Settings,
-       5690656840055152546ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Gallery,
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
+       16739858513966786026ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
        13234575752027769465ULL},
   }};
 
   for (const SnapshotCase& snapshot : cases) {
     CAPTURE(static_cast<int>(snapshot.profile));
-    CAPTURE(static_cast<int>(snapshot.app));
+    CAPTURE(static_cast<int>(snapshot.app.value()));
     CHECK(capture(snapshot.profile, snapshot.app, snapshot.expected) ==
           snapshot.expected);
   }

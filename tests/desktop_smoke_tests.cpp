@@ -65,33 +65,33 @@ class SmokeHarness final : public cadenza::MonotonicClock {
 
 TEST_CASE("desktop input path visits every bundled App and returns home") {
   SmokeHarness harness;
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.tapEnter();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Clock);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kClockAppId);
   harness.holdSpaceHome();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
   harness.tapEnter();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Motion);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kMotionAppId);
   harness.holdSpaceHome();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
   harness.tapEnter();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Settings);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kSettingsAppId);
   harness.holdSpaceHome();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
   harness.tapEnter();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Gallery);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kGalleryAppId);
   const std::uint64_t galleryStart = harness.host.framebufferHash();
   harness.turnRight();
   harness.tapEnter();
   harness.turnRight();
   CHECK(harness.host.framebufferHash() != galleryStart);
   harness.holdSpaceHome();
-  CHECK(harness.host.runtime().currentId() == cadenza::AppId::Launcher);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 }

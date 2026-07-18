@@ -29,10 +29,10 @@ class RecordingDiagnostics final : public cadenza::DiagnosticSink {
 
 TEST_CASE("I2S configuration uses the locked format pins and bounded buffers") {
   firmware_stubs::reset();
-  cadenza::AppRuntime runtime;
+  cadenza::audio::InteractionSoundService service;
   RecordingDiagnostics diagnostics;
   I2sAudioOutput output;
-  REQUIRE(output.begin(runtime, &diagnostics));
+  REQUIRE(output.begin(service, &diagnostics));
   const auto& state = firmware_stubs::state();
   CHECK(state.config.sample_rate == 44100);
   CHECK(state.config.bits_per_sample == I2S_BITS_PER_SAMPLE_16BIT);
@@ -55,17 +55,17 @@ TEST_CASE("I2S install pin and task failures disable audio without Runtime loss"
     if (failure == 0) state.installResult = -10;
     if (failure == 1) state.pinResult = -11;
     if (failure == 2) state.taskResult = 0;
-    cadenza::AppRuntime runtime;
+    cadenza::audio::InteractionSoundService service;
     RecordingDiagnostics diagnostics;
     I2sAudioOutput output;
-    CHECK_FALSE(output.begin(runtime, &diagnostics));
+    CHECK_FALSE(output.begin(service, &diagnostics));
     CHECK_FALSE(output.running());
     CHECK(diagnostics.contains(cadenza::DiagnosticCode::AudioFailure));
 
-    REQUIRE(runtime.playSound(cadenza::audio::SoundCue::Confirm));
+    REQUIRE(service.play(cadenza::audio::SoundCue::Confirm));
     std::array<std::int16_t, 256> samples{};
-    runtime.renderAudio(samples.data(), samples.size());
-    CHECK(runtime.sound().pendingCommandCount() == 0);
+    service.render(samples.data(), samples.size());
+    CHECK(service.pendingCommandCount() == 0);
     if (failure > 0) CHECK(state.uninstallCalls == 1);
   }
 }
@@ -73,10 +73,10 @@ TEST_CASE("I2S install pin and task failures disable audio without Runtime loss"
 TEST_CASE("fatal I2S write stops the task and reports failure") {
   firmware_stubs::reset();
   firmware_stubs::state().writeResult = -12;
-  cadenza::AppRuntime runtime;
+  cadenza::audio::InteractionSoundService service;
   RecordingDiagnostics diagnostics;
   I2sAudioOutput output;
-  REQUIRE(output.begin(runtime, &diagnostics));
+  REQUIRE(output.begin(service, &diagnostics));
   REQUIRE(firmware_stubs::state().capturedTask != nullptr);
   firmware_stubs::state().capturedTask(
       firmware_stubs::state().capturedContext);
@@ -91,10 +91,10 @@ TEST_CASE("partial I2S write is diagnosed once before a fatal retry") {
   auto& state = firmware_stubs::state();
   state.writeBytes = 64;
   state.writeResultAfterFirst = -13;
-  cadenza::AppRuntime runtime;
+  cadenza::audio::InteractionSoundService service;
   RecordingDiagnostics diagnostics;
   I2sAudioOutput output;
-  REQUIRE(output.begin(runtime, &diagnostics));
+  REQUIRE(output.begin(service, &diagnostics));
   state.capturedTask(state.capturedContext);
   CHECK(state.writeCalls == 2);
   CHECK(diagnostics.contains(cadenza::DiagnosticCode::AudioUnderrun));

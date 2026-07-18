@@ -111,6 +111,13 @@ SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy \
   ./build/host/cadenza_desktop --profile t-embed --frames 3
 ```
 
+The desktop simulator uses the same portable connectivity service with a fake
+adapter; it never opens a real network connection. Press `F8` to request Wi-Fi,
+`F9` to inject a link loss, `F10` to toggle BLE advertising, `F12` to toggle BLE
+scanning, and `F11` to start then complete a Security 2 provisioning session.
+The `F1` overlay shows the resulting radio, role, failure, and provisioning
+states.
+
 ## Red-green-refactor loop
 
 The checked-in command wrapper keeps local evidence repeatable:
@@ -123,6 +130,40 @@ tools/check.sh firmware              # PlatformIO T-Embed compile
 tools/check.sh diff                  # whitespace/error audit
 tools/check.sh all                   # complete current matrix
 ```
+
+Candidate ESP-IDF 5.5 UAC builds live in an isolated, reproducible spike and
+never patch the installed PlatformIO Arduino framework:
+
+```bash
+cd .research/spikes/uac_idf
+export IDF_PATH=/path/to/esp-idf-v5.5
+export ESP_IDF_VERSION=5.5
+idf.py -B build-idf-arduino-composite build size
+
+# Build the complete Runtime/display/encoder/I2S0/I2S1/UAC candidate;
+# do not flash without an original T-Embed.
+idf.py -B build-idf-hardware \
+  -DSDKCONFIG="$PWD/sdkconfig.hardware" \
+  -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build size
+
+# Build the complete hardware candidate plus Wi-Fi/NimBLE/Security 2.
+# Use -j1 on a memory-constrained runner.
+idf.py -B build-idf-connectivity \
+  -DSDKCONFIG="$PWD/sdkconfig.connectivity" \
+  -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build size
+```
+
+The component versions and registry hashes are locked in `dependencies.lock`.
+If configuration or dependency resolution fails, fix the isolated environment
+or lock; modifying `/Users/tapir/.platformio/packages/framework-arduinoespressif32`
+is not an accepted recovery path. The hardware-enabled build is compile-only
+until the display/input, ES7210/I²S concurrency and macOS acceptance matrix has
+been executed.
+
+ESP-IDF 5.5 的 BLE provisioning transport 自行拥有 NimBLE host。连接 candidate
+因此让普通 App BLE 与 provisioning BLE 排他运行；不要在未重做 transport ownership
+之前从 App 绕过 system service 同时初始化第二个 NimBLE host。Security 2 material
+必须由 privileged platform hook 注入，默认 weak hook 会安全失败。
 
 Write or expose the failing case first, run the focused command and retain its
 failure reason, implement the smallest complete behavior, then run focused and

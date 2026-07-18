@@ -47,14 +47,43 @@ target_include_directories(cadenza_core
 target_compile_features(cadenza_core PUBLIC cxx_std_17)
 target_link_libraries(cadenza_core PRIVATE cadenza::u8g2)
 
+include(cmake/cadenza_apps_sources.cmake)
+add_library(cadenza_apps STATIC ${CADENZA_APPS_SOURCES})
+add_library(cadenza::apps ALIAS cadenza_apps)
+target_include_directories(cadenza_apps PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/include>
+)
+target_link_libraries(cadenza_apps PUBLIC cadenza::core)
+target_compile_features(cadenza_apps PUBLIC cxx_std_17)
+
+add_library(cadenza_system STATIC
+  lib/cadenza_system/src/connectivity_service.cpp
+  lib/cadenza_system/src/system_service_host.cpp
+  lib/cadenza_system/src/system_resource_leases.cpp
+  lib/cadenza_system/src/usb_voice_packetizer.cpp
+  lib/cadenza_system/src/usb_voice_session_bridge.cpp
+  lib/cadenza_system/src/voice_dma_normalizer.cpp
+  lib/cadenza_system/src/voice_input.cpp
+)
+add_library(cadenza::system ALIAS cadenza_system)
+target_include_directories(cadenza_system PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_system/include>
+)
+target_link_libraries(cadenza_system PUBLIC cadenza::core)
+target_compile_features(cadenza_system PUBLIC cxx_std_17)
+
 add_library(cadenza_host STATIC
+  lib/cadenza_host/src/headless_connectivity_adapter.cpp
   lib/cadenza_host/src/headless_host.cpp
+  lib/cadenza_host/src/headless_microphone.cpp
 )
 add_library(cadenza::host ALIAS cadenza_host)
 target_include_directories(cadenza_host PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_host/include>
 )
-target_link_libraries(cadenza_host PUBLIC cadenza::core)
+target_link_libraries(cadenza_host PUBLIC
+  cadenza::core cadenza::apps cadenza::system
+)
 target_compile_features(cadenza_host PUBLIC cxx_std_17)
 
 add_library(cadenza_desktop_model STATIC
@@ -76,6 +105,7 @@ target_compile_features(cadenza_desktop_model PUBLIC cxx_std_17)
 
 if(CADENZA_BUILD_TESTS)
   enable_testing()
+  find_package(Threads REQUIRED)
 
   add_executable(cadenza_portable_core_compile_probe
     tests/legacy_core_compile_probe.cpp
@@ -149,6 +179,19 @@ if(CADENZA_BUILD_TESTS)
     COMMAND cadenza_i2s_audio_output_tests
   )
 
+  add_executable(cadenza_audio_io_concurrency_tests
+    tests/audio_io_concurrency_tests.cpp
+  )
+  target_link_libraries(cadenza_audio_io_concurrency_tests PRIVATE
+    cadenza::core cadenza::system
+  )
+  target_include_directories(cadenza_audio_io_concurrency_tests PRIVATE
+    include third_party/doctest
+  )
+  add_test(NAME cadenza_audio_io_concurrency_tests
+    COMMAND cadenza_audio_io_concurrency_tests
+  )
+
   add_executable(cadenza_framebuffer_tests tests/framebuffer_tests.cpp)
   target_link_libraries(cadenza_framebuffer_tests PRIVATE cadenza::core)
   target_include_directories(cadenza_framebuffer_tests PRIVATE third_party/doctest)
@@ -170,9 +213,112 @@ if(CADENZA_BUILD_TESTS)
   add_test(NAME cadenza_sprite_atlas_tests COMMAND cadenza_sprite_atlas_tests)
 
   add_executable(cadenza_app_runtime_tests tests/app_runtime_tests.cpp)
-  target_link_libraries(cadenza_app_runtime_tests PRIVATE cadenza::core)
+  target_link_libraries(cadenza_app_runtime_tests PRIVATE
+    cadenza::core cadenza::system
+  )
   target_include_directories(cadenza_app_runtime_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_app_runtime_tests COMMAND cadenza_app_runtime_tests)
+
+  add_executable(cadenza_app_context_contract_tests
+    tests/app_context_contract_tests.cpp
+  )
+  target_link_libraries(cadenza_app_context_contract_tests PRIVATE
+    cadenza::core cadenza::system
+  )
+  target_include_directories(cadenza_app_context_contract_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_app_context_contract_tests
+    COMMAND cadenza_app_context_contract_tests
+  )
+
+  add_executable(cadenza_system_service_host_tests
+    tests/system_service_host_tests.cpp
+  )
+  target_link_libraries(cadenza_system_service_host_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_system_service_host_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_system_service_host_tests
+    COMMAND cadenza_system_service_host_tests
+  )
+
+  add_executable(cadenza_connectivity_boundary_tests
+    tests/connectivity_boundary_tests.cpp
+  )
+  target_link_libraries(cadenza_connectivity_boundary_tests PRIVATE
+    cadenza::system Threads::Threads
+  )
+  target_include_directories(cadenza_connectivity_boundary_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_connectivity_boundary_tests
+    COMMAND cadenza_connectivity_boundary_tests
+  )
+
+  add_executable(cadenza_voice_input_core_tests
+    tests/voice_input_core_tests.cpp
+  )
+  target_link_libraries(cadenza_voice_input_core_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_voice_input_core_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_voice_input_core_tests
+    COMMAND cadenza_voice_input_core_tests
+  )
+
+  add_executable(cadenza_usb_voice_packetizer_tests
+    tests/usb_voice_packetizer_tests.cpp
+  )
+  target_link_libraries(cadenza_usb_voice_packetizer_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_usb_voice_packetizer_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_usb_voice_packetizer_tests
+    COMMAND cadenza_usb_voice_packetizer_tests
+  )
+
+  add_executable(cadenza_usb_voice_session_bridge_tests
+    tests/usb_voice_session_bridge_tests.cpp
+  )
+  target_link_libraries(cadenza_usb_voice_session_bridge_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_usb_voice_session_bridge_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_usb_voice_session_bridge_tests
+    COMMAND cadenza_usb_voice_session_bridge_tests
+  )
+
+  add_executable(cadenza_voice_dma_normalizer_tests
+    tests/voice_dma_normalizer_tests.cpp
+  )
+  target_link_libraries(cadenza_voice_dma_normalizer_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_voice_dma_normalizer_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_voice_dma_normalizer_tests
+    COMMAND cadenza_voice_dma_normalizer_tests
+  )
+
+  add_executable(cadenza_usb_voice_descriptor_contract_tests
+    tests/usb_voice_descriptor_contract_tests.cpp
+  )
+  target_include_directories(cadenza_usb_voice_descriptor_contract_tests PRIVATE
+    include third_party/doctest
+  )
+  add_test(NAME cadenza_usb_voice_descriptor_contract_tests
+    COMMAND cadenza_usb_voice_descriptor_contract_tests
+  )
 
   add_executable(cadenza_transition_runtime_tests tests/transition_runtime_tests.cpp)
   target_link_libraries(cadenza_transition_runtime_tests PRIVATE cadenza::core)
@@ -180,7 +326,9 @@ if(CADENZA_BUILD_TESTS)
   add_test(NAME cadenza_transition_runtime_tests COMMAND cadenza_transition_runtime_tests)
 
   add_executable(cadenza_apps_tests tests/apps_tests.cpp)
-  target_link_libraries(cadenza_apps_tests PRIVATE cadenza::core)
+  target_link_libraries(cadenza_apps_tests PRIVATE
+    cadenza::apps cadenza::system
+  )
   target_include_directories(cadenza_apps_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_apps_tests COMMAND cadenza_apps_tests)
 
@@ -193,6 +341,19 @@ if(CADENZA_BUILD_TESTS)
   target_link_libraries(cadenza_headless_host_tests PRIVATE cadenza::host)
   target_include_directories(cadenza_headless_host_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_headless_host_tests COMMAND cadenza_headless_host_tests)
+
+  add_executable(cadenza_headless_microphone_tests
+    tests/headless_microphone_tests.cpp
+  )
+  target_link_libraries(cadenza_headless_microphone_tests PRIVATE
+    cadenza::host
+  )
+  target_include_directories(cadenza_headless_microphone_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_headless_microphone_tests
+    COMMAND cadenza_headless_microphone_tests
+  )
 
   add_executable(cadenza_app_snapshot_tests tests/app_snapshot_tests.cpp)
   target_link_libraries(cadenza_app_snapshot_tests PRIVATE
@@ -309,7 +470,9 @@ if(CADENZA_BUILD_TESTS)
   )
 
   add_executable(cadenza_gallery_tests tests/gallery_tests.cpp)
-  target_link_libraries(cadenza_gallery_tests PRIVATE cadenza::core)
+  target_link_libraries(cadenza_gallery_tests PRIVATE
+    cadenza::apps cadenza::system
+  )
   target_include_directories(cadenza_gallery_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_gallery_tests COMMAND cadenza_gallery_tests)
 
@@ -343,6 +506,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_shared_sources.cmake
+  )
+
+  add_test(
+    NAME cadenza_connectivity_research_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_connectivity_research.cmake
   )
 
   add_test(

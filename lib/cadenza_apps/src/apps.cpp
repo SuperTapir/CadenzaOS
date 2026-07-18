@@ -1,4 +1,4 @@
-#include "cadenza/core/apps.h"
+#include "cadenza/apps/apps.h"
 
 #include <algorithm>
 #include <cmath>
@@ -32,29 +32,33 @@ void LauncherApp::onEnter() noexcept {
   pulse_ = 1.0F;
 }
 
-void LauncherApp::update(Seconds dt, const InputFrame& input,
-                         AppRuntime& runtime) noexcept {
+void LauncherApp::update(const AppUpdateContext& context) noexcept {
+  const Seconds dt = context.dt;
+  const InputFrame& input = context.input;
   time_ += dt;
   pulse_ *= std::pow(0.015F, dt);
-  const int appCount = runtime.launcherAppCount();
+  const int appCount = context.catalog.launcherAppCount();
   if (appCount == 0) return;
   if (input.turn != 0) {
     const int previous = selected_;
     selected_ = wrap(selected_ + input.turn, appCount);
     pulse_ = 1.0F;
-    runtime.playSound(selected_ == previous ? audio::SoundCue::Boundary
-                                           : audio::SoundCue::Navigate);
-    runtime.emitDiagnostic({DiagnosticCategory::Runtime,
-                            DiagnosticCode::SelectionChanged,
-                            "launcher selection", selected_});
+    context.commands.submit(SystemCommand::playSound(
+        selected_ == previous ? audio::SoundCue::Boundary
+                              : audio::SoundCue::Navigate));
+    context.commands.submit(SystemCommand::emitDiagnostic(
+        {DiagnosticCategory::Runtime, DiagnosticCode::SelectionChanged,
+         "launcher selection", selected_}));
   }
   const float delta = static_cast<float>(selected_) - position_;
   position_ += delta * (1.0F - std::pow(0.0005F, dt));
-  if (input.clicked) runtime.open(runtime.launcherAppAt(selected_));
+  if (input.clicked) {
+    context.navigator.open(context.catalog.launcherAppAt(selected_));
+  }
 }
 
 void LauncherApp::render(MonoCanvas& canvas,
-                         const AppRuntime& runtime) noexcept {
+                         const AppRenderContext& context) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
@@ -78,7 +82,7 @@ void LauncherApp::render(MonoCanvas& canvas,
   const int kick = static_cast<int>(pulse_ * 7.0F);
   canvas.fillRect(cardX + 13 - kick, cardY + 14,
                   cardWidth - 26 + kick * 2, cardHeight - 29, true);
-  const int appCount = runtime.launcherAppCount();
+  const int appCount = context.catalog.launcherAppCount();
   if (appCount == 0) {
     const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
                            cardHeight - 37};
@@ -93,7 +97,7 @@ void LauncherApp::render(MonoCanvas& canvas,
   const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
                          cardHeight - 37};
   canvas.boundedText(
-      menuLabel(runtime.appName(runtime.launcherAppAt(selected_)),
+      menuLabel(context.catalog.appName(context.catalog.launcherAppAt(selected_)),
                 titleBounds, 4, 1, TextAlign::MiddleCenter),
       false);
 
@@ -116,9 +120,10 @@ void LauncherApp::render(MonoCanvas& canvas,
                             (navigationLeft + kNavigationWidth),
                         kFooterLabelHeight};
   canvas.boundedText(
-      menuLabel(runtime.appName(runtime.launcherAppAt(previous)),
+      menuLabel(context.catalog.appName(context.catalog.launcherAppAt(previous)),
                 previousBounds, 1, 1, TextAlign::MiddleLeft));
-  canvas.boundedText(menuLabel(runtime.appName(runtime.launcherAppAt(next)),
+  canvas.boundedText(menuLabel(context.catalog.appName(
+                                   context.catalog.launcherAppAt(next)),
                                nextBounds, 1, 1,
                                TextAlign::MiddleRight));
   const int dotsLeft = centerX - ((appCount - 1) * 9) / 2;
@@ -133,24 +138,26 @@ void LauncherApp::render(MonoCanvas& canvas,
 
 void ClockApp::onEnter() noexcept { phase_ = 0.0F; }
 
-void ClockApp::update(Seconds dt, const InputFrame& input,
-                      AppRuntime& runtime) noexcept {
+void ClockApp::update(const AppUpdateContext& context) noexcept {
+  const Seconds dt = context.dt;
+  const InputFrame& input = context.input;
   phase_ += dt;
   if (running_) elapsed_ += dt;
   if (input.clicked) {
     running_ = !running_;
-    runtime.playSound(running_ ? audio::SoundCue::ToggleOn
-                               : audio::SoundCue::ToggleOff);
+    context.commands.submit(SystemCommand::playSound(
+        running_ ? audio::SoundCue::ToggleOn : audio::SoundCue::ToggleOff));
   }
   if (input.turn) {
     const float previous = elapsed_;
     elapsed_ = std::max(0.0F, elapsed_ + input.turn * 10.0F);
-    runtime.playSound(elapsed_ == previous ? audio::SoundCue::Boundary
-                                           : audio::SoundCue::Navigate);
+    context.commands.submit(SystemCommand::playSound(
+        elapsed_ == previous ? audio::SoundCue::Boundary
+                             : audio::SoundCue::Navigate));
   }
 }
 
-void ClockApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
+void ClockApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
@@ -176,26 +183,29 @@ void ClockApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
 
 void MotionApp::onEnter() noexcept { velocity_ = 0.0F; }
 
-void MotionApp::update(Seconds dt, const InputFrame& input,
-                       AppRuntime& runtime) noexcept {
+void MotionApp::update(const AppUpdateContext& context) noexcept {
+  const Seconds dt = context.dt;
+  const InputFrame& input = context.input;
   time_ += dt;
   const float previousTarget = target_;
   if (input.turn) target_ += input.turn * 0.106F;
   if (input.clicked) target_ = target_ < 0.5F ? 0.84F : 0.16F;
   target_ = std::max(0.11F, std::min(0.89F, target_));
   if (input.turn) {
-    runtime.playSound(target_ == previousTarget ? audio::SoundCue::Boundary
-                                                : audio::SoundCue::Navigate);
+    context.commands.submit(SystemCommand::playSound(
+        target_ == previousTarget ? audio::SoundCue::Boundary
+                                  : audio::SoundCue::Navigate));
   } else if (input.clicked) {
-    runtime.playSound(target_ >= 0.5F ? audio::SoundCue::ToggleOn
-                                     : audio::SoundCue::ToggleOff);
+    context.commands.submit(SystemCommand::playSound(
+        target_ >= 0.5F ? audio::SoundCue::ToggleOn
+                        : audio::SoundCue::ToggleOff));
   }
   const float acceleration = (target_ - x_) * 75.0F - velocity_ * 12.0F;
   velocity_ += acceleration * dt;
   x_ += velocity_ * dt;
 }
 
-void MotionApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
+void MotionApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
@@ -223,37 +233,75 @@ void MotionApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
               TextAlign::MiddleRight);
 }
 
-void SettingsApp::update(Seconds dt, const InputFrame& input,
-                         AppRuntime& runtime) noexcept {
+void SettingsApp::update(const AppUpdateContext& context) noexcept {
+  const Seconds dt = context.dt;
+  const InputFrame& input = context.input;
   time_ += dt;
   if (input.turn) {
-    selected_ = wrap(selected_ + input.turn, 3);
-    runtime.playSound(audio::SoundCue::Navigate);
+    selected_ = wrap(selected_ + input.turn, 5);
+    resetConfirmArmed_ = false;
+    context.commands.submit(
+        SystemCommand::playSound(audio::SoundCue::Navigate));
   }
   if (input.clicked && selected_ == 0) {
     const bool becomingReduced =
-        runtime.motionProfile() == MotionProfile::Normal;
-    runtime.setMotionProfile(becomingReduced ? MotionProfile::Reduced
-                                             : MotionProfile::Normal);
-    runtime.playSound(becomingReduced ? audio::SoundCue::ToggleOff
-                                      : audio::SoundCue::ToggleOn);
+        context.system.motionProfile == MotionProfile::Normal;
+    context.commands.submit(SystemCommand::setMotionProfile(
+        becomingReduced ? MotionProfile::Reduced : MotionProfile::Normal));
+    context.commands.submit(SystemCommand::playSound(
+        becomingReduced ? audio::SoundCue::ToggleOff
+                        : audio::SoundCue::ToggleOn));
   } else if (input.clicked && selected_ == 1) {
     const audio::SoundVolume next =
-        audio::nextSoundVolume(runtime.soundVolume());
-    if (runtime.setSoundVolume(next) && next != audio::SoundVolume::Muted) {
-      runtime.playSound(audio::SoundCue::ToggleOn);
+        audio::nextSoundVolume(context.system.soundVolume);
+    if (context.commands.submit(SystemCommand::setSoundVolume(next)) &&
+        next != audio::SoundVolume::Muted) {
+      context.commands.submit(
+          SystemCommand::playSound(audio::SoundCue::ToggleOn));
     }
   } else if (input.clicked && selected_ == 2) {
-    runtime.playSound(audio::SoundCue::Reject);
+    const bool requested = context.system.connectivity.wifi.desired !=
+                           WiFiDesiredPolicy::OnlineRequested;
+    context.commands.submit(
+        SystemCommand::setNetworkOnlineRequested(requested));
+    context.commands.submit(SystemCommand::playSound(
+        requested ? audio::SoundCue::ToggleOn : audio::SoundCue::ToggleOff));
+  } else if (input.clicked && selected_ == 3) {
+    const ProvisioningState state =
+        context.system.connectivity.provisioning.state;
+    const bool active = state == ProvisioningState::Advertising ||
+                        state == ProvisioningState::Negotiating ||
+                        state == ProvisioningState::Applying ||
+                        state == ProvisioningState::Verifying ||
+                        state == ProvisioningState::Stopping;
+    if (active) {
+      context.commands.submit(SystemCommand::cancelProvisioning());
+      resetConfirmArmed_ = false;
+    } else {
+      const bool resetRequired =
+          state == ProvisioningState::Failed ||
+          context.system.connectivity.wifi.needsUserAction();
+      if (resetRequired && !resetConfirmArmed_) {
+        resetConfirmArmed_ = true;
+        context.commands.submit(
+            SystemCommand::playSound(audio::SoundCue::Boundary));
+      } else {
+        context.commands.submit(
+            SystemCommand::startProvisioning(resetRequired));
+        resetConfirmArmed_ = false;
+      }
+    }
+  } else if (input.clicked && selected_ == 4) {
+    context.commands.submit(SystemCommand::playSound(audio::SoundCue::Reject));
   }
 }
 
 void SettingsApp::render(MonoCanvas& canvas,
-                         const AppRuntime& runtime) noexcept {
+                         const AppRenderContext& context) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
-  const bool energetic = runtime.motionProfile() == MotionProfile::Normal;
+  const bool energetic = context.system.motionProfile == MotionProfile::Normal;
   const int bar = energetic
                       ? static_cast<int>((std::sin(time_ * 8.0F) + 1.0F) * 35.0F)
                       : 18;
@@ -262,16 +310,47 @@ void SettingsApp::render(MonoCanvas& canvas,
   canvas.text("TINGS", 12, 50, 4, false);
   char soundRow[24];
   std::snprintf(soundRow, sizeof(soundRow), "SOUND: %s",
-                audio::soundVolumeName(runtime.soundVolume()));
-  const char* rows[3] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
-                         soundRow, "ABOUT: CADENZA OS"};
-  constexpr int rowHeight = 32;
-  constexpr int rowStep = 40;
-  const int rowsHeight = rowHeight + rowStep * 2;
+                audio::soundVolumeName(context.system.soundVolume));
+  char wifiRow[24];
+  const auto& wifi = context.system.connectivity.wifi;
+  const char* wifiState = wifi.networkOnline()
+                              ? "ONLINE"
+                              : wifi.needsUserAction()
+                                    ? "ACTION"
+                                    : wifi.desired ==
+                                              WiFiDesiredPolicy::OnlineRequested
+                                          ? "CONNECT"
+                                          : "OFF";
+  std::snprintf(wifiRow, sizeof(wifiRow), "WIFI: %s", wifiState);
+  char provisioningRow[28];
+  const auto provisioning = context.system.connectivity.provisioning.state;
+  const char* provisioningState =
+      resetConfirmArmed_
+          ? "CONFIRM RESET"
+          : provisioning == ProvisioningState::Advertising
+                ? "ADVERTISING"
+                : provisioning == ProvisioningState::Negotiating
+                      ? "PAIRING"
+                      : provisioning == ProvisioningState::Applying ||
+                                provisioning == ProvisioningState::Verifying
+                            ? "APPLYING"
+                            : provisioning == ProvisioningState::Stopping
+                                  ? "STOPPING"
+                                  : provisioning == ProvisioningState::Failed
+                                        ? "FAILED"
+                                        : "START";
+  std::snprintf(provisioningRow, sizeof(provisioningRow), "SETUP: %s",
+                provisioningState);
+  const char* rows[5] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
+                         soundRow, wifiRow, provisioningRow,
+                         "ABOUT: CADENZA OS"};
+  constexpr int rowHeight = 24;
+  constexpr int rowStep = 27;
+  const int rowsHeight = rowHeight + rowStep * 4;
   const int rowsTop = std::max(28, (height - rowsHeight) / 2);
   const int rowsLeft = width * 43 / 100;
   const int rowsWidth = width * 53 / 100;
-  for (int index = 0; index < 3; ++index) {
+  for (int index = 0; index < 5; ++index) {
     const int y = rowsTop + index * rowStep;
     if (index == selected_) {
       canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
@@ -289,8 +368,8 @@ void SettingsApp::render(MonoCanvas& canvas,
           true);
     }
   }
-  canvas.text("HOLD TO GO HOME", width - 12, height - 12, 1, true,
-              TextAlign::BottomRight);
+  canvas.text("HOLD: HOME", 12, height - 8, 1, false,
+              TextAlign::BottomLeft);
 }
 
 }  // namespace cadenza

@@ -5,21 +5,32 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
+#include <string>
 
 #include "cadenza/host/headless_host.h"
 
 namespace {
+bool traceContains(
+    const cadenza::host::HeadlessConnectivityAdapter& adapter,
+    cadenza::system::ConnectivityActionType type) noexcept {
+  for (std::size_t index = 0; index < adapter.traceSize(); ++index) {
+    const auto* action = adapter.traceAt(index);
+    if (action && action->type == type) return true;
+  }
+  return false;
+}
+
 class TickApp final : public cadenza::App {
  public:
   const char* name() const noexcept override { return "Tick"; }
-  void update(cadenza::Seconds dt, const cadenza::InputFrame& input,
-              cadenza::AppRuntime&) noexcept override {
-    elapsed += dt;
-    turn += input.turn;
+  void update(const cadenza::AppUpdateContext& context) noexcept override {
+    elapsed += context.dt;
+    turn += context.input.turn;
     ++updates;
   }
   void render(cadenza::MonoCanvas& canvas,
-              const cadenza::AppRuntime&) noexcept override {
+              const cadenza::AppRenderContext&) noexcept override {
     canvas.clear(false);
     canvas.pixel(updates, turn + 10);
   }
@@ -33,8 +44,8 @@ class TickApp final : public cadenza::App {
 TEST_CASE("deterministic runner advances only by its fixed delta") {
   TickApp app;
   cadenza::AppRuntime runtime;
-  REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, app, false));
-  REQUIRE(runtime.begin(cadenza::AppId::Launcher));
+  REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, app, false));
+  REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
   cadenza::host::DeterministicRunner runner{runtime, canvas, framebuffer,
@@ -51,8 +62,8 @@ TEST_CASE("deterministic runner advances only by its fixed delta") {
 TEST_CASE("scripted input is delivered on exact simulation frames") {
   TickApp app;
   cadenza::AppRuntime runtime;
-  REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, app, false));
-  REQUIRE(runtime.begin(cadenza::AppId::Launcher));
+  REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, app, false));
+  REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
   cadenza::host::DeterministicRunner runner{runtime, canvas, framebuffer,
@@ -130,4 +141,177 @@ TEST_CASE("headless interaction produces deterministic PCM golden") {
       cadenza::audio::SoundCue::Back);
   CHECK(confirm.startFrequencyHz < confirm.endFrequencyHz);
   CHECK(back.startFrequencyHz > back.endFrequencyHz);
+}
+
+TEST_CASE("headless WiFi adapter reaches online and cleanly stops") {
+  using cadenza::system::ConnectivityActionType;
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.step();
+
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setNetworkOnlineRequested(true)));
+  host.step();
+  host.step();
+  host.step();
+
+  const auto& online = host.services().snapshot().connectivity.wifi;
+  CHECK(online.radio == cadenza::WiFiRadioState::Ready);
+  CHECK(online.station == cadenza::WiFiStationState::Online);
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StartWiFiRadio));
+  CHECK(traceContains(host.connectivity(), ConnectivityActionType::ConnectWiFi));
+
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setNetworkOnlineRequested(false)));
+  host.step();
+  host.step();
+  const auto& stopped = host.services().snapshot().connectivity.wifi;
+  CHECK(stopped.radio == cadenza::WiFiRadioState::Off);
+  CHECK(stopped.station == cadenza::WiFiStationState::Idle);
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StopWiFiRadio));
+}
+
+TEST_CASE("headless WiFi adapter exposes deterministic timeout retry") {
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.connectivity().setAutomaticWiFiSuccess(false);
+  host.step();
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setNetworkOnlineRequested(true)));
+  host.step();
+  host.step();
+  CHECK(host.services().snapshot().connectivity.wifi.station ==
+        cadenza::WiFiStationState::Connecting);
+
+  host.advance(10.1F);
+  CHECK(host.services().snapshot().connectivity.wifi.station ==
+        cadenza::WiFiStationState::RetryWait);
+  CHECK(host.services().snapshot().connectivity.wifi.failure ==
+        cadenza::WiFiFailure::AssociationTimeout);
+}
+
+TEST_CASE("headless Bluetooth adapter composes advertising and scanning") {
+  using cadenza::system::ConnectivityActionType;
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.step();
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setBluetoothAdvertisingRequested(true)));
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setBluetoothScanningRequested(true)));
+  host.step();
+  host.step();
+  host.step();
+
+  const auto& active = host.services().snapshot().connectivity.bluetoothLe;
+  CHECK(active.radio == cadenza::BluetoothLeRadioState::Ready);
+  CHECK(active.advertising);
+  CHECK(active.scanning);
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StartBluetoothLeAdvertising));
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StartBluetoothLeScanning));
+
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setBluetoothAdvertisingRequested(false)));
+  REQUIRE(host.services().submit(
+      cadenza::SystemCommand::setBluetoothScanningRequested(false)));
+  host.step();
+  host.step();
+  const auto& stopped = host.services().snapshot().connectivity.bluetoothLe;
+  CHECK(stopped.radio == cadenza::BluetoothLeRadioState::Off);
+  CHECK_FALSE(stopped.advertising);
+  CHECK_FALSE(stopped.scanning);
+}
+
+TEST_CASE("headless Security 2 provisioning releases its session lease") {
+  using cadenza::system::ConnectivityActionType;
+  using cadenza::system::SystemResource;
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.connectivity().setAutomaticProvisioningSuccess(true);
+  host.step();
+  REQUIRE(host.services().submit(cadenza::SystemCommand::startProvisioning()));
+  host.step();
+  CHECK(host.services().leases().ownerCount(
+            SystemResource::ProvisioningSession) == 1);
+  host.step();
+  host.step();
+
+  CHECK(host.services().snapshot().connectivity.provisioning.state ==
+        cadenza::ProvisioningState::Succeeded);
+  CHECK(host.services().leases().ownerCount(
+            SystemResource::ProvisioningSession) == 0);
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StartProvisioning));
+  CHECK(traceContains(host.connectivity(),
+                      ConnectivityActionType::StopProvisioning));
+}
+
+TEST_CASE("headless App transition releases only the foreground network owner") {
+  using cadenza::system::SystemResource;
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.step();
+  REQUIRE(host.runtime().open(cadenza::apps::kSettingsAppId));
+  for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+  REQUIRE_FALSE(host.runtime().transitioning());
+
+  const auto settingsOwner =
+      cadenza::ResourceOwner::app(cadenza::apps::kSettingsAppId);
+  REQUIRE(host.services().submit(
+      {settingsOwner,
+       cadenza::SystemCommand::setNetworkOnlineRequested(true), 0}));
+  REQUIRE(host.services().submit(
+      {cadenza::ResourceOwner::usb(),
+       cadenza::SystemCommand::setNetworkOnlineRequested(true), 0}));
+  host.step();
+  CHECK(host.services().leases().ownerCount(SystemResource::Network) == 2);
+
+  REQUIRE(host.runtime().open(cadenza::apps::kLauncherAppId));
+  for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+  REQUIRE_FALSE(host.runtime().transitioning());
+  CHECK(host.services().leases().ownerCount(SystemResource::Network) == 1);
+  CHECK(host.services().snapshot().connectivity.wifi.desired ==
+        cadenza::WiFiDesiredPolicy::OnlineRequested);
+
+  REQUIRE(host.services().submit(
+      {cadenza::ResourceOwner::usb(),
+       cadenza::SystemCommand::setNetworkOnlineRequested(false), 0}));
+  host.step();
+  host.step();
+  CHECK_FALSE(host.services().leases().desired(SystemResource::Network));
+  CHECK(host.services().snapshot().connectivity.wifi.radio ==
+        cadenza::WiFiRadioState::Off);
+}
+
+TEST_CASE("headless framebuffer and action dump exclude provisioning canary") {
+  constexpr const char* kSecretCanary =
+      "CADENZA_SECRET_CANARY_7f9e2a_do_not_log";
+  const std::string privilegedFixture{kSecretCanary};
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  host.connectivity().setAutomaticProvisioningSuccess(true);
+  host.step();
+  REQUIRE(host.services().submit(cadenza::SystemCommand::startProvisioning()));
+  host.step();
+  host.step();
+  host.step();
+
+  std::string actionDump;
+  for (std::size_t index = 0; index < host.connectivity().traceSize(); ++index) {
+    const auto* action = host.connectivity().traceAt(index);
+    REQUIRE(action != nullptr);
+    actionDump += std::to_string(static_cast<unsigned>(action->type));
+    actionDump += ':';
+    actionDump += std::to_string(action->generation);
+    actionDump += '\n';
+  }
+  const auto* bytes = host.framebuffer().data();
+  const auto* bytesEnd = bytes + host.framebuffer().sizeBytes();
+  const auto* canary = reinterpret_cast<const std::uint8_t*>(kSecretCanary);
+  const auto* canaryEnd = canary + std::strlen(kSecretCanary);
+  CHECK(std::search(bytes, bytesEnd, canary, canaryEnd) == bytesEnd);
+  CHECK(actionDump.find(kSecretCanary) == std::string::npos);
+  CHECK(privilegedFixture.find(kSecretCanary) != std::string::npos);
 }

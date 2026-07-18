@@ -5,12 +5,12 @@
 
 #include <atomic>
 
-#include "cadenza/core/app_runtime.h"
+#include "cadenza/audio/interaction_sound.h"
 #include "cadenza/core/diagnostics.h"
 
 class I2sAudioOutput {
  public:
-  bool begin(cadenza::AppRuntime& runtime,
+  bool begin(cadenza::audio::InteractionSoundService& service,
              cadenza::DiagnosticSink* diagnostics = nullptr) noexcept;
   void stop() noexcept;
   bool running() const noexcept {
@@ -23,7 +23,7 @@ class I2sAudioOutput {
   void emit(cadenza::DiagnosticCode code, const char* message,
             std::int32_t value = 0) const noexcept;
 
-  cadenza::AppRuntime* runtime_ = nullptr;
+  cadenza::audio::InteractionSoundService* service_ = nullptr;
   cadenza::DiagnosticSink* diagnostics_ = nullptr;
   std::atomic<bool> running_{false};
   std::atomic<TaskHandle_t> task_{nullptr};

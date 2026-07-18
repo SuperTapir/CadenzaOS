@@ -117,7 +117,7 @@ struct OverlayState {
   bool visible = false;
   float fps = 0.0F;
   float frameMilliseconds = 0.0F;
-  AppId app = AppId::Launcher;
+  AppId app{};
   InputFrame input;
   std::size_t framebufferBytes = 0;
   std::size_t framebufferCapacity = 0;

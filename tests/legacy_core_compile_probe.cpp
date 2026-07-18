@@ -5,7 +5,6 @@
 #include "cadenza/audio/interaction_sound.h"
 #include "cadenza/audio/sound_cue_library.h"
 #include "cadenza/core/app_runtime.h"
-#include "cadenza/core/apps.h"
 #include "cadenza/core/input.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/presenter.h"

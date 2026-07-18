@@ -419,7 +419,7 @@ BoundedTextResult MonoCanvas::layoutText(
       if (marquee) {
         const float phase = std::max(0.0F, std::min(1.0F, request.phase));
         const std::int32_t travel =
-            std::max(0, metrics.width - request.bounds.width);
+            std::max<std::int32_t>(0, metrics.width - request.bounds.width);
         left = request.bounds.x -
                static_cast<std::int32_t>(std::lround(phase * travel));
       }
@@ -508,7 +508,8 @@ BoundedTextResult MonoCanvas::layoutText(
   }
 
   const std::uint8_t verticalLines = static_cast<std::uint8_t>(
-      request.bounds.height / std::max(1, fallbackMetrics.height));
+      request.bounds.height /
+      std::max<std::int32_t>(1, fallbackMetrics.height));
   const std::uint8_t lineLimit = std::min<std::uint8_t>(
       {request.maximumLines, verticalLines,
        static_cast<std::uint8_t>(kBoundedTextMaxLines)});

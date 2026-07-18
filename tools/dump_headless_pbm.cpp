@@ -13,10 +13,14 @@ cadenza::FramebufferProfile profileFrom(const char* value) {
 
 cadenza::AppId appFrom(const char* value) {
   const int app = value ? std::atoi(value) : 0;
-  if (app < 0 || app > static_cast<int>(cadenza::AppId::Gallery)) {
-    return cadenza::AppId::Launcher;
+  switch (app) {
+    case 0: return cadenza::apps::kLauncherAppId;
+    case 1: return cadenza::apps::kClockAppId;
+    case 2: return cadenza::apps::kMotionAppId;
+    case 3: return cadenza::apps::kSettingsAppId;
+    case 4: return cadenza::apps::kGalleryAppId;
+    default: return cadenza::apps::kLauncherAppId;
   }
-  return static_cast<cadenza::AppId>(app);
 }
 }  // namespace
 
@@ -24,18 +28,18 @@ int main(int argc, char** argv) {
   if (argc < 4 || argc > 7) return 2;
   cadenza::host::HeadlessHost host{profileFrom(argv[1])};
   const cadenza::AppId app = appFrom(argv[2]);
-  if (app != cadenza::AppId::Launcher) {
+  if (app != cadenza::apps::kLauncherAppId) {
     if (!host.runtime().open(app)) return 3;
     for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
       host.step();
     }
   }
-  if (argc >= 5 && app == cadenza::AppId::Gallery) {
+  if (argc >= 5 && app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;
     input.turn = static_cast<std::int16_t>(std::atoi(argv[4]));
     host.step(input);
   }
-  if (argc == 6 && app == cadenza::AppId::Gallery) {
+  if (argc == 6 && app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame scrubMode;
     scrubMode.clicked = true;
     host.step(scrubMode);
@@ -43,7 +47,7 @@ int main(int argc, char** argv) {
     scrub.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
     host.step(scrub);
   }
-  if (argc == 7 && app == cadenza::AppId::Gallery) {
+  if (argc == 7 && app == cadenza::apps::kGalleryAppId) {
     if (std::strcmp(argv[5], "auto") != 0) return 2;
     const int frames = std::max(0, std::atoi(argv[6]));
     for (int frame = 0; frame < frames; ++frame) host.step();

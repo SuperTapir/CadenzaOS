@@ -3,15 +3,6 @@
 #include <algorithm>
 
 namespace cadenza {
-namespace {
-constexpr std::size_t indexOf(AppId id) noexcept {
-  return static_cast<std::size_t>(id);
-}
-
-constexpr bool valid(AppId id) noexcept {
-  return indexOf(id) < indexOf(AppId::Count);
-}
-}  // namespace
 
 AppRuntime::AppRuntime(FramebufferProfile profile, const Transition& transition,
                        Seconds transitionDuration) noexcept
@@ -29,42 +20,61 @@ void AppRuntime::setTransition(const Transition& transition,
 }
 
 bool AppRuntime::registerApp(AppId id, App& app,
-                             bool visibleInLauncher) noexcept {
-  if (!valid(id) || begun_) return false;
-  apps_[indexOf(id)] = &app;
-  visibleInLauncher_[indexOf(id)] = visibleInLauncher;
+                             bool visibleInLauncher,
+                             AppCapabilitySet capabilities) noexcept {
+  if (begun_) return false;
+  return catalog_.registerApp(id, app, visibleInLauncher, app.name(),
+                              capabilities) ==
+         AppRegistrationResult::Registered;
+}
+
+bool AppRuntime::resolveCapabilities(
+    AppId id, AppCapabilitySet& capabilities) const noexcept {
+  const AppCatalogEntry* entry = catalog_.find(id);
+  if (!entry) return false;
+  capabilities = entry->capabilities;
+  return true;
+}
+
+bool AppRuntime::configureHome(AppId id) noexcept {
+  if (begun_ || !catalog_.find(id)) return false;
+  homeId_ = id;
   return true;
 }
 
 std::uint8_t AppRuntime::launcherAppCount() const noexcept {
   std::uint8_t count = 0;
-  for (std::size_t index = 0; index < kAppCapacity; ++index) {
-    if (apps_[index] && visibleInLauncher_[index]) ++count;
+  for (std::size_t index = 0; index < catalog_.size(); ++index) {
+    if (catalog_.at(index)->visibleInLauncher) ++count;
   }
   return count;
 }
 
 AppId AppRuntime::launcherAppAt(std::uint8_t position) const noexcept {
-  for (std::size_t index = 0; index < kAppCapacity; ++index) {
-    if (apps_[index] && visibleInLauncher_[index] && position-- == 0) {
-      return static_cast<AppId>(index);
+  for (std::size_t index = 0; index < catalog_.size(); ++index) {
+    const AppCatalogEntry* entry = catalog_.at(index);
+    if (entry->visibleInLauncher && position-- == 0) {
+      return entry->id;
     }
   }
-  return AppId::Launcher;
+  return homeId_;
 }
 
 const char* AppRuntime::appName(AppId id) const noexcept {
-  if (!valid(id)) return "INVALID";
-  const App* app = apps_[indexOf(id)];
-  return app ? app->name() : "MISSING";
+  if (!id.valid()) return "INVALID";
+  const AppCatalogEntry* entry = catalog_.find(id);
+  return entry ? entry->name : "MISSING";
 }
 
 bool AppRuntime::begin(AppId initial) noexcept {
-  if (begun_ || !valid(initial) || !apps_[indexOf(initial)]) return false;
+  const AppCatalogEntry* initialEntry = catalog_.find(initial);
+  if (begun_ || !initialEntry) return false;
+  if (!homeId_.valid()) homeId_ = initial;
+  if (!catalog_.find(homeId_)) return false;
   currentId_ = initial;
   pendingId_ = initial;
   begun_ = true;
-  apps_[indexOf(currentId_)]->onEnter();
+  initialEntry->app->onEnter();
   return true;
 }
 
@@ -72,22 +82,32 @@ bool AppRuntime::open(AppId id) noexcept {
   return startTransition(id, audio::SoundCue::Confirm);
 }
 
+void AppRuntime::renderAppWithContext(
+    App& app, MonoCanvas& canvas, const SystemSnapshot& snapshot) noexcept {
+  const AppCatalogView catalog{catalog_};
+  const AppRenderContext context{catalog, snapshot};
+  app.render(canvas, context);
+}
+
 bool AppRuntime::startTransition(AppId id, audio::SoundCue cue) noexcept {
-  if (!begun_ || !valid(id) || id == currentId_ || transitioning_ ||
-      !apps_[indexOf(id)]) {
+  const AppCatalogEntry* destination = catalog_.find(id);
+  if (!begun_ || !destination || id == currentId_ || transitioning_) {
     return false;
   }
   pendingId_ = id;
   outgoingFrame_.clear(false);
   MonoCanvas outgoingCanvas{outgoingFrame_, diagnosticSink_};
-  apps_[indexOf(currentId_)]->render(outgoingCanvas, *this);
+  renderAppWithContext(*catalog_.find(currentId_)->app, outgoingCanvas,
+                       frameSnapshot_);
   incomingFrame_ = outgoingFrame_;
   transition_ = 0.0F;
   transitioning_ = true;
   swapped_ = false;
-  sound_.play(cue);
+  incomingRendered_ = false;
+  frameCommandSink_->submit(
+      {ResourceOwner::system(), SystemCommand::playSound(cue), 0});
   emitDiagnostic({DiagnosticCategory::Runtime, DiagnosticCode::AppTransition,
-                  "app transition", static_cast<std::int32_t>(indexOf(id))});
+                  "app transition", static_cast<std::int32_t>(id.value())});
   return true;
 }
 
@@ -96,26 +116,39 @@ void AppRuntime::emitDiagnostic(const DiagnosticEvent& event) const noexcept {
 }
 
 void AppRuntime::update(Seconds dt, const InputFrame& input) noexcept {
-  sound_.advance(std::max(0.0F, dt));
-  if (!begun_ || !apps_[indexOf(currentId_)]) return;
-  if (!transitioning_ && input.longPressed && currentId_ != AppId::Launcher) {
-    startTransition(AppId::Launcher, audio::SoundCue::Back);
+  updateWithSystem(dt, input, frameSnapshot_, fallbackCommandSink_);
+}
+
+void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
+                                  const SystemSnapshot& snapshot,
+                                  SystemCommandSink& commands) noexcept {
+  frameSnapshot_ = snapshot;
+  frameCommandSink_ = &commands;
+  commands.bindCapabilityResolver(*this);
+  AppCatalogEntry* current = catalog_.find(currentId_);
+  if (!begun_ || !current) return;
+  if (!transitioning_ && input.longPressed && currentId_ != homeId_) {
+    startTransition(homeId_, audio::SoundCue::Back);
     return;
   }
   if (!transitioning_) {
-    apps_[indexOf(currentId_)]->update(std::max(0.0F, dt), input, *this);
+    const AppCatalogView catalog{catalog_};
+    AppCommandPort commandPort{currentId_, current->capabilities, commands};
+    const AppUpdateContext context{std::max(0.0F, dt), input, catalog, *this,
+                                   frameSnapshot_, commandPort, canvasWidth(),
+                                   canvasHeight()};
+    current->app->update(context);
     return;
   }
 
   transition_ += std::max(0.0F, dt) / transitionDuration_;
   if (!swapped_ && transition_ >= 0.5F) {
-    apps_[indexOf(currentId_)]->onExit();
+    current->app->onExit();
     currentId_ = pendingId_;
-    apps_[indexOf(currentId_)]->onEnter();
-    incomingFrame_.clear(false);
-    MonoCanvas incomingCanvas{incomingFrame_, diagnosticSink_};
-    apps_[indexOf(currentId_)]->render(incomingCanvas, *this);
+    current = catalog_.find(currentId_);
+    current->app->onEnter();
     swapped_ = true;
+    incomingRendered_ = false;
   }
   if (transition_ >= 1.0F) {
     transition_ = 1.0F;
@@ -124,17 +157,30 @@ void AppRuntime::update(Seconds dt, const InputFrame& input) noexcept {
 }
 
 void AppRuntime::render(MonoCanvas& canvas) noexcept {
-  if (!begun_ || !apps_[indexOf(currentId_)]) {
+  renderWithSystem(canvas, frameSnapshot_);
+}
+
+void AppRuntime::renderWithSystem(MonoCanvas& canvas,
+                                  const SystemSnapshot& snapshot) noexcept {
+  frameSnapshot_ = snapshot;
+  const AppCatalogEntry* current = catalog_.find(currentId_);
+  if (!begun_ || !current) {
     canvas.clear(false);
     canvas.text("RUNTIME: NO APP", canvas.width() / 2, canvas.height() / 2, 2,
                 true, TextAlign::MiddleCenter);
     return;
   }
   if (transitioning_) {
+    if (swapped_ && !incomingRendered_) {
+      incomingFrame_.clear(false);
+      MonoCanvas incomingCanvas{incomingFrame_, diagnosticSink_};
+      renderAppWithContext(*current->app, incomingCanvas, frameSnapshot_);
+      incomingRendered_ = true;
+    }
     transitionStrategy_->compose(outgoingFrame_, incomingFrame_, canvas,
                                  transition_);
   } else {
-    apps_[indexOf(currentId_)]->render(canvas, *this);
+    renderAppWithContext(*current->app, canvas, frameSnapshot_);
   }
 }
 

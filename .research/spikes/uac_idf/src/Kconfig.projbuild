@@ -1,0 +1,36 @@
+menu "Cadenza candidate hardware"
+
+config CADENZA_T_EMBED_RUNTIME
+    bool "Build the complete T-Embed display/input/App runtime"
+    default n
+    help
+        Link the portable runtime and bundled Apps with the ESP-IDF esp_lcd
+        ST7789 and GPIO encoder adapters. The hardware candidate enables this
+        together with speaker, microphone and USB Audio.
+
+config CADENZA_T_EMBED_MICROPHONE
+    bool "Use the physical T-Embed ES7210 microphone instead of synthetic PCM"
+    default n
+    help
+        Build and execute the researched ES7210/I2S1 adapter. Leave disabled
+        when no physical original T-Embed is connected. The adapter source is
+        compiled in either mode so CI still checks the SDK integration.
+
+config CADENZA_T_EMBED_SPEAKER
+    bool "Use the physical T-Embed MAX98357A speaker output"
+    default n
+    help
+        Build and execute the ESP-IDF 5 I2S0 output adapter. It owns a task,
+        DMA channel and buffers independent from the I2S1 microphone adapter.
+
+config CADENZA_CONNECTIVITY_RUNTIME
+    bool "Build ESP-IDF Wi-Fi, NimBLE and Security 2 adapter"
+    depends on CADENZA_T_EMBED_RUNTIME
+    default y
+    help
+        Connect the portable capability/lease-driven connectivity service to
+        ESP-IDF Wi-Fi/IP events, NimBLE GAP roles and the official BLE Wi-Fi
+        provisioning manager. Security 0 is not supported by this adapter;
+        Security 2 material must come from the privileged platform hook.
+
+endmenu

@@ -5,34 +5,38 @@
 ## 运行链路
 
 ```text
-T-Embed GPIO / SDL keyboard+mouse
-              ↓ RawInputEvent + monotonic timestamp
-          InputReducer
-              ↓ InputFrame
-          AppRuntime ─── lifecycle / long-press home / Transition
-              ├──────── semantic SoundCue + session volume
-              │                 ↓ fixed SPSC queue
-              │       SDL callback / ESP32 I²S task / headless PCM
-              ↓
-Launcher / Clock / Motion / Settings / Animation Gallery
-              ↓ MonoCanvas + animation/presentation core
-      canonical 1-bit MonoFramebuffer
-              ↓
-TftPresenter / SDL3 texture / PNG+GIF / snapshot hash / future Sharp presenter
+platform callbacks ──→ bounded typed PlatformEvent queue
+                              ↓ beginFrame
+raw input ──→ InputReducer ──→ frozen SystemSnapshot + AppUpdateContext
+                              ↓ typed SystemCommand queue
+                         SystemServiceHost commit
+                              ↓ same-frame AppRenderContext
+                         AppRuntime + transition
+                              ↓
+                       canonical MonoFramebuffer
+                              ↓
+               T-Embed / SDL / headless / future Sharp
+
+ES7210/I²S1 ──→ 48 kHz voice coordinator ──┬─→ analyzer snapshot ─→ Apps
+                                           └─→ UAC packetizer ───→ macOS
+SoundCue ─────→ 44.1 kHz sound service ───────→ I²S0 / SDL / headless
 ```
 
 ## 平台负责什么
 
 - 初始化硬件和维护稳定的帧循环；
 - 将旋钮和按钮统一成与具体 GPIO 无关的 `InputFrame`；
+- 组合 `cadenza_core`、`cadenza_apps`、`cadenza_system` 与平台 adapter；
 - 注册应用、维护当前应用，并调用生命周期；
 - 拦截“长按返回 Launcher”这样的系统手势；
 - 绘制统一的应用切换转场；
 - 提供 row-major、MSB-first、`1 = black` 的 1-bit 画布，禁止应用依赖彩色
   TFT 或 SDL 特性；
-- 将显示提交与应用绘制分离。
+- 将显示提交与应用绘制分离；
 - 拥有 `InteractionSoundService`，把 Navigate、Confirm、Back 等语义提交给
   独立音频消费者；应用不得操作 SDL、I²S、WAV 路径或任意 oscillator。
+- 拥有 voice capture 生命周期、consumer fan-out、隐私状态与错误降级；App 不得
+  取得 raw PCM、codec、DMA、USB、Wi-Fi 或 BLE callback。
 
 ## 应用负责什么
 
@@ -42,11 +46,25 @@ TftPresenter / SDL3 texture / PNG+GIF / snapshot hash / future Sharp presenter
 const char* name() const;
 void onEnter();
 void onExit();
-void update(float dt, const InputFrame& input, AppRuntime& runtime);
-void render(MonoCanvas& canvas, const AppRuntime& runtime);
+void update(const AppUpdateContext& context);
+void render(MonoCanvas& canvas, const AppRenderContext& context);
 ```
 
-应用不读取 GPIO，不直接持有屏幕，不自行实现页面切换，也不通过 `delay()` 控制节奏。状态只属于应用实例；系统可以随时离开它，再通过 `onEnter()` 重新进入。
+update context 只含 `dt`、`InputFrame`、只读 `SystemSnapshot`、catalog view、
+`AppNavigator` 与绑定当前 App 身份的 `AppCommandPort`；render context 只含只读 snapshot。
+应用不读取 GPIO，不直接持有屏幕，不自行实现页面切换，也不通过 `delay()` 控制
+节奏。状态只属于应用实例；系统可以随时离开它，再通过 `onEnter()` 重新进入。
+
+## 模块与所有权
+
+- `cadenza_core`：App 契约/目录/生命周期、输入、图形、动画、声音语义；不知道
+  bundled App 与平台 SDK。
+- `cadenza_apps`：Launcher、Clock、Motion、Settings、Gallery；只能依赖窄 App
+  context。
+- `cadenza_system`：帧事务、权威系统状态、sound/voice services、固定队列、USB
+  packetizer 与 DMA normalizer；不含平台 header。
+- platform roots：headless、SDL、当前 Arduino firmware、候选 ESP-IDF firmware；
+  负责硬件/API 对接，不重新定义业务状态或 PCM 语义。
 
 ## 关键决定
 
@@ -92,10 +110,61 @@ I²S frame；任何平台 adapter 都不得另写一套音色。
 产品资产。未来 WAV 仍映射到相同 `SoundCue` Event；母版、平台转换、来源权利
 和真机验收遵循 [`audio-asset-contract.md`](audio-asset-contract.md)。
 
-## P8 之后的平台工作
+### 帧事务与异步回调
+
+Wi-Fi、BLE、USB、I²S 等 callback 只能写入有界 adapter/mailbox 或
+`PlatformEvent` queue；它们不能调用 App 生命周期或直接修改 snapshot。
+SDK callback 使用单 producer/单 consumer 的 `PlatformEventMailbox<N>`，满时
+拒绝 newest 并记录 posted/consumed/rejected/high-water；主 system loop 再将
+Wi-Fi/Bluetooth LE 等 typed event 摄取进 host。App 只看到稳定的
+`ConnectivitySnapshot`，不看到 mailbox、SSID/凭据、socket 或 GATT callback。
+`beginFrame()` 在预算内摄取事件并冻结 update snapshot，App update 只排队命令，
+`commitCommands()` 按 FIFO 提交并生成同帧 render snapshot。队列满、拒绝原因和
+high-water 都可观测，避免把中断/SDK 线程变成隐式重入路径。
+
+### App 能力路由不是进程沙箱
+
+组合根用固定 `AppDescriptor`/`AppCapabilitySet` 声明每个 App 的最小能力；未声明
+即默认拒绝。Runtime 只把绑定当前 AppId 的 operation port 放进 update context，
+App 不能通过该 API 自选 caller。port 在入队前检查 capability，SystemServiceHost
+在 commit 时通过只读 catalog resolver 再检查一次，因此错误 adapter 直接注入 App
+信封也不能绕过策略。System 与 USB 使用不同 owner，拒绝原因、owner、operation 和
+queue high-water 可审计。
+
+这是同一地址空间内的 policy enforcement，不是 native process sandbox：C++ 固件
+中的恶意或内存越界代码仍可能绕过类型边界。当前目标是约束受支持 App API、减少
+误用并提供可验证审计；若未来加载不可信第三方代码，需要 MPU/process/WASM 等另一个
+隔离层，不能把 capability set 宣称为安全沙箱。
+
+### 系统资源使用租约
+
+网络、BLE advertising/scanning 与 voice analyzer 使用固定容量 owner-aware lease，
+而不是“最后一次 bool 写入获胜”。Foreground lease 在 App 实际完成 transition swap
+的同一帧、command commit 前自动回收；Session 由会话结束释放；Persistent 仅允许
+受信 System/平台 owner，普通 App 会被拒绝。资源 desired state 从 owner count 推导，
+所以一个 App 退出不会错误关闭另一个 owner 正在使用的资源，最后一个 owner 释放后
+才停止硬件。acquire 幂等，unknown release、容量失败、自动清理与 high-water 都有
+计数器。
+
+### Voice session、隐私与 backpressure
+
+capture coordinator 固定输出 48 kHz、S16、mono、480-sample/10 ms blocks。
+Analyzer 与 USB 各有容量 4 的 SPSC queue；慢 consumer 只丢自己的 newest block，
+不阻塞采集也不破坏另一个 consumer。USB 再切成 48-sample/1 ms packets，underflow
+发等长静音，disconnect/alt inactive 清除 stale data。任一 consumer active 时全局
+显示 `MIC`；USB streaming 时默认抑制系统 cue，避免扬声器被板载麦克风回录。
+
+T-Embed 候选输入由 ES7210/I²S1 adapter 独占，输出由 I²S0 adapter 独占；两者不得
+共享 task、DMA 或可变 buffer。当前自动化覆盖 portable 语义和各自构建，真实并发、
+左右通道、增益、时钟和声学泄漏仍是到货后的硬件门禁。
+
+## 后续平台工作
 
 1. 增加应用级持久化存储命名空间；
 2. 根据真机测量决定是否复用 Gallery/Runtime 的离屏 framebuffer；
 3. 实现 Sharp presenter，并在实体屏上对比 400×240 快照；
 4. 根据实体 T-Embed 试听选择默认音色，并在需要时实现 sample voice；
 5. 定义休眠、背光/对比度等系统服务，而不是让应用直接操作硬件。
+6. 为 Wi-Fi provisioning、凭据、BLE service/RF coexistence 单独建立 OpenSpec，
+   复用 platform-event → service state machine → snapshot/command，不暴露 raw socket
+   或 GATT callback。

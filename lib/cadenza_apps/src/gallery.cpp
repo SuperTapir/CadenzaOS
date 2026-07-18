@@ -1,4 +1,4 @@
-#include "cadenza/core/apps.h"
+#include "cadenza/apps/apps.h"
 
 #include <algorithm>
 #include <array>
@@ -67,23 +67,24 @@ void AnimationGalleryApp::onEnter() noexcept {
   resetDemo();
 }
 
-void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
-                                 AppRuntime& runtime) noexcept {
-  if (demoWidth_ != runtime.canvasWidth() ||
-      demoHeight_ != runtime.canvasHeight()) {
-    demoWidth_ = runtime.canvasWidth();
-    demoHeight_ = runtime.canvasHeight();
+void AnimationGalleryApp::update(const AppUpdateContext& context) noexcept {
+  const Seconds dt = context.dt;
+  const InputFrame& input = context.input;
+  if (demoWidth_ != context.displayWidth ||
+      demoHeight_ != context.displayHeight) {
+    demoWidth_ = context.displayWidth;
+    demoHeight_ = context.displayHeight;
     resetDemo();
   }
-  if (runtime.motionProfile() != motionProfile_) {
-    applyMotionProfile(runtime.motionProfile());
+  if (context.system.motionProfile != motionProfile_) {
+    applyMotionProfile(context.system.motionProfile);
   }
   if (input.clicked) {
     mode_ = mode_ == GalleryMode::AutoPlay ? GalleryMode::Scrub
                                            : GalleryMode::AutoPlay;
-    runtime.playSound(mode_ == GalleryMode::Scrub
-                          ? audio::SoundCue::ToggleOn
-                          : audio::SoundCue::ToggleOff);
+    context.commands.submit(SystemCommand::playSound(
+        mode_ == GalleryMode::Scrub ? audio::SoundCue::ToggleOn
+                                    : audio::SoundCue::ToggleOff));
   }
   if (input.turn != 0) {
     if (mode_ == GalleryMode::Scrub) {
@@ -92,13 +93,15 @@ void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
           0.0F, std::min(1.0F, progress_ + input.turn *
                          presentation_defaults::kScrubStep));
       reconstructDemoState();
-      runtime.playSound(progress_ == previous ? audio::SoundCue::Boundary
-                                              : audio::SoundCue::Navigate);
+      context.commands.submit(SystemCommand::playSound(
+          progress_ == previous ? audio::SoundCue::Boundary
+                                : audio::SoundCue::Navigate));
     } else {
       page_ = static_cast<std::size_t>(
           wrapPage(static_cast<int>(page_) + input.turn));
       resetDemo();
-      runtime.playSound(audio::SoundCue::Navigate);
+      context.commands.submit(
+          SystemCommand::playSound(audio::SoundCue::Navigate));
     }
   }
   if (mode_ == GalleryMode::Scrub) return;
@@ -350,7 +353,7 @@ void AnimationGalleryApp::renderDither(MonoCanvas& canvas) noexcept {
 }
 
 void AnimationGalleryApp::render(MonoCanvas& canvas,
-                                 const AppRuntime&) noexcept {
+                                 const AppRenderContext&) noexcept {
   canvas.clear(false);
   switch (page_) {
     case 0: renderEasing(canvas); break;

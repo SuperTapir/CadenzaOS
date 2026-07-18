@@ -8,6 +8,9 @@
 #include "cadenza/core/transition.h"
 
 namespace {
+constexpr cadenza::AppId kHomeAppId{1};
+constexpr cadenza::AppId kClockAppId{2};
+
 using BufferBytes =
     std::array<std::uint8_t, cadenza::MonoFramebuffer::kCapacityBytes>;
 
@@ -29,10 +32,9 @@ class PatternApp final : public cadenza::App {
   PatternApp(const char* appName, int offset) : appName_(appName), offset_(offset) {}
 
   const char* name() const noexcept override { return appName_; }
-  void update(cadenza::Seconds, const cadenza::InputFrame&,
-              cadenza::AppRuntime&) noexcept override {}
+  void update(const cadenza::AppUpdateContext&) noexcept override {}
   void render(cadenza::MonoCanvas& canvas,
-              const cadenza::AppRuntime&) noexcept override {
+              const cadenza::AppRenderContext&) noexcept override {
     canvas.clear(false);
     canvas.pixel(offset_, 1);
     canvas.pixel(offset_ + 2, 2);
@@ -70,16 +72,17 @@ TEST_CASE("runtime captures outgoing at open and incoming after lifecycle swap")
   cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed, transition};
   PatternApp launcher{"Launcher", 1};
   PatternApp clock{"Clock", 10};
-  REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
-  REQUIRE(runtime.registerApp(cadenza::AppId::Clock, clock));
-  REQUIRE(runtime.begin(cadenza::AppId::Launcher));
+  REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
+  REQUIRE(runtime.registerApp(kClockAppId, clock));
+  REQUIRE(runtime.configureHome(kHomeAppId));
+  REQUIRE(runtime.begin(kHomeAppId));
 
   cadenza::MonoFramebuffer output{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas outputCanvas{output};
   runtime.render(outputCanvas);
   const BufferBytes launcherFrame = snapshot(output);
 
-  REQUIRE(runtime.open(cadenza::AppId::Clock));
+  REQUIRE(runtime.open(kClockAppId));
   output.clear();
   runtime.render(outputCanvas);
   CHECK(equals(output, launcherFrame));

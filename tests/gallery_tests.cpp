@@ -6,7 +6,8 @@
 #include <cstdint>
 #include <cstring>
 
-#include "cadenza/core/apps.h"
+#include "cadenza/apps/apps.h"
+#include "app_context_test_support.h"
 
 namespace {
 
@@ -17,11 +18,12 @@ bool contains(const cadenza::MonoFramebuffer& framebuffer) {
 }
 
 std::uint64_t renderHash(cadenza::AnimationGalleryApp& gallery,
-                         const cadenza::AppRuntime& runtime) {
+                         const cadenza::AppRuntime& runtime,
+                         const cadenza::system::SystemServiceHost& services) {
   cadenza::MonoFramebuffer framebuffer{
       cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
-  gallery.render(canvas, runtime);
+  cadenza::test::renderApp(gallery, canvas, runtime, services);
   std::uint64_t hash = 1469598103934665603ULL;
   for (std::size_t index = 0; index < framebuffer.sizeBytes(); ++index) {
     hash ^= framebuffer.data()[index];
@@ -31,11 +33,12 @@ std::uint64_t renderHash(cadenza::AnimationGalleryApp& gallery,
 }
 
 std::uint64_t renderContentHash(cadenza::AnimationGalleryApp& gallery,
-                                const cadenza::AppRuntime& runtime) {
+                                const cadenza::AppRuntime& runtime,
+                                const cadenza::system::SystemServiceHost& services) {
   cadenza::MonoFramebuffer framebuffer{
       cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
-  gallery.render(canvas, runtime);
+  cadenza::test::renderApp(gallery, canvas, runtime, services);
   std::uint64_t hash = 1469598103934665603ULL;
   for (int y = 45; y < framebuffer.height() - 20; ++y) {
     for (int x = 0; x < framebuffer.width(); ++x) {
@@ -68,30 +71,31 @@ TEST_CASE("Gallery registry exposes every required presentation category") {
 TEST_CASE("Gallery navigation and paused knob scrub are deterministic") {
   cadenza::AnimationGalleryApp gallery;
   cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
   gallery.onEnter();
   CHECK(gallery.currentPage() == 0);
   cadenza::InputFrame turn;
   turn.turn = -1;
-  gallery.update(0.0F, turn, runtime);
+  cadenza::test::updateApp(gallery, 0.0F, turn, runtime, services);
   CHECK(gallery.currentPage() == gallery.pageCount() - 1);
 
   cadenza::InputFrame press;
   press.clicked = true;
-  gallery.update(0.0F, press, runtime);
+  cadenza::test::updateApp(gallery, 0.0F, press, runtime, services);
   CHECK(gallery.mode() == cadenza::GalleryMode::Scrub);
   turn.turn = 10;
-  gallery.update(0.0F, turn, runtime);
+  cadenza::test::updateApp(gallery, 0.0F, turn, runtime, services);
   const float larger = gallery.progress();
   CHECK(larger == doctest::Approx(0.5F));
-  gallery.update(5.0F, {}, runtime);
+  cadenza::test::updateApp(gallery, 5.0F, {}, runtime, services);
   CHECK(gallery.progress() == larger);
   turn.turn = -4;
-  gallery.update(0.0F, turn, runtime);
+  cadenza::test::updateApp(gallery, 0.0F, turn, runtime, services);
   CHECK(gallery.progress() == doctest::Approx(0.3F));
 
-  gallery.update(0.0F, press, runtime);
+  cadenza::test::updateApp(gallery, 0.0F, press, runtime, services);
   CHECK(gallery.mode() == cadenza::GalleryMode::AutoPlay);
-  gallery.update(0.1F, {}, runtime);
+  cadenza::test::updateApp(gallery, 0.1F, {}, runtime, services);
   CHECK(gallery.progress() > 0.3F);
   gallery.onEnter();
   CHECK(gallery.progress() == 0.0F);
@@ -107,16 +111,17 @@ TEST_CASE("Gallery transient demos replay at the same phase every cycle") {
   for (const std::int16_t page : transientPages) {
     cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
     gallery.onEnter();
     cadenza::InputFrame navigate;
     navigate.turn = page;
-    gallery.update(0.0F, navigate, runtime);
+    cadenza::test::updateApp(gallery, 0.0F, navigate, runtime, services);
 
-    gallery.update(kSamplePhase, {}, runtime);
+    cadenza::test::updateApp(gallery, kSamplePhase, {}, runtime, services);
     const float firstProgress = gallery.progress();
-    const std::uint64_t firstCycle = renderHash(gallery, runtime);
-    gallery.update(kFullCycle, {}, runtime);
-    const std::uint64_t secondCycle = renderHash(gallery, runtime);
+    const std::uint64_t firstCycle = renderHash(gallery, runtime, services);
+    cadenza::test::updateApp(gallery, kFullCycle, {}, runtime, services);
+    const std::uint64_t secondCycle = renderHash(gallery, runtime, services);
 
     CAPTURE(page);
     CHECK(gallery.progress() == doctest::Approx(
@@ -132,14 +137,15 @@ TEST_CASE("Gallery particle burst is centered in both display profiles") {
            cadenza::FramebufferProfile::Sharp}) {
     cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime{profile};
+  cadenza::system::SystemServiceHost services;
     gallery.onEnter();
     cadenza::InputFrame navigate;
     navigate.turn = 11;
-    gallery.update(0.0F, navigate, runtime);
+    cadenza::test::updateApp(gallery, 0.0F, navigate, runtime, services);
 
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer};
-    gallery.render(canvas, runtime);
+    cadenza::test::renderApp(gallery, canvas, runtime, services);
     int minX = framebuffer.width();
     int maxX = -1;
     int minY = framebuffer.height();
@@ -165,30 +171,34 @@ TEST_CASE("Gallery stateful demos scrub visibly and reversibly") {
   const std::array<std::int16_t, 4> statefulPages{{2, 9, 10, 11}};
   for (const std::int16_t page : statefulPages) {
     cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
     cadenza::AnimationGalleryApp reversed;
     reversed.onEnter();
     cadenza::InputFrame navigate;
     navigate.turn = page;
-    reversed.update(0.0F, navigate, runtime);
-    const std::uint64_t atStart = renderContentHash(reversed, runtime);
+    cadenza::test::updateApp(reversed, 0.0F, navigate, runtime, services);
+    const std::uint64_t atStart =
+        renderContentHash(reversed, runtime, services);
 
     cadenza::InputFrame press;
     press.clicked = true;
-    reversed.update(0.0F, press, runtime);
+    cadenza::test::updateApp(reversed, 0.0F, press, runtime, services);
     cadenza::InputFrame turn;
     turn.turn = 5;
-    reversed.update(0.0F, turn, runtime);
+    cadenza::test::updateApp(reversed, 0.0F, turn, runtime, services);
     turn.turn = -4;
-    reversed.update(0.0F, turn, runtime);
-    const std::uint64_t afterReverse = renderContentHash(reversed, runtime);
+    cadenza::test::updateApp(reversed, 0.0F, turn, runtime, services);
+    const std::uint64_t afterReverse =
+        renderContentHash(reversed, runtime, services);
 
     cadenza::AnimationGalleryApp direct;
     direct.onEnter();
-    direct.update(0.0F, navigate, runtime);
-    direct.update(0.0F, press, runtime);
+    cadenza::test::updateApp(direct, 0.0F, navigate, runtime, services);
+    cadenza::test::updateApp(direct, 0.0F, press, runtime, services);
     turn.turn = 1;
-    direct.update(0.0F, turn, runtime);
-    const std::uint64_t directSeek = renderContentHash(direct, runtime);
+    cadenza::test::updateApp(direct, 0.0F, turn, runtime, services);
+    const std::uint64_t directSeek =
+        renderContentHash(direct, runtime, services);
 
     CAPTURE(page);
     CHECK(afterReverse != atStart);
@@ -203,22 +213,27 @@ TEST_CASE("Gallery is a normal App and every page renders at both profiles") {
     cadenza::LauncherApp launcher;
     cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
-    REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
-    REQUIRE(runtime.registerApp(cadenza::AppId::Gallery, gallery));
-    REQUIRE(runtime.begin(cadenza::AppId::Launcher));
-    REQUIRE(runtime.open(cadenza::AppId::Gallery));
+  cadenza::system::SystemServiceHost services;
+    REQUIRE(runtime.registerApp(
+        cadenza::apps::kLauncherAppId, launcher, false,
+        cadenza::apps::builtinAppCapabilities(cadenza::apps::kLauncherAppId)));
+    REQUIRE(runtime.registerApp(
+        cadenza::apps::kGalleryAppId, gallery, true,
+        cadenza::apps::builtinAppCapabilities(cadenza::apps::kGalleryAppId)));
+    REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
+    REQUIRE(runtime.open(cadenza::apps::kGalleryAppId));
     runtime.update(1.0F, {});
-    CHECK(runtime.currentId() == cadenza::AppId::Gallery);
+    CHECK(runtime.currentId() == cadenza::apps::kGalleryAppId);
 
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer};
     for (std::size_t page = 0; page < gallery.pageCount(); ++page) {
       framebuffer.clear(false);
-      gallery.render(canvas, runtime);
+      cadenza::test::renderApp(gallery, canvas, runtime, services);
       CHECK(contains(framebuffer));
       cadenza::InputFrame next;
       next.turn = 1;
-      gallery.update(0.0F, next, runtime);
+      cadenza::test::updateApp(gallery, 0.0F, next, runtime, services);
     }
 
     cadenza::InputFrame home;
@@ -232,17 +247,29 @@ TEST_CASE("Settings motion preference propagates through runtime to Gallery") {
   cadenza::SettingsApp settings;
   cadenza::AnimationGalleryApp gallery;
   cadenza::AppRuntime runtime;
-  CHECK(runtime.motionProfile() == cadenza::MotionProfile::Normal);
+  cadenza::system::SystemServiceHost services;
+  REQUIRE(runtime.registerApp(
+      cadenza::apps::kSettingsAppId, settings, false,
+      cadenza::apps::builtinAppCapabilities(cadenza::apps::kSettingsAppId)));
+  REQUIRE(runtime.registerApp(
+      cadenza::apps::kGalleryAppId, gallery, false,
+      cadenza::apps::builtinAppCapabilities(cadenza::apps::kGalleryAppId)));
+  REQUIRE(runtime.begin(cadenza::apps::kSettingsAppId));
+  CHECK(services.snapshot().motionProfile == cadenza::MotionProfile::Normal);
 
   cadenza::InputFrame press;
   press.clicked = true;
-  settings.update(0.0F, press, runtime);
-  CHECK(runtime.motionProfile() == cadenza::MotionProfile::Reduced);
-  gallery.update(0.0F, {}, runtime);
+  cadenza::test::updateApp(settings, 0.0F, press, runtime, services,
+                           cadenza::apps::kSettingsAppId);
+  CHECK(services.snapshot().motionProfile == cadenza::MotionProfile::Reduced);
+  cadenza::test::updateApp(gallery, 0.0F, {}, runtime, services,
+                           cadenza::apps::kGalleryAppId);
   CHECK(gallery.motionProfile() == cadenza::MotionProfile::Reduced);
 
-  settings.update(0.0F, press, runtime);
-  CHECK(runtime.motionProfile() == cadenza::MotionProfile::Normal);
-  gallery.update(0.0F, {}, runtime);
+  cadenza::test::updateApp(settings, 0.0F, press, runtime, services,
+                           cadenza::apps::kSettingsAppId);
+  CHECK(services.snapshot().motionProfile == cadenza::MotionProfile::Normal);
+  cadenza::test::updateApp(gallery, 0.0F, {}, runtime, services,
+                           cadenza::apps::kGalleryAppId);
   CHECK(gallery.motionProfile() == cadenza::MotionProfile::Normal);
 }

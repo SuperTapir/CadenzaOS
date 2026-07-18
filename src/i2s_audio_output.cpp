@@ -4,29 +4,34 @@
 
 #include "board_pins.h"
 #include "cadenza/audio/i2s_audio_format.h"
+#include "cadenza_t_embed_audio_contract.h"
 
 namespace {
-constexpr i2s_port_t kPort = I2S_NUM_0;
-constexpr std::size_t kFramesPerChunk = 128;
+constexpr i2s_port_t kPort = static_cast<i2s_port_t>(
+    cadenza::t_embed_audio::kSpeaker.i2sPort);
+constexpr std::size_t kFramesPerChunk =
+    cadenza::t_embed_audio::kSpeaker.dmaFrames;
 constexpr TickType_t kWriteTimeout = pdMS_TO_TICKS(20);
-constexpr UBaseType_t kTaskPriority = 2;
-constexpr std::uint32_t kTaskStackBytes = 4096;
+constexpr UBaseType_t kTaskPriority =
+    cadenza::t_embed_audio::kSpeaker.taskPriority;
+constexpr std::uint32_t kTaskStackBytes =
+    cadenza::t_embed_audio::kSpeaker.taskStackBytes;
 }  // namespace
 
-bool I2sAudioOutput::begin(cadenza::AppRuntime& runtime,
+bool I2sAudioOutput::begin(cadenza::audio::InteractionSoundService& service,
                            cadenza::DiagnosticSink* diagnostics) noexcept {
   if (running()) return true;
-  runtime_ = &runtime;
+  service_ = &service;
   diagnostics_ = diagnostics;
 
   i2s_config_t config{};
   config.mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX);
-  config.sample_rate = static_cast<std::uint32_t>(cadenza::audio::kSampleRate);
+  config.sample_rate = cadenza::t_embed_audio::kSpeaker.sampleRateHz;
   config.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT;
   config.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT;
   config.communication_format = I2S_COMM_FORMAT_STAND_I2S;
   config.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1;
-  config.dma_buf_count = 4;
+  config.dma_buf_count = cadenza::t_embed_audio::kSpeaker.dmaDescriptors;
   config.dma_buf_len = kFramesPerChunk;
   config.use_apll = false;
   config.tx_desc_auto_clear = true;
@@ -56,7 +61,7 @@ bool I2sAudioOutput::begin(cadenza::AppRuntime& runtime,
   TaskHandle_t createdTask = nullptr;
   const BaseType_t created = xTaskCreatePinnedToCore(
       taskEntry, "cadenza-audio", kTaskStackBytes, this, kTaskPriority,
-      &createdTask, 0);
+      &createdTask, cadenza::t_embed_audio::kSpeaker.taskCore);
   if (created != pdPASS) {
     running_.store(false, std::memory_order_release);
     emit(cadenza::DiagnosticCode::AudioFailure,
@@ -94,7 +99,7 @@ void I2sAudioOutput::run() noexcept {
   std::array<cadenza::audio::StereoI2sFrame, kFramesPerChunk> stereo{};
   bool partialWriteReported = false;
   while (running_.load(std::memory_order_acquire)) {
-    runtime_->renderAudio(mono.data(), mono.size());
+    service_->render(mono.data(), mono.size());
     cadenza::audio::duplicateMonoToStereo(mono.data(), stereo.data(),
                                           mono.size());
     std::size_t written = 0;
