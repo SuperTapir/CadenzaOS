@@ -99,6 +99,9 @@ class AnimationGalleryApp final : public App {
   static const std::uint8_t kSpritePixels[4];
 
   void resetDemo() noexcept;
+  void restartDemoState() noexcept;
+  void reconstructDemoState() noexcept;
+  void advanceDemoState(Seconds delta) noexcept;
   void applyMotionProfile(MotionProfile profile) noexcept;
   void applyProgress() noexcept;
   void ensureTransitionBuffers(const MonoCanvas& canvas) noexcept;
@@ -117,6 +120,8 @@ class AnimationGalleryApp final : public App {
   GalleryMode mode_ = GalleryMode::AutoPlay;
   MotionProfile motionProfile_ = MotionProfile::Normal;
   float progress_ = 0.0F;
+  std::int16_t demoWidth_ = 320;
+  std::int16_t demoHeight_ = 170;
   Tween<float> firstTween_{0.0F, 1.0F, 0.8F, Easing::OutBack};
   Tween<float> secondTween_{0.0F, 1.0F, 0.8F, Easing::InOutCubic};
   Timeline<2> timeline_;

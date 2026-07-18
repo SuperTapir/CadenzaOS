@@ -69,6 +69,12 @@ void AnimationGalleryApp::onEnter() noexcept {
 
 void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
                                  AppRuntime& runtime) noexcept {
+  if (demoWidth_ != runtime.canvasWidth() ||
+      demoHeight_ != runtime.canvasHeight()) {
+    demoWidth_ = runtime.canvasWidth();
+    demoHeight_ = runtime.canvasHeight();
+    resetDemo();
+  }
   if (runtime.motionProfile() != motionProfile_) {
     applyMotionProfile(runtime.motionProfile());
   }
@@ -80,7 +86,7 @@ void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
       progress_ = std::max(
           0.0F, std::min(1.0F, progress_ + input.turn *
                          presentation_defaults::kScrubStep));
-      applyProgress();
+      reconstructDemoState();
     } else {
       page_ = static_cast<std::size_t>(
           wrapPage(static_cast<int>(page_) + input.turn));
@@ -90,15 +96,18 @@ void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
   if (mode_ == GalleryMode::Scrub) return;
 
   const Seconds delta = std::max(0.0F, dt);
-  progress_ = std::fmod(
-      progress_ + delta / presentation_defaults::kGalleryCycleDuration, 1.0F);
+  const double unwrappedProgress =
+      static_cast<double>(progress_) +
+      static_cast<double>(delta) /
+          static_cast<double>(presentation_defaults::kGalleryCycleDuration);
+  progress_ = static_cast<float>(std::fmod(unwrappedProgress, 1.0));
+  Seconds demoDelta = delta;
+  if (unwrappedProgress >= 1.0) {
+    restartDemoState();
+    demoDelta = progress_ * presentation_defaults::kGalleryCycleDuration;
+  }
   applyProgress();
-  spring_.update(delta);
-  selection_.update(delta);
-  punch_.update(delta);
-  shake_.update(delta);
-  particles_.update(delta);
-  spriteMachine_.update(delta);
+  advanceDemoState(demoDelta);
 }
 
 void AnimationGalleryApp::applyMotionProfile(MotionProfile profile) noexcept {
@@ -116,30 +125,66 @@ void AnimationGalleryApp::applyMotionProfile(MotionProfile profile) noexcept {
 
 void AnimationGalleryApp::resetDemo() noexcept {
   progress_ = 0.0F;
+  restartDemoState();
+  applyProgress();
+}
+
+void AnimationGalleryApp::restartDemoState() noexcept {
   firstTween_.reset();
   secondTween_.reset();
   timeline_.reset();
   spring_.reset(0.0F);
   spring_.setTarget(1.0F);
+  selection_ = SelectionFeedback{motionProfile_};
   selection_.trigger();
   punch_.trigger();
   shake_.trigger();
   idle_.reset();
   active_.reset();
   spriteMachine_.start("idle");
+  particles_ = ParticlePool<24>{ParticleFullPolicy::ReplaceOldest};
+  emitter_ = ParticleEmitter{0x1B17U};
   Particle particle;
-  particle.position = {150.0F, 90.0F};
+  particle.position = {static_cast<float>(demoWidth_) * 0.5F,
+                       static_cast<float>(demoHeight_) * 0.5F};
   particle.velocity = {0.0F, -8.0F};
   particle.acceleration = {0.0F, 12.0F};
   particle.lifetime = 2.0F;
   particle.visual = ParticleVisual::Circle;
   particle.radius = 2;
   emitter_.emit(particles_, particle, 12, 18.0F);
+}
+
+void AnimationGalleryApp::reconstructDemoState() noexcept {
+  restartDemoState();
   applyProgress();
+  advanceDemoState(progress_ *
+                   presentation_defaults::kGalleryCycleDuration);
+}
+
+void AnimationGalleryApp::advanceDemoState(Seconds delta) noexcept {
+  constexpr Seconds kPresentationStep = 1.0F / 60.0F;
+  Seconds remaining = std::max(0.0F, delta);
+  while (remaining > 0.000001F) {
+    const Seconds step = std::min(kPresentationStep, remaining);
+    spring_.update(step);
+    selection_.update(step);
+    punch_.update(step);
+    shake_.update(step);
+    particles_.update(step);
+    remaining -= step;
+  }
 }
 
 void AnimationGalleryApp::applyProgress() noexcept {
   timeline_.seekTime(progress_ * timeline_.duration());
+  if (progress_ >= 0.5F &&
+      std::strcmp(spriteMachine_.currentState(), "idle") == 0) {
+    spriteMachine_.trigger("toggle");
+  } else if (progress_ < 0.5F &&
+             std::strcmp(spriteMachine_.currentState(), "active") == 0) {
+    spriteMachine_.trigger("toggle");
+  }
   idle_.seek(progress_);
   active_.seek(progress_);
 }
@@ -271,13 +316,6 @@ void AnimationGalleryApp::renderParticles(MonoCanvas& canvas) noexcept {
 }
 
 void AnimationGalleryApp::renderSpriteState(MonoCanvas& canvas) noexcept {
-  if (progress_ >= 0.5F &&
-      std::strcmp(spriteMachine_.currentState(), "idle") == 0) {
-    spriteMachine_.trigger("toggle");
-  } else if (progress_ < 0.5F &&
-             std::strcmp(spriteMachine_.currentState(), "active") == 0) {
-    spriteMachine_.trigger("toggle");
-  }
   const SpriteFrame* frame = spriteMachine_.animation()->frame();
   if (!frame) return;
   const BitmapView& bitmap = spriteAtlas_.bitmap();

@@ -53,6 +53,16 @@ Useful launch options are `--profile t-embed|sharp`, `--scale 1..4`,
 `--overlay`, `--device-frame`, and `--frames N`. The last option is used by the
 SDL dummy-driver smoke gate.
 
+The headless PBM dumper supports reproducible Gallery visual review without an
+SDL window. App id `4` is Gallery; the first trailing number selects its page.
+The `auto` form advances fixed 1/60 s frames, while the shorter form enters
+Scrub and applies knob steps of 5% each:
+
+```bash
+./build/host/cadenza_dump_headless_pbm 400 4 /tmp/particles.pbm 11 auto 90
+./build/host/cadenza_dump_headless_pbm 400 4 /tmp/camera-scrub.pbm 10 1
+```
+
 ## Red-green-refactor loop
 
 The checked-in command wrapper keeps local evidence repeatable:

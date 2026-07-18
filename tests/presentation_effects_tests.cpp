@@ -68,3 +68,20 @@ TEST_CASE("camera shake is seeded bounded decaying and neutral at end") {
   CHECK(first.y() == 0.0F);
   CHECK_FALSE(first.active());
 }
+
+TEST_CASE("zero simulation delta does not advance camera shake") {
+  cadenza::CameraShake paused{12345, 6.0F, 0.5F};
+  cadenza::CameraShake reference{12345, 6.0F, 0.5F};
+  paused.trigger();
+  reference.trigger();
+
+  paused.update(0.0F);
+  CHECK(paused.x() == 0.0F);
+  CHECK(paused.y() == 0.0F);
+  CHECK(paused.currentBound() == reference.currentBound());
+
+  paused.update(0.1F);
+  reference.update(0.1F);
+  CHECK(paused.x() == reference.x());
+  CHECK(paused.y() == reference.y());
+}

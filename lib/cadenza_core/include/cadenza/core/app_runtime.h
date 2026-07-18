@@ -68,6 +68,8 @@ class AppRuntime {
     motionProfile_ = profile;
   }
   MotionProfile motionProfile() const noexcept { return motionProfile_; }
+  std::int16_t canvasWidth() const noexcept { return outgoingFrame_.width(); }
+  std::int16_t canvasHeight() const noexcept { return outgoingFrame_.height(); }
 
  private:
   static constexpr std::size_t kAppCapacity =

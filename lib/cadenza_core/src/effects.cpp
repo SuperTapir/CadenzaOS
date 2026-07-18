@@ -75,8 +75,8 @@ void CameraShake::trigger() noexcept {
 }
 
 void CameraShake::update(Seconds delta) noexcept {
-  if (!active_) return;
-  elapsed_ += std::max(0.0F, delta);
+  if (!active_ || delta <= 0.0F) return;
+  elapsed_ += delta;
   if (elapsed_ >= duration_) {
     elapsed_ = duration_;
     x_ = 0.0F;

@@ -15,10 +15,10 @@ conversion may allocate because it is outside the embedded core.
 
 The clean T-Embed release link on 2026-07-18 reported:
 
-- RAM: 82,608 / 327,680 B (25.2%);
-- Flash: 316,193 / 3,145,728 B (10.1%);
+- RAM: 82,616 / 327,680 B (25.2%);
+- Flash: 316,409 / 3,145,728 B (10.1%);
 - pre-Gallery baseline: RAM 55,824 B, Flash 302,717 B;
-- current delta from the pre-Gallery baseline: +26,784 B RAM and +13,476 B
+- current delta from the pre-Gallery baseline: +26,792 B RAM and +13,692 B
   Flash (Gallery plus final repeat/Timeline/transition audit fixes).
 
 The framebuffer ownership is intentionally explicit for correctness and
