@@ -4,6 +4,7 @@
 
 #include "input.h"
 #include "mono_canvas.h"
+#include "cadenza/core/diagnostics.h"
 
 enum class AppId : uint8_t { Launcher, Clock, Motion, Settings, Count };
 
@@ -26,6 +27,8 @@ class AppRuntime {
   void update(float dt, const InputFrame& input);
   void render(MonoCanvas& canvas);
   void open(AppId id);
+  void setDiagnosticSink(cadenza::DiagnosticSink* sink) { diagnosticSink_ = sink; }
+  void emitDiagnostic(const cadenza::DiagnosticEvent& event) const;
   AppId currentId() const { return currentId_; }
   uint8_t launcherAppCount() const;
   AppId launcherAppAt(uint8_t position) const;
@@ -39,4 +42,5 @@ class AppRuntime {
   float transition_ = 0.0f;
   bool transitioning_ = false;
   bool swapped_ = false;
+  cadenza::DiagnosticSink* diagnosticSink_ = nullptr;
 };

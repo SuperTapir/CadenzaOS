@@ -2,19 +2,19 @@
 
 - [x] 1.1 Record reference-project commit SHAs, licenses, reusable ideas, rejected scope, and asset provenance rules in a research note
 - [x] 1.2 Run reproducible LVGL/U8g2/Tweeny/SDL adoption spikes and record the measured adopt/wrap/reject boundary
-- [ ] 1.3 Add CMake core/test/desktop targets and documented macOS bootstrap for CMake and SDL3
-- [ ] 1.4 Integrate a pinned, source/font-curated U8g2 subset and vendor pinned lightweight test, PNG, and GIF writers with third-party notices and license verification
-- [ ] 1.5 Add a failing host compile test that proves current core headers depend on Arduino/TFT types
-- [ ] 1.6 Establish a red-green-refactor command loop for focused tests, full host tests, desktop build, firmware build, and diff checks
+- [x] 1.3 Add CMake core/test/desktop targets and documented macOS bootstrap for CMake and SDL3
+- [x] 1.4 Integrate a pinned, source/font-curated U8g2 subset and vendor pinned lightweight test, PNG, and GIF writers with third-party notices and license verification
+- [x] 1.5 Add a failing host compile test that proves current core headers depend on Arduino/TFT types
+- [x] 1.6 Establish a red-green-refactor command loop for focused tests, full host tests, desktop build, firmware build, and diff checks
 
 ## 2. Portable Core Services and Input
 
-- [ ] 2.1 Write host tests for platform-free core headers, no-op/recording diagnostics, and injected simulation time
-- [ ] 2.2 Implement standard C++ core types, diagnostic sink, and SimulationClock without platform includes
-- [ ] 2.3 Write InputReducer tests for debounce, short/long press boundaries, release, repeated samples, held duration, turn sign, saturation, and frame reset
-- [ ] 2.4 Implement RawInputEvent, InputReducer, InputFrame, and explicit input configuration without allocation
-- [ ] 2.5 Write adapter contract tests using fake raw-input and monotonic-time sources
-- [ ] 2.6 Split T-Embed GPIO sampling from shared input reduction and route Serial through the diagnostic adapter
+- [x] 2.1 Write host tests for platform-free core headers, no-op/recording diagnostics, and injected simulation time
+- [x] 2.2 Implement standard C++ core types, diagnostic sink, and SimulationClock without platform includes
+- [x] 2.3 Write InputReducer tests for debounce, short/long press boundaries, release, repeated samples, held duration, turn sign, saturation, and frame reset
+- [x] 2.4 Implement RawInputEvent, InputReducer, InputFrame, and explicit input configuration without allocation
+- [x] 2.5 Write adapter contract tests using fake raw-input and monotonic-time sources
+- [x] 2.6 Split T-Embed GPIO sampling from shared input reduction and route Serial through the diagnostic adapter
 
 ## 3. Canonical Framebuffer and Rasterizer
 

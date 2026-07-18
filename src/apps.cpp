@@ -24,7 +24,9 @@ void LauncherApp::update(float dt, const InputFrame& input, AppRuntime& runtime)
   if (input.turn != 0) {
     selected_ = wrap(selected_ + input.turn, appCount);
     pulse_ = 1.0f;
-    Serial.printf("Selected: %s\n", runtime.appName(runtime.launcherAppAt(selected_)));
+    runtime.emitDiagnostic({cadenza::DiagnosticCategory::Runtime,
+                            cadenza::DiagnosticCode::SelectionChanged,
+                            "launcher selection", selected_});
   }
   const float delta = static_cast<float>(selected_) - position_;
   position_ += delta * (1.0f - std::pow(0.0005f, dt));

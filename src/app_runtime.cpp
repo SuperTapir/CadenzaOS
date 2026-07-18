@@ -47,8 +47,13 @@ void AppRuntime::open(AppId id) {
   transition_ = 0.0f;
   transitioning_ = true;
   swapped_ = false;
-  Serial.printf("App transition: %s -> %s\n", apps_[indexOf(currentId_)]->name(),
-                apps_[indexOf(pendingId_)]->name());
+  emitDiagnostic({cadenza::DiagnosticCategory::Runtime,
+                  cadenza::DiagnosticCode::AppTransition, "app transition",
+                  indexOf(pendingId_)});
+}
+
+void AppRuntime::emitDiagnostic(const cadenza::DiagnosticEvent& event) const {
+  if (diagnosticSink_) diagnosticSink_->emit(event);
 }
 
 void AppRuntime::update(float dt, const InputFrame& input) {

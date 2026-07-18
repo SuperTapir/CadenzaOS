@@ -6,6 +6,7 @@
 
 项目的长期目标、设计动机和硬件路线记录在 [`docs/project-vision.md`](docs/project-vision.md)。
 当前平台的职责边界和后续路线记录在 [`docs/platform-architecture.md`](docs/platform-architecture.md)。
+桌面构建与测试环境记录在 [`docs/development.md`](docs/development.md)。
 
 当前功能：
 

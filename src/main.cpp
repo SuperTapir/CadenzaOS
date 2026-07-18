@@ -8,6 +8,7 @@
 #include "board_pins.h"
 #include "input.h"
 #include "mono_canvas.h"
+#include "serial_diagnostic_sink.h"
 #include "tft_mono_canvas.h"
 
 namespace {
@@ -15,6 +16,7 @@ TFT_eSPI display;
 TftMonoCanvas canvas(display);
 InputController input;
 AppRuntime runtime;
+SerialDiagnosticSink diagnosticSink;
 LauncherApp launcher;
 ClockApp clockApp;
 MotionApp motion;
@@ -67,6 +69,7 @@ void setup() {
     while (true) delay(1000);
   }
   input.begin();
+  runtime.setDiagnosticSink(&diagnosticSink);
   runtime.registerApp(AppId::Launcher, launcher, false);
   runtime.registerApp(AppId::Clock, clockApp);
   runtime.registerApp(AppId::Motion, motion);

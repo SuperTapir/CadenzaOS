@@ -2,13 +2,29 @@
 
 #include <Arduino.h>
 
-struct InputFrame {
-  int8_t turn = 0;
-  bool pressed = false;
-  bool released = false;
-  bool clicked = false;
-  bool longPressed = false;
-  uint32_t heldMs = 0;
+#include "cadenza/core/input.h"
+#include "cadenza/core/input_adapter.h"
+
+using InputFrame = cadenza::InputFrame;
+
+class TEmbedRawInputSource final : public cadenza::RawInputSource,
+                                   public cadenza::MonotonicClock {
+ public:
+  void begin();
+  void sample();
+  bool poll(cadenza::RawInputEvent& event) noexcept override;
+  cadenza::MonotonicMillis nowMs() const noexcept override;
+
+ private:
+  static constexpr uint8_t kQueueCapacity = 16;
+  bool enqueue(cadenza::RawInputType type, int32_t value,
+               cadenza::MonotonicMillis timestampMs) noexcept;
+
+  cadenza::RawInputEvent queue_[kQueueCapacity] = {};
+  uint8_t readPosition_ = 0;
+  uint8_t writePosition_ = 0;
+  int lastEncoderA_ = HIGH;
+  bool lastButtonDown_ = false;
 };
 
 class InputController {
@@ -17,14 +33,9 @@ class InputController {
   // Sampling is intentionally independent from rendering so encoder edges are
   // not lost when a frame is expensive to draw or transfer.
   void sample();
-  InputFrame takeFrame();
+ InputFrame takeFrame();
 
  private:
-  int lastEncoderA_ = HIGH;
-  bool stableButton_ = HIGH;
-  bool sampledButton_ = HIGH;
-  bool longPressSent_ = false;
-  uint32_t sampleChangedAt_ = 0;
-  uint32_t pressedAt_ = 0;
-  InputFrame pending_;
+  TEmbedRawInputSource source_;
+  cadenza::InputReducer reducer_;
 };
