@@ -39,8 +39,11 @@ void LauncherApp::update(Seconds dt, const InputFrame& input,
   const int appCount = runtime.launcherAppCount();
   if (appCount == 0) return;
   if (input.turn != 0) {
+    const int previous = selected_;
     selected_ = wrap(selected_ + input.turn, appCount);
     pulse_ = 1.0F;
+    runtime.playSound(selected_ == previous ? audio::SoundCue::Boundary
+                                           : audio::SoundCue::Navigate);
     runtime.emitDiagnostic({DiagnosticCategory::Runtime,
                             DiagnosticCode::SelectionChanged,
                             "launcher selection", selected_});
@@ -131,11 +134,20 @@ void LauncherApp::render(MonoCanvas& canvas,
 void ClockApp::onEnter() noexcept { phase_ = 0.0F; }
 
 void ClockApp::update(Seconds dt, const InputFrame& input,
-                      AppRuntime&) noexcept {
+                      AppRuntime& runtime) noexcept {
   phase_ += dt;
   if (running_) elapsed_ += dt;
-  if (input.clicked) running_ = !running_;
-  if (input.turn) elapsed_ = std::max(0.0F, elapsed_ + input.turn * 10.0F);
+  if (input.clicked) {
+    running_ = !running_;
+    runtime.playSound(running_ ? audio::SoundCue::ToggleOn
+                               : audio::SoundCue::ToggleOff);
+  }
+  if (input.turn) {
+    const float previous = elapsed_;
+    elapsed_ = std::max(0.0F, elapsed_ + input.turn * 10.0F);
+    runtime.playSound(elapsed_ == previous ? audio::SoundCue::Boundary
+                                           : audio::SoundCue::Navigate);
+  }
 }
 
 void ClockApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
@@ -165,11 +177,19 @@ void ClockApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
 void MotionApp::onEnter() noexcept { velocity_ = 0.0F; }
 
 void MotionApp::update(Seconds dt, const InputFrame& input,
-                       AppRuntime&) noexcept {
+                       AppRuntime& runtime) noexcept {
   time_ += dt;
+  const float previousTarget = target_;
   if (input.turn) target_ += input.turn * 0.106F;
   if (input.clicked) target_ = target_ < 0.5F ? 0.84F : 0.16F;
   target_ = std::max(0.11F, std::min(0.89F, target_));
+  if (input.turn) {
+    runtime.playSound(target_ == previousTarget ? audio::SoundCue::Boundary
+                                                : audio::SoundCue::Navigate);
+  } else if (input.clicked) {
+    runtime.playSound(target_ >= 0.5F ? audio::SoundCue::ToggleOn
+                                     : audio::SoundCue::ToggleOff);
+  }
   const float acceleration = (target_ - x_) * 75.0F - velocity_ * 12.0F;
   velocity_ += acceleration * dt;
   x_ += velocity_ * dt;
@@ -206,11 +226,25 @@ void MotionApp::render(MonoCanvas& canvas, const AppRuntime&) noexcept {
 void SettingsApp::update(Seconds dt, const InputFrame& input,
                          AppRuntime& runtime) noexcept {
   time_ += dt;
-  if (input.turn) selected_ = wrap(selected_ + input.turn, 2);
+  if (input.turn) {
+    selected_ = wrap(selected_ + input.turn, 3);
+    runtime.playSound(audio::SoundCue::Navigate);
+  }
   if (input.clicked && selected_ == 0) {
-    runtime.setMotionProfile(runtime.motionProfile() == MotionProfile::Normal
-                                 ? MotionProfile::Reduced
-                                 : MotionProfile::Normal);
+    const bool becomingReduced =
+        runtime.motionProfile() == MotionProfile::Normal;
+    runtime.setMotionProfile(becomingReduced ? MotionProfile::Reduced
+                                             : MotionProfile::Normal);
+    runtime.playSound(becomingReduced ? audio::SoundCue::ToggleOff
+                                      : audio::SoundCue::ToggleOn);
+  } else if (input.clicked && selected_ == 1) {
+    const audio::SoundVolume next =
+        audio::nextSoundVolume(runtime.soundVolume());
+    if (runtime.setSoundVolume(next) && next != audio::SoundVolume::Muted) {
+      runtime.playSound(audio::SoundCue::ToggleOn);
+    }
+  } else if (input.clicked && selected_ == 2) {
+    runtime.playSound(audio::SoundCue::Reject);
   }
 }
 
@@ -226,18 +260,33 @@ void SettingsApp::render(MonoCanvas& canvas,
   canvas.fillRect(0, 0, width * 28 / 100 + bar, height, true);
   canvas.text("SET", 12, 18, 4, false);
   canvas.text("TINGS", 12, 50, 4, false);
-  const char* rows[2] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
-                         "CADENZA OS"};
-  for (int index = 0; index < 2; ++index) {
-    const int y = 53 + index * 48;
+  char soundRow[24];
+  std::snprintf(soundRow, sizeof(soundRow), "SOUND: %s",
+                audio::soundVolumeName(runtime.soundVolume()));
+  const char* rows[3] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
+                         soundRow, "ABOUT: CADENZA OS"};
+  constexpr int rowHeight = 32;
+  constexpr int rowStep = 40;
+  const int rowsHeight = rowHeight + rowStep * 2;
+  const int rowsTop = std::max(28, (height - rowsHeight) / 2);
+  const int rowsLeft = width * 43 / 100;
+  const int rowsWidth = width * 53 / 100;
+  for (int index = 0; index < 3; ++index) {
+    const int y = rowsTop + index * rowStep;
     if (index == selected_) {
-      canvas.fillRect(width * 43 / 100, y, width * 53 / 100, 34, true);
-      canvas.text(rows[index], width * 46 / 100, y + 17, 2, false,
-                  TextAlign::MiddleLeft);
+      canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
+      canvas.boundedText(
+          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
+                                  rowHeight - 4},
+                    2, 1, TextAlign::MiddleLeft),
+          false);
     } else {
-      canvas.rect(width * 43 / 100, y, width * 53 / 100, 34, true);
-      canvas.text(rows[index], width * 46 / 100, y + 17, 2, true,
-                  TextAlign::MiddleLeft);
+      canvas.rect(rowsLeft, y, rowsWidth, rowHeight, true);
+      canvas.boundedText(
+          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
+                                  rowHeight - 4},
+                    2, 1, TextAlign::MiddleLeft),
+          true);
     }
   }
   canvas.text("HOLD TO GO HOME", width - 12, height - 12, 1, true,

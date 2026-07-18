@@ -71,7 +71,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Motion,
        11046562126395087774ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Settings,
-       16015422347803220551ULL},
+       16657356307816133356ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::AppId::Gallery,
        14139291840108583961ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Launcher,
@@ -81,7 +81,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Motion,
        2956592992690758759ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Settings,
-       16871251489666615369ULL},
+       5690656840055152546ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::AppId::Gallery,
        13234575752027769465ULL},
   }};

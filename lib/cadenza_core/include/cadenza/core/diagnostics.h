@@ -10,6 +10,7 @@ enum class DiagnosticCategory : std::uint8_t {
   Graphics,
   Animation,
   Capacity,
+  Audio,
 };
 
 enum class DiagnosticCode : std::uint8_t {
@@ -20,6 +21,9 @@ enum class DiagnosticCode : std::uint8_t {
   ClippedGeometry,
   FullyClipped,
   CapacityExceeded,
+  AudioInitialized,
+  AudioFailure,
+  AudioUnderrun,
 };
 
 struct DiagnosticEvent {

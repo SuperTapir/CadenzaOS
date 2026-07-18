@@ -76,7 +76,11 @@ TEST_CASE("open guards current missing invalid and in-flight destinations") {
   CHECK_FALSE(fixture.runtime.open(cadenza::AppId::Count));
   REQUIRE(fixture.runtime.open(cadenza::AppId::Clock));
   CHECK(fixture.runtime.transitioning());
+  CHECK(fixture.runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Confirm);
+  CHECK(fixture.runtime.sound().pendingCommandCount() == 1);
   CHECK_FALSE(fixture.runtime.open(cadenza::AppId::Motion));
+  CHECK(fixture.runtime.sound().pendingCommandCount() == 1);
 }
 
 TEST_CASE("transition orders exit before enter at the midpoint") {
@@ -118,6 +122,9 @@ TEST_CASE("long press starts system return without updating active App") {
   fixture.runtime.update(0.01F, input);
   CHECK(fixture.runtime.transitioning());
   CHECK(fixture.clock.updates == 0);
+  CHECK(fixture.runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Back);
+  CHECK(fixture.runtime.sound().pendingCommandCount() == 1);
   fixture.runtime.update(0.17F, {});
   CHECK(fixture.runtime.currentId() == cadenza::AppId::Launcher);
   CHECK(fixture.events ==

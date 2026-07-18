@@ -78,6 +78,39 @@ Scrub and applies knob steps of 5% each:
 ./build/host/cadenza_dump_headless_pbm 400 4 /tmp/camera-scrub.pbm 10 1
 ```
 
+## Interaction sound workflow
+
+Apps call semantic `SoundCue` values only. The authored synthesis palette lives
+in `lib/cadenza_core/src/sound_cue_library.cpp`; changing it does not require
+editing Apps, Runtime, SDL, or I²S code. Export the current palette as standard
+44.1 kHz mono WAV files for listening or A/B comparison:
+
+```bash
+cmake --build build/host --target cadenza_dump_sound_cues
+./build/host/cadenza_dump_sound_cues --all /tmp/cadenza-cues
+./build/host/cadenza_dump_sound_cues confirm /tmp/confirm.wav
+```
+
+The exporter is an audition aid, not an aesthetic approval test. A PCM golden
+is updated only after a sound is deliberately accepted.
+
+For externally generated or recorded replacements, keep the lossless master
+and follow `docs/audio-asset-contract.md`. The preferred handoff is 48 kHz,
+24-bit mono WAV plus cue name and provenance/rights metadata. Do not manually
+convert a master to embedded PCM or normalize it to an invented universal dB
+target; the future importer owns deterministic platform conversion and Event
+gain, and the final decision requires in-context T-Embed listening.
+
+Settings cycles the session volume `Medium → High → Muted → Low → Medium`.
+Audio output failure is nonfatal: the graphics/input runtime continues and the
+adapter emits a diagnostic. Use the SDL dummy driver to test callback ownership
+without a physical device:
+
+```bash
+SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy \
+  ./build/host/cadenza_desktop --profile t-embed --frames 3
+```
+
 ## Red-green-refactor loop
 
 The checked-in command wrapper keeps local evidence repeatable:

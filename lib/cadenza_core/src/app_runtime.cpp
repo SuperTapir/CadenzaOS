@@ -69,6 +69,10 @@ bool AppRuntime::begin(AppId initial) noexcept {
 }
 
 bool AppRuntime::open(AppId id) noexcept {
+  return startTransition(id, audio::SoundCue::Confirm);
+}
+
+bool AppRuntime::startTransition(AppId id, audio::SoundCue cue) noexcept {
   if (!begun_ || !valid(id) || id == currentId_ || transitioning_ ||
       !apps_[indexOf(id)]) {
     return false;
@@ -81,6 +85,7 @@ bool AppRuntime::open(AppId id) noexcept {
   transition_ = 0.0F;
   transitioning_ = true;
   swapped_ = false;
+  sound_.play(cue);
   emitDiagnostic({DiagnosticCategory::Runtime, DiagnosticCode::AppTransition,
                   "app transition", static_cast<std::int32_t>(indexOf(id))});
   return true;
@@ -91,9 +96,10 @@ void AppRuntime::emitDiagnostic(const DiagnosticEvent& event) const noexcept {
 }
 
 void AppRuntime::update(Seconds dt, const InputFrame& input) noexcept {
+  sound_.advance(std::max(0.0F, dt));
   if (!begun_ || !apps_[indexOf(currentId_)]) return;
   if (!transitioning_ && input.longPressed && currentId_ != AppId::Launcher) {
-    open(AppId::Launcher);
+    startTransition(AppId::Launcher, audio::SoundCue::Back);
     return;
   }
   if (!transitioning_) {

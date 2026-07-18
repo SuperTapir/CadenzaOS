@@ -20,6 +20,22 @@ std::uint64_t framebufferHash(const MonoFramebuffer& framebuffer) noexcept {
   return hash;
 }
 
+std::uint64_t pcmHash(const std::int16_t* samples,
+                      std::size_t count) noexcept {
+  constexpr std::uint64_t kOffset = 14695981039346656037ULL;
+  constexpr std::uint64_t kPrime = 1099511628211ULL;
+  if (samples == nullptr) return kOffset;
+  std::uint64_t hash = kOffset;
+  for (std::size_t index = 0; index < count; ++index) {
+    const std::uint16_t value = static_cast<std::uint16_t>(samples[index]);
+    hash ^= static_cast<std::uint8_t>(value & 0xFFU);
+    hash *= kPrime;
+    hash ^= static_cast<std::uint8_t>(value >> 8U);
+    hash *= kPrime;
+  }
+  return hash;
+}
+
 DeterministicRunner::DeterministicRunner(AppRuntime& runtime,
                                          MonoCanvas& canvas,
                                          MonoFramebuffer& framebuffer,

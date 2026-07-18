@@ -14,6 +14,9 @@
 - Launcher、Clock、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
 - SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入和设备外框；
 - 旋转选择、短按进入、长按返回 Launcher 的输入模型；
+- Navigate、Boundary、Confirm、Back、Toggle 与 Reject 语义音效，桌面
+  SDL callback 与 T-Embed I²S task 共用 44.1 kHz 三声部核心；
+- Settings 会话音量、立即静音、headless PCM golden 和当前 cue WAV 导出；
 - allocation-free Tween、Timeline、Spring、转场、camera effects、粒子与
   atlas 序列帧状态机；
 - 暂停、单帧、时间倍率、PNG 截图、PNG/GIF 录制和调试 HUD；
@@ -22,6 +25,9 @@
 项目定位是“1-bit 交互与动画运行时”，不是完整游戏引擎。物理、碰撞、
 Tilemap、ECS 和关卡系统当前明确不在范围内。引擎/库复用边界记录在
 [`docs/engine-adoption-decision.md`](docs/engine-adoption-decision.md)。
+音频调研和采用决策见 [`docs/audio-reference-research.md`](docs/audio-reference-research.md)，
+未来自行生成 WAV 的交付、转换和验收规则见
+[`docs/audio-asset-contract.md`](docs/audio-asset-contract.md)。
 
 ## 桌面模拟器
 
@@ -76,6 +82,7 @@ tools/check.sh firmware
 
 当前引脚来自 LILYGO 官方原版 T-Embed 配置。不要烧录到 T-Embed CC1101；收到设备后应先根据包装和主板丝印确认版本。
 
-P0–P7 的主机、桌面和固件编译门禁已经建立；编码器手感、TFT 撕裂、真实
-FPS/最慢帧与模拟器/真机像素实拍对比属于 P8，必须在实体硬件上完成，不能
-用桌面结果冒充。当前证据见 [`docs/verification.md`](docs/verification.md)。
+P0–P7 与音频的主机、桌面和固件编译门禁已经建立；编码器手感、TFT 撕裂、
+真实 FPS/最慢帧、模拟器/真机像素实拍和扬声器听感仍必须在实体硬件上完成，
+不能用桌面结果冒充。当前证据与真机脚本见
+[`docs/verification.md`](docs/verification.md)。

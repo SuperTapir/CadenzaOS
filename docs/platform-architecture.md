@@ -10,6 +10,9 @@ T-Embed GPIO / SDL keyboard+mouse
           InputReducer
               ↓ InputFrame
           AppRuntime ─── lifecycle / long-press home / Transition
+              ├──────── semantic SoundCue + session volume
+              │                 ↓ fixed SPSC queue
+              │       SDL callback / ESP32 I²S task / headless PCM
               ↓
 Launcher / Clock / Motion / Settings / Animation Gallery
               ↓ MonoCanvas + animation/presentation core
@@ -28,6 +31,8 @@ TftPresenter / SDL3 texture / PNG+GIF / snapshot hash / future Sharp presenter
 - 提供 row-major、MSB-first、`1 = black` 的 1-bit 画布，禁止应用依赖彩色
   TFT 或 SDL 特性；
 - 将显示提交与应用绘制分离。
+- 拥有 `InteractionSoundService`，把 Navigate、Confirm、Back 等语义提交给
+  独立音频消费者；应用不得操作 SDL、I²S、WAV 路径或任意 oscillator。
 
 ## 应用负责什么
 
@@ -38,7 +43,7 @@ const char* name() const;
 void onEnter();
 void onExit();
 void update(float dt, const InputFrame& input, AppRuntime& runtime);
-void render(MonoCanvas& canvas);
+void render(MonoCanvas& canvas, const AppRuntime& runtime);
 ```
 
 应用不读取 GPIO，不直接持有屏幕，不自行实现页面切换，也不通过 `delay()` 控制节奏。状态只属于应用实例；系统可以随时离开它，再通过 `onEnter()` 重新进入。
@@ -71,10 +76,26 @@ Tween、Sequence、Parallel、Timeline、Spring、粒子和状态机都使用值
 core 不包含 Arduino、TFT_eSPI 或 SDL header。转场采用明确的 source/
 destination framebuffer 所有权，代价见 [`memory-budget.md`](memory-budget.md)。
 
+### 音频时钟不绑定图形帧
+
+App 与 Runtime 只在状态实际变化时提交 `SoundCue`。16 项固定 SPSC 队列把
+主线程与音频消费者隔离；Navigate/Boundary 最多占 12 项，为关键提示和控制
+保留容量。Muted/StopAll 另有原子安全邮箱，因此即使关键 cue 填满队列也不能
+阻塞静音。
+
+`AudioEngine` 由唯一消费者拥有：桌面是 SDL3 AudioStream callback，T-Embed
+是固定到 core 0 的 FreeRTOS task，headless 测试同步拉取。三者消费相同的
+44.1 kHz、S16、mono PCM。T-Embed adapter 只负责将 mono 复制为 right-left
+I²S frame；任何平台 adapter 都不得另写一套音色。
+
+当前音色是集中在 `sound_cue_library.cpp` 的参数合成 palette，不是不可替换的
+产品资产。未来 WAV 仍映射到相同 `SoundCue` Event；母版、平台转换、来源权利
+和真机验收遵循 [`audio-asset-contract.md`](audio-asset-contract.md)。
+
 ## P8 之后的平台工作
 
 1. 增加应用级持久化存储命名空间；
 2. 根据真机测量决定是否复用 Gallery/Runtime 的离屏 framebuffer；
 3. 实现 Sharp presenter，并在实体屏上对比 400×240 快照；
-4. 定义声音、休眠、背光/对比度等系统服务，而不是让应用直接操作硬件；
-5. 声音、持久化与新应用放在当前平台解耦/动画主线之后。
+4. 根据实体 T-Embed 试听选择默认音色，并在需要时实现 sample voice；
+5. 定义休眠、背光/对比度等系统服务，而不是让应用直接操作硬件。

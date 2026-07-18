@@ -78,19 +78,27 @@ void AnimationGalleryApp::update(Seconds dt, const InputFrame& input,
   if (runtime.motionProfile() != motionProfile_) {
     applyMotionProfile(runtime.motionProfile());
   }
-  if (input.clicked) mode_ = mode_ == GalleryMode::AutoPlay
-                                  ? GalleryMode::Scrub
-                                  : GalleryMode::AutoPlay;
+  if (input.clicked) {
+    mode_ = mode_ == GalleryMode::AutoPlay ? GalleryMode::Scrub
+                                           : GalleryMode::AutoPlay;
+    runtime.playSound(mode_ == GalleryMode::Scrub
+                          ? audio::SoundCue::ToggleOn
+                          : audio::SoundCue::ToggleOff);
+  }
   if (input.turn != 0) {
     if (mode_ == GalleryMode::Scrub) {
+      const float previous = progress_;
       progress_ = std::max(
           0.0F, std::min(1.0F, progress_ + input.turn *
                          presentation_defaults::kScrubStep));
       reconstructDemoState();
+      runtime.playSound(progress_ == previous ? audio::SoundCue::Boundary
+                                              : audio::SoundCue::Navigate);
     } else {
       page_ = static_cast<std::size_t>(
           wrapPage(static_cast<int>(page_) + input.turn));
       resetDemo();
+      runtime.playSound(audio::SoundCue::Navigate);
     }
   }
   if (mode_ == GalleryMode::Scrub) return;

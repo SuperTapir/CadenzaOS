@@ -9,6 +9,7 @@
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/mono_framebuffer.h"
 #include "input.h"
+#include "i2s_audio_output.h"
 #include "serial_diagnostic_sink.h"
 #include "tft_presenter.h"
 
@@ -20,6 +21,7 @@ TftPresenter presenter(display);
 InputController input;
 cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed};
 SerialDiagnosticSink diagnosticSink;
+I2sAudioOutput audioOutput;
 cadenza::LauncherApp launcher;
 cadenza::ClockApp clockApp;
 cadenza::MotionApp motion;
@@ -76,6 +78,9 @@ void setup() {
   runtime.registerApp(cadenza::AppId::Settings, settings);
   runtime.registerApp(cadenza::AppId::Gallery, gallery);
   runtime.begin(cadenza::AppId::Launcher);
+  if (!audioOutput.begin(runtime, &diagnosticSink)) {
+    Serial.println("Audio disabled; graphics runtime remains active");
+  }
   lastFrameUs = micros();
 }
 

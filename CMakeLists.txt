@@ -98,6 +98,57 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_input_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_input_tests COMMAND cadenza_input_tests)
 
+  add_executable(cadenza_audio_engine_tests tests/audio_engine_tests.cpp)
+  target_link_libraries(cadenza_audio_engine_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_audio_engine_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_audio_engine_tests COMMAND cadenza_audio_engine_tests)
+
+  add_executable(cadenza_audio_command_queue_tests
+    tests/audio_command_queue_tests.cpp
+  )
+  target_link_libraries(cadenza_audio_command_queue_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_audio_command_queue_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_audio_command_queue_tests
+    COMMAND cadenza_audio_command_queue_tests
+  )
+
+  add_executable(cadenza_interaction_sound_tests
+    tests/interaction_sound_tests.cpp
+  )
+  target_link_libraries(cadenza_interaction_sound_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_interaction_sound_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_interaction_sound_tests
+    COMMAND cadenza_interaction_sound_tests
+  )
+
+  add_executable(cadenza_i2s_audio_format_tests
+    tests/i2s_audio_format_tests.cpp
+  )
+  target_link_libraries(cadenza_i2s_audio_format_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_i2s_audio_format_tests PRIVATE
+    include third_party/doctest
+  )
+  add_test(NAME cadenza_i2s_audio_format_tests
+    COMMAND cadenza_i2s_audio_format_tests
+  )
+
+  add_executable(cadenza_i2s_audio_output_tests
+    tests/i2s_audio_output_tests.cpp
+    tests/firmware_stubs/firmware_stubs.cpp
+    src/i2s_audio_output.cpp
+  )
+  target_link_libraries(cadenza_i2s_audio_output_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_i2s_audio_output_tests PRIVATE
+    tests/firmware_stubs include third_party/doctest
+  )
+  add_test(NAME cadenza_i2s_audio_output_tests
+    COMMAND cadenza_i2s_audio_output_tests
+  )
+
   add_executable(cadenza_framebuffer_tests tests/framebuffer_tests.cpp)
   target_link_libraries(cadenza_framebuffer_tests PRIVATE cadenza::core)
   target_include_directories(cadenza_framebuffer_tests PRIVATE third_party/doctest)
@@ -152,6 +203,9 @@ if(CADENZA_BUILD_TESTS)
 
   add_executable(cadenza_dump_headless_pbm tools/dump_headless_pbm.cpp)
   target_link_libraries(cadenza_dump_headless_pbm PRIVATE cadenza::host)
+
+  add_executable(cadenza_dump_sound_cues tools/dump_sound_cues.cpp)
+  target_link_libraries(cadenza_dump_sound_cues PRIVATE cadenza::core)
 
   add_executable(cadenza_desktop_model_tests tests/desktop_model_tests.cpp)
   target_link_libraries(cadenza_desktop_model_tests PRIVATE
@@ -300,8 +354,36 @@ endif()
 
 if(CADENZA_BUILD_DESKTOP)
   find_package(SDL3 CONFIG REQUIRED)
+  add_library(cadenza_sdl_audio STATIC
+    lib/cadenza_desktop/src/sdl_audio_output.cpp
+  )
+  add_library(cadenza::sdl_audio ALIAS cadenza_sdl_audio)
+  target_include_directories(cadenza_sdl_audio PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_desktop/include>
+  )
+  target_link_libraries(cadenza_sdl_audio PUBLIC cadenza::core SDL3::SDL3)
+  target_compile_features(cadenza_sdl_audio PUBLIC cxx_std_17)
+
   add_executable(cadenza_desktop desktop/main.cpp)
   target_link_libraries(cadenza_desktop PRIVATE
-    cadenza::host cadenza::desktop_model SDL3::SDL3
+    cadenza::host cadenza::desktop_model cadenza::sdl_audio SDL3::SDL3
   )
+
+  if(CADENZA_BUILD_TESTS)
+    add_executable(cadenza_sdl_audio_output_tests
+      tests/sdl_audio_output_tests.cpp
+    )
+    target_link_libraries(cadenza_sdl_audio_output_tests PRIVATE
+      cadenza::sdl_audio
+    )
+    target_include_directories(cadenza_sdl_audio_output_tests PRIVATE
+      third_party/doctest
+    )
+    add_test(NAME cadenza_sdl_audio_output_tests
+      COMMAND cadenza_sdl_audio_output_tests
+    )
+    set_tests_properties(cadenza_sdl_audio_output_tests PROPERTIES
+      ENVIRONMENT "SDL_AUDIODRIVER=dummy"
+    )
+  endif()
 endif()

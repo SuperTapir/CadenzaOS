@@ -2,7 +2,9 @@
 #include "doctest.h"
 
 #include <array>
+#include <algorithm>
 #include <cmath>
+#include <cstdint>
 
 #include "cadenza/host/headless_host.h"
 
@@ -97,4 +99,35 @@ TEST_CASE("framebuffer hash is stable and pixel-sensitive at both profiles") {
     CHECK(cadenza::host::framebufferHash(first) !=
           cadenza::host::framebufferHash(second));
   }
+}
+
+TEST_CASE("headless interaction produces deterministic PCM golden") {
+  cadenza::host::HeadlessHost first{cadenza::FramebufferProfile::TEmbed};
+  cadenza::host::HeadlessHost second{cadenza::FramebufferProfile::TEmbed};
+  cadenza::InputFrame turn;
+  turn.turn = 1;
+  first.step(turn);
+  second.step(turn);
+
+  std::array<std::int16_t, 2048> a{};
+  std::array<std::int16_t, 2048> b{};
+  first.renderAudio(a.data(), a.size());
+  second.renderAudio(b.data(), b.size());
+  CHECK(a == b);
+  const auto hash = cadenza::host::pcmHash(a.data(), a.size());
+  CHECK(hash == 9821519019372894971ULL);
+  const auto peak = *std::max_element(
+      a.begin(), a.end(), [](std::int16_t left, std::int16_t right) {
+        return std::abs(static_cast<int>(left)) <
+               std::abs(static_cast<int>(right));
+      });
+  CHECK(std::abs(static_cast<int>(peak)) > 1000);
+  CHECK(std::abs(static_cast<int>(peak)) < 12000);
+
+  const auto confirm = cadenza::audio::InteractionSoundService::profile(
+      cadenza::audio::SoundCue::Confirm);
+  const auto back = cadenza::audio::InteractionSoundService::profile(
+      cadenza::audio::SoundCue::Back);
+  CHECK(confirm.startFrequencyHz < confirm.endFrequencyHz);
+  CHECK(back.startFrequencyHz > back.endFrequencyHz);
 }

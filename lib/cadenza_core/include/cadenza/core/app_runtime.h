@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "cadenza/audio/interaction_sound.h"
 #include "cadenza/core/core_types.h"
 #include "cadenza/core/diagnostics.h"
 #include "cadenza/core/input.h"
@@ -50,6 +51,16 @@ class AppRuntime {
   void update(Seconds dt, const InputFrame& input) noexcept;
   void render(MonoCanvas& canvas) noexcept;
   bool open(AppId id) noexcept;
+  bool playSound(audio::SoundCue cue) noexcept { return sound_.play(cue); }
+  bool setSoundVolume(audio::SoundVolume volume) noexcept {
+    return sound_.setVolume(volume);
+  }
+  audio::SoundVolume soundVolume() const noexcept { return sound_.volume(); }
+  audio::InteractionSoundService& sound() noexcept { return sound_; }
+  const audio::InteractionSoundService& sound() const noexcept { return sound_; }
+  void renderAudio(std::int16_t* samples, std::size_t count) noexcept {
+    sound_.render(samples, count);
+  }
 
   void setDiagnosticSink(DiagnosticSink* sink) noexcept {
     diagnosticSink_ = sink;
@@ -75,6 +86,8 @@ class AppRuntime {
   static constexpr std::size_t kAppCapacity =
       static_cast<std::size_t>(AppId::Count);
 
+  bool startTransition(AppId id, audio::SoundCue cue) noexcept;
+
   std::array<App*, kAppCapacity> apps_{};
   std::array<bool, kAppCapacity> visibleInLauncher_{};
   AppId currentId_ = AppId::Launcher;
@@ -89,6 +102,7 @@ class AppRuntime {
   const Transition* transitionStrategy_ = nullptr;
   Seconds transitionDuration_ = presentation_defaults::kAppTransitionDuration;
   MotionProfile motionProfile_ = MotionProfile::Normal;
+  audio::InteractionSoundService sound_;
 };
 
 }  // namespace cadenza

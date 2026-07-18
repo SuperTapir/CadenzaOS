@@ -16,6 +16,7 @@
 #include "cadenza/desktop/desktop_model.h"
 #include "cadenza/desktop/png_writer.h"
 #include "cadenza/desktop/recording.h"
+#include "cadenza/desktop/sdl_audio_output.h"
 #include "cadenza/desktop/simulation_controller.h"
 #include "cadenza/host/headless_host.h"
 
@@ -142,6 +143,11 @@ int main(int argc, char** argv) {
   cadenza::desktop::DesktopDiagnosticLog diagnostics;
   cadenza::host::HeadlessHost host{config.profile, 1.0F / 60.0F,
                                     &diagnostics};
+  cadenza::desktop::SdlAudioOutput audioOutput;
+  if (!SDL_InitSubSystem(SDL_INIT_AUDIO) ||
+      !audioOutput.start(host.runtime().sound())) {
+    std::fprintf(stderr, "SDL audio disabled: %s\n", SDL_GetError());
+  }
   cadenza::desktop::DesktopInputMapper mapper;
   cadenza::InputReducer reducer;
   cadenza::desktop::OverlayState overlay;
@@ -300,6 +306,7 @@ int main(int argc, char** argv) {
   }
 
   if (recording.active()) recording.stop();
+  audioOutput.stop();
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);

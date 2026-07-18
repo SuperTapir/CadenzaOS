@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
+#include <vector>
 
 #include "cadenza/core/apps.h"
 
@@ -90,6 +91,119 @@ TEST_CASE("portable Launcher opens the selected registered App") {
   CHECK(runtime.transitioning());
   runtime.update(0.17F, {});
   CHECK(runtime.currentId() == cadenza::AppId::Clock);
+}
+
+TEST_CASE("one input frame emits at most one semantic navigation cue") {
+  cadenza::LauncherApp launcher;
+  NamedApp clock{"Clock"};
+  NamedApp motion{"Motion"};
+  NamedApp settings{"Settings"};
+  NamedApp gallery{"Gallery"};
+  cadenza::AppRuntime runtime;
+  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+
+  cadenza::InputFrame turn;
+  turn.turn = 7;
+  runtime.update(1.0F / 60.0F, turn);
+  CHECK(runtime.sound().pendingCommandCount() == 1);
+  CHECK(runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Navigate);
+}
+
+TEST_CASE("bundled Apps emit success and boundary cues from actual state") {
+  cadenza::AppRuntime runtime;
+  cadenza::LauncherApp launcher;
+  cadenza::ClockApp clock;
+  cadenza::MotionApp motion;
+  cadenza::SettingsApp settings;
+  REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
+  REQUIRE(runtime.registerApp(cadenza::AppId::Clock, clock));
+  REQUIRE(runtime.registerApp(cadenza::AppId::Motion, motion));
+  REQUIRE(runtime.registerApp(cadenza::AppId::Settings, settings));
+  REQUIRE(runtime.begin(cadenza::AppId::Launcher));
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  clock.update(0.0F, click, runtime);
+  CHECK(runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::ToggleOff);
+
+  cadenza::InputFrame largeTurn;
+  largeTurn.turn = 100;
+  motion.update(0.0F, largeTurn, runtime);
+  CHECK(runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Navigate);
+  runtime.sound().advance(0.03F);
+  cadenza::InputFrame boundaryTurn;
+  boundaryTurn.turn = 1;
+  motion.update(0.0F, boundaryTurn, runtime);
+  CHECK(runtime.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Boundary);
+}
+
+TEST_CASE("Settings exposes a sound row and cycles session volume") {
+  cadenza::AppRuntime runtime;
+  cadenza::SettingsApp settings;
+  cadenza::LauncherApp launcher;
+  REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
+  REQUIRE(runtime.registerApp(cadenza::AppId::Settings, settings));
+  REQUIRE(runtime.begin(cadenza::AppId::Settings));
+
+  cadenza::InputFrame selectSound;
+  selectSound.turn = 1;
+  settings.update(0.03F, selectSound, runtime);
+  cadenza::InputFrame click;
+  click.clicked = true;
+  settings.update(0.0F, click, runtime);
+  CHECK(runtime.soundVolume() == cadenza::audio::SoundVolume::High);
+  settings.update(0.0F, click, runtime);
+  CHECK(runtime.soundVolume() == cadenza::audio::SoundVolume::Muted);
+  settings.update(0.0F, click, runtime);
+  CHECK(runtime.soundVolume() == cadenza::audio::SoundVolume::Low);
+}
+
+TEST_CASE("Settings volume changes are immediately visible and muted stays visual") {
+  for (const cadenza::FramebufferProfile profile : {
+           cadenza::FramebufferProfile::TEmbed,
+           cadenza::FramebufferProfile::Sharp}) {
+    CAPTURE(static_cast<int>(profile));
+    cadenza::AppRuntime runtime{profile};
+    cadenza::SettingsApp settings;
+    cadenza::LauncherApp launcher;
+    REQUIRE(runtime.registerApp(cadenza::AppId::Launcher, launcher, false));
+    REQUIRE(runtime.registerApp(cadenza::AppId::Settings, settings));
+    REQUIRE(runtime.begin(cadenza::AppId::Settings));
+    cadenza::InputFrame selectSound;
+    selectSound.turn = 1;
+    settings.update(0.03F, selectSound, runtime);
+
+    cadenza::MonoFramebuffer framebuffer{profile};
+    cadenza::MonoCanvas canvas{framebuffer};
+    settings.render(canvas, runtime);
+    const std::vector<std::uint8_t> medium(
+        framebuffer.data(), framebuffer.data() + framebuffer.sizeBytes());
+
+    cadenza::InputFrame click;
+    click.clicked = true;
+    settings.update(0.0F, click, runtime);
+    settings.render(canvas, runtime);
+    const std::vector<std::uint8_t> high(
+        framebuffer.data(), framebuffer.data() + framebuffer.sizeBytes());
+    CHECK(runtime.soundVolume() == cadenza::audio::SoundVolume::High);
+    CHECK(high != medium);
+
+    settings.update(0.0F, click, runtime);
+    settings.render(canvas, runtime);
+    const std::vector<std::uint8_t> muted(
+        framebuffer.data(), framebuffer.data() + framebuffer.sizeBytes());
+    CHECK(runtime.soundVolume() == cadenza::audio::SoundVolume::Muted);
+    CHECK(muted != high);
+    std::array<std::int16_t, 256> samples{};
+    runtime.renderAudio(samples.data(), samples.size());
+    CHECK(std::all_of(samples.begin(), samples.end(),
+                      [](std::int16_t sample) { return sample == 0; }));
+    CHECK(hasBlackPixel(framebuffer));
+  }
 }
 
 TEST_CASE("Launcher contains Animation Gallery inside the decorated card") {

@@ -13,6 +13,8 @@
 namespace cadenza::host {
 
 std::uint64_t framebufferHash(const MonoFramebuffer& framebuffer) noexcept;
+std::uint64_t pcmHash(const std::int16_t* samples,
+                      std::size_t count) noexcept;
 
 template <std::size_t Capacity>
 class InputScript {
@@ -89,6 +91,9 @@ class HeadlessHost {
   void step(const InputFrame& input = {}) noexcept { runner_.step(input); }
   void advance(Seconds delta, const InputFrame& input = {}) noexcept {
     runner_.advance(delta, input);
+  }
+  void renderAudio(std::int16_t* samples, std::size_t count) noexcept {
+    runtime_.renderAudio(samples, count);
   }
   std::uint64_t framebufferHash() const noexcept {
     return runner_.framebufferHash();
