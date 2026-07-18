@@ -28,7 +28,7 @@ SoundCue ─────→ 44.1 kHz sound service ───────→ I²S
 - 将旋钮和按钮统一成与具体 GPIO 无关的 `InputFrame`；
 - 组合 `cadenza_core`、`cadenza_apps`、`cadenza_system` 与平台 adapter；
 - 注册应用、维护当前应用，并调用生命周期；
-- 拦截“长按返回 Launcher”这样的系统手势；
+- 拦截“长按打开 System Menu”这样的系统手势；
 - 绘制统一的应用切换转场；
 - 提供 row-major、MSB-first、`1 = black` 的 1-bit 画布，禁止应用依赖彩色
   TFT 或 SDL 特性；
@@ -65,6 +65,12 @@ update context 只含 `dt`、`InputFrame`、只读 `SystemSnapshot`、catalog vi
   packetizer 与 DMA normalizer；不含平台 header。
 - platform roots：headless、SDL、当前 Arduino firmware、候选 ESP-IDF firmware；
   负责硬件/API 对接，不重新定义业务状态或 PCM 语义。
+
+System Overlay 属于 `cadenza_core` 的 portable presentation state，不是隐藏 App。
+它只允许一个 interactive surface，按 App/transition、transient、interactive、
+persistent/critical 的固定顺序合成。System Menu 打开时复用 Runtime 已有 framebuffer
+冻结 active App；AppId 与 enter/exit 生命周期不变，system frame transaction 继续。
+按钮从 long-press 到 release 锁存给 System，避免打开/关闭边界输入泄漏。
 
 ## 关键决定
 

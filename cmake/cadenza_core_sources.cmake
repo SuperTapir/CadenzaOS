@@ -10,6 +10,7 @@ set(CADENZA_CORE_SOURCES
   lib/cadenza_core/src/simulation_clock.cpp
   lib/cadenza_core/src/sound_cue_library.cpp
   lib/cadenza_core/src/spring.cpp
+  lib/cadenza_core/src/system_surface.cpp
   lib/cadenza_core/src/transition.cpp
   lib/cadenza_core/src/version.cpp
 )

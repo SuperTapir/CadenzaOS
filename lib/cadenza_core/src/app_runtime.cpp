@@ -111,6 +111,67 @@ bool AppRuntime::startTransition(AppId id, audio::SoundCue cue) noexcept {
   return true;
 }
 
+void AppRuntime::captureFrozenApp(const SystemSnapshot& snapshot) noexcept {
+  const AppCatalogEntry* current = catalog_.find(currentId_);
+  if (!current) return;
+  outgoingFrame_.clear(false);
+  MonoCanvas frozenCanvas{outgoingFrame_, diagnosticSink_};
+  renderAppWithContext(*current->app, frozenCanvas, snapshot);
+}
+
+void AppRuntime::handleSystemSurfaceIntent(
+    presentation::SystemSurfaceIntent intent,
+    const SystemSnapshot& snapshot) noexcept {
+  using presentation::SystemSurfaceIntent;
+  const auto submit = [this](const SystemCommand& command) noexcept {
+    return frameCommandSink_->submit(
+        {ResourceOwner::system(), command, 0});
+  };
+  switch (intent) {
+    case SystemSurfaceIntent::None: break;
+    case SystemSurfaceIntent::Opened:
+      submit(SystemCommand::playSound(audio::SoundCue::Confirm));
+      break;
+    case SystemSurfaceIntent::Closed:
+      submit(SystemCommand::playSound(audio::SoundCue::Back));
+      break;
+    case SystemSurfaceIntent::Navigate:
+      submit(SystemCommand::playSound(audio::SoundCue::Navigate));
+      break;
+    case SystemSurfaceIntent::Boundary:
+      submit(SystemCommand::playSound(audio::SoundCue::Boundary));
+      break;
+    case SystemSurfaceIntent::Home:
+      startTransition(homeId_, audio::SoundCue::Back);
+      break;
+    case SystemSurfaceIntent::Sound: {
+      audio::SoundVolume next = audio::SoundVolume::Muted;
+      switch (snapshot.soundVolume) {
+        case audio::SoundVolume::Muted: next = audio::SoundVolume::Low; break;
+        case audio::SoundVolume::Low: next = audio::SoundVolume::Medium; break;
+        case audio::SoundVolume::Medium: next = audio::SoundVolume::High; break;
+        case audio::SoundVolume::High: next = audio::SoundVolume::Muted; break;
+        case audio::SoundVolume::Count: next = audio::SoundVolume::High; break;
+      }
+      submit(SystemCommand::setSoundVolume(next));
+      submit(SystemCommand::playSound(next == audio::SoundVolume::Muted
+                                          ? audio::SoundCue::ToggleOff
+                                          : audio::SoundCue::ToggleOn));
+      break;
+    }
+    case SystemSurfaceIntent::Motion: {
+      const MotionProfile next = snapshot.motionProfile == MotionProfile::Normal
+                                     ? MotionProfile::Reduced
+                                     : MotionProfile::Normal;
+      submit(SystemCommand::setMotionProfile(next));
+      submit(SystemCommand::playSound(next == MotionProfile::Reduced
+                                          ? audio::SoundCue::ToggleOff
+                                          : audio::SoundCue::ToggleOn));
+      break;
+    }
+  }
+}
+
 void AppRuntime::emitDiagnostic(const DiagnosticEvent& event) const noexcept {
   if (diagnosticSink_) diagnosticSink_->emit(event);
 }
@@ -127,11 +188,19 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
   commands.bindCapabilityResolver(*this);
   AppCatalogEntry* current = catalog_.find(currentId_);
   if (!begun_ || !current) return;
-  if (!transitioning_ && input.longPressed && currentId_ != homeId_) {
-    startTransition(homeId_, audio::SoundCue::Back);
-    return;
+  const bool deferredMenuBeforeUpdate = surfaces_.hasDeferredMenu();
+  const presentation::SystemSurfaceFrame surfaceFrame =
+      surfaces_.update(dt, input, transitioning_, currentId_ == homeId_);
+  if (surfaceFrame.captureFrozenFrame) {
+    if (deferredMenuBeforeUpdate) {
+      captureFrozenApp(snapshot);
+    } else {
+      outgoingFrame_ = incomingFrame_;
+    }
   }
+  handleSystemSurfaceIntent(surfaceFrame.intent, snapshot);
   if (!transitioning_) {
+    if (surfaceFrame.consumeInput || surfaces_.appSuspended()) return;
     const AppCatalogView catalog{catalog_};
     AppCommandPort commandPort{currentId_, current->capabilities, commands};
     const AppUpdateContext context{std::max(0.0F, dt), input, catalog, *this,
@@ -153,6 +222,7 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
   if (transition_ >= 1.0F) {
     transition_ = 1.0F;
     transitioning_ = false;
+    surfaces_.notifyTransitionStable();
   }
 }
 
@@ -179,8 +249,25 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
     }
     transitionStrategy_->compose(outgoingFrame_, incomingFrame_, canvas,
                                  transition_);
+  } else if (surfaces_.appSuspended()) {
+    canvas.drawFramebuffer(outgoingFrame_,
+                           {0, 0, outgoingFrame_.width(),
+                            outgoingFrame_.height()},
+                           0, 0);
   } else {
-    renderAppWithContext(*current->app, canvas, frameSnapshot_);
+    incomingFrame_.clear(false);
+    MonoCanvas appCanvas{incomingFrame_, diagnosticSink_};
+    renderAppWithContext(*current->app, appCanvas, frameSnapshot_);
+    canvas.drawFramebuffer(incomingFrame_,
+                           {0, 0, incomingFrame_.width(),
+                            incomingFrame_.height()},
+                           0, 0);
+  }
+  presentation::renderTransientFeedback(canvas, surfaces_);
+  if (surfaces_.menuActive()) {
+    presentation::renderSystemMenu(canvas, surfaces_.selection(),
+                                   currentId_ == homeId_, frameSnapshot_,
+                                   surfaces_.revealProgress());
   }
 }
 

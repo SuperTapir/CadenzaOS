@@ -13,7 +13,7 @@
 - 320×170 T-Embed 与 400×240 Sharp profile 共用的 1-bit framebuffer；
 - Launcher、Clock、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
 - SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入和设备外框；
-- 旋转选择、短按进入、长按返回 Launcher 的输入模型；
+- 旋转选择、短按进入、长按打开系统菜单并显式返回 Launcher 的输入模型；
 - Input、Action、Outcome、System 四家族 15 项语义音效，桌面 SDL callback
   与 T-Embed I²S task 共用 44.1 kHz 四声部核心；
 - Settings 会话音量、立即静音、headless PCM golden 和当前 cue WAV 导出；

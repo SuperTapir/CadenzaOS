@@ -239,7 +239,9 @@ TEST_CASE("Gallery is a normal App and every page renders at both profiles") {
     cadenza::InputFrame home;
     home.longPressed = true;
     runtime.update(0.0F, home);
-    CHECK(runtime.transitioning());
+    CHECK(runtime.systemMenuActive());
+    CHECK_FALSE(runtime.transitioning());
+    CHECK(runtime.currentId() == cadenza::apps::kGalleryAppId);
   }
 }
 

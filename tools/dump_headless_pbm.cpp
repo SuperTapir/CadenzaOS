@@ -34,7 +34,20 @@ int main(int argc, char** argv) {
       host.step();
     }
   }
-  if (argc >= 5 && app == cadenza::apps::kGalleryAppId) {
+  if (argc >= 5 && std::strcmp(argv[4], "menu") == 0) {
+    cadenza::InputFrame held;
+    held.longPressed = true;
+    host.step(held);
+    cadenza::InputFrame released;
+    released.released = true;
+    host.step(released);
+    for (int frame = 0; frame < 12; ++frame) host.step();
+    if (argc >= 6) {
+      cadenza::InputFrame turn;
+      turn.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
+      host.step(turn);
+    }
+  } else if (argc >= 5 && app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;
     input.turn = static_cast<std::int16_t>(std::atoi(argv[4]));
     host.step(input);

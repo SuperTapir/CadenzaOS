@@ -9,6 +9,7 @@
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/transition.h"
 #include "cadenza/presentation/defaults.h"
+#include "cadenza/presentation/system_surface.h"
 
 namespace cadenza {
 
@@ -44,6 +45,7 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
 
   void setDiagnosticSink(DiagnosticSink* sink) noexcept {
     diagnosticSink_ = sink;
+    surfaces_.setDiagnosticSink(sink);
   }
   void emitDiagnostic(const DiagnosticEvent& event) const noexcept;
 
@@ -60,6 +62,20 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
                      Seconds duration) noexcept;
   std::int16_t canvasWidth() const noexcept { return outgoingFrame_.width(); }
   std::int16_t canvasHeight() const noexcept { return outgoingFrame_.height(); }
+  bool systemMenuActive() const noexcept { return surfaces_.menuActive(); }
+  bool appSuspendedBySystem() const noexcept {
+    return surfaces_.appSuspended();
+  }
+  presentation::SystemMenuItem systemMenuSelection() const noexcept {
+    return surfaces_.selection();
+  }
+  presentation::SystemSurfaceCoordinator& systemSurfaces() noexcept {
+    return surfaces_;
+  }
+  const presentation::SystemSurfaceCoordinator& systemSurfaces()
+      const noexcept {
+    return surfaces_;
+  }
 
  private:
   class DiscardingSystemCommandSink final : public SystemCommandSink {
@@ -73,6 +89,10 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   };
 
   bool startTransition(AppId id, audio::SoundCue cue) noexcept;
+  void captureFrozenApp(const SystemSnapshot& snapshot) noexcept;
+  void handleSystemSurfaceIntent(
+      presentation::SystemSurfaceIntent intent,
+      const SystemSnapshot& snapshot) noexcept;
   void renderAppWithContext(App& app, MonoCanvas& canvas,
                             const SystemSnapshot& snapshot) noexcept;
 
@@ -93,6 +113,7 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   SystemSnapshot frameSnapshot_{};
   DiscardingSystemCommandSink fallbackCommandSink_{};
   SystemCommandSink* frameCommandSink_ = &fallbackCommandSink_;
+  presentation::SystemSurfaceCoordinator surfaces_{};
 };
 
 }  // namespace cadenza

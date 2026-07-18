@@ -59,7 +59,7 @@ file(GLOB build_manifests
   "${PROJECT_ROOT}/.research/spikes/uac_idf/CMakeLists.txt"
   "${PROJECT_ROOT}/.research/spikes/uac_idf/src/CMakeLists.txt")
 foreach(manifest IN LISTS build_manifests)
-  if(manifest STREQUAL CMAKE_CURRENT_LIST_FILE)
+  if(manifest MATCHES "/audit_.*research[.]cmake$")
     continue()
   endif()
   file(READ "${manifest}" manifest_text)

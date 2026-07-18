@@ -8,6 +8,7 @@
 
 #include "cadenza/core/app_runtime.h"
 #include "cadenza/core/app_catalog.h"
+#include "cadenza/system/frame_coordinator.h"
 #include "cadenza/system/system_service_host.h"
 
 namespace {
@@ -141,7 +142,7 @@ TEST_CASE("catalog rejects invalid duplicate and capacity without mutation") {
   CHECK_FALSE(catalog.at(1)->visibleInLauncher);
 }
 
-TEST_CASE("system return uses the composition root configured Home App") {
+TEST_CASE("system menu Home uses the composition root configured Home App") {
   std::vector<std::string> events;
   FakeApp home{"CustomHome", events};
   FakeApp child{"Child", events};
@@ -154,8 +155,20 @@ TEST_CASE("system return uses the composition root configured Home App") {
   cadenza::InputFrame input;
   input.longPressed = true;
   runtime.update(0.01F, input);
+  REQUIRE(runtime.systemMenuActive());
+  CHECK_FALSE(runtime.transitioning());
+  cadenza::InputFrame release;
+  release.released = true;
+  runtime.update(0.01F, release);
+  cadenza::InputFrame turn;
+  turn.turn = 1;
+  runtime.update(0.01F, turn);
+  cadenza::InputFrame click;
+  click.clicked = true;
+  click.released = true;
+  runtime.update(0.01F, click);
   REQUIRE(runtime.transitioning());
-  runtime.update(0.17F, {});
+  runtime.update(0.33F, {});
   CHECK(runtime.currentId() == cadenza::AppId{77});
   CHECK(events == std::vector<std::string>{"Child:enter", "Child:exit",
                                            "CustomHome:enter"});
@@ -215,24 +228,25 @@ TEST_CASE("only active App updates and transition input is frozen") {
   CHECK(fixture.clock.updates == 1);
 }
 
-TEST_CASE("long press starts system return without updating active App") {
+TEST_CASE("long press opens system menu without updating active App") {
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kClockAppId));
   cadenza::InputFrame input;
   input.longPressed = true;
   fixture.update(0.01F, input);
-  CHECK(fixture.runtime.transitioning());
+  CHECK(fixture.runtime.systemMenuActive());
+  CHECK_FALSE(fixture.runtime.transitioning());
+  CHECK(fixture.runtime.currentId() == kClockAppId);
   CHECK(fixture.clock.updates == 0);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
-        cadenza::audio::SoundCue::Back);
+        cadenza::audio::SoundCue::Confirm);
   CHECK(fixture.services.sound().pendingCommandCount() == 1);
   fixture.update(0.17F);
-  CHECK(fixture.runtime.currentId() == kHomeAppId);
-  CHECK(fixture.events ==
-        std::vector<std::string>{"Clock:enter", "Clock:exit", "Launcher:enter"});
+  CHECK(fixture.runtime.currentId() == kClockAppId);
+  CHECK(fixture.events == std::vector<std::string>{"Clock:enter"});
 }
 
-TEST_CASE("App open and long press render approved Confirm and Back PCM") {
+TEST_CASE("App open and system menu use approved semantic cues") {
   constexpr std::size_t kSamples = 44100;
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
@@ -251,8 +265,93 @@ TEST_CASE("App open and long press render approved Confirm and Back PCM") {
   input.longPressed = true;
   fixture.update(0.01F, input);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Confirm);
+
+  cadenza::InputFrame released;
+  released.released = true;
+  fixture.update(0.01F, released);
+  fixture.update(0.01F, input);
+  CHECK_FALSE(fixture.runtime.systemMenuActive());
+  CHECK(fixture.services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Back);
-  pcm.fill(0);
-  fixture.services.renderAudio(pcm.data(), pcm.size());
-  CHECK(pcmHash(pcm.data(), pcm.size()) == 0x1AA4B6B726F7D759ULL);
+}
+
+TEST_CASE("system menu freezes App lifecycle while services keep advancing") {
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kClockAppId));
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, {});
+  const int updatesBeforeMenu = fixture.clock.updates;
+  const int rendersBeforeMenu = fixture.clock.renders;
+  cadenza::InputFrame input;
+  input.longPressed = true;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, input);
+  const int frozenRenderCount = fixture.clock.renders;
+  CHECK(frozenRenderCount == rendersBeforeMenu);
+  REQUIRE(fixture.services.postPlatformEvent(
+      cadenza::system::PlatformEvent::soundOutputAvailability(true)));
+  cadenza::InputFrame release;
+  release.released = true;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.05F, release);
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.05F, {});
+
+  CHECK(fixture.clock.updates == updatesBeforeMenu);
+  CHECK(fixture.clock.renders == frozenRenderCount);
+  CHECK(fixture.services.snapshot().soundOutputAvailable);
+  CHECK(fixture.events == std::vector<std::string>{"Clock:enter", "Clock:update"});
+}
+
+TEST_CASE("menu request during transition opens on stable destination") {
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kHomeAppId));
+  REQUIRE(fixture.runtime.open(kClockAppId));
+  cadenza::InputFrame held;
+  held.longPressed = true;
+  fixture.update(0.10F, held);
+  CHECK(fixture.runtime.systemSurfaces().hasDeferredMenu());
+  CHECK_FALSE(fixture.runtime.systemMenuActive());
+  cadenza::InputFrame release;
+  release.released = true;
+  fixture.update(0.23F, release);
+  CHECK_FALSE(fixture.runtime.transitioning());
+  CHECK(fixture.runtime.currentId() == kClockAppId);
+  CHECK_FALSE(fixture.runtime.systemMenuActive());
+  fixture.update(0.01F);
+  CHECK(fixture.runtime.systemMenuActive());
+  CHECK(fixture.clock.updates == 0);
+}
+
+TEST_CASE("system menu setting action commits through typed system command") {
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kClockAppId));
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+  cadenza::InputFrame held;
+  held.longPressed = true;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, held);
+  cadenza::InputFrame release;
+  release.released = true;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, release);
+  cadenza::InputFrame selectSound;
+  selectSound.turn = 2;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, selectSound);
+  REQUIRE(fixture.runtime.systemMenuSelection() ==
+          cadenza::presentation::SystemMenuItem::Sound);
+  cadenza::InputFrame click;
+  click.clicked = true;
+  click.released = true;
+  cadenza::system::FrameCoordinator::runFrame(
+      fixture.services, fixture.runtime, canvas, 0.01F, click);
+  CHECK(fixture.services.snapshot().soundVolume ==
+        cadenza::audio::SoundVolume::High);
+  CHECK(fixture.runtime.systemMenuActive());
 }

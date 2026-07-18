@@ -1,0 +1,266 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest.h"
+
+#include <cstdint>
+
+#include "cadenza/core/mono_canvas.h"
+#include "cadenza/presentation/system_surface.h"
+
+namespace {
+
+std::uint64_t framebufferHash(const cadenza::MonoFramebuffer& frame) {
+  std::uint64_t hash = 1469598103934665603ULL;
+  for (std::size_t index = 0; index < frame.sizeBytes(); ++index) {
+    hash = (hash ^ frame.data()[index]) * 1099511628211ULL;
+  }
+  return hash;
+}
+
+cadenza::InputFrame longPress() {
+  cadenza::InputFrame input;
+  input.longPressed = true;
+  input.heldMs = 650;
+  return input;
+}
+
+cadenza::InputFrame release() {
+  cadenza::InputFrame input;
+  input.released = true;
+  return input;
+}
+
+}  // namespace
+
+TEST_CASE("long press sequence arms menu only after trigger release") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  const auto opened = surfaces.update(0.01F, longPress(), false);
+  CHECK(opened.consumeInput);
+  CHECK(opened.captureFrozenFrame);
+  CHECK(opened.intent == cadenza::presentation::SystemSurfaceIntent::Opened);
+  REQUIRE(surfaces.menuActive());
+  CHECK(surfaces.revealProgress() == doctest::Approx(0.0F));
+
+  cadenza::InputFrame held;
+  held.turn = 2;
+  held.clicked = true;
+  const auto heldFrame = surfaces.update(0.01F, held, false);
+  CHECK(heldFrame.consumeInput);
+  CHECK(heldFrame.intent == cadenza::presentation::SystemSurfaceIntent::None);
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Resume);
+
+  const auto released = surfaces.update(0.01F, release(), false);
+  CHECK(released.consumeInput);
+  CHECK(surfaces.menuActive());
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Resume);
+  CHECK(surfaces.revealProgress() > 0.0F);
+  surfaces.update(0.2F, {}, false);
+  CHECK(surfaces.revealProgress() == doctest::Approx(1.0F));
+
+  cadenza::InputFrame turn;
+  turn.turn = 1;
+  const auto navigated = surfaces.update(0.01F, turn, false);
+  CHECK(navigated.intent ==
+        cadenza::presentation::SystemSurfaceIntent::Navigate);
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Home);
+}
+
+TEST_CASE("long press close consumes held sequence through release") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  surfaces.update(0.01F, longPress(), false);
+  surfaces.update(0.01F, release(), false);
+  REQUIRE(surfaces.menuActive());
+
+  const auto closed = surfaces.update(0.01F, longPress(), false);
+  CHECK(closed.intent == cadenza::presentation::SystemSurfaceIntent::Closed);
+  CHECK_FALSE(surfaces.menuActive());
+  CHECK(surfaces.appSuspended());
+
+  cadenza::InputFrame noisyRelease = release();
+  noisyRelease.clicked = true;
+  noisyRelease.turn = 3;
+  const auto captured = surfaces.update(0.01F, noisyRelease, false);
+  CHECK(captured.consumeInput);
+  CHECK(captured.intent == cadenza::presentation::SystemSurfaceIntent::None);
+  CHECK_FALSE(surfaces.appSuspended());
+
+  cadenza::InputFrame next;
+  next.clicked = true;
+  CHECK_FALSE(surfaces.update(0.01F, next, false).consumeInput);
+}
+
+TEST_CASE("Home menu omits Home from its navigation order") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  surfaces.update(0.01F, longPress(), false, true);
+  surfaces.update(0.01F, release(), false, true);
+  REQUIRE(surfaces.menuActive());
+
+  cadenza::InputFrame turn;
+  turn.turn = 1;
+  CHECK(surfaces.update(0.01F, turn, false, true).intent ==
+        cadenza::presentation::SystemSurfaceIntent::Navigate);
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Sound);
+
+  turn.turn = 8;
+  surfaces.update(0.01F, turn, false, true);
+  CHECK(surfaces.selection() == cadenza::presentation::SystemMenuItem::Motion);
+}
+
+TEST_CASE("transition menu request is captured and deferred to stable frame") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  const auto requested = surfaces.update(0.01F, longPress(), true);
+  CHECK(requested.consumeInput);
+  CHECK(surfaces.hasDeferredMenu());
+  CHECK_FALSE(surfaces.menuActive());
+  surfaces.update(0.01F, release(), true);
+  surfaces.notifyTransitionStable();
+  const auto opened = surfaces.update(0.01F, {}, false);
+  CHECK(opened.intent == cadenza::presentation::SystemSurfaceIntent::Opened);
+  CHECK(opened.captureFrozenFrame);
+  CHECK(surfaces.menuActive());
+}
+
+TEST_CASE("interactive and transient capacities reject deterministically") {
+  using namespace cadenza::presentation;
+  SystemSurfaceCoordinator surfaces;
+  REQUIRE(surfaces.requestInteractive(SurfaceKind::SystemMenu));
+  CHECK_FALSE(surfaces.requestInteractive(SurfaceKind::SystemMenu));
+  CHECK(surfaces.diagnostics().lastRejection == SurfaceRejection::Busy);
+  CHECK_FALSE(surfaces.requestInteractive(SurfaceKind::Dialog));
+  CHECK(surfaces.diagnostics().lastRejection == SurfaceRejection::DeniedOwner);
+  CHECK_FALSE(surfaces.rejectInvalidAction());
+  CHECK(surfaces.diagnostics().lastRejection ==
+        SurfaceRejection::InvalidAction);
+
+  for (std::size_t index = 0; index < surfaces.kTransientCapacity; ++index) {
+    REQUIRE(surfaces.pushTransient("SAVED", 1.0F));
+  }
+  CHECK_FALSE(surfaces.pushTransient("OVERFLOW", 1.0F));
+  CHECK(surfaces.diagnostics().lastRejection ==
+        SurfaceRejection::TransientQueueFull);
+  CHECK(surfaces.diagnostics().transientHighWater ==
+        surfaces.kTransientCapacity);
+  REQUIRE(surfaces.requestInteractive(SurfaceKind::None));
+  CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
+  surfaces.update(2.0F, {}, false);
+  CHECK(surfaces.transientCount() == 0);
+}
+
+TEST_CASE("system menu render is deterministic for both framebuffer profiles") {
+  const cadenza::FramebufferProfile profiles[] = {
+      cadenza::FramebufferProfile::TEmbed,
+      cadenza::FramebufferProfile::Sharp};
+  const std::uint64_t goldenHashes[] = {17166433962280013512ULL,
+                                        13747170315493377016ULL};
+  for (std::size_t profileIndex = 0; profileIndex < 2; ++profileIndex) {
+    const auto profile = profiles[profileIndex];
+    cadenza::MonoFramebuffer first{profile};
+    cadenza::MonoFramebuffer second{profile};
+    cadenza::MonoCanvas firstCanvas{first};
+    cadenza::MonoCanvas secondCanvas{second};
+    cadenza::SystemSnapshot snapshot;
+    snapshot.soundVolume = cadenza::audio::SoundVolume::Muted;
+    snapshot.motionProfile = cadenza::MotionProfile::Reduced;
+    cadenza::presentation::renderSystemMenu(
+        firstCanvas, cadenza::presentation::SystemMenuItem::Resume, true,
+        snapshot);
+    cadenza::presentation::renderSystemMenu(
+        secondCanvas, cadenza::presentation::SystemMenuItem::Resume, true,
+        snapshot);
+    CHECK(framebufferHash(first) == framebufferHash(second));
+    CHECK(framebufferHash(first) == goldenHashes[profileIndex]);
+    const auto layout = cadenza::presentation::SystemMenuLayout::forCanvas(
+        first.width(), first.height());
+    CHECK(layout.panel.x > 0);
+    CHECK(layout.panel.x + layout.panel.width == first.width());
+    CHECK(layout.panel.x >= first.width() / 3);
+    CHECK(first.pixel(layout.panel.x, layout.panel.y));
+  }
+}
+
+TEST_CASE("system menu mask preserves the frozen app instead of replacing it") {
+  cadenza::MonoFramebuffer frame{cadenza::FramebufferProfile::TEmbed};
+  frame.clear(true);
+  cadenza::MonoCanvas canvas{frame};
+  cadenza::SystemSnapshot snapshot;
+  cadenza::presentation::renderSystemMenu(
+      canvas, cadenza::presentation::SystemMenuItem::Resume, false, snapshot);
+  const auto layout = cadenza::presentation::SystemMenuLayout::forCanvas(
+      frame.width(), frame.height());
+  for (std::int32_t y = 0; y < frame.height(); y += 7) {
+    for (std::int32_t x = 0; x < layout.panel.x; x += 7) {
+      CHECK(frame.pixel(x, y));
+    }
+  }
+}
+
+TEST_CASE("volume indicator keeps every bar visible and hollows inactive bars") {
+  using cadenza::audio::SoundVolume;
+  const SoundVolume volumes[] = {SoundVolume::Muted, SoundVolume::Low,
+                                 SoundVolume::Medium, SoundVolume::High};
+  const std::int32_t activeCounts[] = {0, 1, 3, 5};
+  constexpr cadenza::Rect kBounds{4, 4, 30, 14};
+  for (std::size_t state = 0; state < 4; ++state) {
+    cadenza::MonoFramebuffer frame{cadenza::FramebufferProfile::TEmbed};
+    cadenza::MonoCanvas canvas{frame};
+    cadenza::presentation::SystemUi::volumeIndicator(
+        canvas, kBounds, volumes[state], false);
+    const std::int32_t baseY = kBounds.y + kBounds.height - 3;
+    for (std::int32_t bar = 0; bar < 5; ++bar) {
+      const std::int32_t height = 3 + bar * 2;
+      const std::int32_t x = kBounds.x + bar * 6;
+      const std::int32_t top = baseY - height;
+      CHECK(frame.pixel(x, top));
+      CHECK(frame.pixel(x + 1, top + 1) == (bar < activeCounts[state]));
+    }
+  }
+
+  cadenza::MonoFramebuffer inverted{cadenza::FramebufferProfile::TEmbed};
+  inverted.clear(true);
+  cadenza::MonoCanvas invertedCanvas{inverted};
+  cadenza::presentation::SystemUi::volumeIndicator(
+      invertedCanvas, kBounds, SoundVolume::Medium, true);
+  CHECK_FALSE(inverted.pixel(kBounds.x, kBounds.y + 8));
+}
+
+TEST_CASE("Motion switch has distinct left and right knob positions") {
+  constexpr cadenza::Rect kBounds{4, 4, 30, 14};
+  cadenza::MonoFramebuffer disabled{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer enabled{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas disabledCanvas{disabled};
+  cadenza::MonoCanvas enabledCanvas{enabled};
+  cadenza::presentation::SystemUi::toggle(disabledCanvas, kBounds, false,
+                                          false);
+  cadenza::presentation::SystemUi::toggle(enabledCanvas, kBounds, true,
+                                          false);
+
+  CHECK(disabled.pixel(10, 9));
+  CHECK_FALSE(disabled.pixel(24, 9));
+  CHECK_FALSE(enabled.pixel(10, 9));
+  CHECK(enabled.pixel(24, 9));
+
+  cadenza::MonoFramebuffer inverted{cadenza::FramebufferProfile::TEmbed};
+  inverted.clear(true);
+  cadenza::MonoCanvas invertedCanvas{inverted};
+  cadenza::presentation::SystemUi::toggle(invertedCanvas, kBounds, true,
+                                          true);
+  CHECK_FALSE(inverted.pixel(24, 9));
+}
+
+TEST_CASE("passive transient and status indicator have dual-profile goldens") {
+  const cadenza::FramebufferProfile profiles[] = {
+      cadenza::FramebufferProfile::TEmbed,
+      cadenza::FramebufferProfile::Sharp};
+  const std::uint64_t goldenHashes[] = {325176067826602694ULL,
+                                        3852824331461943778ULL};
+  for (std::size_t profileIndex = 0; profileIndex < 2; ++profileIndex) {
+    cadenza::MonoFramebuffer frame{profiles[profileIndex]};
+    cadenza::MonoCanvas canvas{frame};
+    cadenza::presentation::SystemSurfaceCoordinator surfaces;
+    REQUIRE(surfaces.pushTransient("SAVED", 1.0F));
+    cadenza::presentation::renderTransientFeedback(canvas, surfaces);
+    cadenza::presentation::SystemUi::statusIndicator(
+        canvas, {frame.width() - 62, 4, 58, 16}, "SYNC", true);
+    CHECK(framebufferHash(frame) == goldenHashes[profileIndex]);
+    CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
+  }
+}

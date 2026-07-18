@@ -124,7 +124,7 @@ Navigate/Select v6 与 ToggleOn/ToggleOff 已在本地 A/B 试听中获用户接
 
 1. 系统音量 Medium，距离设备约正常手持距离；慢转 24 格，确认每次有效选择有反馈且无爆音。
 2. 一秒内快速转动多格，确认声音密度被抑制、不在停止后继续补响。
-3. 连续执行打开/长按返回 20 次，确认 Confirm/Back 方向可辨且转场起点同步。
+3. 连续执行打开/System Menu Home 20 次，确认 Confirm/Back 方向可辨且 Menu/转场起点同步。
 4. 在 Settings 循环 High → Muted → Low → Medium；Muted 切换瞬间不得残留尾音，视觉仍完整表达状态。
 5. 分别在安静室内、普通环境噪声下试听；检查 Low 可用、Medium 舒适、High 不破音。
 6. 录制扬声器输出并检查直流点击、削顶和明显缓冲间断；记录固件 FPS/最慢帧，确认 I²S 不破坏图形交互。

@@ -219,6 +219,13 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_app_runtime_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_app_runtime_tests COMMAND cadenza_app_runtime_tests)
 
+  add_executable(cadenza_system_surface_tests tests/system_surface_tests.cpp)
+  target_link_libraries(cadenza_system_surface_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_system_surface_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_system_surface_tests COMMAND cadenza_system_surface_tests)
+
   add_executable(cadenza_app_context_contract_tests
     tests/app_context_contract_tests.cpp
   )
@@ -368,6 +375,14 @@ if(CADENZA_BUILD_TESTS)
   add_executable(cadenza_dump_sound_cues tools/dump_sound_cues.cpp)
   target_link_libraries(cadenza_dump_sound_cues PRIVATE cadenza::core)
 
+  add_executable(cadenza_system_overlay_size_probe
+    tools/system_overlay_size_probe.cpp
+  )
+  target_link_libraries(cadenza_system_overlay_size_probe PRIVATE cadenza::core)
+  add_test(NAME cadenza_system_overlay_size_probe
+    COMMAND cadenza_system_overlay_size_probe
+  )
+
   add_executable(cadenza_desktop_model_tests tests/desktop_model_tests.cpp)
   target_link_libraries(cadenza_desktop_model_tests PRIVATE
     cadenza::desktop_model cadenza::host
@@ -513,6 +528,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_connectivity_research.cmake
+  )
+
+  add_test(
+    NAME cadenza_system_overlay_research_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_system_overlay_research.cmake
   )
 
   add_test(

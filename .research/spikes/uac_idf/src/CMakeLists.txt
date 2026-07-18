@@ -14,6 +14,7 @@ if(CONFIG_CADENZA_T_EMBED_RUNTIME)
     "${cadenza_root}/lib/cadenza_core/src/mono_framebuffer.cpp"
     "${cadenza_root}/lib/cadenza_core/src/simulation_clock.cpp"
     "${cadenza_root}/lib/cadenza_core/src/spring.cpp"
+    "${cadenza_root}/lib/cadenza_core/src/system_surface.cpp"
     "${cadenza_root}/lib/cadenza_core/src/transition.cpp"
     "${cadenza_root}/lib/cadenza_core/src/version.cpp"
     "${cadenza_root}/lib/cadenza_apps/src/apps.cpp"

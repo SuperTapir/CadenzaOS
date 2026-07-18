@@ -42,7 +42,7 @@ contract were added:
 | Research/adoption | 16 fixed repositories with commit/license/source boundaries, official Playdate docs, public-device recording analysis, and explicit adopt/reject decisions in the three `audio-*-research.md` documents |
 | Portable synth | wavetable sine, triangle, PolyBLEP square, deterministic xorshift noise, precomputed exponential envelope, finite parameter rejection, minimum ramps, saturating mix, exact ending silence and four-voice priority/age/smooth-steal tests |
 | Concurrency/control | fixed 16-slot SPSC FIFO, four critical slots, no producer overwrite, Navigate cooldown, full-queue overflow evidence, and out-of-band Muted/StopAll safety mailbox; a saturated 16-critical-cue queue still renders immediate zero |
-| Semantic integration | Input/Action/Outcome/System expose 15 stable cues; existing Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes remain covered in Launcher, Clock, Motion, Settings, Gallery, app-open and long-press-return tests; actual App open/return PCM is locked to the approved Confirm/Back goldens |
+| Semantic integration | Input/Action/Outcome/System expose 15 stable cues; Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes remain covered in bundled Apps, app-open and System Menu tests；长按现在打开系统菜单，显式 Home 动作使用 Back transition |
 | Headless PCM | a real Launcher turn renders 2,048 deterministic samples, hash `14994789996363689834`, nonzero bounded peak; every cue also has a 44,100-sample golden and exact silent tail |
 | SDL | SDL3 3.4.12 dummy callback consumes independently of App updates, no-device failure preserves portable service, stop prevents later callbacks; real executable passes three frames at both profiles with dummy video+audio drivers |
 | T-Embed adapter | host test locks GPIO 7/5/6 and right-left mono duplication; the real adapter is compiled against ESP-IDF/FreeRTOS stubs and injected with install, pin, task, partial-write and fatal-write failures; locked PlatformIO Arduino-ESP32 2.0.17 release compiles and links the independent core-0 legacy-I²S task |
@@ -60,9 +60,23 @@ Confirm/Back calibration fix:
   no per-sample transcendental function or allocation; ESP32 runtime timing is
   still a physical-board measurement;
 - approved-prototype correlation: Confirm 0.984379, Back 0.979893; the real App
-  open/long-press-return path renders their matching deterministic goldens;
+  open/System Menu Home path renders their matching deterministic goldens;
 - OpenSpec strict validation, source-manifest audit, platform-leakage audit and
   `git diff --check`: pass.
+
+## System Overlay 软件验证
+
+2026-07-18 的 `build-system-overlay-runtime` 软件结果：
+
+- 参考 clone/commit/license/source/build-dependency audit：通过；
+- input owner、suspend lifecycle、transition defer、typed setting、capacity/
+  diagnostics tests：通过；
+- 320×170 与 400×240 System Menu framebuffer golden：通过；
+- desktop scripted path 访问全部 bundled App，并通过 System Menu Home 返回：通过；
+- PlatformIO firmware：99,000 B RAM、361,705 B Flash；
+- ESP-IDF 5.5 connectivity candidate：binary 1,188,496 B，static D/IRAM
+  231,143 B；
+- 实体 T-Embed 的 650 ms 手感、屏幕可读性和 100 次循环：待硬件，不能由软件门禁代替。
 
 ## Delta-spec completion audit
 
@@ -95,7 +109,7 @@ for normal use:
 1. Flash the verified `cadenza-t-embed` build and confirm the serial diagnostic
    `I2S audio task started`; there must be no repeated AudioUnderrun/AudioFailure.
 2. At Medium, turn slowly through Launcher choices and compare selection motion
-   with Navigate onset. Check every boundary, open, long-press return, toggle,
+   with Navigate onset. Check every boundary, open, System Menu Home, toggle,
    About reject, and all four Settings volume states.
 3. Repeat fast rotation for 10 seconds. Sound must stop when motion stops; there
    must be no delayed tick queue, display stall or watchdog reset.

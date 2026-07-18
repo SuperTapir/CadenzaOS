@@ -29,7 +29,7 @@ class SmokeHarness final : public cadenza::MonotonicClock {
     settle();
   }
 
-  void holdSpaceHome() {
+  void returnHomeThroughSystemMenu() {
     REQUIRE(mapper_.key(cadenza::desktop::DesktopKey::Space, true, false,
                         now_));
     now_ += 700;
@@ -39,6 +39,9 @@ class SmokeHarness final : public cadenza::MonotonicClock {
                         now_));
     now_ += 30;
     deliver();
+    REQUIRE(host.runtime().systemMenuActive());
+    turnRight();
+    tapEnter();
     settle();
   }
 
@@ -69,19 +72,19 @@ TEST_CASE("desktop input path visits every bundled App and returns home") {
 
   harness.tapEnter();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kClockAppId);
-  harness.holdSpaceHome();
+  harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
   harness.tapEnter();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kMotionAppId);
-  harness.holdSpaceHome();
+  harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
   harness.tapEnter();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kSettingsAppId);
-  harness.holdSpaceHome();
+  harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.turnRight();
@@ -92,6 +95,6 @@ TEST_CASE("desktop input path visits every bundled App and returns home") {
   harness.tapEnter();
   harness.turnRight();
   CHECK(harness.host.framebufferHash() != galleryStart);
-  harness.holdSpaceHome();
+  harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 }
