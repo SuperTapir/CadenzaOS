@@ -5,17 +5,20 @@
 ## 运行链路
 
 ```text
-物理编码器
-    ↓ 高频采样、消抖、事件累积
-InputController
-    ↓ 每帧 InputFrame
-AppRuntime ────── 系统级返回手势与转场
-    ↓ update / render
-当前 App
-    ↓ 仅使用黑白绘图 API
-MonoCanvas
-    ↓ 1-bit 帧缓冲
-显示后端：T-Embed TFT / Sharp Memory LCD
+T-Embed GPIO / SDL keyboard+mouse
+              ↓ RawInputEvent + monotonic timestamp
+          InputReducer
+              ↓ InputFrame
+          AppRuntime ─── lifecycle / long-press home / Transition
+              ├──────── semantic SoundCue + session volume
+              │                 ↓ fixed SPSC queue
+              │       SDL callback / ESP32 I²S task / headless PCM
+              ↓
+Launcher / Clock / Motion / Settings / Animation Gallery
+              ↓ MonoCanvas + animation/presentation core
+      canonical 1-bit MonoFramebuffer
+              ↓
+TftPresenter / SDL3 texture / PNG+GIF / snapshot hash / future Sharp presenter
 ```
 
 ## 平台负责什么
@@ -25,8 +28,11 @@ MonoCanvas
 - 注册应用、维护当前应用，并调用生命周期；
 - 拦截“长按返回 Launcher”这样的系统手势；
 - 绘制统一的应用切换转场；
-- 提供 1-bit 画布，禁止应用依赖彩色 TFT 特性；
+- 提供 row-major、MSB-first、`1 = black` 的 1-bit 画布，禁止应用依赖彩色
+  TFT 或 SDL 特性；
 - 将显示提交与应用绘制分离。
+- 拥有 `InteractionSoundService`，把 Navigate、Confirm、Back 等语义提交给
+  独立音频消费者；应用不得操作 SDL、I²S、WAV 路径或任意 oscillator。
 
 ## 应用负责什么
 
@@ -37,7 +43,7 @@ const char* name() const;
 void onEnter();
 void onExit();
 void update(float dt, const InputFrame& input, AppRuntime& runtime);
-void render(MonoCanvas& canvas);
+void render(MonoCanvas& canvas, const AppRuntime& runtime);
 ```
 
 应用不读取 GPIO，不直接持有屏幕，不自行实现页面切换，也不通过 `delay()` 控制节奏。状态只属于应用实例；系统可以随时离开它，再通过 `onEnter()` 重新进入。
@@ -52,18 +58,44 @@ void render(MonoCanvas& canvas);
 
 应用目前随固件编译并在 `setup()` 中注册。这个选择让生命周期、内存占用和崩溃边界更容易验证。SD 卡资源、脚本应用和动态加载等到平台契约稳定后再做。
 
-### 画布从第一天就是 1-bit
+### 唯一权威画面是 1-bit framebuffer
 
-T-Embed 虽然是彩屏，应用拿到的仍然只有黑白图元接口。以后迁移到 400 × 240 Sharp 屏时，主要更换 `MonoCanvas` 后端；输入与应用生命周期无需推倒重来。
+T-Embed 虽然是彩屏，应用拿到的仍然只有黑白图元接口。U8g2 的精选 raster
+与字体代码只写入 caller-owned framebuffer；TFT、SDL、PNG、GIF 和测试都只
+读取同一份像素。Sharp profile 已在桌面和快照中验证，未来只需增加 presenter，
+不再替换画布或 App 代码。
 
 ### 两块屏幕使用各自的原生分辨率
 
 T-Embed 后端使用 320 × 170，Sharp 后端使用 400 × 240。平台不对整幅画面做非等比缩放；应用从 `MonoCanvas` 读取实际宽高，按区域、边距和锚点响应式布局。这样既不会把 Sharp 的像素构图锁死在临时硬件上，也能充分利用 T-Embed 的整块屏幕。
 
-## 下一步平台工作
+### 动画与内存边界
+
+Tween、Sequence、Parallel、Timeline、Spring、粒子和状态机都使用值语义或
+固定容量，不在逐帧路径分配。SDL3、stb 和 gif-h 只属于 desktop adapter；
+core 不包含 Arduino、TFT_eSPI 或 SDL header。转场采用明确的 source/
+destination framebuffer 所有权，代价见 [`memory-budget.md`](memory-budget.md)。
+
+### 音频时钟不绑定图形帧
+
+App 与 Runtime 只在状态实际变化时提交 `SoundCue`。16 项固定 SPSC 队列把
+主线程与音频消费者隔离；Navigate/Boundary 最多占 12 项，为关键提示和控制
+保留容量。Muted/StopAll 另有原子安全邮箱，因此即使关键 cue 填满队列也不能
+阻塞静音。
+
+`AudioEngine` 由唯一消费者拥有：桌面是 SDL3 AudioStream callback，T-Embed
+是固定到 core 0 的 FreeRTOS task，headless 测试同步拉取。三者消费相同的
+44.1 kHz、S16、mono PCM。T-Embed adapter 只负责将 mono 复制为 right-left
+I²S frame；任何平台 adapter 都不得另写一套音色。
+
+当前音色是集中在 `sound_cue_library.cpp` 的参数合成 palette，不是不可替换的
+产品资产。未来 WAV 仍映射到相同 `SoundCue` Event；母版、平台转换、来源权利
+和真机验收遵循 [`audio-asset-contract.md`](audio-asset-contract.md)。
+
+## P8 之后的平台工作
 
 1. 增加应用级持久化存储命名空间；
-2. 加入帧时间、堆内存和输入事件的调试叠层；
-3. 实现 Sharp `MonoCanvas` 后端，并建立 400 × 240 桌面预览；
-4. 定义声音、休眠、背光/对比度等系统服务，而不是让应用直接操作硬件；
-5. 为生命周期与输入状态机增加可在电脑上运行的测试。
+2. 根据真机测量决定是否复用 Gallery/Runtime 的离屏 framebuffer；
+3. 实现 Sharp presenter，并在实体屏上对比 400×240 快照；
+4. 根据实体 T-Embed 试听选择默认音色，并在需要时实现 sample voice；
+5. 定义休眠、背光/对比度等系统服务，而不是让应用直接操作硬件。

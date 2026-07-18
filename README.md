@@ -6,16 +6,61 @@
 
 项目的长期目标、设计动机和硬件路线记录在 [`docs/project-vision.md`](docs/project-vision.md)。
 当前平台的职责边界和后续路线记录在 [`docs/platform-architecture.md`](docs/platform-architecture.md)。
+桌面构建与测试环境记录在 [`docs/development.md`](docs/development.md)。
 
 当前功能：
 
-- 320×170、内存中 1-bit 双缓冲的黑白 Launcher；
-- 统一的应用生命周期与应用切换转场；
+- 320×170 T-Embed 与 400×240 Sharp profile 共用的 1-bit framebuffer；
+- Launcher、Clock、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
+- SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入和设备外框；
 - 旋转选择、短按进入、长按返回 Launcher 的输入模型；
-- 可实际进入的 Clock、Motion Study、Settings 三个内置应用；
-- 60 FPS 动画循环与纯图元动态视觉；
-- USB 串口输出启动、Flash、PSRAM 和输入事件；
-- Cursor 中的编译、烧录和串口任务。
+- Navigate、Boundary、Confirm、Back、Toggle 与 Reject 语义音效，桌面
+  SDL callback 与 T-Embed I²S task 共用 44.1 kHz 三声部核心；
+- Settings 会话音量、立即静音、headless PCM golden 和当前 cue WAV 导出；
+- allocation-free Tween、Timeline、Spring、转场、camera effects、粒子与
+  atlas 序列帧状态机；
+- 暂停、单帧、时间倍率、PNG 截图、PNG/GIF 录制和调试 HUD；
+- 不接硬件即可运行的生命周期、输入、像素快照、动画与桌面 E2E 测试。
+
+项目定位是“1-bit 交互与动画运行时”，不是完整游戏引擎。物理、碰撞、
+Tilemap、ECS 和关卡系统当前明确不在范围内。引擎/库复用边界记录在
+[`docs/engine-adoption-decision.md`](docs/engine-adoption-decision.md)。
+音频调研和采用决策见 [`docs/audio-reference-research.md`](docs/audio-reference-research.md)，
+未来自行生成 WAV 的交付、转换和验收规则见
+[`docs/audio-asset-contract.md`](docs/audio-asset-contract.md)。
+
+## 桌面模拟器
+
+```bash
+brew install cmake sdl3
+cmake --preset host-debug
+cmake --build build/host --parallel
+./build/host/cadenza_desktop --profile t-embed --scale 2 --overlay
+```
+
+开发时可使用零额外依赖的模拟器脚本。`dev` 会监听 C/C++ 与 CMake 文件，
+增量编译成功后自动重启模拟器；编译失败时保留当前进程并继续等待修改：
+
+```bash
+./tools/simulator.py dev --profile t-embed --scale 2 --overlay
+./tools/simulator.py build
+./tools/simulator.py run --profile sharp --device-frame
+./tools/simulator.py package
+```
+
+`package` 在 `dist/` 下生成包含 SDL3 的 macOS `.app` 和 zip。它适合本机运行
+和同架构 Mac 的开发构建，不是经过 Developer ID 签名、公证的正式发行包。
+
+旋钮可用鼠标滚轮或左右方向键；空格/回车模拟按键。F1 切换 HUD，F2
+暂停，F3 单帧，F4 切换 fixed/real step，F5 循环时间倍率，F6 截图，F7
+开始/停止录制。完整构建、测试和控制说明见
+[`docs/development.md`](docs/development.md)。
+
+```bash
+tools/check.sh host
+tools/check.sh desktop
+tools/check.sh firmware
+```
 
 ## 在 Cursor 中打开
 
@@ -36,3 +81,8 @@
 ## 重要
 
 当前引脚来自 LILYGO 官方原版 T-Embed 配置。不要烧录到 T-Embed CC1101；收到设备后应先根据包装和主板丝印确认版本。
+
+P0–P7 与音频的主机、桌面和固件编译门禁已经建立；编码器手感、TFT 撕裂、
+真实 FPS/最慢帧、模拟器/真机像素实拍和扬声器听感仍必须在实体硬件上完成，
+不能用桌面结果冒充。当前证据与真机脚本见
+[`docs/verification.md`](docs/verification.md)。

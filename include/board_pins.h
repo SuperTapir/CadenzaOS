@@ -9,5 +9,8 @@ constexpr int kEncoderB = 1;
 constexpr int kEncoderButton = 0;
 
 constexpr int kLcdBacklight = 15;
-}  // namespace BoardPins
 
+constexpr int kI2sBclk = 7;
+constexpr int kI2sWclk = 5;
+constexpr int kI2sDataOut = 6;
+}  // namespace BoardPins

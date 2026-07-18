@@ -2,6 +2,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Cadenza OS: 模拟器开发（自动重载）",
+      "type": "shell",
+      "command": "${workspaceFolder}/tools/simulator.py",
+      "args": ["dev", "--profile", "t-embed", "--scale", "2", "--overlay"],
+      "isBackground": true,
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Cadenza OS: 打包模拟器（macOS）",
+      "type": "shell",
+      "command": "${workspaceFolder}/tools/simulator.py",
+      "args": ["package"],
+      "problemMatcher": ["$gcc"]
+    },
+    {
       "label": "Cadenza OS: 编译（T-Embed）",
       "type": "shell",
       "command": "${workspaceFolder}/../.platformio-env/bin/pio",

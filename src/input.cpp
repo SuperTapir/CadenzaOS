@@ -2,58 +2,68 @@
 
 #include "board_pins.h"
 
-namespace {
-constexpr uint32_t kDebounceMs = 22;
-constexpr uint32_t kLongPressMs = 650;
-}
-
-void InputController::begin() {
+void TEmbedRawInputSource::begin() {
   pinMode(BoardPins::kEncoderA, INPUT_PULLUP);
   pinMode(BoardPins::kEncoderB, INPUT_PULLUP);
   pinMode(BoardPins::kEncoderButton, INPUT_PULLUP);
   lastEncoderA_ = digitalRead(BoardPins::kEncoderA);
-  stableButton_ = sampledButton_ = digitalRead(BoardPins::kEncoderButton);
+  lastButtonDown_ = digitalRead(BoardPins::kEncoderButton) == LOW;
+  if (lastButtonDown_) {
+    enqueue(cadenza::RawInputType::ButtonDown, 0, nowMs());
+  }
 }
 
-void InputController::sample() {
-  const uint32_t now = millis();
+void TEmbedRawInputSource::sample() {
+  const auto now = nowMs();
 
   const int encoderA = digitalRead(BoardPins::kEncoderA);
   if (encoderA != lastEncoderA_ && encoderA == LOW) {
-    pending_.turn += digitalRead(BoardPins::kEncoderB) != encoderA ? 1 : -1;
+    enqueue(cadenza::RawInputType::Turn,
+            digitalRead(BoardPins::kEncoderB) != encoderA ? 1 : -1, now);
   }
   lastEncoderA_ = encoderA;
 
-  const bool sample = digitalRead(BoardPins::kEncoderButton);
-  if (sample != sampledButton_) {
-    sampledButton_ = sample;
-    sampleChangedAt_ = now;
-  }
-  if (sample != stableButton_ && now - sampleChangedAt_ >= kDebounceMs) {
-    stableButton_ = sample;
-    if (stableButton_ == LOW) {
-      pending_.pressed = true;
-      pressedAt_ = now;
-      longPressSent_ = false;
-    } else {
-      pending_.released = true;
-      pending_.clicked = !longPressSent_;
-    }
-  }
-
-  if (stableButton_ == LOW) {
-    pending_.heldMs = now - pressedAt_;
-    if (!longPressSent_ && pending_.heldMs >= kLongPressMs) {
-      longPressSent_ = true;
-      pending_.longPressed = true;
-    }
+  const bool buttonDown = digitalRead(BoardPins::kEncoderButton) == LOW;
+  if (buttonDown != lastButtonDown_) {
+    lastButtonDown_ = buttonDown;
+    enqueue(buttonDown ? cadenza::RawInputType::ButtonDown
+                       : cadenza::RawInputType::ButtonUp,
+            0, now);
   }
 }
 
+bool TEmbedRawInputSource::poll(cadenza::RawInputEvent& event) noexcept {
+  if (readPosition_ == writePosition_) {
+    return false;
+  }
+  event = queue_[readPosition_];
+  readPosition_ = (readPosition_ + 1) % kQueueCapacity;
+  return true;
+}
+
+cadenza::MonotonicMillis TEmbedRawInputSource::nowMs() const noexcept {
+  return millis();
+}
+
+bool TEmbedRawInputSource::enqueue(cadenza::RawInputType type, int32_t value,
+                                   cadenza::MonotonicMillis timestampMs) noexcept {
+  const uint8_t next = (writePosition_ + 1) % kQueueCapacity;
+  if (next == readPosition_) {
+    return false;
+  }
+  queue_[writePosition_] = {type, timestampMs, value};
+  writePosition_ = next;
+  return true;
+}
+
+void InputController::begin() { source_.begin(); }
+
+void InputController::sample() {
+  source_.sample();
+  cadenza::pumpInput(source_, source_, reducer_);
+}
+
 InputFrame InputController::takeFrame() {
-  InputFrame frame = pending_;
-  pending_.turn = 0;
-  pending_.pressed = pending_.released = pending_.clicked = pending_.longPressed = false;
-  if (stableButton_ != LOW) pending_.heldMs = 0;
-  return frame;
+  reducer_.advanceTo(source_.nowMs());
+  return reducer_.takeFrame();
 }

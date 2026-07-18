@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "cue": "confirm",
+  "version": 1,
+  "candidate": "a",
+  "source_file": "confirm-v1-a.wav",
+  "created_at": "YYYY-MM-DD",
+  "tool": "generator, recorder, or editor and version",
+  "origin": {
+    "type": "generated | recorded | library",
+    "model_or_source": "required",
+    "prompt_or_recording_notes": "required or a documented private-reference hash"
+  },
+  "rights": {
+    "rights_holder": "required",
+    "license": "required",
+    "commercial_use": true,
+    "modification": true,
+    "redistribution": true,
+    "evidence_url": "required when applicable"
+  },
+  "intent": "What action and feeling this cue communicates",
+  "event": {
+    "gain_db": 0.0,
+    "variation_group": null,
+    "pitch_random_cents": 0,
+    "polyphony_limit": 3,
+    "cooldown_ms": 0
+  },
+  "sha256": "64 lowercase hexadecimal characters",
+  "review": {
+    "status": "candidate",
+    "desktop": null,
+    "t_embed": "pending_hardware"
+  }
+}
