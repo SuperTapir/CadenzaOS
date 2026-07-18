@@ -42,10 +42,10 @@
 
 ## 5. Headless Host and Baseline Verification
 
-- [ ] 5.1 Write deterministic runner tests for fixed dt, scripted input, replay equality, and framebuffer hashing
-- [ ] 5.2 Implement HeadlessHost, App composition root, deterministic scripts, and inspectable diagnostics
-- [ ] 5.3 Write and approve initial 320×170 and 400×240 snapshots for Launcher, Clock, Motion, and Settings
-- [ ] 5.4 Add a build-source audit proving host and firmware compile the same core/App modules
+- [x] 5.1 Write deterministic runner tests for fixed dt, scripted input, replay equality, and framebuffer hashing
+- [x] 5.2 Implement HeadlessHost, App composition root, deterministic scripts, and inspectable diagnostics
+- [x] 5.3 Write and approve initial 320×170 and 400×240 snapshots for Launcher, Clock, Motion, and Settings
+- [x] 5.4 Add a build-source audit proving host and firmware compile the same core/App modules
 
 ## 6. SDL3 Desktop Simulator MVP
 

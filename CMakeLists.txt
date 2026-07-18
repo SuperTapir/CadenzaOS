@@ -37,16 +37,8 @@ target_compile_definitions(cadenza_u8g2 PUBLIC
   U8X8_WITH_USER_PTR
 )
 
-add_library(cadenza_core STATIC
-  lib/cadenza_core/src/app_runtime.cpp
-  lib/cadenza_core/src/apps.cpp
-  lib/cadenza_core/src/input.cpp
-  lib/cadenza_core/src/mono_canvas.cpp
-  lib/cadenza_core/src/mono_framebuffer.cpp
-  lib/cadenza_core/src/simulation_clock.cpp
-  lib/cadenza_core/src/transition.cpp
-  lib/cadenza_core/src/version.cpp
-)
+include(cmake/cadenza_core_sources.cmake)
+add_library(cadenza_core STATIC ${CADENZA_CORE_SOURCES})
 add_library(cadenza::core ALIAS cadenza_core)
 target_include_directories(cadenza_core
   PUBLIC
@@ -54,6 +46,16 @@ target_include_directories(cadenza_core
 )
 target_compile_features(cadenza_core PUBLIC cxx_std_17)
 target_link_libraries(cadenza_core PRIVATE cadenza::u8g2)
+
+add_library(cadenza_host STATIC
+  lib/cadenza_host/src/headless_host.cpp
+)
+add_library(cadenza::host ALIAS cadenza_host)
+target_include_directories(cadenza_host PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_host/include>
+)
+target_link_libraries(cadenza_host PUBLIC cadenza::core)
+target_compile_features(cadenza_host PUBLIC cxx_std_17)
 
 if(CADENZA_BUILD_TESTS)
   enable_testing()
@@ -114,6 +116,19 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_presenter_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_presenter_tests COMMAND cadenza_presenter_tests)
 
+  add_executable(cadenza_headless_host_tests tests/headless_host_tests.cpp)
+  target_link_libraries(cadenza_headless_host_tests PRIVATE cadenza::host)
+  target_include_directories(cadenza_headless_host_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_headless_host_tests COMMAND cadenza_headless_host_tests)
+
+  add_executable(cadenza_app_snapshot_tests tests/app_snapshot_tests.cpp)
+  target_link_libraries(cadenza_app_snapshot_tests PRIVATE cadenza::host)
+  target_include_directories(cadenza_app_snapshot_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_app_snapshot_tests COMMAND cadenza_app_snapshot_tests)
+
+  add_executable(cadenza_dump_headless_pbm tools/dump_headless_pbm.cpp)
+  target_link_libraries(cadenza_dump_headless_pbm PRIVATE cadenza::host)
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)
@@ -124,6 +139,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/verify_third_party.cmake
+  )
+
+  add_test(
+    NAME cadenza_shared_source_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_shared_sources.cmake
   )
 
   add_test(
