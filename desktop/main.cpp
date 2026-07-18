@@ -55,18 +55,20 @@ cadenza::desktop::DesktopKey mapKey(SDL_Keycode key) {
 }
 
 void convertFrame(const cadenza::MonoFramebuffer& framebuffer,
-                  std::vector<std::uint8_t>& rgba) {
+                  std::vector<std::uint8_t>& rgba,
+                  cadenza::desktop::DisplayPalette palette) {
   rgba.resize(static_cast<std::size_t>(framebuffer.width()) *
               framebuffer.height() * 4U);
   for (std::int32_t y = 0; y < framebuffer.height(); ++y) {
     for (std::int32_t x = 0; x < framebuffer.width(); ++x) {
-      const std::uint8_t value = framebuffer.pixel(x, y) ? 0 : 255;
+      const cadenza::desktop::DisplayColor color =
+          cadenza::desktop::displayColor(framebuffer.pixel(x, y), palette);
       const std::size_t offset =
           (static_cast<std::size_t>(y) * framebuffer.width() + x) * 4U;
-      rgba[offset] = value;
-      rgba[offset + 1] = value;
-      rgba[offset + 2] = value;
-      rgba[offset + 3] = 255;
+      rgba[offset] = color.r;
+      rgba[offset + 1] = color.g;
+      rgba[offset + 2] = color.b;
+      rgba[offset + 3] = color.a;
     }
   }
 }
@@ -75,6 +77,8 @@ struct Options {
   const char* profile = "t-embed";
   int scale = 2;
   int frameLimit = 0;
+  cadenza::desktop::DisplayPalette palette =
+      cadenza::desktop::DisplayPalette::Reflective;
   bool overlay = false;
   bool deviceFrame = false;
 };
@@ -87,6 +91,12 @@ bool parseOptions(int argc, char** argv, Options& options) {
       options.scale = std::atoi(argv[++index]);
     } else if (std::strcmp(argv[index], "--frames") == 0 && index + 1 < argc) {
       options.frameLimit = std::max(0, std::atoi(argv[++index]));
+    } else if (std::strcmp(argv[index], "--palette") == 0 &&
+               index + 1 < argc) {
+      if (!cadenza::desktop::parseDisplayPalette(options.palette,
+                                                  argv[++index])) {
+        return false;
+      }
     } else if (std::strcmp(argv[index], "--overlay") == 0) {
       options.overlay = true;
     } else if (std::strcmp(argv[index], "--device-frame") == 0) {
@@ -106,7 +116,8 @@ int main(int argc, char** argv) {
       !cadenza::desktop::configure(config, options.profile, options.scale)) {
     std::fprintf(stderr,
                  "usage: cadenza_desktop [--profile t-embed|sharp] "
-                 "[--scale 1..4] [--overlay] [--device-frame] "
+                 "[--scale 1..4] [--palette reflective|pure] "
+                 "[--overlay] [--device-frame] "
                  "[--frames N]\n");
     return 2;
   }
@@ -138,9 +149,12 @@ int main(int argc, char** argv) {
     return 4;
   }
 
-  std::printf("Cadenza desktop %s (SDL %d.%d.%d), %dx%d @ %dx\n",
+  std::printf("Cadenza desktop %s (SDL %d.%d.%d), %dx%d @ %dx, %s palette\n",
               cadenza::coreVersion(), SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
-              SDL_MICRO_VERSION, config.width, config.height, config.scale);
+              SDL_MICRO_VERSION, config.width, config.height, config.scale,
+              options.palette == cadenza::desktop::DisplayPalette::Reflective
+                  ? "reflective"
+                  : "pure");
   std::printf(
       "Connectivity debug: F8 WiFi, F9 link loss, F10 BLE advertise, "
       "F11 provisioning, F12 BLE scan\n");
@@ -263,6 +277,7 @@ int main(int argc, char** argv) {
     const std::uint64_t frameStart = SDL_GetTicksNS();
     const float realDelta = static_cast<float>(nowMs - previousFrameMs) / 1000.0F;
     previousFrameMs = nowMs;
+    diagnostics.beginFrame();
     cadenza::pumpInput(mapper, clock, reducer);
     const cadenza::InputFrame input = reducer.takeFrame();
     const float simulationDelta = simulation.consumeDelta(realDelta);
@@ -298,7 +313,7 @@ int main(int argc, char** argv) {
       }
       screenshotRequested = false;
     }
-    convertFrame(host.framebuffer(), rgba);
+    convertFrame(host.framebuffer(), rgba, options.palette);
     SDL_UpdateTexture(texture, nullptr, rgba.data(), config.width * 4);
     SDL_SetRenderDrawColor(renderer, 32, 32, 32, 255);
     SDL_RenderClear(renderer);
@@ -352,13 +367,15 @@ int main(int argc, char** argv) {
           connectivity.bluetoothLe.scanning,
           static_cast<unsigned>(connectivity.provisioning.state),
           static_cast<unsigned>(connectivity.provisioning.failure));
-      if (const auto* diagnostic = diagnostics.recent(0)) {
+      if (const auto* diagnostic = diagnostics.recentThisFrame(0)) {
         SDL_RenderDebugTextFormat(
             renderer, 4.0F, 34.0F, "DIAG %u/%u %s (%d)",
             static_cast<unsigned>(diagnostic->category),
             static_cast<unsigned>(diagnostic->code),
             diagnostic->message ? diagnostic->message : "",
             diagnostic->value);
+      } else {
+        SDL_RenderDebugText(renderer, 4.0F, 34.0F, "DIAG OK");
       }
     }
     SDL_RenderPresent(renderer);

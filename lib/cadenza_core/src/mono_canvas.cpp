@@ -186,7 +186,7 @@ MonoCanvas::MonoCanvas(MonoFramebuffer& framebuffer,
 
 MonoCanvas::~MonoCanvas() { raster().~RasterState(); }
 
-bool MonoCanvas::setClip(Rect requested) noexcept {
+bool MonoCanvas::setClip(Rect requested, bool reportGeometryClips) noexcept {
   if (requested.width <= 0 || requested.height <= 0) {
     clip_ = {};
     emit(DiagnosticCode::InvalidGeometry, "invalid clip rectangle");
@@ -205,10 +205,12 @@ bool MonoCanvas::setClip(Rect requested) noexcept {
                      static_cast<u8g2_uint_t>(clip_.y),
                      static_cast<u8g2_uint_t>(clip_.x + clip_.width),
                      static_cast<u8g2_uint_t>(clip_.y + clip_.height));
+  reportGeometryClips_ = reportGeometryClips;
   return true;
 }
 
 void MonoCanvas::resetClip() noexcept {
+  reportGeometryClips_ = true;
   clip_ = {0, 0, framebuffer_.width(), framebuffer_.height()};
   u8g2_SetClipWindow(&raster().context, 0, 0,
                      static_cast<u8g2_uint_t>(framebuffer_.width()),
@@ -372,8 +374,13 @@ BoundedTextResult MonoCanvas::layoutText(
       request.minimumScale == 0 ||
       request.minimumScale > request.preferredScale ||
       request.maximumLines == 0 || !std::isfinite(request.phase) ||
-      !contains(clip_, request.bounds)) {
+      (reportGeometryClips_ && !contains(clip_, request.bounds))) {
     emit(DiagnosticCode::InvalidGeometry, "invalid bounded text request");
+    return result;
+  }
+
+  if (!reportGeometryClips_ && empty(intersection(clip_, request.bounds))) {
+    result.status = BoundedTextStatus::NoFit;
     return result;
   }
 
@@ -615,11 +622,16 @@ BoundedTextResult MonoCanvas::layoutText(
 bool MonoCanvas::drawBoundedText(const BoundedTextResult& result,
                                  bool black) noexcept {
   if (!result.drawable()) return false;
-  if (!contains(clip_, result.bounds) || result.lineCount > kBoundedTextMaxLines ||
+  if ((reportGeometryClips_ && !contains(clip_, result.bounds)) ||
+      result.lineCount > kBoundedTextMaxLines ||
       !contains(result.bounds, result.renderedBounds)) {
     emit(DiagnosticCode::InvalidGeometry, "invalid bounded text result");
     return false;
   }
+  const Rect textClip = reportGeometryClips_
+                            ? result.bounds
+                            : intersection(result.bounds, clip_);
+  if (empty(textClip)) return false;
   for (std::uint8_t index = 0; index < result.lineCount; ++index) {
     const BoundedTextLine& line = result.lines[index];
     if (line.value[0] == '\0') continue;
@@ -629,7 +641,7 @@ bool MonoCanvas::drawBoundedText(const BoundedTextResult& result,
       return false;
     }
     drawTextRaster(line.value.data(), line.bounds.x, line.bounds.y,
-                   result.scale, black, result.bounds);
+                   result.scale, black, textClip);
   }
   return true;
 }
@@ -809,6 +821,11 @@ const MonoCanvas::RasterState& MonoCanvas::raster() const noexcept {
 }
 
 void MonoCanvas::emit(DiagnosticCode code, const char* message) const noexcept {
+  if (!reportGeometryClips_ &&
+      (code == DiagnosticCode::ClippedGeometry ||
+       code == DiagnosticCode::FullyClipped)) {
+    return;
+  }
   if (diagnostics_) {
     diagnostics_->emit(
         {DiagnosticCategory::Graphics, code, message, 0});

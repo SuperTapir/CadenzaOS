@@ -78,6 +78,47 @@ Scrub and applies knob steps of 5% each:
 ./build/host/cadenza_dump_headless_pbm 400 4 /tmp/camera-scrub.pbm 10 1
 ```
 
+## Launcher and Cover workflow
+
+Launcher uses a continuous cyclic track. Left/Right or the wheel changes the
+logical selection immediately; a click opens that selection even while the
+track is still moving. Open Settings, move to `LAUNCHER`, and click to switch
+between session-only `VERTICAL` and `HORIZONTAL`. Like the current Sound and
+Motion settings, this value resets when a new service session starts; it is not
+persisted to disk or NVS.
+
+Each App may implement the const `renderLauncherCover` hook. The renderer gets
+only fixed full-card bounds: Cover is a static, non-interactive identity image,
+so selection, press, long press, launch, time, and App lifecycle state are not
+inputs and must not change its pixels. Launcher only translates and clips the
+fixed scene to the visible track viewport; a Cover must never re-layout against
+the changing visible slice. A future launch animation is a separate resource,
+not another Cover state. Apps without a Cover use the bounded-name fallback.
+
+The four built-in Covers use complete fixed-ratio packed bitmaps: 350x155 for
+Sharp and a no-crop 280x124 derivative for T-Embed. Horizontal and vertical
+Launcher layouts use the same image size for a profile; only the track axis and
+pitch change. Editable PNG sources, canonical PBMs, generation provenance, and
+rebuild commands live in `assets/launcher-covers/`.
+
+Run the focused visual and interaction gates with:
+
+```bash
+cmake --build build/host --target \
+  cadenza_apps_tests cadenza_launcher_snapshot_tests \
+  cadenza_desktop_smoke_tests
+./build/host/cadenza_apps_tests
+./build/host/cadenza_launcher_snapshot_tests
+./build/host/cadenza_desktop_smoke_tests
+```
+
+Snapshot failures write inspectable PNGs for both framebuffer profiles. Review
+the deterministic midpoint as an image sequence, not only as hashes. The F1
+HUD now displays only diagnostics emitted in the current frame (`DIAG OK` when
+none); the diagnostic ring still retains history for tests and debugging.
+Reference evidence, adopted/rejected choices, and the physical 30 FPS/1-bit
+acceptance script are in `docs/launcher-card-reference-research.md`.
+
 ## Interaction sound workflow
 
 Apps call semantic `SoundCue` values only. The authored synthesis palette lives

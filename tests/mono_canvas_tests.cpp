@@ -86,6 +86,30 @@ TEST_CASE("half-open clip preserves visible pixels and guard storage") {
                     [](std::uint8_t byte) { return byte == 0xA5; }));
 }
 
+TEST_CASE("intentional viewport clips crop without hiding invalid geometry") {
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  CountingSink diagnostics;
+  cadenza::MonoCanvas canvas{framebuffer, &diagnostics};
+
+  REQUIRE(canvas.setClip({10, 10, 20, 20}, false));
+  canvas.fillRect(0, 0, 40, 40);
+  canvas.circle(10, 20, 8);
+  canvas.fillRect(1, 1, 0, 4);
+
+  CHECK(diagnostics.counts[static_cast<std::size_t>(
+            cadenza::DiagnosticCode::ClippedGeometry)] == 0);
+  CHECK(diagnostics.counts[static_cast<std::size_t>(
+            cadenza::DiagnosticCode::FullyClipped)] == 0);
+  CHECK(diagnostics.counts[static_cast<std::size_t>(
+            cadenza::DiagnosticCode::InvalidGeometry)] == 1);
+  CHECK(framebuffer.pixel(10, 10));
+  CHECK(framebuffer.pixel(29, 29));
+  CHECK_FALSE(framebuffer.pixel(9, 10));
+
+  canvas.resetClip();
+  CHECK(canvas.reportsGeometryClips());
+}
+
 TEST_CASE("invalid and fully clipped primitives are observable no-ops") {
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   CountingSink diagnostics;

@@ -136,8 +136,11 @@ class MonoCanvas {
   std::int16_t height() const noexcept { return framebuffer_.height(); }
   const Rect& clip() const noexcept { return clip_; }
 
-  bool setClip(Rect clip) noexcept;
+  bool setClip(Rect clip, bool reportGeometryClips = true) noexcept;
   void resetClip() noexcept;
+  bool reportsGeometryClips() const noexcept {
+    return reportGeometryClips_;
+  }
   void clear(bool black = false) noexcept;
   void pixel(std::int32_t x, std::int32_t y, bool black = true) noexcept;
   void line(std::int32_t x0, std::int32_t y0, std::int32_t x1,
@@ -190,6 +193,7 @@ class MonoCanvas {
   MonoFramebuffer& framebuffer_;
   DiagnosticSink* diagnostics_ = nullptr;
   Rect clip_;
+  bool reportGeometryClips_ = true;
   alignas(std::max_align_t) std::byte rasterState_[kRasterStateBytes]{};
 };
 

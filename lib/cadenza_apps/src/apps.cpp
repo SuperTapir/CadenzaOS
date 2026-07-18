@@ -4,6 +4,15 @@
 #include <cmath>
 #include <cstdio>
 
+#include "generated/clock_cover.h"
+#include "generated/clock_t_embed_cover.h"
+#include "generated/gallery_cover.h"
+#include "generated/gallery_t_embed_cover.h"
+#include "generated/motion_cover.h"
+#include "generated/motion_t_embed_cover.h"
+#include "generated/settings_cover.h"
+#include "generated/settings_t_embed_cover.h"
+
 namespace cadenza {
 namespace {
 int wrap(int value, int count) noexcept {
@@ -25,24 +34,154 @@ BoundedTextRequest menuLabel(const char* value, Rect bounds,
   request.maximumLines = 1;
   return request;
 }
+
+Rect intersectRect(Rect a, Rect b) noexcept {
+  const int left = std::max(a.x, b.x);
+  const int top = std::max(a.y, b.y);
+  const int right = std::min(a.x + a.width, b.x + b.width);
+  const int bottom = std::min(a.y + a.height, b.y + b.height);
+  return {left, top, std::max(0, right - left),
+          std::max(0, bottom - top)};
+}
+
+bool hasArea(Rect rect) noexcept { return rect.width > 0 && rect.height > 0; }
+
+void fillWithin(MonoCanvas& canvas, Rect rect, Rect viewport,
+                bool black) noexcept {
+  const Rect visible = intersectRect(rect, viewport);
+  if (hasArea(visible)) {
+    canvas.fillRect(visible.x, visible.y, visible.width, visible.height,
+                    black);
+  }
+}
+
+void borderWithin(MonoCanvas& canvas, Rect rect, Rect viewport,
+                  bool black) noexcept {
+  if (rect.width <= 0 || rect.height <= 0) return;
+  const int left = rect.x;
+  const int right = rect.x + rect.width - 1;
+  const int top = rect.y;
+  const int bottom = rect.y + rect.height - 1;
+  const int viewportRight = viewport.x + viewport.width - 1;
+  const int viewportBottom = viewport.y + viewport.height - 1;
+  const int horizontalLeft = std::max(left, viewport.x);
+  const int horizontalRight = std::min(right, viewportRight);
+  const int verticalTop = std::max(top, viewport.y);
+  const int verticalBottom = std::min(bottom, viewportBottom);
+  if (horizontalLeft <= horizontalRight && top >= viewport.y &&
+      top <= viewportBottom) {
+    canvas.line(horizontalLeft, top, horizontalRight, top, black);
+  }
+  if (horizontalLeft <= horizontalRight && bottom >= viewport.y &&
+      bottom <= viewportBottom && bottom != top) {
+    canvas.line(horizontalLeft, bottom, horizontalRight, bottom, black);
+  }
+  if (verticalTop <= verticalBottom && left >= viewport.x &&
+      left <= viewportRight) {
+    canvas.line(left, verticalTop, left, verticalBottom, black);
+  }
+  if (verticalTop <= verticalBottom && right >= viewport.x &&
+      right <= viewportRight && right != left) {
+    canvas.line(right, verticalTop, right, verticalBottom, black);
+  }
+}
+
+Rect inset(Rect rect, int amount) noexcept {
+  if (amount <= 0) return rect;
+  return {rect.x + amount, rect.y + amount,
+          std::max(0, rect.width - amount * 2),
+          std::max(0, rect.height - amount * 2)};
+}
+
+void renderFallbackCover(MonoCanvas& canvas, Rect bounds,
+                         const char* title) noexcept {
+  if (!hasArea(bounds)) return;
+  canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, false);
+  if (bounds.width < 34 || bounds.height < 20) return;
+  const int iconSize = std::min(24, std::max(8, bounds.height / 4));
+  const int iconX = bounds.x + std::max(7, bounds.width / 14);
+  const int iconY = bounds.y + (bounds.height - iconSize) / 2;
+  canvas.rect(iconX, iconY, iconSize, iconSize, true);
+  const Rect textBounds{iconX + iconSize + 8, bounds.y + 5,
+                        bounds.x + bounds.width - (iconX + iconSize + 13),
+                        bounds.height - 10};
+  if (textBounds.width >= 24 && textBounds.height >= 10) {
+    canvas.boundedText(
+        menuLabel(title, textBounds, 3, 1, TextAlign::MiddleLeft), true);
+  }
+}
+
+bool renderBitmapCover(MonoCanvas& canvas, Rect bounds,
+                       const BitmapView& tEmbedBitmap,
+                       const BitmapView& sharpBitmap,
+                       bool blackBackground) noexcept {
+  if (!hasArea(bounds)) return false;
+  const BitmapView& bitmap = bounds.width <= tEmbedBitmap.width
+                                 ? tEmbedBitmap
+                                 : sharpBitmap;
+  if (!bitmap.valid()) return false;
+  canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height,
+                  blackBackground);
+  const int copyWidth = std::min(bounds.width, bitmap.width);
+  const int copyHeight = std::min(bounds.height, bitmap.height);
+  if (copyWidth <= 0 || copyHeight <= 0) return true;
+  const Rect source{(bitmap.width - copyWidth) / 2,
+                    (bitmap.height - copyHeight) / 2,
+                    copyWidth, copyHeight};
+  const int destinationX = bounds.x + (bounds.width - copyWidth) / 2;
+  const int destinationY = bounds.y + (bounds.height - copyHeight) / 2;
+  canvas.drawBitmap(bitmap, source, destinationX, destinationY);
+  return true;
+}
+
+void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
+                        AppId appId, const char* title,
+                        const AppCatalogView& catalog) noexcept {
+  const Rect visible = intersectRect(card, viewport);
+  if (!hasArea(visible)) return;
+  fillWithin(canvas, card, viewport, false);
+  borderWithin(canvas, card, viewport, true);
+  const Rect content = inset(card, 3);
+  const Rect visibleContent = intersectRect(content, viewport);
+  if (!hasArea(visibleContent)) return;
+  const Rect previousClip = canvas.clip();
+  const bool previousClipDiagnostics = canvas.reportsGeometryClips();
+  if (!canvas.setClip(visibleContent, false)) return;
+  if (!catalog.renderLauncherCover(appId, canvas, content)) {
+    renderFallbackCover(canvas, content, title);
+  }
+  canvas.setClip(previousClip, previousClipDiagnostics);
+}
 }  // namespace
 
 void LauncherApp::onEnter() noexcept {
-  position_ = static_cast<float>(selected_);
-  pulse_ = 1.0F;
+  position_ = static_cast<float>(targetPosition_);
+  trackSpring_.reset(position_);
+  settled_ = true;
 }
 
 void LauncherApp::update(const AppUpdateContext& context) noexcept {
   const Seconds dt = context.dt;
   const InputFrame& input = context.input;
-  time_ += dt;
-  pulse_ *= std::pow(0.015F, dt);
   const int appCount = context.catalog.launcherAppCount();
-  if (appCount == 0) return;
+  if (appCount == 0) {
+    selected_ = 0;
+    targetPosition_ = 0;
+    position_ = 0.0F;
+    trackSpring_.reset(0.0F);
+    settled_ = true;
+    return;
+  }
+  if (motionProfile_ != context.system.motionProfile) {
+    motionProfile_ = context.system.motionProfile;
+    trackSpring_.reset(position_);
+    trackSpring_.setTarget(static_cast<float>(targetPosition_));
+  }
   if (input.turn != 0) {
     const int previous = selected_;
-    selected_ = wrap(selected_ + input.turn, appCount);
-    pulse_ = 1.0F;
+    targetPosition_ += static_cast<std::int64_t>(input.turn);
+    selected_ = wrap(static_cast<int>(targetPosition_ % appCount), appCount);
+    settled_ = false;
     context.commands.submit(SystemCommand::playSound(
         selected_ == previous ? audio::SoundCue::Boundary
                               : audio::SoundCue::Navigate));
@@ -50,8 +189,41 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
         {DiagnosticCategory::Runtime, DiagnosticCode::SelectionChanged,
          "launcher selection", selected_}));
   }
-  const float delta = static_cast<float>(selected_) - position_;
-  position_ += delta * (1.0F - std::pow(0.0005F, dt));
+  const float target = static_cast<float>(targetPosition_);
+  if (motionProfile_ == MotionProfile::Normal) {
+    trackSpring_.setTarget(target);
+    trackSpring_.update(dt);
+    position_ = trackSpring_.value();
+    settled_ = trackSpring_.settled();
+  } else {
+    const float delta = target - position_;
+    if (std::abs(delta) <= 0.0005F) {
+      position_ = target;
+      settled_ = true;
+    } else {
+      const float next =
+          position_ + delta * (1.0F - std::pow(0.0005F, dt));
+      if ((dt > 0.0F && next == position_) ||
+          std::abs(target - next) <= 0.0005F) {
+        position_ = target;
+        settled_ = true;
+      } else {
+        position_ = next;
+        settled_ = false;
+      }
+    }
+    trackSpring_.reset(position_);
+    trackSpring_.setTarget(target);
+  }
+  constexpr std::int64_t kRebaseThreshold = 4096;
+  if (settled_ && std::abs(targetPosition_) >= kRebaseThreshold) {
+    const std::int64_t canonical = selected_;
+    const std::int64_t shift = targetPosition_ - canonical;
+    targetPosition_ = canonical;
+    position_ -= static_cast<float>(shift);
+    trackSpring_.reset(position_);
+    trackSpring_.setTarget(static_cast<float>(targetPosition_));
+  }
   if (input.clicked) {
     context.navigator.open(context.catalog.launcherAppAt(selected_));
   }
@@ -62,76 +234,53 @@ void LauncherApp::render(MonoCanvas& canvas,
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
-  const int centerX = width / 2;
-  const int drift = static_cast<int>(time_ * 28.0F) % 20;
-  for (int x = -height + drift; x < width; x += 20) {
-    canvas.line(x, 0, x + height, height, true);
+  // Maximum-density pure scanlines for a 1-bit framebuffer: one dark row,
+  // one light row. The phase is screen-anchored and never crawls with cards.
+  for (int y = 1; y < height; y += 2) {
+    canvas.line(0, y, width - 1, y, true);
   }
-  canvas.fillRect(0, 0, width, 28, true);
-  canvas.text("CADENZA", 10, 14, 2, false, TextAlign::MiddleLeft);
-  canvas.text("TURN  SELECT  PRESS  OPEN", width - 12, 14, 1, false,
-              TextAlign::MiddleRight);
-
-  const int cardX = width * 6 / 100;
-  const int cardY = height * 25 / 100;
-  const int cardWidth = width - cardX * 2;
-  const int cardHeight = height * 54 / 100;
-  canvas.fillRect(cardX, cardY, cardWidth, cardHeight, false);
-  canvas.rect(cardX, cardY, cardWidth, cardHeight, true);
-  canvas.rect(cardX + 3, cardY + 3, cardWidth - 6, cardHeight - 6, true);
-  const int kick = static_cast<int>(pulse_ * 7.0F);
-  canvas.fillRect(cardX + 13 - kick, cardY + 14,
-                  cardWidth - 26 + kick * 2, cardHeight - 29, true);
+  const int centerX = width / 2;
+  const Rect viewport{0, 0, width, height};
   const int appCount = context.catalog.launcherAppCount();
   if (appCount == 0) {
-    const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
-                           cardHeight - 37};
-    canvas.boundedText(menuLabel("NO APPS", titleBounds, 4, 1,
-                                 TextAlign::MiddleCenter),
-                       false);
-    return;
-  }
-  // The title is constrained to the smallest black card interior (kick == 0),
-  // with four pixels of text padding on every side. The animated kick may
-  // expand the background but never changes the text contract.
-  const Rect titleBounds{cardX + 17, cardY + 18, cardWidth - 34,
-                         cardHeight - 37};
-  canvas.boundedText(
-      menuLabel(context.catalog.appName(context.catalog.launcherAppAt(selected_)),
-                titleBounds, 4, 1, TextAlign::MiddleCenter),
-      false);
-
-  const int previous = wrap(selected_ - 1, appCount);
-  const int next = wrap(selected_ + 1, appCount);
-  const int footerY = height - 17;
-  // Reserve a stable 64-pixel navigation slot. Dynamic neighbor names are
-  // isolated in the remaining left and right regions and cannot reach dots.
-  constexpr int kFooterMargin = 12;
-  constexpr int kNavigationWidth = 64;
-  constexpr int kFooterLabelHeight = 13;
-  const int navigationLeft = centerX - kNavigationWidth / 2;
-  const Rect previousBounds{kFooterMargin,
-                            footerY - kFooterLabelHeight / 2,
-                            navigationLeft - kFooterMargin,
-                            kFooterLabelHeight};
-  const Rect nextBounds{navigationLeft + kNavigationWidth,
-                        footerY - kFooterLabelHeight / 2,
-                        width - kFooterMargin -
-                            (navigationLeft + kNavigationWidth),
-                        kFooterLabelHeight};
-  canvas.boundedText(
-      menuLabel(context.catalog.appName(context.catalog.launcherAppAt(previous)),
-                previousBounds, 1, 1, TextAlign::MiddleLeft));
-  canvas.boundedText(menuLabel(context.catalog.appName(
-                                   context.catalog.launcherAppAt(next)),
-                               nextBounds, 1, 1,
-                               TextAlign::MiddleRight));
-  const int dotsLeft = centerX - ((appCount - 1) * 9) / 2;
-  for (int index = 0; index < appCount; ++index) {
-    if (index == selected_) {
-      canvas.fillCircle(dotsLeft + index * 9, footerY, 3, true);
-    } else {
-      canvas.circle(dotsLeft + index * 9, footerY, 2, true);
+    const int cardWidth = width * 88 / 100;
+    const int cardHeight = viewport.height * 72 / 100;
+    renderLauncherCard(
+        canvas,
+        {centerX - cardWidth / 2,
+         viewport.y + (viewport.height - cardHeight) / 2, cardWidth,
+         cardHeight},
+        viewport, {}, "NO APPS", context.catalog);
+  } else {
+    const bool vertical = context.system.launcherOrientation ==
+                          LauncherOrientation::Vertical;
+    // Cover art owns a fixed 350:155 canvas. The Launcher sizes its card
+    // around a complete profile-specific image instead of cropping artwork
+    // differently for horizontal and vertical navigation.
+    const int contentWidth = std::min(350, width * 7 / 8);
+    const int contentHeight = contentWidth * 155 / 350;
+    const int cardWidth = contentWidth + 6;
+    const int cardHeight = contentHeight + 6;
+    const int pitch = vertical ? cardHeight + std::max(8, height / 20)
+                               : cardWidth + std::max(10, width / 30);
+    const int centerY = viewport.y + viewport.height / 2;
+    const std::int64_t base =
+        static_cast<std::int64_t>(std::floor(position_));
+    for (std::int64_t slot = base - 3; slot <= base + 3; ++slot) {
+      const float offset = static_cast<float>(slot) - position_;
+      const int cardCenterX =
+          vertical ? centerX
+                   : centerX + static_cast<int>(std::round(offset * pitch));
+      const int cardCenterY =
+          vertical ? centerY + static_cast<int>(std::round(offset * pitch))
+                   : centerY;
+      const Rect card{cardCenterX - cardWidth / 2,
+                      cardCenterY - cardHeight / 2, cardWidth, cardHeight};
+      const int appIndex = wrap(static_cast<int>(slot % appCount), appCount);
+      const AppId appId = context.catalog.launcherAppAt(appIndex);
+      renderLauncherCard(
+          canvas, card, viewport, appId, context.catalog.appName(appId),
+          context.catalog);
     }
   }
 }
@@ -179,6 +328,12 @@ void ClockApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
               height - 12, 1, true, TextAlign::BottomLeft);
   canvas.text("HOLD: HOME", width - 12, height - 12, 1, true,
               TextAlign::BottomRight);
+}
+
+bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
+                                   Rect bounds) const noexcept {
+  return renderBitmapCover(canvas, bounds, kClockTEmbedCover,
+                           kClockCover, true);
 }
 
 void MotionApp::onEnter() noexcept { velocity_ = 0.0F; }
@@ -233,12 +388,18 @@ void MotionApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
               TextAlign::MiddleRight);
 }
 
+bool MotionApp::renderLauncherCover(MonoCanvas& canvas,
+                                    Rect bounds) const noexcept {
+  return renderBitmapCover(canvas, bounds, kMotionTEmbedCover,
+                           kMotionCover, false);
+}
+
 void SettingsApp::update(const AppUpdateContext& context) noexcept {
   const Seconds dt = context.dt;
   const InputFrame& input = context.input;
   time_ += dt;
   if (input.turn) {
-    selected_ = wrap(selected_ + input.turn, 5);
+    selected_ = wrap(selected_ + input.turn, 6);
     resetConfirmArmed_ = false;
     context.commands.submit(
         SystemCommand::playSound(audio::SoundCue::Navigate));
@@ -292,6 +453,15 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
       }
     }
   } else if (input.clicked && selected_ == 4) {
+    const bool becomingHorizontal =
+        context.system.launcherOrientation == LauncherOrientation::Vertical;
+    context.commands.submit(SystemCommand::setLauncherOrientation(
+        becomingHorizontal ? LauncherOrientation::Horizontal
+                           : LauncherOrientation::Vertical));
+    context.commands.submit(SystemCommand::playSound(
+        becomingHorizontal ? audio::SoundCue::ToggleOn
+                           : audio::SoundCue::ToggleOff));
+  } else if (input.clicked && selected_ == 5) {
     context.commands.submit(SystemCommand::playSound(audio::SoundCue::Reject));
   }
 }
@@ -341,16 +511,20 @@ void SettingsApp::render(MonoCanvas& canvas,
                                         : "START";
   std::snprintf(provisioningRow, sizeof(provisioningRow), "SETUP: %s",
                 provisioningState);
-  const char* rows[5] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
-                         soundRow, wifiRow, provisioningRow,
+  const char* launcherRow =
+      context.system.launcherOrientation == LauncherOrientation::Vertical
+          ? "LAUNCHER: VERTICAL"
+          : "LAUNCHER: HORIZONTAL";
+  const char* rows[6] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
+                         soundRow, wifiRow, provisioningRow, launcherRow,
                          "ABOUT: CADENZA OS"};
-  constexpr int rowHeight = 24;
-  constexpr int rowStep = 27;
-  const int rowsHeight = rowHeight + rowStep * 4;
-  const int rowsTop = std::max(28, (height - rowsHeight) / 2);
+  const int rowHeight = height < 200 ? 20 : 24;
+  const int rowStep = height < 200 ? 22 : 27;
+  const int rowsHeight = rowHeight + rowStep * 5;
+  const int rowsTop = std::max(24, (height - rowsHeight) / 2);
   const int rowsLeft = width * 43 / 100;
   const int rowsWidth = width * 53 / 100;
-  for (int index = 0; index < 5; ++index) {
+  for (int index = 0; index < 6; ++index) {
     const int y = rowsTop + index * rowStep;
     if (index == selected_) {
       canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
@@ -370,6 +544,18 @@ void SettingsApp::render(MonoCanvas& canvas,
   }
   canvas.text("HOLD: HOME", 12, height - 8, 1, false,
               TextAlign::BottomLeft);
+}
+
+bool SettingsApp::renderLauncherCover(MonoCanvas& canvas,
+                                      Rect bounds) const noexcept {
+  return renderBitmapCover(canvas, bounds, kSettingsTEmbedCover,
+                           kSettingsCover, false);
+}
+
+bool AnimationGalleryApp::renderLauncherCover(
+    MonoCanvas& canvas, Rect bounds) const noexcept {
+  return renderBitmapCover(canvas, bounds, kGalleryTEmbedCover,
+                           kGalleryCover, true);
 }
 
 }  // namespace cadenza

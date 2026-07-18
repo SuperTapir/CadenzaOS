@@ -27,6 +27,33 @@ bool configure(DesktopConfig& output, const char* profile,
   return true;
 }
 
+bool parseDisplayPalette(DisplayPalette& output,
+                         const char* value) noexcept {
+  if (!value) return false;
+  DisplayPalette candidate;
+  if (std::strcmp(value, "reflective") == 0) {
+    candidate = DisplayPalette::Reflective;
+  } else if (std::strcmp(value, "pure") == 0) {
+    candidate = DisplayPalette::Pure;
+  } else {
+    return false;
+  }
+  output = candidate;
+  return true;
+}
+
+DisplayColor displayColor(bool black,
+                          DisplayPalette palette) noexcept {
+  if (palette == DisplayPalette::Pure) {
+    return black ? DisplayColor{0, 0, 0, 255}
+                 : DisplayColor{255, 255, 255, 255};
+  }
+  // Playdate SDK 1.12.3 design-reference simulator captures use this warm,
+  // low-contrast ink/paper pair to approximate a well-lit reflective LCD.
+  return black ? DisplayColor{50, 47, 40, 255}
+               : DisplayColor{177, 174, 167, 255};
+}
+
 bool DesktopInputMapper::wheel(float deltaY,
                                MonotonicMillis timestampMs) noexcept {
   if (!std::isfinite(deltaY) || deltaY == 0.0F) return false;

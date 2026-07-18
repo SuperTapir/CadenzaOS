@@ -4,6 +4,14 @@
 
 namespace cadenza {
 
+bool AppCatalogView::renderLauncherCover(
+    AppId id, MonoCanvas& canvas, Rect bounds) const noexcept {
+  if (!id.valid() || bounds.width <= 0 || bounds.height <= 0) return false;
+  const AppCatalogEntry* entry = catalog_->find(id);
+  return entry && entry->app &&
+         entry->app->renderLauncherCover(canvas, bounds);
+}
+
 AppRuntime::AppRuntime(FramebufferProfile profile, const Transition& transition,
                        Seconds transitionDuration) noexcept
     : outgoingFrame_(profile),

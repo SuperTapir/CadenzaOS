@@ -14,6 +14,9 @@ class App {
   virtual void update(const AppUpdateContext& context) noexcept = 0;
   virtual void render(MonoCanvas& canvas,
                       const AppRenderContext& context) noexcept = 0;
+  virtual bool renderLauncherCover(MonoCanvas&, Rect) const noexcept {
+    return false;
+  }
 };
 
 }  // namespace cadenza

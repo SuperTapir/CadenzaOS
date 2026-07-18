@@ -20,6 +20,39 @@ TEST_CASE("desktop profile and integer scale accept only supported values") {
   CHECK_FALSE(cadenza::desktop::configure(config, "sharp", 5));
 }
 
+TEST_CASE("desktop display palette matches reflective reference and keeps pure mode") {
+  using cadenza::desktop::DisplayPalette;
+  DisplayPalette palette = DisplayPalette::Pure;
+  CHECK(cadenza::desktop::parseDisplayPalette(palette, "reflective"));
+  CHECK(palette == DisplayPalette::Reflective);
+  const auto reflectiveInk =
+      cadenza::desktop::displayColor(true, palette);
+  const auto reflectivePaper =
+      cadenza::desktop::displayColor(false, palette);
+  CHECK(reflectiveInk.r == 50);
+  CHECK(reflectiveInk.g == 47);
+  CHECK(reflectiveInk.b == 40);
+  CHECK(reflectiveInk.a == 255);
+  CHECK(reflectivePaper.r == 177);
+  CHECK(reflectivePaper.g == 174);
+  CHECK(reflectivePaper.b == 167);
+  CHECK(reflectivePaper.a == 255);
+
+  CHECK(cadenza::desktop::parseDisplayPalette(palette, "pure"));
+  const auto pureInk = cadenza::desktop::displayColor(true, palette);
+  const auto purePaper = cadenza::desktop::displayColor(false, palette);
+  CHECK(pureInk.r == 0);
+  CHECK(pureInk.g == 0);
+  CHECK(pureInk.b == 0);
+  CHECK(purePaper.r == 255);
+  CHECK(purePaper.g == 255);
+  CHECK(purePaper.b == 255);
+
+  CHECK_FALSE(cadenza::desktop::parseDisplayPalette(palette, "sepia"));
+  CHECK(palette == DisplayPalette::Pure);
+  CHECK_FALSE(cadenza::desktop::parseDisplayPalette(palette, nullptr));
+}
+
 TEST_CASE("desktop mapper emits raw turn and aggregate button semantics") {
   cadenza::desktop::DesktopInputMapper mapper;
   CHECK(mapper.wheel(0.25F, 10));
@@ -97,4 +130,24 @@ TEST_CASE("simulator diagnostics expose canvas and capacity misuse") {
   CHECK(diagnostics.recent(0)->code == cadenza::DiagnosticCode::CapacityExceeded);
   REQUIRE(diagnostics.recent(1) != nullptr);
   CHECK(diagnostics.recent(1)->code == cadenza::DiagnosticCode::InvalidGeometry);
+}
+
+TEST_CASE("desktop overlay distinguishes current-frame diagnostics from history") {
+  cadenza::desktop::DesktopDiagnosticLog diagnostics;
+  diagnostics.emit({cadenza::DiagnosticCategory::Graphics,
+                    cadenza::DiagnosticCode::ClippedGeometry,
+                    "old clipped geometry", 0});
+  REQUIRE(diagnostics.recent(0) != nullptr);
+  diagnostics.beginFrame();
+  CHECK(diagnostics.recentThisFrame(0) == nullptr);
+  CHECK(diagnostics.currentFrameEventCount() == 0);
+
+  diagnostics.emit({cadenza::DiagnosticCategory::Graphics,
+                    cadenza::DiagnosticCode::InvalidGeometry,
+                    "current invalid geometry", 0});
+  REQUIRE(diagnostics.recentThisFrame(0) != nullptr);
+  CHECK(diagnostics.recentThisFrame(0)->code ==
+        cadenza::DiagnosticCode::InvalidGeometry);
+  CHECK(diagnostics.currentFrameEventCount() == 1);
+  CHECK(diagnostics.totalEvents() == 2);
 }

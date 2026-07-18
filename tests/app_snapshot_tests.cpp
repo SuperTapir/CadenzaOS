@@ -65,23 +65,23 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       2968281691757874956ULL},
+       3278954239642223294ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
        2172376209712558838ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11046562126395087774ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
-       15594660916157055540ULL},
+       7412932320142494479ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        14139291840108583961ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       5421283046709258962ULL},
+       17517733931075453906ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kClockAppId,
        8667913246713477979ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        2956592992690758759ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
-       16739858513966786026ULL},
+       13007615703856417540ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
        13234575752027769465ULL},
   }};
@@ -96,9 +96,9 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               16937710498554101448ULL) ==
-        16937710498554101448ULL);
+                               10510090133264282098ULL) ==
+        10510090133264282098ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               5912879823780594669ULL) ==
-        5912879823780594669ULL);
+                               10395072706391661531ULL) ==
+        10395072706391661531ULL);
 }

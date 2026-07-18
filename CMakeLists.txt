@@ -106,6 +106,37 @@ target_compile_features(cadenza_desktop_model PUBLIC cxx_std_17)
 if(CADENZA_BUILD_TESTS)
   enable_testing()
   find_package(Threads REQUIRED)
+  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+  foreach(launcher_cover IN ITEMS clock motion settings gallery)
+    string(SUBSTRING "${launcher_cover}" 0 1 launcher_cover_initial)
+    string(TOUPPER "${launcher_cover_initial}" launcher_cover_initial)
+    string(SUBSTRING "${launcher_cover}" 1 -1 launcher_cover_tail)
+    set(launcher_cover_symbol
+      "k${launcher_cover_initial}${launcher_cover_tail}Cover")
+    add_test(
+      NAME cadenza_launcher_${launcher_cover}_cover_asset_check
+      COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/pack_bitmap.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}.pbm
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/src/generated/${launcher_cover}_cover.h
+        --symbol ${launcher_cover_symbol}
+        --provenance
+          "Cadenza original AI-assisted artwork, user-approved 2026-07-18; canonical PBM in assets/launcher-covers/${launcher_cover}.pbm"
+        --check
+    )
+    add_test(
+      NAME cadenza_launcher_${launcher_cover}_t_embed_cover_asset_check
+      COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/pack_bitmap.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}_t_embed.pbm
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/src/generated/${launcher_cover}_t_embed_cover.h
+        --symbol "k${launcher_cover_initial}${launcher_cover_tail}TEmbedCover"
+        --provenance
+          "Cadenza original AI-assisted artwork; no-crop 280x124 derivative of assets/launcher-covers/${launcher_cover}.pbm"
+        --check
+    )
+  endforeach()
 
   add_executable(cadenza_portable_core_compile_probe
     tests/legacy_core_compile_probe.cpp
@@ -368,6 +399,19 @@ if(CADENZA_BUILD_TESTS)
   )
   target_include_directories(cadenza_app_snapshot_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_app_snapshot_tests COMMAND cadenza_app_snapshot_tests)
+
+  add_executable(cadenza_launcher_snapshot_tests
+    tests/launcher_snapshot_tests.cpp
+  )
+  target_link_libraries(cadenza_launcher_snapshot_tests PRIVATE
+    cadenza::host cadenza::desktop_model
+  )
+  target_include_directories(cadenza_launcher_snapshot_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_launcher_snapshot_tests
+    COMMAND cadenza_launcher_snapshot_tests
+  )
 
   add_executable(cadenza_dump_headless_pbm tools/dump_headless_pbm.cpp)
   target_link_libraries(cadenza_dump_headless_pbm PRIVATE cadenza::host)

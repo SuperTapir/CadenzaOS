@@ -14,6 +14,9 @@
 
 namespace cadenza {
 
+class MonoCanvas;
+struct Rect;
+
 class AppCatalogView {
  public:
   explicit constexpr AppCatalogView(const AppCatalog& catalog) noexcept
@@ -41,6 +44,9 @@ class AppCatalogView {
     return entry ? entry->name : "MISSING";
   }
 
+  bool renderLauncherCover(AppId id, MonoCanvas& canvas,
+                           Rect bounds) const noexcept;
+
  private:
   const AppCatalog* catalog_;
 };
@@ -54,6 +60,7 @@ class AppNavigator {
 struct SystemSnapshot {
   audio::SoundVolume soundVolume = audio::SoundVolume::High;
   MotionProfile motionProfile = MotionProfile::Normal;
+  LauncherOrientation launcherOrientation = LauncherOrientation::Vertical;
   bool soundOutputAvailable = false;
   ConnectivitySnapshot connectivity{};
   VoiceSnapshot voice{};
@@ -63,6 +70,7 @@ enum class SystemCommandType : std::uint8_t {
   PlaySound,
   SetSoundVolume,
   SetMotionProfile,
+  SetLauncherOrientation,
   SetVoiceAnalyzerActive,
   SetNetworkOnlineRequested,
   StartProvisioning,
@@ -79,6 +87,7 @@ constexpr AppCapability requiredCapability(
       return AppCapability::SoundPlay;
     case SystemCommandType::SetSoundVolume:
     case SystemCommandType::SetMotionProfile:
+    case SystemCommandType::SetLauncherOrientation:
       return AppCapability::SettingsWrite;
     case SystemCommandType::SetVoiceAnalyzerActive:
       return AppCapability::VoiceAnalyzer;
@@ -101,6 +110,7 @@ struct SystemCommand {
   audio::SoundCue soundCue = audio::SoundCue::Navigate;
   audio::SoundVolume soundVolume = audio::SoundVolume::High;
   MotionProfile motionProfile = MotionProfile::Normal;
+  LauncherOrientation launcherOrientation = LauncherOrientation::Vertical;
   bool voiceAnalyzerActive = false;
   bool networkOnlineRequested = false;
   bool resetCredentialsConfirmed = false;
@@ -125,6 +135,14 @@ struct SystemCommand {
     SystemCommand command;
     command.type = SystemCommandType::SetMotionProfile;
     command.motionProfile = profile;
+    return command;
+  }
+
+  static SystemCommand setLauncherOrientation(
+      LauncherOrientation orientation) noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::SetLauncherOrientation;
+    command.launcherOrientation = orientation;
     return command;
   }
 

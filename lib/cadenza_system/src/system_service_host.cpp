@@ -44,6 +44,9 @@ bool SystemServiceHost::validCommand(const SystemCommand& command) const noexcep
     case SystemCommandType::SetMotionProfile:
       return command.motionProfile == MotionProfile::Normal ||
              command.motionProfile == MotionProfile::Reduced;
+    case SystemCommandType::SetLauncherOrientation:
+      return command.launcherOrientation == LauncherOrientation::Vertical ||
+             command.launcherOrientation == LauncherOrientation::Horizontal;
     case SystemCommandType::SetVoiceAnalyzerActive:
     case SystemCommandType::SetNetworkOnlineRequested:
     case SystemCommandType::StartProvisioning:
@@ -200,6 +203,9 @@ bool SystemServiceHost::apply(
       return true;
     case SystemCommandType::SetMotionProfile:
       snapshot_.motionProfile = command.motionProfile;
+      return true;
+    case SystemCommandType::SetLauncherOrientation:
+      snapshot_.launcherOrientation = command.launcherOrientation;
       return true;
     case SystemCommandType::SetVoiceAnalyzerActive:
       if (command.voiceAnalyzerActive) {

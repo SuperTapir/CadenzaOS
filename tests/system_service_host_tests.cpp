@@ -25,15 +25,23 @@ class FrameProbeApp final : public cadenza::App {
   const char* name() const noexcept override { return "Probe"; }
   void update(const cadenza::AppUpdateContext& context) noexcept override {
     updateVolume = context.system.soundVolume;
+    updateOrientation = context.system.launcherOrientation;
     context.commands.submit(cadenza::SystemCommand::setSoundVolume(
         cadenza::audio::SoundVolume::Low));
+    context.commands.submit(cadenza::SystemCommand::setLauncherOrientation(
+        cadenza::LauncherOrientation::Horizontal));
   }
   void render(cadenza::MonoCanvas&,
               const cadenza::AppRenderContext& context) noexcept override {
     renderVolume = context.system.soundVolume;
+    renderOrientation = context.system.launcherOrientation;
   }
   cadenza::audio::SoundVolume updateVolume = cadenza::audio::SoundVolume::Count;
   cadenza::audio::SoundVolume renderVolume = cadenza::audio::SoundVolume::Count;
+  cadenza::LauncherOrientation updateOrientation =
+      cadenza::LauncherOrientation::Horizontal;
+  cadenza::LauncherOrientation renderOrientation =
+      cadenza::LauncherOrientation::Vertical;
 };
 
 class VoiceOwnerProbeApp final : public cadenza::App {
@@ -87,6 +95,48 @@ TEST_CASE("frame coordinator exposes frozen update and committed render state") 
                                                {});
   CHECK(app.updateVolume == cadenza::audio::SoundVolume::Medium);
   CHECK(app.renderVolume == cadenza::audio::SoundVolume::Low);
+  CHECK(app.updateOrientation == cadenza::LauncherOrientation::Vertical);
+  CHECK(app.renderOrientation == cadenza::LauncherOrientation::Horizontal);
+}
+
+TEST_CASE("Launcher orientation defaults vertical and commits in frame order") {
+  cadenza::system::SystemServiceHost host;
+  const cadenza::SystemSnapshot& update = host.beginFrame(0.01F);
+  CHECK(update.launcherOrientation == cadenza::LauncherOrientation::Vertical);
+
+  REQUIRE(host.submit(cadenza::SystemCommand::setLauncherOrientation(
+      cadenza::LauncherOrientation::Horizontal)));
+  CHECK(update.launcherOrientation == cadenza::LauncherOrientation::Vertical);
+  CHECK(host.commitCommands().launcherOrientation ==
+        cadenza::LauncherOrientation::Horizontal);
+}
+
+TEST_CASE("Launcher orientation validates values and SettingsWrite capability") {
+  cadenza::system::SystemServiceHost host;
+  CHECK_FALSE(host.submit(cadenza::SystemCommand::setLauncherOrientation(
+      static_cast<cadenza::LauncherOrientation>(99))));
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::InvalidCommand);
+
+  constexpr cadenza::AppId kCaller{0x7410};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort denied{kCaller, {}, host};
+  CHECK_FALSE(denied.submit(cadenza::SystemCommand::setLauncherOrientation(
+      cadenza::LauncherOrientation::Horizontal)));
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::CapabilityDenied);
+  CHECK(host.snapshot().launcherOrientation ==
+        cadenza::LauncherOrientation::Vertical);
+
+  resolver.capabilities = cadenza::AppCapabilitySet{
+      cadenza::AppCapability::SettingsWrite};
+  cadenza::AppCommandPort authorized{kCaller, resolver.capabilities, host};
+  REQUIRE(authorized.submit(cadenza::SystemCommand::setLauncherOrientation(
+      cadenza::LauncherOrientation::Horizontal)));
+  CHECK(host.commitCommands().launcherOrientation ==
+        cadenza::LauncherOrientation::Horizontal);
 }
 
 TEST_CASE("frame freezes update snapshot and commits FIFO for render") {

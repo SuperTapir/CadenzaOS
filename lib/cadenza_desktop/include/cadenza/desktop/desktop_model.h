@@ -26,6 +26,13 @@ class DesktopDiagnosticLog final : public DiagnosticSink {
         (write_ + events_.size() - 1 - offset) % events_.size();
     return &events_[index];
   }
+  void beginFrame() noexcept { frameStartTotalEvents_ = totalEvents_; }
+  std::uint32_t currentFrameEventCount() const noexcept {
+    return totalEvents_ - frameStartTotalEvents_;
+  }
+  const DiagnosticEvent* recentThisFrame(std::size_t offset) const noexcept {
+    return offset < currentFrameEventCount() ? recent(offset) : nullptr;
+  }
   std::uint32_t totalEvents() const noexcept { return totalEvents_; }
   std::uint32_t capacityOverflows() const noexcept {
     return capacityOverflows_;
@@ -36,6 +43,7 @@ class DesktopDiagnosticLog final : public DiagnosticSink {
   std::size_t write_ = 0;
   std::size_t count_ = 0;
   std::uint32_t totalEvents_ = 0;
+  std::uint32_t frameStartTotalEvents_ = 0;
   std::uint32_t capacityOverflows_ = 0;
 };
 
@@ -45,6 +53,20 @@ struct DesktopConfig {
   std::int16_t height = 170;
   std::uint8_t scale = 2;
 };
+
+enum class DisplayPalette : std::uint8_t { Reflective, Pure };
+
+struct DisplayColor {
+  std::uint8_t r = 0;
+  std::uint8_t g = 0;
+  std::uint8_t b = 0;
+  std::uint8_t a = 255;
+};
+
+bool parseDisplayPalette(DisplayPalette& output,
+                         const char* value) noexcept;
+DisplayColor displayColor(bool black,
+                          DisplayPalette palette) noexcept;
 
 struct DevicePreviewLayout {
   std::int32_t logicalWidth = 0;

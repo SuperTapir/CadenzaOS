@@ -77,10 +77,19 @@ def main() -> None:
         required=True,
         help="original/public-domain/license reference recorded in the header",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="fail if output does not exactly match the generated header",
+    )
     args = parser.parse_args()
     width, height, pixels = read_pbm(args.input)
     output = render(identifier(args.symbol), width, height, pack(width, height, pixels),
                     args.provenance)
+    if args.check:
+        if not args.output.exists() or args.output.read_text(encoding="utf-8") != output:
+            raise SystemExit(f"generated bitmap is stale: {args.output}")
+        return
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(output, encoding="utf-8")
 

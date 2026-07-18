@@ -25,11 +25,17 @@ class LauncherApp final : public App {
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
 
+  int selectedIndex() const noexcept { return selected_; }
+  std::int64_t targetPosition() const noexcept { return targetPosition_; }
+  float visualPosition() const noexcept { return position_; }
+  bool settled() const noexcept { return settled_; }
  private:
   int selected_ = 0;
+  std::int64_t targetPosition_ = 0;
   float position_ = 0.0F;
-  float pulse_ = 0.0F;
-  float time_ = 0.0F;
+  Spring trackSpring_{0.0F};
+  MotionProfile motionProfile_ = MotionProfile::Normal;
+  bool settled_ = true;
 };
 
 class ClockApp final : public App {
@@ -39,6 +45,8 @@ class ClockApp final : public App {
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
+  bool renderLauncherCover(MonoCanvas& canvas,
+                           Rect bounds) const noexcept override;
 
  private:
   bool running_ = true;
@@ -53,6 +61,8 @@ class MotionApp final : public App {
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
+  bool renderLauncherCover(MonoCanvas& canvas,
+                           Rect bounds) const noexcept override;
 
  private:
   float target_ = 0.5F;
@@ -67,6 +77,8 @@ class SettingsApp final : public App {
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
+  bool renderLauncherCover(MonoCanvas& canvas,
+                           Rect bounds) const noexcept override;
 
  private:
   int selected_ = 0;
@@ -86,6 +98,8 @@ class AnimationGalleryApp final : public App {
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
+  bool renderLauncherCover(MonoCanvas& canvas,
+                           Rect bounds) const noexcept override;
 
   constexpr std::size_t pageCount() const noexcept { return kPageCount; }
   const char* pageName(std::size_t index) const noexcept;

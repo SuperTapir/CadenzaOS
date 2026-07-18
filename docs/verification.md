@@ -78,6 +78,47 @@ Confirm/Back calibration fix:
   231,143 B；
 - 实体 T-Embed 的 650 ms 手感、屏幕可读性和 100 次循环：待硬件，不能由软件门禁代替。
 
+## Continuous Launcher 软件验证
+
+`add-continuous-launcher-navigation` 增加以下独立证据；最终数字以该变更归档前的
+fresh gate 为准：
+
+- 逻辑目标使用无界整数、视觉位置连续追赶，并在 settled 后安全重基；单步中间态、
+  首尾单 pitch 环绕、快速同向/反向 retarget、移动中打开和空目录均有自动化用例；
+- Normal Spring 与 Reduced Motion 分别覆盖受限 overshoot、单调无 overshoot、
+  profile 中途切换和确定 settled；
+- Settings 的 Launcher 行通过 `SettingsWrite` command 同帧切换 Vertical/Horizontal，
+  新 service session 默认恢复 Vertical；
+- Launcher 快照矩阵覆盖 320×170/400×240、横纵 settled、确定中间帧、内置 Cover、
+  fallback，以及按下/启动代表捕获；代表捕获必须与对应 neutral Cover 像素一致。
+  交互测试另行验证 Cover 不接收状态、固定 layout bounds 与静默 viewport clip，
+  避免点击变图或横向移动时内容重排；
+- desktop 真实输入路径覆盖 Settings 切方向、System Menu Home/Resume、长按 release
+  后稳定帧恢复、未 settled 时打开最新选择。本帧 Launcher 的 Invalid/Clipped
+  geometry 计数为零；HUD 只显示本帧事件，无新事件时显示 `DIAG OK`，但历史环形
+  日志仍保留供审计。
+
+2026-07-18 fixed-ratio Cover 最终门禁证据：
+
+- `cadenza_apps_tests`、`cadenza_launcher_snapshot_tests` 与
+  `cadenza_desktop_smoke_tests` 定向门禁 3/3 通过；Clock 启动捕获与 neutral Cover
+  hash 相同，Motion press 捕获与 neutral Cover hash 相同；
+- host 全部 target 编译成功；62/62 项 CTest 通过。八个 Cover asset check 证明
+  packed header 与 canonical PBM 一致；`cadenza_app_snapshot_tests` 与新增的
+  `cadenza_launcher_snapshot_tests` 均已逐图审阅并批准固定比例完整画面；
+- SDL 3.4.12 可执行文件分别以全新 dummy-driver 进程运行 320×170 与 400×240，
+  `--frames 3 --overlay` 均正常退出；desktop smoke 的当前帧诊断审计通过；
+- PlatformIO `cadenza-t-embed` release 编译成功：RAM 99,184 / 327,680 B
+  (30.3%)，Flash 408,997 / 3,145,728 B (13.0%)；双 profile Cover 相比前一版
+  增加 43,084 B flash，未增加静态 RAM；
+- `cadenza_shared_source_audit` 与 `cadenza_portable_core_compile_probe` 2/2 通过，
+  `openspec validate add-continuous-launcher-navigation --strict` 与
+  `git diff --check` 通过。
+
+软件证据不能证明 T-Embed 的 30 FPS、TFT 撕裂、拖影或高频 1-bit 相位闪烁。实体
+步骤见 `launcher-card-reference-research.md`。当前状态为
+`fixed-ratio Cover artwork and platform gates complete / hardware motion acceptance pending`。
+
 ## Delta-spec completion audit
 
 This is the requirement-by-requirement audit, rather than an inference from a

@@ -8,6 +8,10 @@ project screenshots, logos, texture tables, and example art are not copied.
 | `u8g2_font_6x10_tf` | `third_party/u8g2/src/u8g2_font_6x10_tf.c` | U8g2 upstream terminal-emulator font metadata marks the font public domain; vendored at the pinned U8g2 commit | Public domain font data; U8g2 wrapper code is BSD-2-Clause |
 | ordered 8×8 threshold table | `lib/cadenza_core/src/mono_canvas.cpp` | Cadenza-authored recursive Bayer ordering | Original project code |
 | Gallery four-frame 2×4 sprite | `lib/cadenza_core/src/gallery.cpp` | Cadenza-authored for deterministic state-animation QA | Original project code |
+| Clock Launcher Cover | `assets/launcher-covers/source/clock.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
+| Motion Launcher Cover | `assets/launcher-covers/source/motion.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
+| Settings Launcher Cover | `assets/launcher-covers/source/settings.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
+| Animation Gallery Launcher Cover | `assets/launcher-covers/source/gallery.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
 
 `font8x8` is present only in the ignored research clone and is not a bundled
 asset. New fonts, textures, converted bitmaps, or atlases must add a row here

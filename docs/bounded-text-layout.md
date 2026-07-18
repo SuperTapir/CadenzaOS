@@ -27,19 +27,22 @@
 
 ## Launcher 区域
 
-- 主标题：使用扣除双层卡片边框、最小黑色背景和 4px 文字 padding 后的内部矩形；倍数范围为 4 到 1，fallback 为 `Ellipsis`。
-- Footer：左右各保留 12px 屏幕边距，中间固定保留 64px 导航区域；前后应用名只能在各自左右区域内以 1 倍 `fit`/`Ellipsis` 绘制。
-- 长名称不得擦除卡片边框、进入中央圆点区域、越过屏幕边缘或产生 `text clipped`。
+- App Cover：名称属于 App 自身构图；renderer 得到固定完整卡片 bounds，并在其安全
+  padding 内选择字号。Launcher 的 viewport 只裁切像素，不改变 Cover 的布局 bounds。
+- 通用 fallback：动态 `App::name()` 使用扣除单层边界、图标和安全 padding 后的独立
+  区域；倍数从首选值降到 1，fallback 为 `Ellipsis`。相邻只露出窄边且文字区域不足
+  时允许不绘制名称。
+- Launcher 不再绘制前后名称 footer 或页码圆点。长名称不得擦除卡片边界、进入相邻
+  Cover、越过轨道 viewport 或产生 `text clipped`。
 
 ## 动态文本调用盘点
 
 | 调用 | 数据上限 | 处理 |
 | --- | --- | --- |
-| Launcher 当前应用名 | 来自可注册 `App::name()`，长度不受核心控制 | 已迁移到主标题受约束区域 |
-| Launcher 前后应用名 | 来自可注册 `App::name()`，长度不受核心控制 | 已迁移到左右独立 footer 区域 |
+| Launcher fallback 应用名 | 来自可注册 `App::name()`，长度不受核心控制 | 在所属 Cover 可见内区独立执行 `fit`/`Ellipsis`；空间不足则省略 |
 | Clock 时间值 | 固定 `%02d:%02d` 格式与本地 16-byte buffer | 保留现有绘制，由应用快照覆盖 |
 | Settings 行文本 | 两组编译期常量 | 保留现有绘制，由双 profile 应用测试覆盖 |
 | Gallery page name / page label | 固定容量枚举表与 `%02u/%02u` 格式 | 保留现有绘制，由 Gallery 快照覆盖 |
 | Gallery animation state | 固定状态机名称集合 | 保留现有绘制，由 Gallery 测试覆盖 |
 
-盘点结果中只有 Launcher 的 `App::name()` 是可扩展且无长度上限的菜单输入，因此本次不机械迁移静态标签。
+盘点结果中只有 Launcher fallback 的 `App::name()` 是可扩展且无长度上限的菜单输入，因此本次不机械迁移内置 Cover 或其他静态标签。
