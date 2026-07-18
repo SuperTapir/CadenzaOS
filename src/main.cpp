@@ -3,24 +3,27 @@
 
 #include <algorithm>
 
-#include "app_runtime.h"
-#include "apps.h"
 #include "board_pins.h"
+#include "cadenza/core/app_runtime.h"
+#include "cadenza/core/apps.h"
+#include "cadenza/core/mono_canvas.h"
+#include "cadenza/core/mono_framebuffer.h"
 #include "input.h"
-#include "mono_canvas.h"
 #include "serial_diagnostic_sink.h"
-#include "tft_mono_canvas.h"
+#include "tft_presenter.h"
 
 namespace {
 TFT_eSPI display;
-TftMonoCanvas canvas(display);
+cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+cadenza::MonoCanvas canvas{framebuffer};
+TftPresenter presenter(display);
 InputController input;
-AppRuntime runtime;
+cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed};
 SerialDiagnosticSink diagnosticSink;
-LauncherApp launcher;
-ClockApp clockApp;
-MotionApp motion;
-SettingsApp settings;
+cadenza::LauncherApp launcher;
+cadenza::ClockApp clockApp;
+cadenza::MotionApp motion;
+cadenza::SettingsApp settings;
 uint32_t lastFrameUs = 0;
 
 struct LcdCommand {
@@ -62,19 +65,15 @@ void setup() {
   pinMode(BoardPins::kLcdBacklight, OUTPUT);
   digitalWrite(BoardPins::kLcdBacklight, HIGH);
 
-  const DisplayProfile& profile = DisplayProfiles::kTEmbed;
-  Serial.printf("Display: %s, %dx%d\n", profile.name, profile.width, profile.height);
-  if (!canvas.begin(profile)) {
-    Serial.println("FATAL: unable to allocate 1-bit canvas");
-    while (true) delay(1000);
-  }
+  Serial.printf("Display: T-Embed ST7789, %dx%d\n", framebuffer.width(),
+                framebuffer.height());
   input.begin();
   runtime.setDiagnosticSink(&diagnosticSink);
-  runtime.registerApp(AppId::Launcher, launcher, false);
-  runtime.registerApp(AppId::Clock, clockApp);
-  runtime.registerApp(AppId::Motion, motion);
-  runtime.registerApp(AppId::Settings, settings);
-  runtime.begin(AppId::Launcher);
+  runtime.registerApp(cadenza::AppId::Launcher, launcher, false);
+  runtime.registerApp(cadenza::AppId::Clock, clockApp);
+  runtime.registerApp(cadenza::AppId::Motion, motion);
+  runtime.registerApp(cadenza::AppId::Settings, settings);
+  runtime.begin(cadenza::AppId::Launcher);
   lastFrameUs = micros();
 }
 
@@ -89,5 +88,5 @@ void loop() {
   lastFrameUs = now;
   runtime.update(dt, input.takeFrame());
   runtime.render(canvas);
-  canvas.present();
+  presenter.present(framebuffer);
 }

@@ -1,11 +1,10 @@
-// This is an intentionally failing characterization probe. The current
-// top-level "core" headers still include Arduino/TFT types. CTest marks the
-// failed build as the expected legacy state. Platform decoupling must move
-// these contracts into cadenza_core and invert this probe to require success.
-#include "app_runtime.h"
-#include "apps.h"
-#include "display_profile.h"
-#include "input.h"
-#include "mono_canvas.h"
+// This probe intentionally includes the complete portable application surface
+// without Arduino, TFT_eSPI, SDL, or compatibility shims.
+#include "cadenza/core/app_runtime.h"
+#include "cadenza/core/apps.h"
+#include "cadenza/core/input.h"
+#include "cadenza/core/mono_canvas.h"
+#include "cadenza/core/presenter.h"
+#include "cadenza/core/transition.h"
 
 int main() { return 0; }

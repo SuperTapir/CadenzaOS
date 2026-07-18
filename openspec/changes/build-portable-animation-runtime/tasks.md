@@ -32,13 +32,13 @@
 
 ## 4. Runtime and Firmware Migration
 
-- [ ] 4.1 Write fake-App tests for registration, initial entry, open guards, lifecycle order, active update, input freeze, and long-press return
-- [ ] 4.2 Migrate App/AppRuntime to the portable core and structured diagnostics while preserving lifecycle behavior
-- [ ] 4.3 Write transition capture tests proving outgoing/incoming frame ownership and exact endpoint output
-- [ ] 4.4 Implement transition strategy injection and dual off-screen App capture with a temporary cut/blinds strategy
-- [ ] 4.5 Migrate Launcher, Clock, Motion, and Settings away from Arduino/TFT APIs and onto the software canvas/font
-- [ ] 4.6 Write presenter contract tests and replace TFT-owned drawing with a framebuffer-only TftPresenter
-- [ ] 4.7 Rebuild the T-Embed target and remove superseded Arduino-coupled core/canvas code only after the new firmware path compiles
+- [x] 4.1 Write fake-App tests for registration, initial entry, open guards, lifecycle order, active update, input freeze, and long-press return
+- [x] 4.2 Migrate App/AppRuntime to the portable core and structured diagnostics while preserving lifecycle behavior
+- [x] 4.3 Write transition capture tests proving outgoing/incoming frame ownership and exact endpoint output
+- [x] 4.4 Implement transition strategy injection and dual off-screen App capture with a temporary cut/blinds strategy
+- [x] 4.5 Migrate Launcher, Clock, Motion, and Settings away from Arduino/TFT APIs and onto the software canvas/font
+- [x] 4.6 Write presenter contract tests and replace TFT-owned drawing with a framebuffer-only TftPresenter
+- [x] 4.7 Rebuild the T-Embed target and remove superseded Arduino-coupled core/canvas code only after the new firmware path compiles
 
 ## 5. Headless Host and Baseline Verification
 

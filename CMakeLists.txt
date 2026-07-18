@@ -38,10 +38,13 @@ target_compile_definitions(cadenza_u8g2 PUBLIC
 )
 
 add_library(cadenza_core STATIC
+  lib/cadenza_core/src/app_runtime.cpp
+  lib/cadenza_core/src/apps.cpp
   lib/cadenza_core/src/input.cpp
   lib/cadenza_core/src/mono_canvas.cpp
   lib/cadenza_core/src/mono_framebuffer.cpp
   lib/cadenza_core/src/simulation_clock.cpp
+  lib/cadenza_core/src/transition.cpp
   lib/cadenza_core/src/version.cpp
 )
 add_library(cadenza::core ALIAS cadenza_core)
@@ -55,10 +58,10 @@ target_link_libraries(cadenza_core PRIVATE cadenza::u8g2)
 if(CADENZA_BUILD_TESTS)
   enable_testing()
 
-  add_executable(cadenza_legacy_core_compile_probe EXCLUDE_FROM_ALL
+  add_executable(cadenza_portable_core_compile_probe
     tests/legacy_core_compile_probe.cpp
   )
-  target_include_directories(cadenza_legacy_core_compile_probe PRIVATE include)
+  target_link_libraries(cadenza_portable_core_compile_probe PRIVATE cadenza::core)
 
   add_executable(cadenza_core_smoke tests/core_smoke.cpp)
   target_link_libraries(cadenza_core_smoke PRIVATE cadenza::core)
@@ -91,6 +94,26 @@ if(CADENZA_BUILD_TESTS)
   target_include_directories(cadenza_sprite_atlas_tests PRIVATE third_party/doctest)
   add_test(NAME cadenza_sprite_atlas_tests COMMAND cadenza_sprite_atlas_tests)
 
+  add_executable(cadenza_app_runtime_tests tests/app_runtime_tests.cpp)
+  target_link_libraries(cadenza_app_runtime_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_app_runtime_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_app_runtime_tests COMMAND cadenza_app_runtime_tests)
+
+  add_executable(cadenza_transition_runtime_tests tests/transition_runtime_tests.cpp)
+  target_link_libraries(cadenza_transition_runtime_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_transition_runtime_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_transition_runtime_tests COMMAND cadenza_transition_runtime_tests)
+
+  add_executable(cadenza_apps_tests tests/apps_tests.cpp)
+  target_link_libraries(cadenza_apps_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_apps_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_apps_tests COMMAND cadenza_apps_tests)
+
+  add_executable(cadenza_presenter_tests tests/presenter_tests.cpp)
+  target_link_libraries(cadenza_presenter_tests PRIVATE cadenza::core)
+  target_include_directories(cadenza_presenter_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_presenter_tests COMMAND cadenza_presenter_tests)
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)
@@ -104,12 +127,9 @@ if(CADENZA_BUILD_TESTS)
   )
 
   add_test(
-    NAME cadenza_legacy_core_is_not_portable_yet
+    NAME cadenza_portable_core_compile_probe
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}
-      --target cadenza_legacy_core_compile_probe
-  )
-  set_tests_properties(cadenza_legacy_core_is_not_portable_yet PROPERTIES
-    WILL_FAIL TRUE
+      --target cadenza_portable_core_compile_probe
   )
 endif()
 
