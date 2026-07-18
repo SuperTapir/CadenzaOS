@@ -57,6 +57,16 @@ target_include_directories(cadenza_host PUBLIC
 target_link_libraries(cadenza_host PUBLIC cadenza::core)
 target_compile_features(cadenza_host PUBLIC cxx_std_17)
 
+add_library(cadenza_desktop_model STATIC
+  lib/cadenza_desktop/src/desktop_model.cpp
+)
+add_library(cadenza::desktop_model ALIAS cadenza_desktop_model)
+target_include_directories(cadenza_desktop_model PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_desktop/include>
+)
+target_link_libraries(cadenza_desktop_model PUBLIC cadenza::core)
+target_compile_features(cadenza_desktop_model PUBLIC cxx_std_17)
+
 if(CADENZA_BUILD_TESTS)
   enable_testing()
 
@@ -129,6 +139,20 @@ if(CADENZA_BUILD_TESTS)
   add_executable(cadenza_dump_headless_pbm tools/dump_headless_pbm.cpp)
   target_link_libraries(cadenza_dump_headless_pbm PRIVATE cadenza::host)
 
+  add_executable(cadenza_desktop_model_tests tests/desktop_model_tests.cpp)
+  target_link_libraries(cadenza_desktop_model_tests PRIVATE
+    cadenza::desktop_model cadenza::host
+  )
+  target_include_directories(cadenza_desktop_model_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_desktop_model_tests COMMAND cadenza_desktop_model_tests)
+
+  add_executable(cadenza_desktop_smoke_tests tests/desktop_smoke_tests.cpp)
+  target_link_libraries(cadenza_desktop_smoke_tests PRIVATE
+    cadenza::desktop_model cadenza::host
+  )
+  target_include_directories(cadenza_desktop_smoke_tests PRIVATE third_party/doctest)
+  add_test(NAME cadenza_desktop_smoke_tests COMMAND cadenza_desktop_smoke_tests)
+
   add_executable(cadenza_vendor_smoke tests/vendor_smoke.cpp)
   target_link_libraries(cadenza_vendor_smoke PRIVATE cadenza::u8g2)
   target_include_directories(cadenza_vendor_smoke PRIVATE third_party/doctest)
@@ -158,5 +182,7 @@ endif()
 if(CADENZA_BUILD_DESKTOP)
   find_package(SDL3 CONFIG REQUIRED)
   add_executable(cadenza_desktop desktop/main.cpp)
-  target_link_libraries(cadenza_desktop PRIVATE cadenza::core SDL3::SDL3)
+  target_link_libraries(cadenza_desktop PRIVATE
+    cadenza::host cadenza::desktop_model SDL3::SDL3
+  )
 endif()

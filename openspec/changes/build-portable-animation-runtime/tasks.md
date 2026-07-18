@@ -49,11 +49,11 @@
 
 ## 6. SDL3 Desktop Simulator MVP
 
-- [ ] 6.1 Write isolated tests for profile selection, integer-scale validation, raw key/wheel/button mapping, and overlay separation
-- [ ] 6.2 Implement SDL3 window, nearest-neighbor framebuffer texture presentation, 320×170/400×240 profiles, and 1×–4× scale
-- [ ] 6.3 Implement mouse-wheel/arrow turn and Space/Enter press/release adapters through InputReducer
-- [ ] 6.4 Implement non-authoritative FPS, frame-time, current-App, and recent-input overlay
-- [ ] 6.5 Add a desktop smoke test that visits Launcher, Clock, Motion, and Settings and returns home without alternate UI code
+- [x] 6.1 Write isolated tests for profile selection, integer-scale validation, raw key/wheel/button mapping, and overlay separation
+- [x] 6.2 Implement SDL3 window, nearest-neighbor framebuffer texture presentation, 320×170/400×240 profiles, and 1×–4× scale
+- [x] 6.3 Implement mouse-wheel/arrow turn and Space/Enter press/release adapters through InputReducer
+- [x] 6.4 Implement non-authoritative FPS, frame-time, current-App, and recent-input overlay
+- [x] 6.5 Add a desktop smoke test that visits Launcher, Clock, Motion, and Settings and returns home without alternate UI code
 
 ## 7. Simulator Debugging and Capture
 

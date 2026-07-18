@@ -32,7 +32,7 @@ case "${mode}" in
   desktop)
     configure_host
     cmake --build "${build_dir}" --target cadenza_desktop --parallel
-    "${build_dir}/cadenza_desktop"
+    SDL_VIDEODRIVER=dummy "${build_dir}/cadenza_desktop" --frames 2
     ;;
   firmware)
     "${pio_command}" run --project-dir "${project_root}"
@@ -42,7 +42,7 @@ case "${mode}" in
     ;;
   all)
     run_host_tests
-    "${build_dir}/cadenza_desktop"
+    SDL_VIDEODRIVER=dummy "${build_dir}/cadenza_desktop" --frames 2
     "${pio_command}" run --project-dir "${project_root}"
     git -C "${project_root}" diff --check
     ;;
