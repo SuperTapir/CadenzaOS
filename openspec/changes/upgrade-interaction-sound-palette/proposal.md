@@ -5,11 +5,13 @@
 ## What Changes
 
 - 将现有单一“三角波主体 + 低增益方波” palette 替换为 Semantic Hierarchy：Navigate/Boundary 保持短促、干燥的机构反馈，Confirm/Back 使用更完整但仍克制的调音敲击尾音，Toggle 位于两者之间，Reject 保持低沉且不更响。
-- 将声音语义组织为四个稳定家族：
+- 将声音语义组织为五个稳定家族：
   - **Input**：Navigate、Boundary。
   - **Action**：Confirm、Back、ToggleOn、ToggleOff、Reject。
+  - **Surface**：MenuOpen、MenuClose。
   - **Outcome**：Complete、Warning、Failure。
   - **System**：Notification、Connect、Disconnect、PowerOn、PowerOff。
+- 将 System Menu 从跨层级 Action 中拆出：展开/收起分别使用与 0.20 秒形变同帧启动的 MenuOpen/MenuClose 单动作声，不再复用 Confirm/Back 的双敲长尾；中心音区更低但保留明确的上扬/下潜幅度。
 - 为 Confirm/Back 与 ToggleOn/ToggleOff 使用不同的节奏和材质结构：Confirm/Back 是跨导航层级的两段调音敲击，Toggle 是原地状态变化的单次机械 click + 短共振，不得只依赖升/降调区分。
 - 新增语义只在系统确实发生对应的任务结果、提醒或生命周期事件时触发；本变更不为尚不存在的业务伪造触发点，也不使声音成为唯一反馈。
 - 在 portable audio core 中增加受限的延迟起音、指数衰减与短正弦共振原语，使正式实现可近似还原已选听感；逐样本路径不使用堆、double 或昂贵通用函数。
@@ -26,7 +28,7 @@
 
 ### Modified Capabilities
 
-- `interaction-sound-language`：将单一滑音音色要求修改为按交互频率和重要度分层的 Semantic Hierarchy 声音语言，并把词汇扩展到 Input、Action、Outcome 与 System 四个家族。
+- `interaction-sound-language`：将单一滑音音色要求修改为按交互频率和重要度分层的 Semantic Hierarchy 声音语言，并把词汇扩展到 Input、Action、Surface、Outcome 与 System 五个家族。
 - `portable-audio-core`：为已选 palette 增加固定容量、无堆分配的延迟起音、指数衰减与短正弦共振合成契约。
 - `audio-platform-output`：明确新 palette 在实体 T-Embed 上的疲劳度、可辨识性与输出安全验收门禁。
 

@@ -142,6 +142,16 @@ TEST_CASE("menu closing progress is monotonic and releases only offscreen") {
   CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
 }
 
+TEST_CASE("normal menu reveal keeps the reference two-tenths cadence") {
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  REQUIRE(surfaces.requestInteractive(
+      cadenza::presentation::SurfaceKind::SystemMenu));
+  surfaces.update(0.16F, {}, false);
+  CHECK(surfaces.revealProgress() == doctest::Approx(0.80F));
+  surfaces.update(0.04F, {}, false);
+  CHECK(surfaces.revealProgress() == doctest::Approx(1.0F));
+}
+
 TEST_CASE("Home menu omits Home from its navigation order") {
   cadenza::presentation::SystemSurfaceCoordinator surfaces;
   surfaces.update(0.01F, longPress(), false, true);
@@ -431,11 +441,53 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
         closingCanvas, scratch, cadenza::presentation::SystemMenuItem::Sound,
         false, snapshot, 0.35F, true);
     CHECK(framebufferHash(openingFirst) == framebufferHash(openingSecond));
-    CHECK(framebufferHash(openingFirst) == framebufferHash(closing));
+    CHECK(framebufferHash(openingFirst) != framebufferHash(closing));
     CHECK(framebufferHash(openingFirst) != framebufferHash(stable));
 
     const auto layout = cadenza::presentation::SystemMenuLayout::forCanvas(
         openingFirst.width(), openingFirst.height());
+
+    // The reference Menu behaves like a sheet pulled from its top-left
+    // corner: the top scanline lands immediately while opening, then peels
+    // away immediately while closing. Opening and closing are directional
+    // sweeps, not the same geometry played forwards and backwards.
+    cadenza::MonoFramebuffer openingFirstStep{profile};
+    cadenza::MonoFramebuffer closingFirstStep{profile};
+    cadenza::MonoCanvas openingFirstStepCanvas{openingFirstStep};
+    cadenza::MonoCanvas closingFirstStepCanvas{closingFirstStep};
+    cadenza::presentation::renderSystemMenu(
+        openingFirstStepCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        0.01F, false);
+    cadenza::presentation::renderSystemMenu(
+        closingFirstStepCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        0.99F, true);
+    CHECK(openingFirstStep.pixel(layout.panel.x + 1, layout.panel.y));
+    CHECK_FALSE(closingFirstStep.pixel(layout.panel.x + 1,
+                                       layout.panel.y));
+
+    // At 24 FPS a 200 ms reveal advances by roughly 0.208 on its first
+    // visible frame. The reference still has the bottom edge pinned to the
+    // right side at that instant; without the bottom lead-in delay it is
+    // already about half open and the warp loses most of its amplitude.
+    cadenza::MonoFramebuffer opening24FpsFirst{profile};
+    cadenza::MonoCanvas opening24FpsFirstCanvas{opening24FpsFirst};
+    cadenza::presentation::renderSystemMenu(
+        opening24FpsFirstCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        (1.0F / 24.0F) / 0.20F, false);
+    constexpr float kFirst24FpsProgress = (1.0F / 24.0F) / 0.20F;
+    const float oldRemaining = 1.0F - kFirst24FpsProgress;
+    const float oldBottomReveal =
+        1.0F - oldRemaining * oldRemaining * oldRemaining;
+    const int oldVisibleWidth = static_cast<int>(
+        static_cast<float>(layout.panel.width) * oldBottomReveal + 0.5F);
+    const int oldBottomBorder =
+        layout.panel.x + layout.panel.width - oldVisibleWidth;
+    CHECK_FALSE(opening24FpsFirst.pixel(
+        oldBottomBorder, layout.panel.y + layout.panel.height - 1));
+
     std::size_t earlyMaskPixels = 0;
     std::size_t middleMaskPixels = 0;
     for (int y = 0; y < openingFirst.height(); ++y) {
@@ -448,7 +500,13 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
     CHECK(middleMaskPixels > earlyMaskPixels);
 
     constexpr float kProgress = 0.35F;
-    const float eased = 1.0F - (1.0F - kProgress) * (1.0F - kProgress);
+    constexpr float kOpenBottomDelay = 0.22F;
+    const float bottomProgress = std::max(
+        0.0F, std::min(1.0F,
+            (kProgress - kOpenBottomDelay) /
+                (1.0F - kOpenBottomDelay)));
+    const float remaining = 1.0F - bottomProgress;
+    const float eased = 1.0F - remaining * remaining * remaining;
     std::size_t maskedUncoveredPixels = 0;
     const int sampleTop =
         layout.panel.y + layout.panel.height * 3 / 4;
@@ -456,10 +514,7 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
          y < layout.panel.y + layout.panel.height; ++y) {
       const float row = static_cast<float>(y - layout.panel.y) /
                         static_cast<float>(layout.panel.height - 1);
-      const float stagger = 0.28F * row;
-      const float rowReveal =
-          std::max(0.0F, std::min(1.0F,
-              (eased - stagger) / (1.0F - stagger)));
+      const float rowReveal = 1.0F - (1.0F - eased) * row;
       const int visibleWidth = static_cast<int>(
           static_cast<float>(layout.panel.width) * rowReveal + 0.5F);
       const int destinationLeft =

@@ -46,3 +46,6 @@ Launcher and handoff hashes were re-approved on 2026-07-19 after replacing the
 legacy Clock artwork with the approved `TIMER` cover. The horizontal/vertical
 track endpoints, launch/return transition frames, and warped Menu closing frame
 were visually inspected at both profiles before updating their test constants.
+The Menu opening keyframe was re-approved again after the 24 FPS reference
+comparison added a 22% bottom-edge lead-in delay; its first visible frame now
+keeps the top edge settled while the bottom remains at the right edge.

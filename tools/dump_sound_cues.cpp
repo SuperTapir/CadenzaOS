@@ -97,6 +97,8 @@ bool renderDemos(const std::filesystem::path& directory) {
          renderDemo(directory / "demo-action.wav",
                     {SoundCue::Confirm, SoundCue::Back, SoundCue::ToggleOn,
                      SoundCue::ToggleOff, SoundCue::Reject}) &&
+         renderDemo(directory / "demo-surface.wav",
+                    {SoundCue::MenuOpen, SoundCue::MenuClose}) &&
          renderDemo(directory / "demo-outcome.wav",
                     {SoundCue::Complete, SoundCue::Warning,
                      SoundCue::Failure}) &&

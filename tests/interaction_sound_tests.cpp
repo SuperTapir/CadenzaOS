@@ -102,12 +102,44 @@ TEST_CASE("confirm and back preserve approved two-strike calibration") {
         doctest::Approx(0.210F).epsilon(0.02));
 }
 
-TEST_CASE("semantic hierarchy exposes fifteen stable cues plus Timer Complete") {
-  constexpr std::array<const char*, 16> expected{{
+TEST_CASE("Menu surfaces preserve approved low directional single-onset cues") {
+  using namespace cadenza::audio;
+  const auto& menuOpen = soundCueDefinition(SoundCue::MenuOpen);
+  const auto& menuClose = soundCueDefinition(SoundCue::MenuClose);
+  REQUIRE(menuOpen.count == 2);
+  REQUIRE(menuClose.count == 2);
+
+  for (const auto* definition : {&menuOpen, &menuClose}) {
+    CHECK(definition->events[0].delaySeconds == doctest::Approx(0.0F));
+    CHECK(definition->events[1].delaySeconds == doctest::Approx(0.0F));
+    CHECK(definition->events[0].tone.waveform == Waveform::Sine);
+    CHECK(definition->events[1].tone.waveform == Waveform::Noise);
+    CHECK(definition->events[0].tone.envelopeCurve ==
+          EnvelopeCurve::Exponential);
+    CHECK(definition->events[1].tone.envelopeCurve ==
+          EnvelopeCurve::Exponential);
+  }
+
+  const auto openProfile = InteractionSoundService::profile(SoundCue::MenuOpen);
+  const auto closeProfile =
+      InteractionSoundService::profile(SoundCue::MenuClose);
+  CHECK(openProfile.startFrequencyHz == doctest::Approx(340.0F));
+  CHECK(openProfile.endFrequencyHz == doctest::Approx(680.0F));
+  CHECK(openProfile.durationSeconds == doctest::Approx(0.160F));
+  CHECK(closeProfile.startFrequencyHz == doctest::Approx(640.0F));
+  CHECK(closeProfile.endFrequencyHz == doctest::Approx(290.0F));
+  CHECK(closeProfile.durationSeconds == doctest::Approx(0.140F));
+  CHECK(openProfile.startFrequencyHz < openProfile.endFrequencyHz);
+  CHECK(closeProfile.startFrequencyHz > closeProfile.endFrequencyHz);
+}
+
+TEST_CASE("semantic hierarchy exposes stable cues plus Timer and Menu surfaces") {
+  constexpr std::array<const char*, 18> expected{{
       "navigate",     "boundary",     "confirm",    "back",
       "toggle-on",    "toggle-off",   "reject",     "complete",
       "warning",      "failure",      "notification", "connect",
       "disconnect",   "power-on",     "power-off", "timer-complete",
+      "menu-open",    "menu-close",
   }};
   CHECK(static_cast<std::size_t>(cadenza::audio::SoundCue::Count) ==
         expected.size());
@@ -173,7 +205,7 @@ TEST_CASE("delayed cue events start on schedule and are cleared by stop") {
 
 TEST_CASE("all semantic hierarchy cues render deterministically and end silent") {
   constexpr std::size_t kSamples = 44100;
-  constexpr std::array<std::uint64_t, 16> kGolden{{
+  constexpr std::array<std::uint64_t, 18> kGolden{{
       0x42ECB646DBC2F138ULL, 0x4DA394CE9C2148C2ULL,
       0x718BD5DCD3F36003ULL, 0x1AA4B6B726F7D759ULL,
       0x093E015B6B49C061ULL, 0xE184E7C5DF4F77CFULL,
@@ -182,6 +214,7 @@ TEST_CASE("all semantic hierarchy cues render deterministically and end silent")
       0x1E33454BC817A8F4ULL, 0x544F48552963AB96ULL,
       0xE18B997BCB79D023ULL, 0xCAB9268E54DCD0EEULL,
       0xFF77B74687A40111ULL, 0xF5AB40E42CF75F78ULL,
+      0x7E65C35377921CA6ULL, 0x68D82E874AB181F1ULL,
   }};
   for (std::size_t cueIndex = 0;
        cueIndex < static_cast<std::size_t>(cadenza::audio::SoundCue::Count);
