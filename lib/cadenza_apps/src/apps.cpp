@@ -5,6 +5,8 @@
 #include <cmath>
 #include <cstdio>
 
+#include "generated/about_logo_cover.h"
+#include "generated/about_logo_t_embed_cover.h"
 #include "generated/gallery_cover.h"
 #include "generated/gallery_t_embed_cover.h"
 #include "generated/motion_cover.h"
@@ -480,6 +482,31 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
               TextAlign::BottomLeft, TextRole::Footer);
 }
 
+void renderAboutScreen(MonoCanvas& canvas) noexcept {
+  constexpr const char* kCredit = "Made by Tapir";
+  constexpr const char* kFooter = "PRESS: BACK  HOLD: MENU";
+
+  canvas.clear(false);
+  const int width = canvas.width();
+  const int height = canvas.height();
+  const BitmapView& logo = width < kAboutLogoCover.width
+                               ? kAboutLogoTEmbedCover
+                               : kAboutLogoCover;
+  canvas.drawBitmap(logo, {0, 0, logo.width, logo.height},
+                    (width - logo.width) / 2, 0);
+
+  const TextMetrics footerMetrics =
+      canvas.measureText(kFooter, TextRole::Footer);
+  const int footerY = height - 7;
+  const int footerTop = footerY - footerMetrics.height;
+  const int creditY = logo.height + (footerTop - logo.height) / 2;
+  canvas.text(kCredit, width / 2, creditY, 1, true,
+              TextAlign::MiddleCenter, TextRole::Footer);
+  canvas.text(kFooter, std::max(4, (width - footerMetrics.width) / 2),
+              footerY, 1, true, TextAlign::BottomLeft,
+              TextRole::Footer);
+}
+
 void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
                         AppId appId, const char* title,
                         const AppCatalogView& catalog) noexcept {
@@ -791,10 +818,26 @@ bool MotionApp::renderLaunchFrame(MonoCanvas& canvas,
   return true;
 }
 
+void SettingsApp::onEnter() noexcept {
+  showingAbout_ = false;
+  resetConfirmArmed_ = false;
+}
+
 void SettingsApp::update(const AppUpdateContext& context) noexcept {
   const Seconds dt = context.dt;
   const InputFrame& input = context.input;
   time_ += dt;
+  if (showingAbout_) {
+    if (input.clicked) {
+      showingAbout_ = false;
+      context.commands.submit(
+          SystemCommand::playSound(audio::SoundCue::Back));
+    } else if (input.turn) {
+      context.commands.submit(
+          SystemCommand::playSound(audio::SoundCue::Boundary));
+    }
+    return;
+  }
   if (input.turn) {
     selected_ = wrap(selected_ + input.turn, 6);
     resetConfirmArmed_ = false;
@@ -859,12 +902,17 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
         becomingHorizontal ? audio::SoundCue::ToggleOn
                            : audio::SoundCue::ToggleOff));
   } else if (input.clicked && selected_ == 5) {
-    context.commands.submit(SystemCommand::playSound(audio::SoundCue::Reject));
+    showingAbout_ = true;
+    context.commands.submit(SystemCommand::playSound(audio::SoundCue::Confirm));
   }
 }
 
 void SettingsApp::render(MonoCanvas& canvas,
                          const AppRenderContext& context) noexcept {
+  if (showingAbout_) {
+    renderAboutScreen(canvas);
+    return;
+  }
   renderSettingsScreen(canvas, context.system, selected_, time_,
                        resetConfirmArmed_);
 }

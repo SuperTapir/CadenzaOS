@@ -161,6 +161,24 @@ fresh gate 为准：
 软件预览不能替代 Memory LCD 的一像素移动闪烁、反射环境和真机观看距离验收；
 这些物理项继续标记为 hardware motion acceptance pending。
 
+## 2026-07-19 About identity screen
+
+- Settings 的 `ABOUT: OS` 从 Reject 占位行为改为可进入的独立页面；短按返回
+  Settings，长按仍由系统菜单处理，进入 App 时不会残留旧 About 状态。
+- 用户明确批准钢琴意象、`CADENZA OS` 与花体 slogan
+  `A Space to Improvise.` 的双 profile 1-bit 基线；随后按用户反馈裁去内部白边放大
+  Logo，并把署名降为最小 Footer 字号的 `Made by Tapir`。
+- 正式 350×155 / 280×124 PBM 使用三档色调与显式 `--edge-cleanup`；source→PBM、
+  PBM→header 三项可复现检查通过，1× reflective、硬阈值与 4× nearest-neighbor
+  审阅无裁切、断字或关键轮廓 Bayer fringe。
+- `cadenza_apps_tests` 的双 profile About open/render/return case 通过；完整 host
+  83/83 通过，`git diff --check` 通过。
+- PlatformIO `cadenza-t-embed` release 编译成功：RAM 100,528 / 327,680 B
+  (30.7%)，Flash 476,733 / 3,145,728 B (15.2%)。
+
+软件与反射色板预览不能替代真机观看距离下的花体 slogan、细小署名和 4×4 dither
+验收；该项保留为 hardware visual acceptance pending。
+
 ## Delta-spec completion audit
 
 This is the requirement-by-requirement audit, rather than an inference from a
@@ -193,7 +211,7 @@ for normal use:
    `I2S audio task started`; there must be no repeated AudioUnderrun/AudioFailure.
 2. At Medium, turn slowly through Launcher choices and compare selection motion
    with Navigate onset. Check every boundary, open, System Menu Home, toggle,
-   About reject, and all four Settings volume states.
+   About open/return, and all four Settings volume states.
 3. Repeat fast rotation for 10 seconds. Sound must stop when motion stops; there
    must be no delayed tick queue, display stall or watchdog reset.
 4. Trigger Confirm, Back and Reject while other tails are active. Listen for

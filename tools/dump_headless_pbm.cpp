@@ -159,6 +159,15 @@ int main(int argc, char** argv) {
       host.step(turn);
     }
   } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+             argc >= 5 && app == cadenza::apps::kSettingsAppId &&
+             std::strcmp(argv[4], "about") == 0) {
+    cadenza::InputFrame selectAbout;
+    selectAbout.turn = 5;
+    host.step(selectAbout);
+    cadenza::InputFrame click;
+    click.clicked = true;
+    host.step(click);
+  } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
              argc >= 5 &&
              app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;

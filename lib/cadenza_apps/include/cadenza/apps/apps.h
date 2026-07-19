@@ -97,6 +97,7 @@ class MotionApp final : public App {
 class SettingsApp final : public App {
  public:
   const char* name() const noexcept override { return "Settings"; }
+  void onEnter() noexcept override;
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
@@ -105,11 +106,13 @@ class SettingsApp final : public App {
   bool renderLaunchFrame(MonoCanvas& canvas,
                          float progress,
                          const AppRenderContext& context) const noexcept override;
+  bool showingAbout() const noexcept { return showingAbout_; }
 
  private:
   int selected_ = 0;
   float time_ = 0.0F;
   bool resetConfirmArmed_ = false;
+  bool showingAbout_ = false;
 };
 
 enum class GalleryMode : std::uint8_t { AutoPlay, Scrub };

@@ -1305,6 +1305,62 @@ TEST_CASE("Settings switches Launcher orientation immediately at both profiles")
   }
 }
 
+TEST_CASE("Settings About opens a dedicated identity screen and click returns") {
+  for (const cadenza::FramebufferProfile profile : {
+           cadenza::FramebufferProfile::TEmbed,
+           cadenza::FramebufferProfile::Sharp}) {
+    CAPTURE(static_cast<int>(profile));
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::system::SystemServiceHost services;
+    cadenza::SettingsApp settings;
+    cadenza::LauncherApp launcher;
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                            false));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
+    REQUIRE(runtime.begin(cadenza::apps::kSettingsAppId));
+
+    cadenza::MonoFramebuffer framebuffer{profile};
+    cadenza::MonoCanvas canvas{framebuffer};
+    cadenza::test::renderApp(settings, canvas, runtime, services);
+    const std::uint64_t settingsHash = framebufferHash(framebuffer);
+
+    cadenza::InputFrame selectAbout;
+    selectAbout.turn = 5;
+    cadenza::test::updateApp(settings, 0.0F, selectAbout, runtime, services,
+                             cadenza::apps::kSettingsAppId);
+    cadenza::InputFrame click;
+    click.clicked = true;
+    cadenza::test::updateApp(settings, 0.0F, click, runtime, services,
+                             cadenza::apps::kSettingsAppId);
+    CHECK(settings.showingAbout());
+    CHECK(services.sound().lastAcceptedCue() ==
+          cadenza::audio::SoundCue::Confirm);
+
+    TextDiagnosticSink diagnostics;
+    cadenza::MonoCanvas aboutCanvas{framebuffer, &diagnostics};
+    cadenza::test::renderApp(settings, aboutCanvas, runtime, services);
+    CHECK(framebufferHash(framebuffer) != settingsHash);
+    CHECK(hasBlackPixel(framebuffer));
+    const int logoHeight =
+        profile == cadenza::FramebufferProfile::TEmbed ? 124 : 155;
+    CHECK(hasBlackInRect(framebuffer,
+                         {0, 0, framebuffer.width(), logoHeight}));
+    CHECK(hasBlackInRect(
+        framebuffer,
+        {0, logoHeight, framebuffer.width(),
+         static_cast<int>(framebuffer.height()) - logoHeight}));
+    CHECK_FALSE(diagnostics.textClipped);
+    CHECK_FALSE(diagnostics.unexpectedGeometryClip);
+    CHECK_FALSE(diagnostics.invalidGeometry);
+
+    cadenza::test::updateApp(settings, 0.0F, click, runtime, services,
+                             cadenza::apps::kSettingsAppId);
+    CHECK_FALSE(settings.showingAbout());
+    CHECK(services.sound().lastAcceptedCue() ==
+          cadenza::audio::SoundCue::Back);
+  }
+}
+
 TEST_CASE("Settings drives Wi-Fi and owner-bound provisioning without credentials") {
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
