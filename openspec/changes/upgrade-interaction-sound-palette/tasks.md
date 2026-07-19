@@ -28,3 +28,10 @@
 - [x] 5.1 记录 `09-semantic-hierarchy-full` Confirm/Back 的双事件 offset、有效时长、包络峰与主频边界，并先添加能够拒绝当前错误正式输出和旧滑音的失败测试
 - [x] 5.2 将 Confirm/Back 正式 C++ 合成参数移植到拍板原型边界，保持四声部、无参考 WAV 运行时依赖，并在通过校准门禁后更新 PCM golden
 - [x] 5.3 验证真实 App open/长按返回经 SystemServiceHost 分别路由 Confirm/Back，导出上下文试听并运行 OpenSpec strict、音频定向、host、desktop 与 firmware 门禁
+
+## 6. System Menu Surface cue
+
+- [x] 6.1 先添加 System Menu 展开/收起分别路由 MenuOpen/MenuClose 且不再触发 Confirm/Back 的失败测试
+- [x] 6.2 将用户拍板的低音区 V2 MenuOpen/MenuClose 单起音参数接入 SoundCue、palette、名称与 cue dump
+- [x] 6.3 增加两项时长、方向、单起音、确定性 PCM/golden 与真实 Runtime 上下文回归，并记录拍板试听边界
+- [x] 6.4 更新音频文档并运行 OpenSpec strict、音频定向、完整 host、shared-source 与可用 firmware 门禁

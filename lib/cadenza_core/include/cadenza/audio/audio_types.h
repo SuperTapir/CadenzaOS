@@ -23,6 +23,8 @@ enum class SoundCue : std::uint8_t {
   PowerOn,
   PowerOff,
   TimerComplete,
+  MenuOpen,
+  MenuClose,
   Count,
 };
 

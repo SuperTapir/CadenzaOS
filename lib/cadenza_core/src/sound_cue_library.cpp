@@ -36,6 +36,14 @@ ToneSpec resonator(float startHz, float endHz, float duration, float gain,
   return value;
 }
 
+ToneSpec surfaceTexture(float duration, float gain) noexcept {
+  ToneSpec value = linearTone(Waveform::Noise, 900.0F, 900.0F, duration,
+                              gain, 2, 0.00045F, 0.006F);
+  value.envelopeCurve = EnvelopeCurve::Exponential;
+  value.decaySeconds = 0.007F;
+  return value;
+}
+
 SoundEvent event(const ToneSpec& tone, float delay = 0.0F) noexcept {
   return {tone, delay};
 }
@@ -179,6 +187,14 @@ const std::array<SoundCueDefinition,
                            0.47F, 3, 0.00035F, 0.024F, 0.07F),
                  0.290F)}},
          4},
+        {{{event(resonator(340.0F, 680.0F, 0.160F, 0.30F, 0.060F, 0.11F,
+                           2, 0.0012F, 0.012F, 0.09F, 0.08F)),
+           event(surfaceTexture(0.048F, 0.040F))}},
+         2},
+        {{{event(resonator(640.0F, 290.0F, 0.140F, 0.29F, 0.048F, 0.18F,
+                           2, 0.0012F, 0.012F, 0.09F, 0.08F)),
+           event(surfaceTexture(0.042F, 0.034F))}},
+         2},
     }};
 }  // namespace
 
@@ -221,6 +237,10 @@ const char* soundCueName(SoundCue cue) noexcept {
       return "power-off";
     case SoundCue::TimerComplete:
       return "timer-complete";
+    case SoundCue::MenuOpen:
+      return "menu-open";
+    case SoundCue::MenuClose:
+      return "menu-close";
     case SoundCue::Count:
       return "invalid";
   }

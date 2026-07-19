@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: 语义声音词汇
-系统 SHALL 定义 Input 家族的 Navigate、Boundary，Action 家族的 Confirm、Back、ToggleOn、ToggleOff、Reject，Outcome 家族的 Complete、Warning、Failure，以及 System 家族的 Notification、Connect、Disconnect、PowerOn、PowerOff；调用方 SHALL 请求交互语义而不是平台设备操作或资源路径。
+系统 SHALL 定义 Input 家族的 Navigate、Boundary，Action 家族的 Confirm、Back、ToggleOn、ToggleOff、Reject，Surface 家族的 MenuOpen、MenuClose，Outcome 家族的 Complete、Warning、Failure，以及 System 家族的 Notification、Connect、Disconnect、PowerOn、PowerOff；调用方 SHALL 请求交互语义而不是平台设备操作或资源路径。
 
 #### Scenario: Launcher 选择改变
 - **WHEN** 旋钮输入实际改变 Launcher 当前选择
@@ -10,6 +10,10 @@
 #### Scenario: 打开与返回
 - **WHEN** 用户确认打开 App 或长按返回 Launcher
 - **THEN** 系统分别触发 Confirm 或 Back，且提示与转场开始属于同一次语义动作
+
+#### Scenario: System Menu 展开与收起
+- **WHEN** System Menu 开始展开或收起
+- **THEN** 系统分别触发 MenuOpen 或 MenuClose，声音与视觉形变同帧开始，且不得复用 Confirm 或 Back
 
 #### Scenario: 无效动作
 - **WHEN** 用户动作没有改变状态或被边界拒绝
@@ -20,7 +24,7 @@
 - **THEN** 系统按其稳定语义播放对应 palette，且声音不替代视觉状态
 
 ### Requirement: 分层的 Cadenza 声音语言
-系统 SHALL 使用原创参数合成实现经人工拍板的 Semantic Hierarchy palette；Navigate、ToggleOn 与 ToggleOff SHALL 分别以 Select、Turn On、Turn Off 的时长、低调程度和动作轮廓作为本地校准参考，但 SHALL NOT 嵌入或分发参考采样。Input SHALL 最轻，Action SHALL 可辨动作类型，Outcome 与 System MAY 使用更完整音身，但不得形成持续背景音乐。
+系统 SHALL 使用原创参数合成实现经人工拍板的 Semantic Hierarchy palette；Navigate、ToggleOn 与 ToggleOff SHALL 分别以 Select、Turn On、Turn Off 的时长、低调程度和动作轮廓作为本地校准参考，但 SHALL NOT 嵌入或分发参考采样。Input SHALL 最轻，Action SHALL 可辨动作类型，Surface SHALL 使用低于 Confirm/Back 的单起音形变声，Outcome 与 System MAY 使用更完整音身，但不得形成持续背景音乐。
 
 #### Scenario: Navigate 近似校准
 - **WHEN** headless 渲染 Navigate
@@ -34,8 +38,12 @@
 - **WHEN** headless 分别渲染 App 进入使用的 Confirm 与长按返回使用的 Back
 - **THEN** Confirm 保持两段上行调音敲击，Back 保持不对称的两段下行且第二段更闷更短；两者的事件 offset、有效时长、包络峰和主频范围处于已记录的 `09-semantic-hierarchy-full` 校准边界，并与旧版连续 Triangle/Square 滑音可区分
 
+#### Scenario: Menu Surface 成对可辨
+- **WHEN** headless 分别渲染 MenuOpen 与 MenuClose
+- **THEN** 两者均为无延迟第二敲击的单动作声，MenuOpen 在约 160 ms 内从低音区明显上扬，MenuClose 在约 140 ms 内明显下潜，且上下文试听不被误认为 Confirm/Back
+
 #### Scenario: 家族层级
-- **WHEN** 依次渲染 Input、Action、Outcome 与 System cue
+- **WHEN** 依次渲染 Input、Action、Surface、Outcome 与 System cue
 - **THEN** 每个 cue 使用唯一名称和确定性合成定义，且重要状态仍具有非声音反馈
 
 ### Requirement: 高频输入抑制
