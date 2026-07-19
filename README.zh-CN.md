@@ -1,6 +1,10 @@
-# Cadenza
+# Cadenza OS
 
 [English](README.md) · **简体中文**
+
+<p align="center">
+  <img src="assets/about/source/about_logo.png" alt="Cadenza OS — A Space to Improvise." width="700">
+</p>
 
 **Cadenza** 是由 Tapir 创作的个人互动设备与创作平台；它的系统称为
 **Cadenza OS**。当前版本以原版 LILYGO T-Embed（非 CC1101 版本）为原型硬件，

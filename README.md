@@ -1,6 +1,10 @@
-# Cadenza
+# Cadenza OS
 
 **English** · [简体中文](README.zh-CN.md)
+
+<p align="center">
+  <img src="assets/about/source/about_logo.png" alt="Cadenza OS — A Space to Improvise." width="700">
+</p>
 
 **Cadenza** is a personal interactive-device and creative platform by Tapir.
 Its system, **Cadenza OS**, explores a portable 1-bit App/Runtime, system
