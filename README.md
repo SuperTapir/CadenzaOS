@@ -1,8 +1,5 @@
 # Cadenza
 
-[![Cadenza OS application walkthrough](docs/media/cadenza-os-demo-poster.png)](https://github.com/user-attachments/assets/4cbb17ba-b52b-44dc-b557-88dd9fdf3d63)
-
-
 https://github.com/user-attachments/assets/4cbb17ba-b52b-44dc-b557-88dd9fdf3d63
 
 
