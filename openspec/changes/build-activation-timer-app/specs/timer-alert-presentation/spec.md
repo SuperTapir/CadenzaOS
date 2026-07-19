@@ -4,7 +4,7 @@
 Running 或 Paused Timer 的 owner App 不在前台时，系统 SHALL 在 persistent indicator layer 显示紧凑状态和向上取整的剩余分钟；indicator SHALL 不抢占输入，owner App 前台 SHALL 不重复显示。
 
 #### Scenario: Launcher 显示后台 Timer
-- **WHEN** Clock 启动 10 分钟 Timer 后返回 Launcher 且 remaining 为 07:18
+- **WHEN** Timer 启动 10 分钟 Timer 后返回 Launcher 且 remaining 为 07:18
 - **THEN** Launcher 保持可操作并显示可读的 Running indicator `T 08`
 
 ### Requirement: 到期使用 critical Timer Alert
@@ -29,7 +29,7 @@ TimerAlert SHALL 在出现时接管后续 input，并 SHALL 在已有按钮 sequ
 TimerAlert SHALL 在 App transition 期间立即拥有输入并在当前可组合 frame 上显示，不得等待目标 App update 或丢失 expiration generation。
 
 #### Scenario: launch transition 中到期
-- **WHEN** Clock 到 Motion 的 transition 中 Timer 到期
+- **WHEN** Timer 到 Motion 的 transition 中 Timer 到期
 - **THEN** alert 在该帧后成为唯一 interactive surface、App transition 不接收确认输入且确认后 runtime 回到确定的 stable App state
 
 ### Requirement: Alert 双 profile 可读且无声等价

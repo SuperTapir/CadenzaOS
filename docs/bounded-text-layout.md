@@ -40,7 +40,7 @@
 | 调用 | 数据上限 | 处理 |
 | --- | --- | --- |
 | Launcher fallback 应用名 | 来自可注册 `App::name()`，长度不受核心控制 | 在所属 Cover 可见内区独立执行 `fit`/`Ellipsis`；空间不足则省略 |
-| Clock 时间值 | 固定 `%02d:%02d` 格式与本地 16-byte buffer | 保留现有绘制，由应用快照覆盖 |
+| Timer 时间值 | 固定 `%02d:%02d` 格式与本地 16-byte buffer | 保留现有绘制，由应用快照覆盖 |
 | Settings 行文本 | 两组编译期常量 | 保留现有绘制，由双 profile 应用测试覆盖 |
 | Gallery page name / page label | 固定容量枚举表与 `%02u/%02u` 格式 | 保留现有绘制，由 Gallery 快照覆盖 |
 | Gallery animation state | 固定状态机名称集合 | 保留现有绘制，由 Gallery 测试覆盖 |

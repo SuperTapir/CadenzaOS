@@ -141,7 +141,7 @@ class HeadlessHost {
 
  private:
   LauncherApp launcher_;
-  ClockApp clock_;
+  TimerApp timer_;
   MotionApp motion_;
   SettingsApp settings_;
   AnimationGalleryApp gallery_;

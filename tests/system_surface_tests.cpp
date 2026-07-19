@@ -180,7 +180,12 @@ TEST_CASE("Timer alert preempts Menu and owns the acknowledgement click") {
   CHECK(alert.consumeInput);
   CHECK(alert.captureFrozenFrame);
   CHECK(surfaces.timerAlertActive());
+  CHECK(surfaces.timerAlertElapsed() == doctest::Approx(0.0F));
   CHECK_FALSE(surfaces.menuActive());
+
+  surfaces.update(0.25F, {}, false, false,
+                  cadenza::MotionProfile::Normal, expired);
+  CHECK(surfaces.timerAlertElapsed() == doctest::Approx(0.25F));
 
   cadenza::InputFrame click;
   click.clicked = true;
@@ -189,6 +194,7 @@ TEST_CASE("Timer alert preempts Menu and owns the acknowledgement click") {
       0.01F, click, false, false, cadenza::MotionProfile::Normal, expired);
   CHECK(acknowledged.intent == SystemSurfaceIntent::TimerAcknowledge);
   CHECK(surfaces.timerAlertActive());
+  CHECK(surfaces.timerAlertElapsed() == doctest::Approx(0.0F));
 }
 
 TEST_CASE("Button sequence held at expiry cannot acknowledge Timer alert") {
@@ -226,24 +232,40 @@ TEST_CASE("Button sequence held at expiry cannot acknowledge Timer alert") {
             .intent == SystemSurfaceIntent::TimerAcknowledge);
 }
 
-TEST_CASE("Timer alert renderer is deterministic on both profiles") {
-  constexpr std::array<std::uint64_t, 2> expected{{
-      11299818760683844865ULL, 17672932458818425821ULL}};
-  std::size_t profileIndex = 0;
+TEST_CASE("Timer alert renderer loops and adapts to Motion Profile") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     cadenza::MonoFramebuffer first{profile};
     cadenza::MonoFramebuffer second{profile};
+    cadenza::MonoFramebuffer midpoint{profile};
+    cadenza::MonoFramebuffer reducedFirst{profile};
+    cadenza::MonoFramebuffer reducedSecond{profile};
     first.clear(true);
     second.clear(true);
+    midpoint.clear(true);
+    reducedFirst.clear(true);
+    reducedSecond.clear(true);
     cadenza::MonoCanvas firstCanvas{first};
     cadenza::MonoCanvas secondCanvas{second};
-    cadenza::presentation::renderTimerAlert(firstCanvas);
-    cadenza::presentation::renderTimerAlert(secondCanvas);
+    cadenza::MonoCanvas midpointCanvas{midpoint};
+    cadenza::MonoCanvas reducedFirstCanvas{reducedFirst};
+    cadenza::MonoCanvas reducedSecondCanvas{reducedSecond};
+    cadenza::TimerSnapshot timer;
+    cadenza::presentation::renderTimerAlert(
+        firstCanvas, timer, 0.0F, cadenza::MotionProfile::Normal);
+    cadenza::presentation::renderTimerAlert(
+        secondCanvas, timer, 1.2F, cadenza::MotionProfile::Normal);
+    cadenza::presentation::renderTimerAlert(
+        midpointCanvas, timer, 0.6F, cadenza::MotionProfile::Normal);
+    cadenza::presentation::renderTimerAlert(
+        reducedFirstCanvas, timer, 0.0F, cadenza::MotionProfile::Reduced);
+    cadenza::presentation::renderTimerAlert(
+        reducedSecondCanvas, timer, 0.6F, cadenza::MotionProfile::Reduced);
     CHECK(framebufferHash(first) == framebufferHash(second));
-    CHECK(framebufferHash(first) == expected[profileIndex++]);
+    CHECK(framebufferHash(first) != framebufferHash(midpoint));
+    CHECK(framebufferHash(reducedFirst) == framebufferHash(reducedSecond));
     CHECK(first.pixel(0, 0));
-    CHECK_FALSE(first.pixel(first.width() / 2, first.height() / 2));
+    CHECK_FALSE(first.pixel(13, 13));
   }
 }
 
@@ -330,18 +352,24 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
     cadenza::MonoFramebuffer stable{profile};
     cadenza::MonoFramebuffer openingFirst{profile};
     cadenza::MonoFramebuffer openingSecond{profile};
+    cadenza::MonoFramebuffer openingEarly{profile};
     cadenza::MonoFramebuffer closing{profile};
+    cadenza::MonoFramebuffer hidden{profile};
     cadenza::MonoFramebuffer scratch{profile};
-    rigid.clear(true);
-    stable.clear(true);
-    openingFirst.clear(true);
-    openingSecond.clear(true);
-    closing.clear(true);
+    rigid.clear(false);
+    stable.clear(false);
+    openingFirst.clear(false);
+    openingSecond.clear(false);
+    openingEarly.clear(false);
+    closing.clear(false);
+    hidden.clear(false);
     cadenza::MonoCanvas rigidCanvas{rigid};
     cadenza::MonoCanvas stableCanvas{stable};
     cadenza::MonoCanvas openingFirstCanvas{openingFirst};
     cadenza::MonoCanvas openingSecondCanvas{openingSecond};
+    cadenza::MonoCanvas openingEarlyCanvas{openingEarly};
     cadenza::MonoCanvas closingCanvas{closing};
+    cadenza::MonoCanvas hiddenCanvas{hidden};
     cadenza::SystemSnapshot snapshot;
 
     cadenza::presentation::renderSystemMenu(
@@ -352,6 +380,17 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
         false, snapshot, 1.0F, false);
     CHECK(framebufferHash(rigid) == framebufferHash(stable));
 
+    cadenza::presentation::renderSystemMenu(
+        hiddenCanvas, scratch, cadenza::presentation::SystemMenuItem::Sound,
+        false, snapshot, 0.0F, false);
+    cadenza::MonoFramebuffer frozenBaseline{profile};
+    frozenBaseline.clear(false);
+    CHECK(framebufferHash(hidden) == framebufferHash(frozenBaseline));
+
+    cadenza::presentation::renderSystemMenu(
+        openingEarlyCanvas, scratch,
+        cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
+        0.15F, false);
     cadenza::presentation::renderSystemMenu(
         openingFirstCanvas, scratch,
         cadenza::presentation::SystemMenuItem::Sound, false, snapshot,
@@ -364,8 +403,47 @@ TEST_CASE("warped menu is stable when open and deforms deterministically") {
         closingCanvas, scratch, cadenza::presentation::SystemMenuItem::Sound,
         false, snapshot, 0.35F, true);
     CHECK(framebufferHash(openingFirst) == framebufferHash(openingSecond));
-    CHECK(framebufferHash(openingFirst) != framebufferHash(closing));
+    CHECK(framebufferHash(openingFirst) == framebufferHash(closing));
     CHECK(framebufferHash(openingFirst) != framebufferHash(stable));
+
+    const auto layout = cadenza::presentation::SystemMenuLayout::forCanvas(
+        openingFirst.width(), openingFirst.height());
+    std::size_t earlyMaskPixels = 0;
+    std::size_t middleMaskPixels = 0;
+    for (int y = 0; y < openingFirst.height(); ++y) {
+      for (int x = 0; x < layout.panel.x; ++x) {
+        if (openingEarly.pixel(x, y)) ++earlyMaskPixels;
+        if (openingFirst.pixel(x, y)) ++middleMaskPixels;
+      }
+    }
+    CHECK(earlyMaskPixels > 0);
+    CHECK(middleMaskPixels > earlyMaskPixels);
+
+    constexpr float kProgress = 0.35F;
+    const float eased = 1.0F - (1.0F - kProgress) * (1.0F - kProgress);
+    std::size_t maskedUncoveredPixels = 0;
+    const int sampleTop =
+        layout.panel.y + layout.panel.height * 3 / 4;
+    for (int y = sampleTop;
+         y < layout.panel.y + layout.panel.height; ++y) {
+      const float row = static_cast<float>(y - layout.panel.y) /
+                        static_cast<float>(layout.panel.height - 1);
+      const float stagger = 0.28F * row;
+      const float rowReveal =
+          std::max(0.0F, std::min(1.0F,
+              (eased - stagger) / (1.0F - stagger)));
+      const int visibleWidth = static_cast<int>(
+          static_cast<float>(layout.panel.width) * rowReveal + 0.5F);
+      const int destinationLeft =
+          layout.panel.x + layout.panel.width - visibleWidth;
+      for (int x = layout.panel.x; x < destinationLeft; ++x) {
+        // This range is in the right half but precedes this scanline's panel
+        // destination. Any black pixel therefore comes from the full-screen
+        // mask, not from panel content.
+        if (openingFirst.pixel(x, y)) ++maskedUncoveredPixels;
+      }
+    }
+    CHECK(maskedUncoveredPixels > 0);
   }
 }
 

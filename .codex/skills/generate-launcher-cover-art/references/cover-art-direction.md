@@ -111,6 +111,18 @@ one emblem, disciplined alignment, and optionally one short semantic micro-label
 only when it remains legible. Avoid turning the Cover into a dashboard or copying
 a real platform's trade dress.
 
+### Dimensional overlap
+
+Use when a flat title and one functional object can create a memorable 2D/3D
+relationship. Keep the title frontal and immediately readable; place one tilted
+volumetric object behind or through it, and define an explicit occlusion order.
+Build the object from no more than a front face, rim, and side wall. Assign each
+gray plane to one of those surfaces so perspective survives ordered-dither
+conversion. Reject generic extruded decoration, floating objects with no App
+meaning, photorealistic rendering, and any overlap that obscures letter identity.
+At hard threshold, the title, object silhouette, and which element is in front
+must still be obvious.
+
 ## Visual complexity budget
 
 Before composing a prompt, write a permitted-element list containing only:
@@ -186,13 +198,13 @@ Exclude: imitation of a specific Playdate game cover, copied logo or character, 
 
 ## App briefs
 
-### CLOCK
+### TIMER
 
-Purpose: stopwatch/timer; rotary input adjusts time and Confirm pauses/resumes.
-Art role: the set's quiet, exact and slightly mysterious night scene.
+Purpose: countdown timer; rotary input adjusts time and Confirm pauses/resumes.
+Art role: the set's dark, exact 2D/3D industrial micro-poster.
 
 ```text
-A radically simplified editorial-minimal launcher cover for an app titled “CLOCK”. The first impression is quiet, exact, nocturnal, and slightly mysterious; the recall hook is one oversized circular dial emerging from a single geometric tower mass. Use only the word “CLOCK”, that combined dial-and-tower silhouette, two bold hands, one sweeping triangular beam, and optionally the compact readout “12:34”. Let asymmetry, black space, and the title carry the composition. Keep the tower and dial as one motif with at most two large internal planes, not a rendered building. Do not add a moon, stars, distant lighthouse, skyline, railings, ladders, antennas, windows, rocks, vegetation, or ground debris. Spell the title exactly “CLOCK”.
+A radically simplified dimensional-overlap launcher cover for an app titled “TIMER”. The first impression is dark, exact, and dimensional; the recall hook is the complete foreground letter R occluding one large tilted 3D countdown dial behind it. Use only the word “TIMER” and that dial. Keep the title flat, frontal, bright, and immediately readable. Build the dial from a light rim, one broad gray face, one dark side wall, one simple hand, and one missing sector that makes elapsed time obvious. Preserve the complete R silhouette in front of the dial. Use three to five deliberate gray values whose ordered-dither conversion retains the face/rim/side-wall depth. Do not add clock towers, small ticks, numerals, multiple hands, buttons, screws, shadows detached from the dial, secondary instruments, or a miniature Timer UI. Spell the title exactly “TIMER”.
 ```
 
 Keep the displayed time static in all Launcher interactions.
@@ -243,7 +255,7 @@ Reject or iterate unless every applicable item passes:
 - The Cover contains one primary scene and one dominant motif.
 - The Cover stays within three semantic layers: title, dominant motif, and one
   broad supporting shape; there are no more than two small semantic accents.
-- CLOCK/GALLERY read as dark and MOTION/SETTINGS read as light.
+- TIMER/GALLERY read as dark and MOTION/SETTINGS read as light.
 - The chosen house style or visual strategy is coherent and does not imitate a
   specific Catalog title, copyrighted character, logo, or layout.
 - Safe margins, contour weight, title readability, reduction quality, and texture
@@ -267,7 +279,8 @@ Reject or iterate unless every applicable item passes:
 - Important contours remain readable after a 4× reduction to 350×155.
 - Every retained detail remains meaningful and stable at both 350×155 and
   280×124 when viewed at 1×; enlarged-master appeal is not an acceptance reason.
-- MOTION's core circle is hollow; CLOCK has one main dial.
+- MOTION's core circle is hollow; TIMER has one tilted countdown dial and a
+  complete foreground `R`.
 - Image is a static identity Cover, not a pressed/selected/launch variant.
 - Original lossless PNG is retained separately from derived crops and 1-bit files.
 - Pure black/white and reflective-palette previews are reviewed at 1× size.

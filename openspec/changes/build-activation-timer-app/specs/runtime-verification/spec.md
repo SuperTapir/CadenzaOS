@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Both display profiles have snapshots
-Approved screenshot/framebuffer snapshots SHALL cover Launcher, Clock/Activation Timer Ready/Running/Paused, Motion, Settings, Gallery, Timer background indicator, TimerAlert, and representative transitions at 320×170 and 400×240.
+Approved screenshot/framebuffer snapshots SHALL cover Launcher, Timer Ready/Running/Paused, Motion, Settings, Gallery, Timer background indicator, TimerAlert, and representative transitions at 320×170 and 400×240.
 
 #### Scenario: Snapshot regression runs
 - **WHEN** deterministic fixed-step scenes render their capture frames
@@ -17,10 +17,10 @@ Approved screenshot/framebuffer snapshots SHALL cover Launcher, Clock/Activation
 - **THEN** 只有后两者为 Expired，expiration edge/generation/cue 次数与规格一致
 
 ### Requirement: Timer 后台与 alert 输入链路有可执行 E2E
-Headless/desktop E2E SHALL 从 Launcher 打开 Clock、设定并开始、打开 System Menu或返回 Launcher、跨过 deadline、确认 alert、再次启动，并 SHALL 覆盖 alert 出现在 held button 与 App transition 中的 trace。
+Headless/desktop E2E SHALL 从 Launcher 打开 Timer、设定并开始、打开 System Menu或返回 Launcher、跨过 deadline、确认 alert、再次启动，并 SHALL 覆盖 alert 出现在 held button 与 App transition 中的 trace。
 
 #### Scenario: 完整十分钟流程的缩时重放
-- **WHEN** deterministic host 以缩时 monotonic trace 执行 Launcher→Clock→Start→Home→Expire→Acknowledge→Clock→Start
+- **WHEN** deterministic host 以缩时 monotonic trace 执行 Launcher→Timer→Start→Home→Expire→Acknowledge→Timer→Start
 - **THEN** Timer 在后台连续、alert 抢占和恢复正确、最近时长保留、current App/lifecycle/input owner/声音序列全部匹配规格
 
 ### Requirement: Timer 变更通过完整构建与审计门禁

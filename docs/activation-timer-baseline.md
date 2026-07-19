@@ -12,16 +12,16 @@
 
 初次 CMake 缓存指向已删除的 `/Library/Frameworks/Python.framework/Versions/3.13/bin/python3`；显式切换到 workspace bundled Python 后重跑通过。这是本机环境漂移，不是项目回归。
 
-## Clock App framebuffer
+## Timer App framebuffer
 
-变更前 `ClockApp` 是正向 elapsed demo，fresh stable render hash：
+变更前 `TimerApp` 是正向 elapsed demo，fresh stable render hash：
 
 | Profile | Hash (decimal) |
 | --- | ---: |
 | 320×170 | 2172376209712558838 |
 | 400×240 | 8667913246713477979 |
 
-Launcher、Motion、Settings、Gallery 和 selection 完整基线保存在 `tests/snapshots/app_baselines.md`，Timer 变更不得无解释修改非 Clock 项。
+Launcher、Motion、Settings、Gallery 和 selection 完整基线保存在 `tests/snapshots/app_baselines.md`，Timer 变更不得无解释修改非 Timer 项。
 
 ## System Overlay
 

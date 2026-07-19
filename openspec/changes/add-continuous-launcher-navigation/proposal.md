@@ -7,7 +7,7 @@
 - 将 Launcher 改为可中断、循环且连续的卡片轨道，导航期间同时呈现当前项与相邻项，并在循环边界沿单卡最短路径移动。
 - 在 Settings 增加 `LAUNCHER: VERTICAL | HORIZONTAL`，切换后通过受权限约束的系统设置快照立即传播到 Launcher；本 change 保持现有会话级设置生命周期，不引入通用持久化存储。
 - 优化 Launcher 交互：快速连续旋转连续 retarget、移动中点击打开逻辑选中项、相邻卡片提供方向预告、页脚去除重复的前后 App 名称，并保留稳定的选择指示。
-- 为 App 增加固定容量、无分配的 Launcher Cover 绘制契约；Clock、Motion、Settings 和 Gallery 各自使用经人工确认、离线裁切并转换为 1-bit 的原创静态内容场景，没有 Cover 的 App 使用受约束名称 fallback。
+- 为 App 增加固定容量、无分配的 Launcher Cover 绘制契约；Timer、Motion、Settings 和 Gallery 各自使用经人工确认、离线裁切并转换为 1-bit 的原创静态内容场景，没有 Cover 的 App 使用受约束名称 fallback。
 - Cover 明确定义为静态、不可交互的视觉身份；选中、按下、长按、启动和 App lifecycle 状态均不得改变 Cover 像素。未来若需要启动动画，应使用独立资源与契约，不复用或变异 Cover。
 - 重做 Launcher 视觉层级：应用内容成为卡片主体，系统 chrome 收敛为轻量轮廓和简洁标题栏，移除笨重双层大框、通用巨字、重复页码 footer 和抢眼移动纹理。
 - Normal motion 使用轻微受控 overshoot，Reduced Motion 取消 overshoot 但保留连续导航反馈。

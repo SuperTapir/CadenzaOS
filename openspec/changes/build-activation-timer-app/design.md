@@ -1,6 +1,6 @@
 ## Context
 
-当前 `ClockApp` 在前台用 `AppUpdateContext.dt` 正向累加 `elapsed_`；System Menu 会冻结 App update/render，返回 Launcher 后 Clock 也不再 update。firmware 还会把 presentation `dt` clamp 到 50 ms，因此该路径既不能实现倒计时，也不能保证真实十分钟后提醒。
+该变更开始时的旧实现用 `AppUpdateContext.dt` 正向累加 `elapsed_`；System Menu 会冻结 App update/render，返回 Launcher 后旧 Clock 演示也不再 update。firmware 还会把 presentation `dt` clamp 到 50 ms，因此该路径既不能实现倒计时，也不能保证真实十分钟后提醒。
 
 Cadenza 已有固定容量 `SystemServiceHost`、typed command/frozen snapshot/frame transaction，以及单 interactive slot 的 System Surface Coordinator。`docs/activation-timer-reference-research.md` 锁定并阅读了 AOSP DeskClock、Zephyr、FreeRTOS、ESP-IDF 和同类产品：采用单调 deadline、系统持有提醒、回调短且异步等思想，但不复制实现或新增依赖。
 
@@ -22,13 +22,13 @@ Cadenza 已有固定容量 `SystemServiceHost`、typed command/frozen snapshot/f
 - deep-sleep、断电或重启后的持久化；当前系统没有完整 RTC/storage/wakeup 契约。
 - App 自定义 System Menu 条目或任意 callback/view 注入。
 - 引入 FreeRTOS/ESP Timer callback 作为 portable service 实现。
-- 在本变更重新设计已获批的 Clock Launcher Cover。
+- 在该历史变更中重新设计当时已获批的 Clock Launcher Cover（该决定后来由 `polish-activation-timer-presentation` 取代）。
 
 ## Decisions
 
-### 1. Clock catalog entry 保留，内部变为 Activation Timer
+### 1. 历史决定：当时保留旧 Clock catalog entry，内部先变为 Activation Timer
 
-保留 `ClockApp`、`kClockAppId` 和已获批 Clock Cover，避免把产品行为变更与 Launcher 资产重新审批耦合。Clock 的首个真实功能就是 Timer；原正向 chrono 演示及 `elapsed_` 状态全部移除。App `onEnter` 只重置 presentation phase，不重置 system timer，因此离开/返回不会破坏计时。
+该变更当时保留 catalog 数值 `0x0101` 和旧 Clock Cover，避免把产品行为变更与 Launcher 资产重新审批耦合；原正向 chrono 演示及 `elapsed_` 状态全部移除。当前实现已由 `polish-activation-timer-presentation` 完整迁移为 `TimerApp`、`kTimerAppId` 与 TIMER Cover，且仍沿用同一 catalog 数值。App `onEnter` 只重置 presentation phase，不重置 system timer，因此离开/返回不会破坏计时。
 
 备选是同时改名 Timer 并重做 Cover。这会扩大 snapshot、资产、用户审批与 handoff 范围，对核心体验没有增益，暂不采用。
 
@@ -110,7 +110,7 @@ inject monotonic now + ingest platform events
 
 ## Risks / Trade-offs
 
-- [Risk] 保留 Clock 名称会让“Clock 与 Timer”边界暂时模糊 → 首版以 Clock 作为时间工具容器，App 内标题明确 `ACTIVATE TIMER`；未来增加真实时钟时再用独立产品变更决定导航。
+- [已解决的历史风险] 当时保留 Clock 名称曾让“Clock 与 Timer”边界模糊 → `polish-activation-timer-presentation` 已完整迁移到 Timer 命名，不再保留兼容 alias。
 - [Risk] SystemSnapshot 增加 timer 字段会扩大所有 App 可见数据 → 字段只含非敏感只读状态，控制仍由 capability/owner 限制；用 header/source audit 防止 service pointer 泄漏。
 - [Risk] alert 抢占 Menu/transition 容易产生 release leakage → 先写 button-down/expiry/release trace、Menu active expiry、transition expiry 测试，再实现 sequence latch。
 - [Risk] fallback `beginFrame(dt)` 与真实 monotonic 路径不一致 → contract test 对同一 trace 运行两条路径并比较 snapshot；firmware/desktop composition root 强制用 `runFrameAt`。
@@ -120,9 +120,9 @@ inject monotonic now + ingest platform events
 
 ## Migration Plan
 
-1. 保存当前 Clock、App snapshot、System Menu、audio PCM、desktop smoke 和 firmware size 基线。
+1. 保存当时旧 Clock 演示、App snapshot、System Menu、audio PCM、desktop smoke 和 firmware size 基线。
 2. 先加入 TimerService/typed contract 的失败测试，再实现纯 portable state machine 和 monotonic paths。
-3. 接入 SystemServiceHost/frame coordinator 与 ClockApp，保持 System Menu contract 不变。
+3. 接入 SystemServiceHost/frame coordinator 与 TimerApp，保持 System Menu contract 不变。
 4. 先以失败 trace 锁定 alert preemption/input owner，再扩展 surface composition 与 indicator。
 5. 增加 TimerComplete 合成、PCM golden、双 profile snapshot 和完整 E2E。
 6. 更新 docs/audits/build sources，运行 host/strict/sanitizer/SDL/desktop smoke/PlatformIO 门禁并生成可检查 PNG/WAV。

@@ -16,7 +16,7 @@ Mouse wheel and Left/Right keys SHALL emit turn events, while Space and Enter SH
 - **THEN** the runtime closes Menu and returns to the configured Home App through the shared transition path
 
 ### Requirement: Existing Apps complete the desktop loop
-Launcher, Clock, Motion, Settings, and Gallery SHALL open, receive input, render, switch, open/close System Menu, and return home through its explicit Home action in the macOS simulator.
+Launcher, Timer, Motion, Settings, and Gallery SHALL open, receive input, render, switch, open/close System Menu, and return home through its explicit Home action in the macOS simulator.
 
 #### Scenario: Full navigation smoke path runs
 - **WHEN** scripted inputs visit every registered App and use System Menu Home to return to Launcher

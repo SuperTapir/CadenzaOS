@@ -1,6 +1,7 @@
 #include "cadenza/presentation/system_surface.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 
@@ -128,6 +129,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
     openWhenStable_ = false;
     captureUntilRelease_ = false;
     revealProgress_ = 1.0F;
+    timerAlertElapsed_ = 0.0F;
     timerAlertArmed_ =
         !buttonSequenceActive_ && !input.pressed && !input.released &&
         !input.clicked && !input.longPressed && input.heldMs == 0;
@@ -139,10 +141,12 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
     if (timer.state != TimerState::Expired) {
       interactive_ = SurfaceKind::None;
       timerAlertArmed_ = false;
+      timerAlertElapsed_ = 0.0F;
       if (input.released) buttonSequenceActive_ = false;
       ++diagnostics_.closed;
       return {true, false, SystemSurfaceIntent::None};
     }
+    timerAlertElapsed_ += std::max(0.0F, dt);
     if (!timerAlertArmed_) {
       if (input.released) {
         buttonSequenceActive_ = false;
@@ -152,6 +156,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
     }
     if (input.clicked) {
       if (input.released) buttonSequenceActive_ = false;
+      timerAlertElapsed_ = 0.0F;
       return {true, false, SystemSurfaceIntent::TimerAcknowledge};
     }
     if (input.released) buttonSequenceActive_ = false;
@@ -478,11 +483,14 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
   const SystemMenuLayout layout =
       SystemMenuLayout::forCanvas(canvas.width(), canvas.height());
   const float raw = std::max(0.0F, std::min(1.0F, revealProgress));
-  const float eased = closing
-                          ? 1.0F - ease(Easing::InQuad, 1.0F - raw)
-                          : ease(Easing::OutQuad, raw);
+  // revealProgress is the single source of presentation truth. The
+  // coordinator already runs it forwards while opening and backwards while
+  // closing, so using one geometry function makes every closing frame the
+  // exact temporal inverse of its opening counterpart.
+  (void)closing;
+  const float eased = ease(Easing::OutQuad, raw);
   overlayDitherMask(
-      canvas, {0, 0, layout.panel.x, canvas.height()},
+      canvas, {0, 0, canvas.width(), canvas.height()},
       static_cast<std::uint8_t>(8.0F * eased + 0.5F));
 
   const int panelRight = layout.panel.x + layout.panel.width;
@@ -493,11 +501,8 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
                           : static_cast<float>(y - layout.panel.y) /
                                 static_cast<float>(layout.panel.height - 1);
     const float stagger = 0.28F * row;
-    const float rowReveal = closing
-                                ? std::min(1.0F, eased / (1.0F - stagger))
-                                : std::max(0.0F, std::min(
-                                      1.0F, (eased - stagger) /
-                                                (1.0F - stagger)));
+    const float rowReveal = std::max(
+        0.0F, std::min(1.0F, (eased - stagger) / (1.0F - stagger)));
     const int visibleWidth = static_cast<int>(
         static_cast<float>(layout.panel.width) * rowReveal + 0.5F);
     if (visibleWidth <= 0) continue;
@@ -526,14 +531,29 @@ void renderTransientFeedback(
               TextAlign::MiddleCenter);
 }
 
-void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer) noexcept {
+void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer,
+                      float visualElapsed,
+                      MotionProfile motionProfile) noexcept {
   const int width = canvas.width();
   const int height = canvas.height();
   canvas.fillRect(0, 0, width, height, true);
   const Rect card{12, 12, width - 24, height - 24};
   canvas.fillRect(card.x, card.y, card.width, card.height, false);
   canvas.rect(card.x, card.y, card.width, card.height, true);
-  canvas.rect(card.x + 4, card.y + 4, card.width - 8, card.height - 8, true);
+  canvas.rect(card.x + 4, card.y + 4, card.width - 8,
+              card.height - 8, true);
+  if (motionProfile != MotionProfile::Reduced) {
+    constexpr float kPeriodSeconds = 1.2F;
+    const float phase =
+        std::fmod(std::max(0.0F, visualElapsed), kPeriodSeconds) /
+        kPeriodSeconds;
+    const float pulse = 1.0F - std::abs(phase * 2.0F - 1.0F);
+    const int railHeight = 10 + static_cast<int>(pulse * 22.0F + 0.5F);
+    const int railTop = height / 2 - railHeight / 2;
+    canvas.fillRect(card.x + 6, railTop, 2, railHeight, true);
+    canvas.fillRect(card.x + card.width - 8, railTop, 2, railHeight, true);
+  }
+
   canvas.text("TIME UP", width / 2, height / 2 - 20,
               width >= 400 ? 5 : 4, true, TextAlign::MiddleCenter);
   char duration[32];
@@ -543,8 +563,8 @@ void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer) noexcept {
       static_cast<std::uint32_t>(kTimerMinuteMs);
   std::snprintf(duration, sizeof(duration), "%u MINUTES COMPLETE",
                 static_cast<unsigned>(configuredMinutes));
-  canvas.text(duration, width / 2, height / 2 + 18, 1,
-              true, TextAlign::MiddleCenter);
+  canvas.text(duration, width / 2, height / 2 + 18, 1, true,
+              TextAlign::MiddleCenter);
   canvas.fillRect(width / 2 - 64, height - 48, 128, 22, true);
   canvas.text("PRESS TO CONTINUE", width / 2, height - 37, 1, false,
               TextAlign::MiddleCenter);

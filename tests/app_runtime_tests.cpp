@@ -13,7 +13,7 @@
 
 namespace {
 constexpr cadenza::AppId kHomeAppId{1};
-constexpr cadenza::AppId kClockAppId{2};
+constexpr cadenza::AppId kTimerAppId{2};
 constexpr cadenza::AppId kMotionAppId{3};
 constexpr cadenza::AppId kMissingAppId{4};
 
@@ -65,14 +65,14 @@ class FakeApp final : public cadenza::App {
 struct Fixture {
   std::vector<std::string> events;
   FakeApp launcher{"Launcher", events};
-  FakeApp clock{"Clock", events};
+  FakeApp timer{"Timer", events};
   FakeApp motion{"Motion", events};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
 
   Fixture() {
     REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
-    REQUIRE(runtime.registerApp(kClockAppId, clock));
+    REQUIRE(runtime.registerApp(kTimerAppId, timer));
     REQUIRE(runtime.registerApp(kMotionAppId, motion));
     REQUIRE(runtime.configureHome(kHomeAppId));
     runtime.bindSystem(services.snapshot(), services);
@@ -90,12 +90,12 @@ struct Fixture {
 TEST_CASE("runtime registry preserves static IDs visibility and names") {
   Fixture fixture;
   CHECK(fixture.runtime.launcherAppCount() == 2);
-  CHECK(fixture.runtime.launcherAppAt(0) == kClockAppId);
+  CHECK(fixture.runtime.launcherAppAt(0) == kTimerAppId);
   CHECK(fixture.runtime.launcherAppAt(1) == kMotionAppId);
   CHECK(fixture.runtime.launcherAppAt(99) == kHomeAppId);
   CHECK(std::string(fixture.runtime.appName(kMotionAppId)) == "Motion");
   CHECK(std::string(fixture.runtime.appName(kMissingAppId)) == "MISSING");
-  CHECK_FALSE(fixture.runtime.registerApp({}, fixture.clock));
+  CHECK_FALSE(fixture.runtime.registerApp({}, fixture.timer));
 }
 
 TEST_CASE("AppId is a stable value type with an explicit invalid value") {
@@ -188,7 +188,7 @@ TEST_CASE("begin enters one valid initial App exactly once") {
   CHECK(fixture.events.empty());
   REQUIRE(fixture.runtime.begin(kHomeAppId));
   CHECK(fixture.events == std::vector<std::string>{"Launcher:enter"});
-  CHECK_FALSE(fixture.runtime.begin(kClockAppId));
+  CHECK_FALSE(fixture.runtime.begin(kTimerAppId));
   CHECK(fixture.runtime.currentId() == kHomeAppId);
 }
 
@@ -198,7 +198,7 @@ TEST_CASE("open guards current missing invalid and in-flight destinations") {
   CHECK_FALSE(fixture.runtime.open(kHomeAppId));
   CHECK_FALSE(fixture.runtime.open(kMissingAppId));
   CHECK_FALSE(fixture.runtime.open({}));
-  REQUIRE(fixture.runtime.open(kClockAppId));
+  REQUIRE(fixture.runtime.open(kTimerAppId));
   CHECK(fixture.runtime.transitioning());
   CHECK(fixture.services.pendingCommandCount() == 1);
   CHECK_FALSE(fixture.runtime.open(kMotionAppId));
@@ -208,13 +208,13 @@ TEST_CASE("open guards current missing invalid and in-flight destinations") {
 TEST_CASE("transition orders exit before enter at the midpoint") {
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
-  REQUIRE(fixture.runtime.open(kClockAppId));
+  REQUIRE(fixture.runtime.open(kTimerAppId));
   fixture.update(0.39F);
   CHECK(fixture.events == std::vector<std::string>{"Launcher:enter"});
   fixture.update(0.02F);
   CHECK(fixture.events ==
-        std::vector<std::string>{"Launcher:enter", "Launcher:exit", "Clock:enter"});
-  CHECK(fixture.runtime.currentId() == kClockAppId);
+        std::vector<std::string>{"Launcher:enter", "Launcher:exit", "Timer:enter"});
+  CHECK(fixture.runtime.currentId() == kTimerAppId);
 }
 
 TEST_CASE("only active App updates and transition input is frozen") {
@@ -225,33 +225,33 @@ TEST_CASE("only active App updates and transition input is frozen") {
   input.clicked = true;
   fixture.update(0.01F, input);
   CHECK(fixture.launcher.updates == 1);
-  REQUIRE(fixture.runtime.open(kClockAppId));
+  REQUIRE(fixture.runtime.open(kTimerAppId));
   input.turn = 7;
   fixture.update(0.10F, input);
   fixture.update(0.71F, input);
   CHECK_FALSE(fixture.runtime.transitioning());
   CHECK(fixture.launcher.updates == 1);
-  CHECK(fixture.clock.updates == 0);
+  CHECK(fixture.timer.updates == 0);
   fixture.update(0.01F);
-  CHECK(fixture.clock.updates == 1);
+  CHECK(fixture.timer.updates == 1);
 }
 
 TEST_CASE("long press opens system menu without updating active App") {
   Fixture fixture;
-  REQUIRE(fixture.runtime.begin(kClockAppId));
+  REQUIRE(fixture.runtime.begin(kTimerAppId));
   cadenza::InputFrame input;
   input.longPressed = true;
   fixture.update(0.01F, input);
   CHECK(fixture.runtime.systemMenuActive());
   CHECK_FALSE(fixture.runtime.transitioning());
-  CHECK(fixture.runtime.currentId() == kClockAppId);
-  CHECK(fixture.clock.updates == 0);
+  CHECK(fixture.runtime.currentId() == kTimerAppId);
+  CHECK(fixture.timer.updates == 0);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Confirm);
   CHECK(fixture.services.sound().pendingCommandCount() == 1);
   fixture.update(0.17F);
-  CHECK(fixture.runtime.currentId() == kClockAppId);
-  CHECK(fixture.events == std::vector<std::string>{"Clock:enter"});
+  CHECK(fixture.runtime.currentId() == kTimerAppId);
+  CHECK(fixture.events == std::vector<std::string>{"Timer:enter"});
 }
 
 TEST_CASE("App open and system menu use approved semantic cues") {
@@ -259,7 +259,7 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
 
-  REQUIRE(fixture.runtime.open(kClockAppId));
+  REQUIRE(fixture.runtime.open(kTimerAppId));
   fixture.update(0.01F);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Confirm);
@@ -268,7 +268,7 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   CHECK(pcmHash(pcm.data(), pcm.size()) == 0x718BD5DCD3F36003ULL);
 
   fixture.update(0.79F);
-  REQUIRE(fixture.runtime.currentId() == kClockAppId);
+  REQUIRE(fixture.runtime.currentId() == kTimerAppId);
   cadenza::InputFrame input;
   input.longPressed = true;
   fixture.update(0.01F, input);
@@ -294,19 +294,19 @@ TEST_CASE("App open and system menu use approved semantic cues") {
 
 TEST_CASE("system menu freezes App lifecycle while services keep advancing") {
   Fixture fixture;
-  REQUIRE(fixture.runtime.begin(kClockAppId));
+  REQUIRE(fixture.runtime.begin(kTimerAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
 
   cadenza::system::FrameCoordinator::runFrame(
       fixture.services, fixture.runtime, canvas, 0.01F, {});
-  const int updatesBeforeMenu = fixture.clock.updates;
-  const int rendersBeforeMenu = fixture.clock.renders;
+  const int updatesBeforeMenu = fixture.timer.updates;
+  const int rendersBeforeMenu = fixture.timer.renders;
   cadenza::InputFrame input;
   input.longPressed = true;
   cadenza::system::FrameCoordinator::runFrame(
       fixture.services, fixture.runtime, canvas, 0.01F, input);
-  const int frozenRenderCount = fixture.clock.renders;
+  const int frozenRenderCount = fixture.timer.renders;
   CHECK(frozenRenderCount == rendersBeforeMenu);
   REQUIRE(fixture.services.postPlatformEvent(
       cadenza::system::PlatformEvent::soundOutputAvailability(true)));
@@ -317,16 +317,16 @@ TEST_CASE("system menu freezes App lifecycle while services keep advancing") {
   cadenza::system::FrameCoordinator::runFrame(
       fixture.services, fixture.runtime, canvas, 0.05F, {});
 
-  CHECK(fixture.clock.updates == updatesBeforeMenu);
-  CHECK(fixture.clock.renders == frozenRenderCount);
+  CHECK(fixture.timer.updates == updatesBeforeMenu);
+  CHECK(fixture.timer.renders == frozenRenderCount);
   CHECK(fixture.services.snapshot().soundOutputAvailable);
-  CHECK(fixture.events == std::vector<std::string>{"Clock:enter", "Clock:update"});
+  CHECK(fixture.events == std::vector<std::string>{"Timer:enter", "Timer:update"});
 }
 
 TEST_CASE("menu request during transition opens on stable destination") {
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
-  REQUIRE(fixture.runtime.open(kClockAppId));
+  REQUIRE(fixture.runtime.open(kTimerAppId));
   cadenza::InputFrame held;
   held.longPressed = true;
   fixture.update(0.10F, held);
@@ -336,16 +336,16 @@ TEST_CASE("menu request during transition opens on stable destination") {
   release.released = true;
   fixture.update(0.71F, release);
   CHECK_FALSE(fixture.runtime.transitioning());
-  CHECK(fixture.runtime.currentId() == kClockAppId);
+  CHECK(fixture.runtime.currentId() == kTimerAppId);
   CHECK_FALSE(fixture.runtime.systemMenuActive());
   fixture.update(0.01F);
   CHECK(fixture.runtime.systemMenuActive());
-  CHECK(fixture.clock.updates == 0);
+  CHECK(fixture.timer.updates == 0);
 }
 
 TEST_CASE("system menu setting action commits through typed system command") {
   Fixture fixture;
-  REQUIRE(fixture.runtime.begin(kClockAppId));
+  REQUIRE(fixture.runtime.begin(kTimerAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
   cadenza::InputFrame held;
@@ -374,7 +374,7 @@ TEST_CASE("system menu setting action commits through typed system command") {
 
 TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
   Fixture fixture;
-  REQUIRE(fixture.runtime.begin(kClockAppId));
+  REQUIRE(fixture.runtime.begin(kTimerAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
 
@@ -383,7 +383,7 @@ TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
   const std::uint64_t baseline = frameHash(framebuffer);
 
   snapshot.timer.state = cadenza::TimerState::Running;
-  snapshot.timer.owner = kClockAppId;
+  snapshot.timer.owner = kTimerAppId;
   snapshot.timer.remainingMs = 7 * 60000 + 18000;
   fixture.runtime.renderWithSystem(canvas, snapshot);
   CHECK(frameHash(framebuffer) == baseline);

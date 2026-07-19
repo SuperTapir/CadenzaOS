@@ -114,7 +114,7 @@ TEST_CASE("Paused adjustment preserves seconds and clamps to timer limits") {
   CHECK(timer.snapshot().configuredDurationMs == minutes(9) + 18000);
 }
 
-TEST_CASE("Clock regression never increases remaining time") {
+TEST_CASE("Monotonic-time regression never increases remaining time") {
   cadenza::system::TimerService timer;
   timer.advanceTo(1000);
   REQUIRE(timer.start(kOwner, minutes(1)) ==

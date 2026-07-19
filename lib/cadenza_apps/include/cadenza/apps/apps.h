@@ -38,9 +38,18 @@ class LauncherApp final : public App {
   bool settled_ = true;
 };
 
-class ClockApp final : public App {
+enum class TimerPresentationState : std::uint8_t {
+  None,
+  Starting,
+  Pausing,
+  Resuming,
+};
+
+class TimerApp final : public App {
  public:
-  const char* name() const noexcept override { return "Clock"; }
+  const char* name() const noexcept override { return "TIMER"; }
+  void onEnter() noexcept override;
+  void onExit() noexcept override;
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
@@ -50,11 +59,18 @@ class ClockApp final : public App {
                          float progress,
                          const AppRenderContext& context) const noexcept override;
 
+  TimerPresentationState presentationState() const noexcept {
+    return presentationState_;
+  }
+  float presentationElapsed() const noexcept { return presentationElapsed_; }
+
  private:
   std::uint32_t selectedDurationMs_ =
       static_cast<std::uint32_t>(kTimerDefaultDurationMs);
   TimerState observedTimerState_ = TimerState::Ready;
   bool hasObservedTimerState_ = false;
+  TimerPresentationState presentationState_ = TimerPresentationState::None;
+  float presentationElapsed_ = 0.0F;
 };
 
 class MotionApp final : public App {

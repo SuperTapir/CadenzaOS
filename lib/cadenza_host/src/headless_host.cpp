@@ -98,8 +98,8 @@ HeadlessHost::HeadlessHost(FramebufferProfile profile,
   services_.setDiagnosticSink(diagnostics);
   runtime_.registerApp(apps::kLauncherAppId, launcher_, false,
                        apps::builtinAppCapabilities(apps::kLauncherAppId));
-  runtime_.registerApp(apps::kClockAppId, clock_, true,
-                       apps::builtinAppCapabilities(apps::kClockAppId));
+  runtime_.registerApp(apps::kTimerAppId, timer_, true,
+                       apps::builtinAppCapabilities(apps::kTimerAppId));
   runtime_.registerApp(apps::kMotionAppId, motion_, true,
                        apps::builtinAppCapabilities(apps::kMotionAppId));
   runtime_.registerApp(apps::kSettingsAppId, settings_, true,

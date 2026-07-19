@@ -27,7 +27,7 @@ cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed};
 SerialDiagnosticSink diagnosticSink;
 I2sAudioOutput audioOutput;
 cadenza::LauncherApp launcher;
-cadenza::ClockApp clockApp;
+cadenza::TimerApp timerApp;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
@@ -79,8 +79,8 @@ void setup() {
   services.setDiagnosticSink(&diagnosticSink);
   runtime.registerApp(cadenza::apps::kLauncherAppId, launcher, false,
                       cadenza::apps::builtinAppCapabilities(cadenza::apps::kLauncherAppId));
-  runtime.registerApp(cadenza::apps::kClockAppId, clockApp, true,
-                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kClockAppId));
+  runtime.registerApp(cadenza::apps::kTimerAppId, timerApp, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kTimerAppId));
   runtime.registerApp(cadenza::apps::kMotionAppId, motion, true,
                       cadenza::apps::builtinAppCapabilities(cadenza::apps::kMotionAppId));
   runtime.registerApp(cadenza::apps::kSettingsAppId, settings, true,

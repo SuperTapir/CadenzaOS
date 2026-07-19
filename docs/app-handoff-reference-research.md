@@ -48,18 +48,18 @@
 
 ## 2026-07-19 实现与验证记录
 
-实现采用两阶段 handoff：默认 Launcher → App 为 0.80 秒，App → Launcher 为 0.44 秒；Reduced Motion 分别为 0.56 秒和 0.28 秒。Clock、Motion、Settings、Animation Gallery 均提供独立的代码原生全屏 launch renderer；未实现该能力的 App 使用居中的静态 Cover/受约束名称卡。System Menu 在右边缘锚定，逐 scanline 形成斜向前缘，并把完整面板横向重采样进当前可见宽度；Resume 关闭期间仍冻结 App、消费输入，Home 则直接交给 return handoff，避免叠加两条系统动画。
+实现采用两阶段 handoff：默认 Launcher → App 为 0.80 秒，App → Launcher 为 0.44 秒；Reduced Motion 分别为 0.56 秒和 0.28 秒。Timer、Motion、Settings、Animation Gallery 均提供独立的代码原生全屏 launch renderer；未实现该能力的 App 使用居中的静态 Cover/受约束名称卡。System Menu 在右边缘锚定，逐 scanline 形成斜向前缘，并把完整面板横向重采样进当前可见宽度；Resume 关闭期间仍冻结 App、消费输入，Home 则直接交给 return handoff，避免叠加两条系统动画。
 
-首轮视觉审阅指出 Cover、独立概念动画与真实 App UI 仍是三段不连续构图。连续版因此取消中间海报：progress 0 逐像素等于居中 Cover，progress 1 逐像素等于同一 App 状态和 SystemSnapshot 在 `onEnter` 后的真实首屏，中间以固定相位 ordered-dither 单调交接像素。Settings launch renderer 接收只读 AppRenderContext，避免 Motion/Sound/Connectivity 非默认状态在中点跳变；Clock、Motion、Settings 抽取与普通 render 共用的首屏 helper，Gallery 使用与 page 0/Easing 完全一致的初始帧 helper。
+首轮视觉审阅指出 Cover、独立概念动画与真实 App UI 仍是三段不连续构图。连续版因此取消中间海报：progress 0 逐像素等于居中 Cover，progress 1 逐像素等于同一 App 状态和 SystemSnapshot 在 `onEnter` 后的真实首屏，中间以固定相位 ordered-dither 单调交接像素。Settings launch renderer 接收只读 AppRenderContext，避免 Motion/Sound/Connectivity 非默认状态在中点跳变；Timer、Motion、Settings 抽取与普通 render 共用的首屏 helper，Gallery 使用与 page 0/Easing 完全一致的初始帧 helper。
 
-返回动画的完整 30 FPS 审阅又发现：原 `inOutQuad` 把 App → Cover 的 dither 变化集中到中间两帧，T-Embed 的 Clock/Gallery 峰值为 20.96%/21.50%，Sharp 最坏达到 22.90%；同时 Sharp 的 bridge 使用整数向下居中落在 `y=42`，与 Launcher 和 Playdate card 契约的 `(25,43,350,155)` 相差 1 px。修订后前半段改为匀速 threshold 交接，奇数剩余空间统一用向上取整的视觉中心；中点后 Cover 内容矩形逐像素保持不动，只让边框、scanline 与相邻卡片恢复。新版 T-Embed 四 App 峰值依次为 11.70%、7.07%、8.02%、12.23%，Sharp 为 12.17%、7.92%、8.49%、13.05%，均低于 16% 回归上限。
+返回动画的完整 30 FPS 审阅又发现：原 `inOutQuad` 把 App → Cover 的 dither 变化集中到中间两帧，T-Embed 的旧 Clock/Gallery 峰值为 20.96%/21.50%，Sharp 最坏达到 22.90%；同时 Sharp 的 bridge 使用整数向下居中落在 `y=42`，与 Launcher 和 Playdate card 契约的 `(25,43,350,155)` 相差 1 px。修订后前半段改为匀速 threshold 交接，奇数剩余空间统一用向上取整的视觉中心；中点后 Cover 内容矩形逐像素保持不动，只让边框、scanline 与相邻卡片恢复。新版 T-Embed 四 App 峰值依次为 11.70%、7.07%、8.02%、12.23%，Sharp 为 12.17%、7.92%、8.49%、13.05%，均低于 16% 回归上限。
 
 自动化验证结果：
 
 - `cmake --build build -j4`：通过；
 - `ctest --test-dir build --output-on-failure`：71/71 通过；
 - 独立 `-Wall -Wextra -Wpedantic -Werror` 构建与 handoff/allocation/apps/snapshot/desktop focused suite：通过；
-- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；四 App 另以固定 30 FPS 生成完整进入与返回 PNG/GIF 时间轴；
+- 双 profile golden：四个内置 App 入场、无专属 renderer fallback、旧 Clock 返回、Menu opening/closing 均已生成 PNG 目检并锁定 hash；四 App 另以固定 30 FPS 生成完整进入与返回 PNG/GIF 时间轴；该记录描述迁名前的历史资产。
 - endpoint regression 证明四 App `p0 == Cover`、`p1 == first App frame`；30 FPS 相邻帧变化不超过 framebuffer 像素的 20%；
 - return regression 证明四 App 在双 profile 下 `p0 == outgoing App frame`，生命周期中点后的 Cover 矩形与 Launcher 逐像素一致且固定，`p1` 后下一帧不跳变；30 FPS 相邻变化不超过 16%；
 - 完整进入 → Menu 开合 → 返回路径的 `operator new/new[]` 计数保持不变；host `AppRuntime` 为 24,928 B，其中两张固定 framebuffer 为 24,048 B，没有第三张全屏 buffer；

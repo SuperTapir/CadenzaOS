@@ -15,7 +15,7 @@ cadenza::AppId appFrom(const char* value) {
   const int app = value ? std::atoi(value) : 0;
   switch (app) {
     case 0: return cadenza::apps::kLauncherAppId;
-    case 1: return cadenza::apps::kClockAppId;
+    case 1: return cadenza::apps::kTimerAppId;
     case 2: return cadenza::apps::kMotionAppId;
     case 3: return cadenza::apps::kSettingsAppId;
     case 4: return cadenza::apps::kGalleryAppId;
@@ -30,11 +30,45 @@ int main(int argc, char** argv) {
   const cadenza::AppId app = appFrom(argv[2]);
   if (app != cadenza::apps::kLauncherAppId) {
     if (!host.runtime().open(app)) return 3;
-    for (int frame = 0; frame < 32 && host.runtime().transitioning(); ++frame) {
+    for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
       host.step();
     }
   }
-  if (argc >= 5 && std::strcmp(argv[4], "menu") == 0) {
+  if (argc >= 5 && app == cadenza::apps::kTimerAppId &&
+      (std::strcmp(argv[4], "running") == 0 ||
+       std::strcmp(argv[4], "paused") == 0 ||
+       std::strcmp(argv[4], "starting-mid") == 0 ||
+       std::strcmp(argv[4], "pausing-mid") == 0 ||
+       std::strcmp(argv[4], "resuming-mid") == 0 ||
+       std::strcmp(argv[4], "alert") == 0 ||
+       std::strcmp(argv[4], "alert-mid") == 0)) {
+    cadenza::InputFrame click;
+    click.clicked = true;
+    host.step(click);
+    if (std::strcmp(argv[4], "starting-mid") == 0) {
+      host.advance(0.12F);
+    } else if (std::strcmp(argv[4], "alert") == 0 ||
+               std::strcmp(argv[4], "alert-mid") == 0) {
+      host.advance(600.0F);
+      if (std::strcmp(argv[4], "alert-mid") == 0) host.advance(0.30F);
+    } else {
+      host.advance(0.30F);
+    }
+    if (std::strcmp(argv[4], "paused") == 0 ||
+        std::strcmp(argv[4], "pausing-mid") == 0 ||
+        std::strcmp(argv[4], "resuming-mid") == 0) {
+      host.step(click);
+      if (std::strcmp(argv[4], "pausing-mid") == 0) {
+        host.advance(0.09F);
+      } else {
+        host.advance(0.20F);
+      }
+    }
+    if (std::strcmp(argv[4], "resuming-mid") == 0) {
+      host.step(click);
+      host.advance(0.09F);
+    }
+  } else if (argc >= 5 && std::strcmp(argv[4], "menu") == 0) {
     cadenza::InputFrame held;
     held.longPressed = true;
     host.step(held);

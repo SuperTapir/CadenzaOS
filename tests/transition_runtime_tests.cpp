@@ -9,7 +9,7 @@
 
 namespace {
 constexpr cadenza::AppId kHomeAppId{1};
-constexpr cadenza::AppId kClockAppId{2};
+constexpr cadenza::AppId kTimerAppId{2};
 
 using BufferBytes =
     std::array<std::uint8_t, cadenza::MonoFramebuffer::kCapacityBytes>;
@@ -114,9 +114,9 @@ TEST_CASE("runtime captures outgoing at open and incoming after lifecycle swap")
   CaptureTransition transition;
   cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed, transition};
   PatternApp launcher{"Launcher", 1};
-  PatternApp clock{"Clock", 10};
+  PatternApp timer{"Timer", 10};
   REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
-  REQUIRE(runtime.registerApp(kClockAppId, clock));
+  REQUIRE(runtime.registerApp(kTimerAppId, timer));
   REQUIRE(runtime.configureHome(kHomeAppId));
   REQUIRE(runtime.begin(kHomeAppId));
 
@@ -125,7 +125,7 @@ TEST_CASE("runtime captures outgoing at open and incoming after lifecycle swap")
   runtime.render(outputCanvas);
   const BufferBytes launcherFrame = snapshot(output);
 
-  REQUIRE(runtime.open(kClockAppId));
+  REQUIRE(runtime.open(kTimerAppId));
   output.clear();
   runtime.render(outputCanvas);
   CHECK(equals(output, launcherFrame));
@@ -211,13 +211,13 @@ TEST_CASE("default runtime routes launch and return through staged identities") 
   LaunchProbeApp app{"App", true};
   cadenza::AppRuntime runtime;
   REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
-  REQUIRE(runtime.registerApp(kClockAppId, app));
+  REQUIRE(runtime.registerApp(kTimerAppId, app));
   REQUIRE(runtime.configureHome(kHomeAppId));
   REQUIRE(runtime.begin(kHomeAppId));
 
   cadenza::MonoFramebuffer output{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{output};
-  REQUIRE(runtime.open(kClockAppId));
+  REQUIRE(runtime.open(kTimerAppId));
   runtime.render(canvas);
   CHECK(app.launchCalls >= 2);
   CHECK(app.enters == 0);
@@ -227,7 +227,7 @@ TEST_CASE("default runtime routes launch and return through staged identities") 
   CHECK(runtime.currentId() == kHomeAppId);
   runtime.update(0.02F, {});
   runtime.render(canvas);
-  CHECK(runtime.currentId() == kClockAppId);
+  CHECK(runtime.currentId() == kTimerAppId);
   CHECK(app.enters == 1);
   CHECK(launcher.exits == 1);
   CHECK(app.updates == 0);
@@ -236,7 +236,7 @@ TEST_CASE("default runtime routes launch and return through staged identities") 
 
   REQUIRE(runtime.open(kHomeAppId));
   runtime.update(0.21F, {});
-  CHECK(runtime.currentId() == kClockAppId);
+  CHECK(runtime.currentId() == kTimerAppId);
   runtime.update(0.02F, {});
   CHECK(runtime.currentId() == kHomeAppId);
   runtime.update(0.22F, {});
@@ -251,13 +251,13 @@ TEST_CASE("missing launch renderer falls back without blocking lifecycle") {
   LaunchProbeApp app{"Fallback", false};
   cadenza::AppRuntime runtime;
   REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
-  REQUIRE(runtime.registerApp(kClockAppId, app));
+  REQUIRE(runtime.registerApp(kTimerAppId, app));
   REQUIRE(runtime.configureHome(kHomeAppId));
   REQUIRE(runtime.begin(kHomeAppId));
-  REQUIRE(runtime.open(kClockAppId));
+  REQUIRE(runtime.open(kTimerAppId));
   runtime.update(0.81F, {});
   CHECK_FALSE(runtime.transitioning());
-  CHECK(runtime.currentId() == kClockAppId);
+  CHECK(runtime.currentId() == kTimerAppId);
   CHECK(app.enters == 1);
   CHECK(app.launchCalls == 1);
 }

@@ -11,7 +11,7 @@
 当前功能：
 
 - 320×170 T-Embed 与 400×240 Sharp profile 共用的 1-bit framebuffer；
-- Launcher、Clock、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
+- Launcher、Timer、Motion、Settings、Animation Gallery 共用同一套 App/Runtime；
 - SDL3 桌面模拟器，支持 1×–4× 整数缩放、键鼠输入、设备外框与近似
   反射式 Memory LCD 的暖灰预览色板；
 - 旋转选择、短按进入、长按打开系统菜单并显式返回 Launcher 的输入模型；

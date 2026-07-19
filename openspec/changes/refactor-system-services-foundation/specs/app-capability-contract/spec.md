@@ -8,7 +8,7 @@ App update context SHALL 只提供输入、App catalog/navigation、只读系统
 - **THEN** App 不调用 `AppRuntime` service accessor、平台 API、I²S、USB、Wi-Fi 或 BLE callback
 
 ### Requirement: App 标识不硬编码于 core
-`AppId` SHALL 是具有 invalid 值的稳定值类型，内置 App 常量 SHALL 位于 bundled Apps 层；core 不得枚举 Launcher、Clock、Motion、Settings、Gallery 或以后新增的小 App。
+`AppId` SHALL 是具有 invalid 值的稳定值类型，内置 App 常量 SHALL 位于 bundled Apps 层；core 不得枚举 Launcher、Timer、Motion、Settings、Gallery 或以后新增的小 App。
 
 #### Scenario: 新增测试 App
 - **WHEN** 组合根注册一个 core 未知的合法 AppId 和 App 实例

@@ -67,7 +67,7 @@ file(GLOB_RECURSE core_files
   "${PROJECT_ROOT}/lib/cadenza_core/src/*.cpp")
 foreach(core_file IN LISTS core_files)
   file(READ "${core_file}" core_source)
-  if(core_source MATCHES "(LauncherApp|ClockApp|MotionApp|SettingsApp|AnimationGalleryApp|kLauncherAppId|kGalleryAppId)")
+  if(core_source MATCHES "(LauncherApp|TimerApp|MotionApp|SettingsApp|AnimationGalleryApp|kLauncherAppId|kGalleryAppId)")
     message(FATAL_ERROR "Bundled App leaked into core: ${core_file}")
   endif()
 endforeach()

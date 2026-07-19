@@ -170,7 +170,7 @@ class SystemServiceHost final : public SystemCommandSink {
  public:
   static constexpr std::size_t kMaxCommandCapacity = 32;
   static constexpr std::size_t kMaxPlatformEventCapacity = 32;
-  static constexpr MonotonicMillis kTimerAlertRepeatMs = 5000;
+  static constexpr MonotonicMillis kTimerAlertRepeatMs = 2000;
 
   explicit SystemServiceHost(
       SystemServiceHostConfig config = {}) noexcept;

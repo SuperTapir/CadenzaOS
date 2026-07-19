@@ -5,7 +5,7 @@
 namespace cadenza::apps {
 
 inline constexpr AppId kLauncherAppId{0x0100};
-inline constexpr AppId kClockAppId{0x0101};
+inline constexpr AppId kTimerAppId{0x0101};
 inline constexpr AppId kMotionAppId{0x0102};
 inline constexpr AppId kSettingsAppId{0x0103};
 inline constexpr AppId kGalleryAppId{0x0104};
@@ -21,7 +21,7 @@ constexpr AppCapabilitySet builtinAppCapabilities(AppId id) noexcept {
            AppCapability::NetworkAcquire |
            AppCapability::ProvisioningManage;
   }
-  if (id == kClockAppId) {
+  if (id == kTimerAppId) {
     return AppCapabilitySet{AppCapability::SoundPlay} |
            AppCapability::TimerControl;
   }

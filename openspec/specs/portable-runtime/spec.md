@@ -54,7 +54,7 @@ Raw turn and button events SHALL be reduced by one core `InputReducer` into a pe
 - **THEN** the frame preserves the value within the documented 16-bit saturation bounds rather than wrapping
 
 ### Requirement: Application lifecycle is platform-independent
-Launcher, Clock, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator.
+Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator.
 
 #### Scenario: App is switched
 - **WHEN** the runtime opens a registered App and completes its transition

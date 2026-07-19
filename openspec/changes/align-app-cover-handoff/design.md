@@ -32,7 +32,7 @@
 
 `App::renderLauncherCover()` 继续是静态、const、无进度输入的 App 身份。新增可选 `renderLaunchFrame(MonoCanvas&, float progress, const AppRenderContext&) const`，接受归一化进度与只读 render context 并绘制一张全屏 1-bit frame；它可以在 `onEnter` 之前调用，不得读取命令接口或改变 interactive/lifecycle 状态。只读 system snapshot 是必要输入，因为 Settings 首屏取决于 Motion/Sound/Connectivity 状态，若 launch 末帧假定默认设置，就会在 lifecycle 中点再次跳变。`AppCatalogView` 只读转发这项能力，不把可变 App 暴露给 Runtime。
 
-四个内置 App 使用代码原生 renderer 建立明显不同的入场，但差异来自各自 Cover 与真实 UI 的关系，而不是插入独立海报：Clock 从计时 Cover 溶解到 Chrono 首屏，Motion 让同一球/轨道落入交互网格，Settings 让 Cover 的标题与控制器归并为实际左栏/设置行，Gallery 让封面标题与漂浮 frame 归并为 Gallery header/Easing 首屏。每个序列的首帧必须逐像素等于自身居中 Cover bridge，末帧必须逐像素等于同一 App 状态与 system snapshot 在 `onEnter` 后的首帧；没有实现 launch renderer 的 App 使用静态 Cover bridge 与受约束名称 fallback。
+四个内置 App 使用代码原生 renderer 建立明显不同的入场，但差异来自各自 Cover 与真实 UI 的关系，而不是插入独立海报：迁名前的旧 Clock 从计时 Cover 溶解到 Chrono 首屏（当前已由 Timer/TIMER Cover 取代），Motion 让同一球/轨道落入交互网格，Settings 让 Cover 的标题与控制器归并为实际左栏/设置行，Gallery 让封面标题与漂浮 frame 归并为 Gallery header/Easing 首屏。每个序列的首帧必须逐像素等于自身居中 Cover bridge，末帧必须逐像素等于同一 App 状态与 system snapshot 在 `onEnter` 后的首帧；没有实现 launch renderer 的 App 使用静态 Cover bridge 与受约束名称 fallback。
 
 首轮实现曾在前 18% 直接绘制 Cover，随后整帧切到独立概念动画，末帧又与 App UI 无共享布局；这满足“每 App 不同”却不满足视觉连续。修订后使用固定相位 ordered-dither 将 Cover 像素单调交给真实首屏 preview，并复用 App 的首屏绘制 helper，消除两处硬切。30 FPS 相邻采样增加像素变化上限回归，避免未来重新引入整帧替换。
 

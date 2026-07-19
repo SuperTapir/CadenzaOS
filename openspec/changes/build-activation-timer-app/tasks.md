@@ -1,6 +1,6 @@
 ## 1. 调研与基线
 
-- [x] 1.1 保存 Clock App、System Menu、声音 PCM、双 profile snapshot、desktop smoke 与 firmware size 的变更前基线
+- [x] 1.1 保存 Timer App、System Menu、声音 PCM、双 profile snapshot、desktop smoke 与 firmware size 的变更前基线
 - [x] 1.2 完成并审计 AOSP、Zephyr、FreeRTOS、ESP-IDF 与同类产品的版本、许可证、关键源码和采用/不采用结论
 - [x] 1.3 添加 source/license/platform boundary audit，证明 Timer 不引入第三方源码、RTOS callback 或 App 平台时钟依赖
 
@@ -20,13 +20,13 @@
 - [x] 3.4 在 firmware 使用 64-bit ESP monotonic time、desktop 使用 SDL ticks、headless 使用 injected simulation time
 - [x] 3.5 更新 frame order、platform-header、shared-source 和 direct API tests
 
-## 4. Clock / Activation Timer App
+## 4. Timer App
 
 - [x] 4.1 先写 Ready turn/start、Running pause/boundary、Paused adjust/resume、Expired no-App-input 和离开/返回状态测试
-- [x] 4.2 将 ClockApp 从 elapsed demo 迁移为只读 TimerSnapshot + typed command 状态机，保持 catalog id 和获批 Cover
+- [x] 4.2 将 TimerApp 从 elapsed demo 迁移为只读 TimerSnapshot + typed command 状态机，保持 catalog id 和获批 Cover
 - [x] 4.3 实现 320×170 与 400×240 的大号 MM:SS、time mass、分钟刻度、状态/操作提示和 Reduced Motion 表达
 - [x] 4.4 补齐真实状态反馈音、单帧 turn 聚合、边界和失败视觉反馈
-- [x] 4.5 更新 Clock App unit tests、allocation test 与双 profile deterministic snapshots
+- [x] 4.5 更新 Timer App unit tests、allocation test 与双 profile deterministic snapshots
 
 ## 5. 后台 Indicator 与 Critical Alert
 
@@ -45,7 +45,7 @@
 
 ## 7. E2E、文档与完成门禁
 
-- [x] 7.1 实现 Launcher→Clock→Start→System Menu/Home→Expire→Acknowledge→Clock→Start 的 headless deterministic E2E
+- [x] 7.1 实现 Launcher→Timer→Start→System Menu/Home→Expire→Acknowledge→Timer→Start 的 headless deterministic E2E
 - [x] 7.2 更新 desktop smoke/CLI 操作说明，并验证 held button、transition 和 Muted 到期真实流程
 - [x] 7.3 更新平台架构、Timer 实现报告、验证说明、snapshot/PCM baseline 和实体 T-Embed 验收清单
 - [x] 7.4 运行相关测试、完整 host、strict warnings、sanitizer、source/allocation audit、SDL build 与 desktop smoke

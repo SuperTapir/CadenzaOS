@@ -108,7 +108,7 @@ TEST_CASE("desktop input path visits every bundled App and returns home") {
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
   harness.tapEnter();
-  CHECK(harness.host.runtime().currentId() == cadenza::apps::kClockAppId);
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kTimerAppId);
   harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
 
@@ -172,7 +172,7 @@ TEST_CASE("desktop input path starts background Timer and acknowledges expiry") 
   SmokeHarness harness;
   harness.tapEnter();
   REQUIRE(harness.host.runtime().currentId() ==
-          cadenza::apps::kClockAppId);
+          cadenza::apps::kTimerAppId);
   harness.tapEnter();
   REQUIRE(harness.host.services().snapshot().timer.state ==
           cadenza::TimerState::Running);

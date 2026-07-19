@@ -12,7 +12,7 @@ The runtime SHALL update applications and animations only from an injected prese
 - **THEN** animation receives 50 ms while TimerService observes the full monotonic advance and does not gain 1.95 seconds
 
 ### Requirement: Application lifecycle is platform-independent
-Launcher, Clock/Activation Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; System Menu SHALL suspend the active App without changing AppId, while system-owned Timer state continues independently.
+Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; System Menu SHALL suspend the active App without changing AppId, while system-owned Timer state continues independently.
 
 #### Scenario: App is switched
 - **WHEN** the runtime opens a registered App and completes its transition
@@ -23,5 +23,5 @@ Launcher, Clock/Activation Timer, Motion, Settings, and Gallery SHALL implement 
 - **THEN** the runtime opens the system-owned Menu over that App without changing current AppId or emitting App exit/enter
 
 #### Scenario: Timer owner leaves foreground
-- **WHEN** Clock starts a Timer and transitions to Launcher or another App
-- **THEN** Clock stops receiving normal updates but the Timer remains owned, visible through system snapshot/indicator and continues toward its deadline
+- **WHEN** Timer App starts a Timer and transitions to Launcher or another App
+- **THEN** Timer App stops receiving normal updates but the Timer service remains owned, visible through system snapshot/indicator and continues toward its deadline

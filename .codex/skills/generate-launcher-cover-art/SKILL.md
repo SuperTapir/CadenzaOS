@@ -1,6 +1,6 @@
 ---
 name: generate-launcher-cover-art
-description: "Generate, simplify, review, convert, and optionally integrate Playdate-literate CadenzaOS Launcher Cover illustrations: highly legible 1-bit micro-posters with large titles, an App-specific functional hook, strong black/white recognition, and controlled gray planes that add depth and fun within a coherent restrained industrial style. Use when adding or iterating CLOCK, MOTION, SETTINGS, ANIMATION GALLERY, fallback, or a new App Cover; correcting a generic, unclear, or over-detailed Cover; producing smooth grayscale master PNGs; converting them to reviewed 350×155 and 280×124 1-bit assets; packing C++ headers; or applying an approved Cover to its App. Do not approve visual baselines without explicit user approval."
+description: "Generate, simplify, review, convert, and optionally integrate Playdate-literate CadenzaOS Launcher Cover illustrations: highly legible 1-bit micro-posters with large titles, an App-specific functional hook, strong black/white recognition, and controlled gray planes that add depth and fun within a coherent restrained industrial style. Use when adding or iterating TIMER, MOTION, SETTINGS, ANIMATION GALLERY, fallback, or a new App Cover; correcting a generic, unclear, flat, or over-detailed Cover; producing smooth grayscale master PNGs; converting them to reviewed 350×155 and 280×124 1-bit assets; packing C++ headers; or applying an approved Cover to its App. Do not approve visual baselines without explicit user approval."
 ---
 
 # Generate Launcher Cover Art
@@ -47,7 +47,8 @@ acceptance checklist.
    accents only when they communicate App identity. List the permitted elements
    explicitly; instruct the generator not to invent anything else. Also define a
    tonal plan: the main black mass, main white mass, and one to three broad gray
-   planes, with a spatial or material purpose for every gray.
+   planes, with a spatial or material purpose for every gray. When using 2D/3D
+   overlap, also state the occlusion order, tilt, front face, and side face.
 6. Generate and apply one App at a time. Assemble the image prompt as:
 
    ```text
@@ -93,7 +94,7 @@ acceptance checklist.
 
 ```bash
 "$IMAGE_PYTHON" .codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py \
-  /tmp/clock.png assets/launcher-covers --name clock --levels 5 \
+  /tmp/timer.png assets/launcher-covers --name timer --levels 5 \
   --pack-tool tools/pack_bitmap.py \
   --header-dir lib/cadenza_apps/src/generated
 ```
@@ -101,7 +102,7 @@ acceptance checklist.
 ## Static Cover contract
 
 - Never generate Idle, Highlighted, Pressed, or Launching Cover variants.
-- Never animate or alter Clock time, Motion geometry, or any other internal
+- Never animate or alter Timer time, Motion geometry, or any other internal
   pixels because of selection, press, long press, or launch.
 - Treat launch animation as a separate future asset and product contract.
 - Do not draw card borders, button hints, page dots, or Launcher navigation;
@@ -134,7 +135,7 @@ acceptance checklist.
   every letter remains unmistakable at 1×.
 - Use one core scene and one dominant motif per Cover. Do not require every motif
   to be geometric or every title to use the same type treatment.
-- Make CLOCK and ANIMATION GALLERY dark; make MOTION and SETTINGS light.
+- Make TIMER and ANIMATION GALLERY dark; make MOTION and SETTINGS light.
 - Build the master with smooth high-resolution contours and 3–5 deliberate gray
   values. Allow antialiasing in the master; never ask the generator to pre-bake
   jagged pixel stair-steps.
@@ -145,6 +146,9 @@ acceptance checklist.
   define a front face, side face, overlap, cast shape, beam, or atmosphere. Every
   gray must clarify volume, separation, motion, or material; delete ornamental
   gray that only makes the image busier.
+- Permit a flat title to overlap a tilted volumetric object. Keep the title on a
+  clean 2D plane and use only a front face, rim, and side wall for the 3D object;
+  the occlusion must remain obvious after hard threshold and at 280×124.
 - Avoid continuous photographic gradients. Translate designed gray planes into
   regular ordered dither, then clean noisy edge pixels by hand.
 - Prefer large flat planes over rendered machinery. Grayscale may make one object

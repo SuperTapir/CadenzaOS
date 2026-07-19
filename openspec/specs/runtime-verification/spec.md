@@ -46,7 +46,7 @@ Automated tests SHALL cover reverse playback, yoyo, repeat count, repeat delay, 
 - **THEN** final value, repeat state, and callback count match the defined traversal semantics
 
 ### Requirement: Both display profiles have snapshots
-Approved screenshot/framebuffer snapshots SHALL cover Launcher, Clock, Motion, Settings, Gallery, and representative transitions at 320×170 and 400×240.
+Approved screenshot/framebuffer snapshots SHALL cover Launcher, Timer, Motion, Settings, Gallery, and representative transitions at 320×170 and 400×240.
 
 #### Scenario: Snapshot regression runs
 - **WHEN** deterministic fixed-step scenes render their capture frames

@@ -8,7 +8,7 @@ Automated tests SHALL cover every direct transition endpoint, representative mid
 - **THEN** golden endpoint, phase, midpoint-continuity, and direction results match for both profiles where resolution affects geometry
 
 ### Requirement: Both display profiles have snapshots
-Approved screenshot/framebuffer snapshots SHALL cover Launcher, Clock, Motion, Settings, Gallery, representative direct transitions, every built-in App launch sequence, App-to-Launcher Cover handoff, and System Menu opening/open/closing keyframes at 320×170 and 400×240.
+Approved screenshot/framebuffer snapshots SHALL cover Launcher, Timer, Motion, Settings, Gallery, representative direct transitions, every built-in App launch sequence, App-to-Launcher Cover handoff, and System Menu opening/open/closing keyframes at 320×170 and 400×240.
 
 #### Scenario: Snapshot regression runs
 - **WHEN** deterministic fixed-step scenes render their stable and transition capture frames
