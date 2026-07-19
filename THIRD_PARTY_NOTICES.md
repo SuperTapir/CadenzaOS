@@ -7,6 +7,17 @@ are not build inputs.
 SDL3 is a system-provided desktop build dependency and is not vendored or
 linked into `cadenza_core`. The verified macOS build used SDL 3.4.12.
 
+## Bravura-derived SIGHT glyph subset
+
+- Upstream: <https://github.com/steinbergmedia/bravura>
+- Commit: `02e8ed29a29115df35007d1178cebaeee26c20e1`
+- Copyright: © 2019 Steinberg Media Technologies GmbH
+- License: SIL Open Font License 1.1 with Reserved Font Name “Bravura”; copied
+  at `third_party/licenses/Bravura-OFL-1.1.txt`
+- Vendored scope: offline 1-bit raster derivatives of only the SMuFL treble
+  clef, bass clef, sharp, and flat glyphs. The complete font is not vendored
+  or loaded at runtime.
+
 ## U8g2
 
 - Upstream: <https://github.com/olikraus/u8g2>

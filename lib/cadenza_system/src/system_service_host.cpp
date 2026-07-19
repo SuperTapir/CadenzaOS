@@ -39,6 +39,8 @@ bool SystemServiceHost::validCommand(const SystemCommand& command) const noexcep
   switch (command.type) {
     case SystemCommandType::PlaySound:
       return command.soundCue != audio::SoundCue::Count;
+    case SystemCommandType::PlayMusicalNotes:
+      return command.musicalNotes.valid();
     case SystemCommandType::SetSoundVolume:
       return command.soundVolume != audio::SoundVolume::Count;
     case SystemCommandType::SetMotionProfile:
@@ -203,6 +205,13 @@ bool SystemServiceHost::apply(
         ++diagnostics_.suppressedSoundCues;
       } else {
         sound_.play(command.soundCue);
+      }
+      return true;
+    case SystemCommandType::PlayMusicalNotes:
+      if (voiceCapture_.intentActive(voice::VoiceConsumer::Usb)) {
+        ++diagnostics_.suppressedSoundCues;
+      } else {
+        sound_.playNotes(command.musicalNotes);
       }
       return true;
     case SystemCommandType::SetSoundVolume:

@@ -52,6 +52,7 @@ bool sameRect(const cadenza::MonoFramebuffer& first,
 
 enum class HandoffScene : std::uint8_t {
   TimerLaunch,
+  SightLaunch,
   MotionLaunch,
   SettingsLaunch,
   GalleryLaunch,
@@ -65,6 +66,8 @@ const char* handoffSceneName(HandoffScene scene) {
   switch (scene) {
     case HandoffScene::TimerLaunch:
       return "timer-launch";
+    case HandoffScene::SightLaunch:
+      return "sight-launch";
     case HandoffScene::MotionLaunch:
       return "motion-launch";
     case HandoffScene::SettingsLaunch:
@@ -145,6 +148,9 @@ std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
   cadenza::host::HeadlessHost host{profile};
   cadenza::AppId target = cadenza::apps::kTimerAppId;
   switch (scene) {
+    case HandoffScene::SightLaunch:
+      target = cadenza::apps::kSightAppId;
+      break;
     case HandoffScene::MotionLaunch:
       target = cadenza::apps::kMotionAppId;
       break;
@@ -161,6 +167,7 @@ std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
   }
   REQUIRE(host.runtime().open(target));
   if (scene == HandoffScene::TimerLaunch ||
+      scene == HandoffScene::SightLaunch ||
       scene == HandoffScene::MotionLaunch ||
       scene == HandoffScene::SettingsLaunch ||
       scene == HandoffScene::GalleryLaunch ||
@@ -228,7 +235,7 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
                                      std::uint64_t expected) {
   cadenza::host::HeadlessHost host{profile};
   cadenza::InputFrame selectGallery;
-  selectGallery.turn = 3;
+  selectGallery.turn = 4;
   host.step(selectGallery);
   const std::uint64_t actual = host.framebufferHash();
   const auto directory = std::filesystem::current_path() / "snapshot-failures";
@@ -273,11 +280,13 @@ std::uint64_t captureBackgroundTimer(cadenza::FramebufferProfile profile,
 }  // namespace
 
 TEST_CASE("approved bundled App framebuffer snapshots") {
-  const std::array<SnapshotCase, 10> cases{{
+  const std::array<SnapshotCase, 12> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       14918215311978361535ULL},
+       537776504344780917ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kTimerAppId,
        9459123157712897673ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSightAppId,
+       8416291310843725455ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        2528157750090777159ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
@@ -285,9 +294,11 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        5829755783398426753ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       14894746194681732842ULL},
+       12863939745313312135ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kTimerAppId,
        11125504611431129214ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSightAppId,
+       9979839192883276723ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        17137373998554346811ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
@@ -306,17 +317,17 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               15896753282562615363ULL) ==
-        15896753282562615363ULL);
+                               10447888948522225991ULL) ==
+        10447888948522225991ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               13499352535080939587ULL) ==
-        13499352535080939587ULL);
+                               7356285947542530892ULL) ==
+        7356285947542530892ULL);
 }
 
 TEST_CASE("background Timer indicator stays legible over every built-in App") {
   const std::array<SnapshotCase, 8> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       13957566213992405174ULL},
+       12458770175868205636ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11763888816598266585ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
@@ -324,7 +335,7 @@ TEST_CASE("background Timer indicator stays legible over every built-in App") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        115148013231880568ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       65166265943844197ULL},
+       14628784248661360040ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        16730610446322141212ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
@@ -341,8 +352,9 @@ TEST_CASE("background Timer indicator stays legible over every built-in App") {
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {
-  constexpr std::array<HandoffScene, 8> scenes{
-      HandoffScene::TimerLaunch, HandoffScene::MotionLaunch,
+  constexpr std::array<HandoffScene, 9> scenes{
+      HandoffScene::TimerLaunch, HandoffScene::SightLaunch,
+      HandoffScene::MotionLaunch,
       HandoffScene::SettingsLaunch, HandoffScene::GalleryLaunch,
       HandoffScene::FallbackLaunch, HandoffScene::TimerReturn,
       HandoffScene::MenuOpening,
@@ -350,14 +362,16 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
   constexpr std::array<cadenza::FramebufferProfile, 2> profiles{
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
-  constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
-      {{10363111933382688924ULL, 7816090857312221288ULL,
-        13616107464272084726ULL, 5062836223768158047ULL,
+  constexpr std::array<std::array<std::uint64_t, 9>, 2> expected{{
+      {{10246049574384578296ULL, 17910386823993677589ULL,
+        2535712096121363172ULL,
+        8474039113435400778ULL, 2107098608496693303ULL,
         8089027038418072656ULL, 17578902866895419590ULL,
         16216091776987611102ULL,
         12224806840153236890ULL}},
-      {{5668728059796249764ULL, 8216619787726592616ULL,
-        7999527108005928230ULL, 15678527797637150066ULL,
+      {{13262927497032935610ULL, 960847470562970088ULL,
+        11420817932268054054ULL,
+        12575555744855282064ULL, 14954979846596887856ULL,
         14975481694991952360ULL, 10760001046756445264ULL,
         926094830975975231ULL,
         10499074208059608780ULL}},
@@ -381,6 +395,7 @@ TEST_CASE("built-in returns keep the Cover fixed and bound 30 FPS changes") {
   constexpr std::array<cadenza::AppId, 4> apps{
       cadenza::apps::kTimerAppId, cadenza::apps::kMotionAppId,
       cadenza::apps::kSettingsAppId, cadenza::apps::kGalleryAppId};
+  constexpr std::array<std::int16_t, 4> launcherPositions{{0, 2, 3, 4}};
   constexpr float kMaximumChangedRatio = 0.16F;
 
   for (const cadenza::FramebufferProfile profile : profiles) {
@@ -390,7 +405,7 @@ TEST_CASE("built-in returns keep the Cover fixed and bound 30 FPS changes") {
       cadenza::host::HeadlessHost host{profile};
       if (appIndex > 0) {
         cadenza::InputFrame select;
-        select.turn = static_cast<std::int16_t>(appIndex);
+        select.turn = launcherPositions[appIndex];
         host.step(select);
         host.advance(0.5F);
       }

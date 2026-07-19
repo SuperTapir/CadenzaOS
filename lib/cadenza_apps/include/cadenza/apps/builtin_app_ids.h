@@ -9,6 +9,7 @@ inline constexpr AppId kTimerAppId{0x0101};
 inline constexpr AppId kMotionAppId{0x0102};
 inline constexpr AppId kSettingsAppId{0x0103};
 inline constexpr AppId kGalleryAppId{0x0104};
+inline constexpr AppId kSightAppId{0x0105};
 
 constexpr AppCapabilitySet builtinAppCapabilities(AppId id) noexcept {
   if (id == kLauncherAppId) {
@@ -25,7 +26,7 @@ constexpr AppCapabilitySet builtinAppCapabilities(AppId id) noexcept {
     return AppCapabilitySet{AppCapability::SoundPlay} |
            AppCapability::TimerControl;
   }
-  if (id == kMotionAppId || id == kGalleryAppId) {
+  if (id == kMotionAppId || id == kGalleryAppId || id == kSightAppId) {
     return AppCapabilitySet{AppCapability::SoundPlay};
   }
   return {};

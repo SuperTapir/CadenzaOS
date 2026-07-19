@@ -10,9 +10,11 @@ project screenshots, logos, texture tables, and example art are not copied.
 | ordered 8×8 threshold table | `lib/cadenza_core/src/mono_canvas.cpp` | Cadenza-authored recursive Bayer ordering | Original project code |
 | Gallery four-frame 2×4 sprite | `lib/cadenza_core/src/gallery.cpp` | Cadenza-authored for deterministic state-animation QA | Original project code |
 | Timer Launcher Cover | `assets/launcher-covers/source/timer.png` and generated PBM/header | AI-assisted original 3D artwork approved 2026-07-19 | Original project artwork |
+| SIGHT Launcher Cover | `assets/launcher-covers/source/sight.png` and generated PBM/header | AI-assisted original dimensional wordmark and score-ribbon illustration approved 2026-07-19 | Original project artwork |
 | Motion Launcher Cover | `assets/launcher-covers/source/motion.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
 | Settings Launcher Cover | `assets/launcher-covers/source/settings.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
 | Animation Gallery Launcher Cover | `assets/launcher-covers/source/gallery.png` and generated PBM/header | User-provided, AI-assisted original artwork approved 2026-07-18 | Original project artwork |
+| SIGHT music-notation glyph subset | `assets/music-glyphs/` and generated App headers | Four-glyph offline bitmap subset generated from Bravura at commit `02e8ed29`; source and generated subset are covered by SIL Open Font License 1.1 | Redistribution permitted under SIL OFL 1.1; attribution and license text retained |
 
 `font8x8` is present only in the ignored research clone and is not a bundled
 asset. New fonts, textures, converted bitmaps, or atlases must add a row here

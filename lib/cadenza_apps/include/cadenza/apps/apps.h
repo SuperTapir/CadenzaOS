@@ -17,6 +17,86 @@
 
 namespace cadenza {
 
+enum class SightStep : std::uint8_t { C, D, E, F, G, A, B };
+enum class SightAccidental : std::int8_t { Flat = -1, Natural = 0, Sharp = 1 };
+
+struct SpelledPitch {
+  SightStep step = SightStep::C;
+  SightAccidental accidental = SightAccidental::Natural;
+  std::int8_t octave = 4;
+
+  std::uint8_t midiNote() const noexcept;
+};
+
+struct SightCard {
+  std::array<SpelledPitch, 3> pitches{};
+  std::uint8_t count = 1;
+  bool minor = false;
+};
+
+void formatSightChordSymbol(const SightCard& card, char* output,
+                            std::size_t capacity) noexcept;
+
+enum class SightLevel : std::uint8_t { Level1, AllNotes, CommonChords };
+enum class SightScreen : std::uint8_t {
+  LevelPicker,
+  Question,
+  Answer,
+  AnswerExiting,
+};
+enum class SightAnswerAction : std::uint8_t { Replay, Next, Level };
+enum class SightPageTransition : std::uint8_t { None, ToQuestion, ToLevel };
+
+class SightApp final : public App {
+ public:
+  static constexpr Seconds kLevelTransitionSeconds = 0.18F;
+  static constexpr Seconds kAnswerRevealSeconds = 0.20F;
+  static constexpr Seconds kNoteEntranceSeconds = 0.24F;
+  static constexpr Seconds kPageTransitionSeconds = 0.22F;
+
+  const char* name() const noexcept override { return "SIGHT"; }
+  void onEnter() noexcept override;
+  void update(const AppUpdateContext& context) noexcept override;
+  void render(MonoCanvas& canvas,
+              const AppRenderContext& context) noexcept override;
+  bool renderLauncherCover(MonoCanvas& canvas,
+                           Rect bounds) const noexcept override;
+
+  SightLevel level() const noexcept { return level_; }
+  SightScreen screen() const noexcept { return screen_; }
+  SightAnswerAction answerAction() const noexcept { return answerAction_; }
+  SightPageTransition pageTransition() const noexcept {
+    return pageTransition_;
+  }
+  const SightCard& card() const noexcept { return card_; }
+  std::uint8_t candidateCount() const noexcept;
+
+ private:
+  void resetBag() noexcept;
+  void nextCard() noexcept;
+  void playCurrent(const AppUpdateContext& context) noexcept;
+  void renderStudyPage(MonoCanvas& canvas,
+                       const AppRenderContext& context,
+                       SightScreen studyScreen) noexcept;
+
+  SightLevel level_ = SightLevel::Level1;
+  SightLevel previousLevel_ = SightLevel::Level1;
+  SightScreen screen_ = SightScreen::LevelPicker;
+  SightAnswerAction answerAction_ = SightAnswerAction::Next;
+  SightPageTransition pageTransition_ = SightPageTransition::None;
+  SightCard card_{};
+  std::array<std::uint8_t, 29> bag_{};
+  std::uint8_t bagSize_ = 0;
+  std::uint8_t bagPosition_ = 0;
+  std::uint8_t previousCandidate_ = 0xFF;
+  std::uint32_t randomState_ = 0x51A17U;
+  Seconds levelTransitionElapsed_ = kLevelTransitionSeconds;
+  Seconds answerRevealElapsed_ = kAnswerRevealSeconds;
+  Seconds noteEntranceElapsed_ = kNoteEntranceSeconds;
+  Seconds pageTransitionElapsed_ = kPageTransitionSeconds;
+  std::int8_t levelTransitionDirection_ = 0;
+};
+
 class LauncherApp final : public App {
  public:
   const char* name() const noexcept override { return "Launcher"; }

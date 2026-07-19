@@ -12,8 +12,9 @@
 
 https://github.com/user-attachments/assets/4cbb17ba-b52b-44dc-b557-88dd9fdf3d63
 
-上方视频展示带声音的完整应用流程：Launcher、Timer、后台 Timer 指示器、
-System Menu、Motion、Settings 与 Animation Gallery，以及 T-Embed 320×170 和
+上方视频展示带声音的应用流程：Launcher、Timer、后台 Timer 指示器、
+System Menu、Motion、Settings 与 Animation Gallery；当前构建还新增了 SIGHT
+识谱训练。系统支持 T-Embed 320×170 和
 Sharp Memory LCD 400×240 两种显示 profile 下的表现。
 
 > **原型状态：**桌面、headless 与固件编译门禁已经建立；编码器手感、屏幕表现、
@@ -42,12 +43,12 @@ T-Embed 是第一阶段的软件和交互原型。长期硬件方向以 400×240
 
 - 320×170 T-Embed 与 400×240 Sharp profile 共用同一套 1-bit framebuffer、
   App/Runtime 和布局规则；
-- Launcher、Timer、Motion、Settings、Animation Gallery 五个内置 App，支持
+- Launcher、Timer、SIGHT、Motion、Settings、Animation Gallery 六个内置 App，支持
   旋转选择、短按进入、长按系统菜单与显式返回 Launcher；
 - 后台 Timer、到期提示、系统菜单、会话音量、Reduced Motion 与 Launcher
   横竖方向等系统级服务；
-- 18 项语义音效，桌面 SDL callback 与 T-Embed I²S task 共用 44.1 kHz
-  四声部合成核心；
+- 18 项语义音效与受限的 1–4 音 MIDI 乐音播放，桌面 SDL callback 与 T-Embed
+  I²S task 共用 44.1 kHz 四声部合成核心；
 - allocation-free Tween、Timeline、Spring、转场、camera effects、粒子与
   atlas 序列帧状态机；
 - SDL3 桌面模拟器、headless deterministic host、PNG/GIF 录制、像素快照与

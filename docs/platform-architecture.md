@@ -19,7 +19,7 @@ raw input ──→ InputReducer ──→ frozen SystemSnapshot + AppUpdateCont
 
 ES7210/I²S1 ──→ 48 kHz voice coordinator ──┬─→ analyzer snapshot ─→ Apps
                                            └─→ UAC packetizer ───→ macOS
-SoundCue ─────→ 44.1 kHz sound service ───────→ I²S0 / SDL / headless
+SoundCue / bounded MusicalNoteSet ─→ 44.1 kHz sound service ─→ I²S0 / SDL / headless
 monotonic now ─→ TimerService deadline ─→ snapshot / critical TimerAlert
 ```
 
@@ -35,7 +35,9 @@ monotonic now ─→ TimerService deadline ─→ snapshot / critical TimerAlert
   TFT 或 SDL 特性；
 - 将显示提交与应用绘制分离；
 - 拥有 `InteractionSoundService`，把 Navigate、Confirm、Back 等语义提交给
-  独立音频消费者；应用不得操作 SDL、I²S、WAV 路径或任意 oscillator。
+  独立音频消费者；允许具备 SoundPlay capability 的 App 提交最多四音、钢琴
+  MIDI 范围内的 `MusicalNoteSet`，但应用不得操作 SDL、I²S、WAV 路径、Hz、
+  waveform、gain、duration、priority、voice 或任意 oscillator。
 - 拥有 voice capture 生命周期、consumer fan-out、隐私状态与错误降级；App 不得
   取得 raw PCM、codec、DMA、USB、Wi-Fi 或 BLE callback。
 - 拥有单一 `TimerService`、单调 deadline、后台 indicator 与 critical alert；App
@@ -62,7 +64,7 @@ update context 只含 `dt`、`InputFrame`、只读 `SystemSnapshot`、catalog vi
 
 - `cadenza_core`：App 契约/目录/生命周期、输入、图形、动画、声音语义；不知道
   bundled App 与平台 SDK。
-- `cadenza_apps`：Launcher、Timer、Motion、Settings、Gallery；只能依赖窄 App
+- `cadenza_apps`：Launcher、Timer、SIGHT、Motion、Settings、Gallery；只能依赖窄 App
   context。
 - `cadenza_system`：帧事务、权威系统状态、sound/voice services、固定队列、USB
   packetizer 与 DMA normalizer；不含平台 header。

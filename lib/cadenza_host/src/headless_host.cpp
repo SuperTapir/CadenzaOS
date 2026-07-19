@@ -100,6 +100,8 @@ HeadlessHost::HeadlessHost(FramebufferProfile profile,
                        apps::builtinAppCapabilities(apps::kLauncherAppId));
   runtime_.registerApp(apps::kTimerAppId, timer_, true,
                        apps::builtinAppCapabilities(apps::kTimerAppId));
+  runtime_.registerApp(apps::kSightAppId, sight_, true,
+                       apps::builtinAppCapabilities(apps::kSightAppId));
   runtime_.registerApp(apps::kMotionAppId, motion_, true,
                        apps::builtinAppCapabilities(apps::kMotionAppId));
   runtime_.registerApp(apps::kSettingsAppId, settings_, true,

@@ -15,7 +15,8 @@ edition).
 https://github.com/user-attachments/assets/4cbb17ba-b52b-44dc-b557-88dd9fdf3d63
 
 The walkthrough above includes sound and covers Launcher, Timer, the background
-Timer indicator, System Menu, Motion, Settings, Animation Gallery, and the
+Timer indicator, System Menu, Motion, Settings, and Animation Gallery. The
+current build also adds the SIGHT note-reading trainer. Cadenza supports the
 T-Embed 320×170 and Sharp Memory LCD 400×240 display profiles.
 
 > **Prototype status:** desktop, headless, and firmware build gates are in
@@ -51,13 +52,14 @@ the platform without defining the final device.
 
 - One 1-bit framebuffer, App/Runtime, and layout model shared by the 320×170
   T-Embed and 400×240 Sharp profiles;
-- five built-in Apps—Launcher, Timer, Motion, Settings, and Animation
+- six built-in Apps—Launcher, Timer, SIGHT, Motion, Settings, and Animation
   Gallery—with encoder navigation, button input, a System Menu, and explicit
   return to Launcher;
 - system-owned background Timer, expiry alert, session volume, Reduced Motion,
   and vertical or horizontal Launcher orientation;
-- 18 semantic sound cues backed by the same 44.1 kHz, four-voice synthesis core
-  in the SDL callback and T-Embed I²S task;
+- 18 semantic sound cues plus bounded 1–4 note MIDI playback, backed by the
+  same 44.1 kHz, four-voice synthesis core in the SDL callback and T-Embed I²S
+  task;
 - allocation-free Tween, Timeline, Spring, transitions, camera effects,
   particles, and atlas animation state machines;
 - an SDL3 desktop simulator, deterministic headless host, PNG/GIF capture,

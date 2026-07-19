@@ -43,6 +43,38 @@ bool InteractionSoundService::play(SoundCue cue) noexcept {
   return true;
 }
 
+bool InteractionSoundService::playNotes(const MusicalNoteSet& notes) noexcept {
+  if (!notes.valid() || volume_ == SoundVolume::Muted) return false;
+  return commands_.tryPush(AudioCommand::playNotes(notes));
+}
+
+float InteractionSoundService::midiFrequency(std::uint8_t note) noexcept {
+  return 440.0F * std::pow(2.0F, (static_cast<float>(note) - 69.0F) / 12.0F);
+}
+
+void InteractionSoundService::startNotes(
+    const MusicalNoteSet& notes) noexcept {
+  engine_.stopAll();
+  clearScheduled();
+  const float voiceGain = 0.42F / std::sqrt(static_cast<float>(notes.count));
+  for (std::size_t index = 0; index < notes.count; ++index) {
+    ToneSpec tone;
+    tone.waveform = Waveform::Sine;
+    tone.startFrequencyHz = midiFrequency(notes.notes[index]);
+    tone.endFrequencyHz = tone.startFrequencyHz;
+    tone.attackSeconds = 0.008F;
+    tone.decaySeconds = 0.20F;
+    tone.durationSeconds = 0.70F;
+    tone.releaseSeconds = 0.08F;
+    tone.gain = voiceGain;
+    tone.secondHarmonicGain = 0.18F;
+    tone.secondHarmonicPhaseCycles = 0.25F;
+    tone.priority = 2;
+    tone.envelopeCurve = EnvelopeCurve::Exponential;
+    engine_.play(tone);
+  }
+}
+
 bool InteractionSoundService::setVolume(SoundVolume volume) noexcept {
   if (volume >= SoundVolume::Count) return false;
   if (volume == volume_) return true;
@@ -135,6 +167,11 @@ void InteractionSoundService::consumeCommands() noexcept {
         }
         break;
       }
+      case AudioCommandKind::PlayNotes:
+        if (consumerVolume_ != SoundVolume::Muted && command.noteSet.valid()) {
+          startNotes(command.noteSet);
+        }
+        break;
       case AudioCommandKind::SetVolume:
         consumerVolume_ = command.volume;
         engine_.setMasterGain(volumeGain(consumerVolume_));

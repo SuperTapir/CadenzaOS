@@ -19,6 +19,7 @@ cadenza::AppId appFrom(const char* value) {
     case 2: return cadenza::apps::kMotionAppId;
     case 3: return cadenza::apps::kSettingsAppId;
     case 4: return cadenza::apps::kGalleryAppId;
+    case 7: return cadenza::apps::kSightAppId;
     default: return cadenza::apps::kLauncherAppId;
   }
 }
@@ -157,6 +158,53 @@ int main(int argc, char** argv) {
       cadenza::InputFrame turn;
       turn.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
       host.step(turn);
+    }
+  } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+             argc >= 5 && app == cadenza::apps::kSightAppId &&
+             (std::strcmp(argv[4], "question") == 0 ||
+              std::strcmp(argv[4], "note-entry-mid") == 0 ||
+              std::strcmp(argv[4], "page-enter-mid") == 0 ||
+              std::strcmp(argv[4], "page-return-mid") == 0 ||
+              std::strcmp(argv[4], "answer") == 0 ||
+              std::strcmp(argv[4], "chord-answer") == 0 ||
+              std::strcmp(argv[4], "chord-answer-mid") == 0 ||
+              std::strcmp(argv[4], "chord-exit-mid") == 0)) {
+    const bool chordAnswer =
+        std::strcmp(argv[4], "chord-answer") == 0 ||
+        std::strcmp(argv[4], "chord-answer-mid") == 0 ||
+        std::strcmp(argv[4], "chord-exit-mid") == 0;
+    if (chordAnswer) {
+      cadenza::InputFrame selectChords;
+      selectChords.turn = 2;
+      host.step(selectChords);
+    }
+    cadenza::InputFrame click;
+    click.clicked = true;
+    host.step(click);
+    if (std::strcmp(argv[4], "note-entry-mid") == 0) {
+      host.advance(cadenza::SightApp::kNoteEntranceSeconds / 2.0F);
+    } else if (std::strcmp(argv[4], "page-enter-mid") == 0) {
+      host.advance(cadenza::SightApp::kPageTransitionSeconds / 2.0F);
+    } else if (std::strcmp(argv[4], "page-return-mid") == 0) {
+      host.advance(cadenza::SightApp::kPageTransitionSeconds);
+      host.step(click);
+      host.advance(cadenza::SightApp::kAnswerRevealSeconds);
+      cadenza::InputFrame selectLevel;
+      selectLevel.turn = 1;
+      host.step(selectLevel);
+      host.step(click);
+      host.advance(cadenza::SightApp::kPageTransitionSeconds / 2.0F);
+    }
+    if (std::strcmp(argv[4], "answer") == 0 || chordAnswer) {
+      host.step(click);
+      const bool answerMid =
+          std::strcmp(argv[4], "chord-answer-mid") == 0;
+      host.advance(answerMid ? cadenza::SightApp::kAnswerRevealSeconds / 2.0F
+                             : cadenza::SightApp::kAnswerRevealSeconds);
+      if (std::strcmp(argv[4], "chord-exit-mid") == 0) {
+        host.step(click);
+        host.advance(cadenza::SightApp::kAnswerRevealSeconds / 2.0F);
+      }
     }
   } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
              argc >= 5 && app == cadenza::apps::kSettingsAppId &&

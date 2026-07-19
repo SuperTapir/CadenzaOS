@@ -28,6 +28,7 @@ SerialDiagnosticSink diagnosticSink;
 I2sAudioOutput audioOutput;
 cadenza::LauncherApp launcher;
 cadenza::TimerApp timerApp;
+cadenza::SightApp sight;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
@@ -81,6 +82,8 @@ void setup() {
                       cadenza::apps::builtinAppCapabilities(cadenza::apps::kLauncherAppId));
   runtime.registerApp(cadenza::apps::kTimerAppId, timerApp, true,
                       cadenza::apps::builtinAppCapabilities(cadenza::apps::kTimerAppId));
+  runtime.registerApp(cadenza::apps::kSightAppId, sight, true,
+                      cadenza::apps::builtinAppCapabilities(cadenza::apps::kSightAppId));
   runtime.registerApp(cadenza::apps::kMotionAppId, motion, true,
                       cadenza::apps::builtinAppCapabilities(cadenza::apps::kMotionAppId));
   runtime.registerApp(cadenza::apps::kSettingsAppId, settings, true,

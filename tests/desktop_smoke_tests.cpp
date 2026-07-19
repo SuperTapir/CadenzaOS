@@ -114,6 +114,12 @@ TEST_CASE("desktop input path visits every bundled App and returns home") {
 
   harness.turnRight();
   harness.tapEnter();
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kSightAppId);
+  harness.returnHomeThroughSystemMenu();
+  CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
+
+  harness.turnRight();
+  harness.tapEnter();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kMotionAppId);
   harness.returnHomeThroughSystemMenu();
   CHECK(harness.host.runtime().currentId() == cadenza::apps::kLauncherAppId);
@@ -140,7 +146,7 @@ TEST_CASE("desktop Settings changes Launcher axis and moving selection opens") {
   cadenza::desktop::DesktopDiagnosticLog diagnostics;
   SmokeHarness harness{&diagnostics};
 
-  harness.turnRight(2);
+  harness.turnRight(3);
   harness.tapEnter();
   REQUIRE(harness.host.runtime().currentId() ==
           cadenza::apps::kSettingsAppId);

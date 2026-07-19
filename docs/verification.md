@@ -179,6 +179,32 @@ fresh gate 为准：
 软件与反射色板预览不能替代真机观看距离下的花体 slogan、细小署名和 4×4 dither
 验收；该项保留为 hardware visual acceptance pending。
 
+## 2026-07-19 SIGHT 识谱训练
+
+- `docs/sight-reading-reference-research.md` 锁定 Playdate SDK 3.1.0、MusicXML
+  4.0、VexFlow 4.2.6 与 Bravura `02e8ed29` 的版本、许可证、关键源码语义和
+  采用/不采用边界；OpenSpec `build-sight-reading-trainer` strict validation 通过。
+- SIGHT 默认 C3–C5 自然单音，另有 C2–C6 自然单音与 12 个 root 的 major/minor
+  原位三和弦；题库使用确定性 shuffle bag。Question 转轮无动作，click 揭晓并
+  播放；Answer 默认 `NEXT`，可选择 `REPLAY / NEXT / LEVEL`。
+- Bravura 四字形离线子集、双大谱表、加线、相邻和弦音错位、升降号和两行答案
+  布局均通过 320×170 / 400×240 geometry 与快照验证。24 个和弦的 Question 和
+  Answer 逐题检查无 clipped/invalid geometry，长答案不换行溢出。
+- 受 `SoundPlay` capability 约束的 `MusicalNoteSet` 只接受 1–4 个 MIDI 21–108
+  音符；固定音色覆盖 Replay 重启、四声部、队列 reserve、静音、StopAll、确定性、
+  无整数环绕和精确归零尾部。SIGHT 定向套件为 26/26 case、532/532 assertion。
+- 用户批准最终卷谱插画和增强灰阶立体字 Cover；`--levels 5 --edge-cleanup` 的
+  350×155 / 280×124 source→PBM 与 PBM→header 检查、静态 Cover、Launcher
+  snapshots 和 handoff snapshots 全部通过。
+- normal、AppleClang warnings-as-errors 与 ASan+UBSan 均为 90/90；SDL 3.4.12
+  dummy executable 通过；PlatformIO T-Embed release 为 RAM 100,928 / 327,680 B
+  (30.8%)、Flash 496,245 / 3,145,728 B (15.8%)；`git diff --check` 通过。
+
+自动化只证明音高、PCM 边界、路由、显示和构建；尚未在原版 T-Embed 扬声器上
+试听单音、三和弦的音色、响度和 Replay 手感，也未在 Memory LCD 上验收 Cover
+移动时的网点闪烁。首版明确不含语音识别、评分、间隔复习、钢琴键位、持久化、
+调号、节奏、转位或七和弦。
+
 ## Delta-spec completion audit
 
 This is the requirement-by-requirement audit, rather than an inference from a

@@ -43,6 +43,7 @@ class InteractionSoundService {
   InteractionSoundService() noexcept;
 
   bool play(SoundCue cue) noexcept;
+  bool playNotes(const MusicalNoteSet& notes) noexcept;
   bool setVolume(SoundVolume volume) noexcept;
   void stopAll() noexcept;
   void advance(Seconds delta) noexcept;
@@ -65,6 +66,7 @@ class InteractionSoundService {
   }
 
   static SoundCueProfile profile(SoundCue cue) noexcept;
+  static float midiFrequency(std::uint8_t note) noexcept;
 
  private:
   struct ScheduledEvent {
@@ -77,6 +79,7 @@ class InteractionSoundService {
   bool schedule(const SoundEvent& event) noexcept;
   void clearScheduled() noexcept;
   void startDueEvents() noexcept;
+  void startNotes(const MusicalNoteSet& notes) noexcept;
   static float volumeGain(SoundVolume volume) noexcept;
 
   AudioCommandQueue commands_;

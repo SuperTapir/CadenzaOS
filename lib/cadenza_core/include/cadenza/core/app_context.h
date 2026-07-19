@@ -74,6 +74,7 @@ struct SystemSnapshot {
 
 enum class SystemCommandType : std::uint8_t {
   PlaySound,
+  PlayMusicalNotes,
   SetSoundVolume,
   SetMotionProfile,
   SetLauncherOrientation,
@@ -95,6 +96,7 @@ constexpr AppCapability requiredCapability(
     SystemCommandType type) noexcept {
   switch (type) {
     case SystemCommandType::PlaySound:
+    case SystemCommandType::PlayMusicalNotes:
       return AppCapability::SoundPlay;
     case SystemCommandType::SetSoundVolume:
     case SystemCommandType::SetMotionProfile:
@@ -125,6 +127,7 @@ constexpr AppCapability requiredCapability(
 struct SystemCommand {
   SystemCommandType type = SystemCommandType::PlaySound;
   audio::SoundCue soundCue = audio::SoundCue::Navigate;
+  audio::MusicalNoteSet musicalNotes{};
   audio::SoundVolume soundVolume = audio::SoundVolume::High;
   MotionProfile motionProfile = MotionProfile::Normal;
   LauncherOrientation launcherOrientation = LauncherOrientation::Vertical;
@@ -139,6 +142,14 @@ struct SystemCommand {
     SystemCommand command;
     command.type = SystemCommandType::PlaySound;
     command.soundCue = cue;
+    return command;
+  }
+
+  static SystemCommand playMusicalNotes(
+      const audio::MusicalNoteSet& notes) noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::PlayMusicalNotes;
+    command.musicalNotes = notes;
     return command;
   }
 
