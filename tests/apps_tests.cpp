@@ -193,12 +193,18 @@ TEST_CASE("all bundled Apps render through the portable canvas at both profiles"
     REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
 
     cadenza::MonoFramebuffer framebuffer{profile};
-    cadenza::MonoCanvas canvas{framebuffer};
-    for (cadenza::App* app : std::array<cadenza::App*, 5>{
-             &launcher, &timer, &motion, &settings, &gallery}) {
+    const std::array<cadenza::App*, 5> apps{
+        &launcher, &timer, &motion, &settings, &gallery};
+    for (std::size_t appIndex = 0; appIndex < apps.size(); ++appIndex) {
+      CAPTURE(static_cast<int>(profile));
+      CAPTURE(appIndex);
+      cadenza::App* app = apps[appIndex];
+      TextDiagnosticSink diagnostics;
+      cadenza::MonoCanvas canvas{framebuffer, &diagnostics};
       framebuffer.clear(false);
       cadenza::test::renderApp(*app, canvas, runtime, services);
       CHECK(hasBlackPixel(framebuffer));
+      CHECK_FALSE(diagnostics.textClipped);
     }
   }
 }
@@ -920,6 +926,56 @@ TEST_CASE("Activation Timer pauses adjusts whole minutes and resumes") {
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
                            cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+}
+
+TEST_CASE("Timer state badge has equal optical vertical padding") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    CAPTURE(static_cast<int>(profile));
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::system::SystemServiceHost services;
+    cadenza::TimerApp timer;
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
+    REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
+
+    cadenza::InputFrame click;
+    click.clicked = true;
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    REQUIRE(services.snapshot().timer.state == cadenza::TimerState::Paused);
+
+    cadenza::MonoFramebuffer frame{profile};
+    cadenza::MonoCanvas canvas{frame};
+    cadenza::test::renderApp(timer, canvas, runtime, services);
+
+    constexpr int kBadgeTop = 2;
+    const int badgeRight = frame.width() - 13;
+    int badgeLeft = badgeRight;
+    while (badgeLeft > 0 && frame.pixel(badgeLeft - 1, kBadgeTop + 3)) {
+      --badgeLeft;
+    }
+    const int badgeWidth = badgeRight - badgeLeft + 1;
+    const int probeX = badgeLeft + 4;
+    int badgeBottom = kBadgeTop;
+    while (badgeBottom + 1 < frame.height() &&
+           frame.pixel(probeX, badgeBottom + 1)) {
+      ++badgeBottom;
+    }
+
+    int firstInkRow = badgeBottom + 1;
+    int lastInkRow = kBadgeTop - 1;
+    for (int y = kBadgeTop; y <= badgeBottom; ++y) {
+      for (int x = badgeLeft + 4; x < badgeLeft + badgeWidth - 4; ++x) {
+        if (frame.pixel(x, y)) continue;
+        firstInkRow = std::min(firstInkRow, y);
+        lastInkRow = std::max(lastInkRow, y);
+      }
+    }
+    REQUIRE(lastInkRow >= firstInkRow);
+    CHECK(firstInkRow - kBadgeTop == badgeBottom - lastInkRow);
+  }
 }
 
 TEST_CASE("Timer presentation feedback has deterministic lifecycle and clears on handoff") {

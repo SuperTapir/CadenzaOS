@@ -36,7 +36,22 @@ cadenza::BoundedTextRequest request(const char* value, cadenza::Rect bounds) {
   output.minimumScale = 1;
   output.align = cadenza::TextAlign::MiddleCenter;
   output.overflow = cadenza::TextOverflowPolicy::Ellipsis;
+  output.role = cadenza::TextRole::Caption;
   return output;
+}
+
+TEST_CASE("bounded text preserves its explicit typography role") {
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::Sharp};
+  cadenza::MonoCanvas canvas{framebuffer};
+  auto input = request("Settings", {10, 10, 140, 36});
+  input.role = cadenza::TextRole::Body;
+
+  const auto result = canvas.layoutText(input);
+  REQUIRE(result.drawable());
+  CHECK(result.role == cadenza::TextRole::Body);
+  CHECK(result.renderedBounds.width ==
+        canvas.measureText("Settings", cadenza::TextRole::Body).width);
+  CHECK(canvas.drawBoundedText(result));
 }
 }  // namespace
 
@@ -181,7 +196,7 @@ TEST_CASE("wrap preserves complete content and hard-breaks oversized tokens") {
   CHECK(std::strcmp(wordResult.lines[0].value.data(), "ONE") == 0);
   CHECK(std::strcmp(wordResult.lines[1].value.data(), "TWO") == 0);
 
-  auto token = request("ABCDEFGH", {0, 32, 22, lineHeight * 4});
+  auto token = request("ABCDEFGH", {0, 32, 40, lineHeight * 4});
   token.align = cadenza::TextAlign::TopLeft;
   token.overflow = cadenza::TextOverflowPolicy::Wrap;
   token.maximumLines = 4;

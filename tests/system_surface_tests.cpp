@@ -29,6 +29,19 @@ cadenza::InputFrame release() {
   return input;
 }
 
+class GeometryDiagnosticSink final : public cadenza::DiagnosticSink {
+ public:
+  void emit(const cadenza::DiagnosticEvent& event) noexcept override {
+    if (event.code == cadenza::DiagnosticCode::InvalidGeometry ||
+        event.code == cadenza::DiagnosticCode::ClippedGeometry ||
+        event.code == cadenza::DiagnosticCode::FullyClipped) {
+      ++geometryFailures;
+    }
+  }
+
+  int geometryFailures = 0;
+};
+
 }  // namespace
 
 TEST_CASE("long press sequence arms menu only after trigger release") {
@@ -269,6 +282,21 @@ TEST_CASE("Timer alert renderer loops and adapts to Motion Profile") {
   }
 }
 
+TEST_CASE("Timer alert hero and measured action stay inside both viewports") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::MonoFramebuffer frame{profile};
+    GeometryDiagnosticSink diagnostics;
+    cadenza::MonoCanvas canvas{frame, &diagnostics};
+    cadenza::TimerSnapshot timer;
+    timer.configuredDurationMs = 10U * 60U * 1000U;
+    cadenza::presentation::renderTimerAlert(
+        canvas, timer, 0.0F, cadenza::MotionProfile::Reduced);
+    CHECK(diagnostics.geometryFailures == 0);
+    CHECK(canvas.measureText("TIME UP", cadenza::TextRole::Hero).height == 36);
+  }
+}
+
 TEST_CASE("interactive and transient capacities reject deterministically") {
   using namespace cadenza::presentation;
   SystemSurfaceCoordinator surfaces;
@@ -301,8 +329,8 @@ TEST_CASE("system menu render is deterministic for both framebuffer profiles") {
   const cadenza::FramebufferProfile profiles[] = {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
-  const std::uint64_t goldenHashes[] = {17166433962280013512ULL,
-                                        13747170315493377016ULL};
+  const std::uint64_t goldenHashes[] = {13913091511711909422ULL,
+                                        6718633362590459750ULL};
   for (std::size_t profileIndex = 0; profileIndex < 2; ++profileIndex) {
     const auto profile = profiles[profileIndex];
     cadenza::MonoFramebuffer first{profile};
@@ -504,8 +532,8 @@ TEST_CASE("passive transient and status indicator have dual-profile goldens") {
   const cadenza::FramebufferProfile profiles[] = {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
-  const std::uint64_t goldenHashes[] = {325176067826602694ULL,
-                                        3852824331461943778ULL};
+  const std::uint64_t goldenHashes[] = {16251486812105772908ULL,
+                                        1815367600471267849ULL};
   for (std::size_t profileIndex = 0; profileIndex < 2; ++profileIndex) {
     cadenza::MonoFramebuffer frame{profiles[profileIndex]};
     cadenza::MonoCanvas canvas{frame};
@@ -513,7 +541,7 @@ TEST_CASE("passive transient and status indicator have dual-profile goldens") {
     REQUIRE(surfaces.pushTransient("SAVED", 1.0F));
     cadenza::presentation::renderTransientFeedback(canvas, surfaces);
     cadenza::presentation::SystemUi::statusIndicator(
-        canvas, {frame.width() - 62, 4, 58, 16}, "SYNC", true);
+        canvas, {frame.width() - 82, 4, 78, 26}, "SYNC", true);
     CHECK(framebufferHash(frame) == goldenHashes[profileIndex]);
     CHECK_FALSE(surfaces.update(0.01F, {}, false).consumeInput);
   }

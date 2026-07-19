@@ -37,9 +37,9 @@ class FrameCoordinator {
     const SystemSnapshot& renderSnapshot = services.commitCommands();
     runtime.renderWithSystem(canvas, renderSnapshot);
     if (renderSnapshot.voice.microphoneInUse) {
-      canvas.fillRect(canvas.width() - 31, 2, 29, 12, true);
-      canvas.text("MIC", canvas.width() - 16, 8, 1, false,
-                  TextAlign::MiddleCenter);
+      canvas.fillRect(canvas.width() - 43, 2, 41, 24, true);
+      canvas.text("MIC", canvas.width() - 22, 14, 1, false,
+                  TextAlign::MiddleCenter, TextRole::Compact);
     }
   }
 };

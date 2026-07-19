@@ -102,37 +102,6 @@ bool bottomAligned(TextAlign align) noexcept {
   return align == TextAlign::BottomLeft || align == TextAlign::BottomRight;
 }
 
-struct ScaledTextDraw {
-  MonoFramebuffer* framebuffer = nullptr;
-  Rect clip;
-  std::int32_t destinationX = 0;
-  std::int32_t destinationY = 0;
-  std::uint8_t scale = 1;
-};
-
-void scaledTextLine(u8g2_t* context, u8g2_uint_t x, u8g2_uint_t y,
-                    u8g2_uint_t length, std::uint8_t direction) {
-  auto* draw = static_cast<ScaledTextDraw*>(u8g2_GetUserPtr(context));
-  if (!draw || !draw->framebuffer) return;
-  const bool black = context->draw_color != 0;
-  for (u8g2_uint_t index = 0; index < length; ++index) {
-    const std::int32_t sourceX = x + (direction == 0 ? index : 0);
-    const std::int32_t sourceY = y + (direction == 0 ? 0 : index);
-    const std::int32_t left = draw->destinationX + sourceX * draw->scale;
-    const std::int32_t top = draw->destinationY + sourceY * draw->scale;
-    for (std::uint8_t offsetY = 0; offsetY < draw->scale; ++offsetY) {
-      for (std::uint8_t offsetX = 0; offsetX < draw->scale; ++offsetX) {
-        const std::int32_t destinationX = left + offsetX;
-        const std::int32_t destinationY = top + offsetY;
-        if (destinationX >= draw->clip.x && destinationY >= draw->clip.y &&
-            destinationX < draw->clip.x + draw->clip.width &&
-            destinationY < draw->clip.y + draw->clip.height) {
-          draw->framebuffer->setPixel(destinationX, destinationY, black);
-        }
-      }
-    }
-  }
-}
 }  // namespace
 
 const DitherPattern8x8 kOrderedDither8x8{{
@@ -165,7 +134,9 @@ struct MonoCanvas::RasterState {
 
 MonoCanvas::MonoCanvas(MonoFramebuffer& framebuffer,
                        DiagnosticSink* diagnostics) noexcept
-    : framebuffer_(framebuffer), diagnostics_(diagnostics) {
+    : framebuffer_(framebuffer),
+      diagnostics_(diagnostics),
+      typography_(resolveTypography(framebuffer.width(), framebuffer.height())) {
   static_assert(sizeof(RasterState) <= kRasterStateBytes,
                 "Increase MonoCanvas opaque raster storage");
   static_assert(alignof(RasterState) <= alignof(std::max_align_t),
@@ -180,7 +151,6 @@ MonoCanvas::MonoCanvas(MonoFramebuffer& framebuffer,
   u8g2_SetupBuffer(&state->context, framebuffer.data(),
                    state->displayInfo.tile_height,
                    u8g2_ll_hvline_horizontal_right_lsb, U8G2_R0);
-  u8g2_SetFont(&state->context, u8g2_font_6x10_tf);
   resetClip();
 }
 
@@ -299,6 +269,36 @@ void MonoCanvas::fillRect(std::int32_t x, std::int32_t y, std::int32_t width,
                static_cast<u8g2_uint_t>(visible.height));
 }
 
+void MonoCanvas::fillRoundedRect(std::int32_t x, std::int32_t y,
+                                 std::int32_t width, std::int32_t height,
+                                 std::int32_t radius, bool black) noexcept {
+  if (width <= 0 || height <= 0 || radius < 0) {
+    emit(DiagnosticCode::InvalidGeometry, "invalid rounded rectangle");
+    return;
+  }
+  const std::int32_t resolvedRadius =
+      std::min(radius, std::min(width, height) / 2);
+  if (resolvedRadius == 0) {
+    fillRect(x, y, width, height, black);
+    return;
+  }
+  if (width - resolvedRadius * 2 > 0) {
+    fillRect(x + resolvedRadius, y, width - resolvedRadius * 2, height,
+             black);
+  }
+  if (height - resolvedRadius * 2 > 0) {
+    fillRect(x, y + resolvedRadius, width, height - resolvedRadius * 2,
+             black);
+  }
+  fillCircle(x + resolvedRadius, y + resolvedRadius, resolvedRadius, black);
+  fillCircle(x + width - resolvedRadius - 1, y + resolvedRadius,
+             resolvedRadius, black);
+  fillCircle(x + resolvedRadius, y + height - resolvedRadius - 1,
+             resolvedRadius, black);
+  fillCircle(x + width - resolvedRadius - 1,
+             y + height - resolvedRadius - 1, resolvedRadius, black);
+}
+
 void MonoCanvas::circle(std::int32_t x, std::int32_t y, std::int32_t radius,
                         bool black) noexcept {
   drawCircle(x, y, radius, false, black);
@@ -311,22 +311,43 @@ void MonoCanvas::fillCircle(std::int32_t x, std::int32_t y,
 
 TextMetrics MonoCanvas::measureText(const char* value,
                                     std::uint8_t scale) noexcept {
-  if (!value || scale == 0) return {};
-  auto& context = raster().context;
-  const std::int32_t ascent = u8g2_GetAscent(&context);
-  const std::int32_t descent = u8g2_GetDescent(&context);
-  return {static_cast<std::int32_t>(u8g2_GetStrWidth(&context, value)) * scale,
-          (ascent - descent) * scale, ascent * scale, descent * scale};
+  return measureText(value, TextRole::Caption, scale);
+}
+
+TextMetrics MonoCanvas::measureText(const char* value, TextRole role,
+                                    std::uint8_t scale) noexcept {
+  if (!value || scale == 0 || !validTextRole(role)) return {};
+  const BitmapFont& font = typography_.font(role);
+  if (!font.valid()) return {};
+  std::int32_t width = 0;
+  for (std::size_t index = 0; value[index] != '\0'; ++index) {
+    std::uint8_t codepoint = static_cast<std::uint8_t>(value[index]);
+    const BitmapGlyph* glyph = font.glyph(codepoint);
+    if (!glyph) {
+      codepoint = static_cast<std::uint8_t>('?');
+      glyph = font.glyph(codepoint);
+    }
+    if (!glyph) continue;
+    width += glyph->width;
+    if (value[index + 1] != '\0') {
+      std::uint8_t next = static_cast<std::uint8_t>(value[index + 1]);
+      if (!font.glyph(next)) next = static_cast<std::uint8_t>('?');
+      width += font.tracking + font.kerning(codepoint, next);
+    }
+  }
+  return {width * scale, static_cast<std::int32_t>(font.height) * scale,
+          static_cast<std::int32_t>(font.ascent) * scale,
+          static_cast<std::int32_t>(font.descent) * scale};
 }
 
 void MonoCanvas::text(const char* value, std::int32_t x, std::int32_t y,
                       std::uint8_t scale, bool black,
-                      TextAlign align) noexcept {
-  if (!value || scale == 0) {
+                      TextAlign align, TextRole role) noexcept {
+  if (!value || scale == 0 || !validTextRole(role)) {
     emit(DiagnosticCode::InvalidGeometry, "invalid text or scale");
     return;
   }
-  const TextMetrics metrics = measureText(value, scale);
+  const TextMetrics metrics = measureText(value, role, scale);
   std::int32_t left = x;
   std::int32_t top = y;
   switch (align) {
@@ -362,18 +383,20 @@ void MonoCanvas::text(const char* value, std::int32_t x, std::int32_t y,
     emit(DiagnosticCode::ClippedGeometry, "text clipped");
   }
 
-  drawTextRaster(value, left, top, scale, black, clip_);
+  drawTextRaster(value, left, top, scale, black, clip_, role);
 }
 
 BoundedTextResult MonoCanvas::layoutText(
     const BoundedTextRequest& request) noexcept {
   BoundedTextResult result;
   result.bounds = request.bounds;
+  result.role = request.role;
   if (!request.value || request.bounds.width <= 0 ||
       request.bounds.height <= 0 || request.preferredScale == 0 ||
       request.minimumScale == 0 ||
       request.minimumScale > request.preferredScale ||
       request.maximumLines == 0 || !std::isfinite(request.phase) ||
+      !validTextRole(request.role) ||
       (reportGeometryClips_ && !contains(clip_, request.bounds))) {
     emit(DiagnosticCode::InvalidGeometry, "invalid bounded text request");
     return result;
@@ -404,7 +427,7 @@ BoundedTextResult MonoCanvas::layoutText(
                         bool marquee = false) noexcept {
     result.lineCount = lineCount;
     result.scale = scale;
-    const TextMetrics baseMetrics = measureText("A", scale);
+    const TextMetrics baseMetrics = measureText("A", request.role, scale);
     const std::int32_t lineHeight = baseMetrics.height;
     const std::int32_t blockHeight = lineHeight * lineCount;
     std::int32_t top = request.bounds.y;
@@ -416,7 +439,8 @@ BoundedTextResult MonoCanvas::layoutText(
     result.renderedBounds = {};
     for (std::uint8_t index = 0; index < lineCount; ++index) {
       BoundedTextLine& line = result.lines[index];
-      const TextMetrics metrics = measureText(line.value.data(), scale);
+      const TextMetrics metrics =
+          measureText(line.value.data(), request.role, scale);
       std::int32_t left = request.bounds.x;
       if (rightAligned(request.align)) {
         left = request.bounds.x + request.bounds.width - metrics.width;
@@ -441,7 +465,8 @@ BoundedTextResult MonoCanvas::layoutText(
     for (std::int32_t scale = request.preferredScale;
          scale >= request.minimumScale; --scale) {
       const TextMetrics metrics =
-          measureText(request.value, static_cast<std::uint8_t>(scale));
+          measureText(request.value, request.role,
+                      static_cast<std::uint8_t>(scale));
       if (metrics.width <= request.bounds.width &&
           metrics.height <= request.bounds.height) {
         copyRange(result.lines[0], request.value, inputLength);
@@ -455,7 +480,8 @@ BoundedTextResult MonoCanvas::layoutText(
   }
 
   const std::uint8_t fallbackScale = request.minimumScale;
-  const TextMetrics fallbackMetrics = measureText("A", fallbackScale);
+  const TextMetrics fallbackMetrics =
+      measureText("A", request.role, fallbackScale);
   if (fallbackMetrics.height > request.bounds.height) {
     result.status = BoundedTextStatus::NoFit;
     return result;
@@ -465,7 +491,7 @@ BoundedTextResult MonoCanvas::layoutText(
                        std::size_t sourceLength) noexcept -> bool {
     constexpr char kEllipsis[] = "...";
     const std::int32_t ellipsisWidth =
-        measureText(kEllipsis, fallbackScale).width;
+        measureText(kEllipsis, request.role, fallbackScale).width;
     if (ellipsisWidth > request.bounds.width) return false;
     const std::size_t maximumPrefix =
         std::min(sourceLength, kBoundedTextLineCapacity - 3);
@@ -473,7 +499,7 @@ BoundedTextResult MonoCanvas::layoutText(
     for (std::size_t length = 0; length <= maximumPrefix; ++length) {
       copyRange(line, source, length);
       std::memcpy(line.value.data() + length, kEllipsis, 4);
-      if (measureText(line.value.data(), fallbackScale).width <=
+      if (measureText(line.value.data(), request.role, fallbackScale).width <=
           request.bounds.width) {
         chosen = length;
       } else {
@@ -503,7 +529,8 @@ BoundedTextResult MonoCanvas::layoutText(
       result.status = BoundedTextStatus::NoFit;
       return result;
     }
-    const TextMetrics metrics = measureText(request.value, request.preferredScale);
+    const TextMetrics metrics =
+        measureText(request.value, request.role, request.preferredScale);
     if (metrics.height > request.bounds.height) {
       result.status = BoundedTextStatus::NoFit;
       return result;
@@ -540,7 +567,8 @@ BoundedTextResult MonoCanvas::layoutText(
     if (lineCount + 1 == lineLimit) {
       const std::size_t remaining = scannedLength - position;
       if (!scanTruncated && remaining <= kBoundedTextLineCapacity &&
-          measureText(request.value + position, fallbackScale).width <=
+          measureText(request.value + position, request.role, fallbackScale)
+                  .width <=
               request.bounds.width) {
         copyRange(result.lines[lineCount], request.value + position, remaining);
         position = scannedLength;
@@ -570,7 +598,7 @@ BoundedTextResult MonoCanvas::layoutText(
       }
       candidate[fitted] = next;
       candidate[fitted + 1] = '\0';
-      if (measureText(candidate.data(), fallbackScale).width >
+      if (measureText(candidate.data(), request.role, fallbackScale).width >
           request.bounds.width) {
         candidate[fitted] = '\0';
         break;
@@ -641,7 +669,7 @@ bool MonoCanvas::drawBoundedText(const BoundedTextResult& result,
       return false;
     }
     drawTextRaster(line.value.data(), line.bounds.x, line.bounds.y,
-                   result.scale, black, textClip);
+                   result.scale, black, textClip, result.role);
   }
   return true;
 }
@@ -655,25 +683,51 @@ BoundedTextResult MonoCanvas::boundedText(const BoundedTextRequest& request,
 
 void MonoCanvas::drawTextRaster(const char* value, std::int32_t left,
                                 std::int32_t top, std::uint8_t scale,
-                                bool black, Rect clip) noexcept {
-  if (!value || scale == 0 || empty(clip)) return;
+                                bool black, Rect clip, TextRole role) noexcept {
+  if (!value || scale == 0 || empty(clip) || !validTextRole(role)) return;
+  const BitmapFont& font = typography_.font(role);
+  if (!font.valid()) return;
 
-  auto& context = raster().context;
-  ScaledTextDraw draw{&framebuffer_, clip, left, top, scale};
-  const auto previousLine = context.ll_hvline;
-  void* previousUser = u8g2_GetUserPtr(&context);
-  context.ll_hvline = scaledTextLine;
-  u8g2_SetUserPtr(&context, &draw);
-  u8g2_SetDrawColor(&context, black ? 1 : 0);
-  u8g2_SetMaxClipWindow(&context);
-  u8g2_DrawStr(&context, 0,
-               static_cast<u8g2_uint_t>(u8g2_GetAscent(&context)), value);
-  context.ll_hvline = previousLine;
-  u8g2_SetUserPtr(&context, previousUser);
-  u8g2_SetClipWindow(&context, static_cast<u8g2_uint_t>(clip_.x),
-                     static_cast<u8g2_uint_t>(clip_.y),
-                     static_cast<u8g2_uint_t>(clip_.x + clip_.width),
-                     static_cast<u8g2_uint_t>(clip_.y + clip_.height));
+  std::int32_t cursor = left;
+  for (std::size_t index = 0; value[index] != '\0'; ++index) {
+    std::uint8_t codepoint = static_cast<std::uint8_t>(value[index]);
+    const BitmapGlyph* glyph = font.glyph(codepoint);
+    if (!glyph) {
+      codepoint = static_cast<std::uint8_t>('?');
+      glyph = font.glyph(codepoint);
+    }
+    if (!glyph) continue;
+    const std::uint8_t* glyphData = font.data + glyph->offset;
+    for (std::int32_t sourceY = 0; sourceY < font.height; ++sourceY) {
+      for (std::int32_t sourceX = 0; sourceX < glyph->width; ++sourceX) {
+        const std::size_t offset =
+            static_cast<std::size_t>(sourceY) * glyph->stride +
+            static_cast<std::size_t>(sourceX) / 8U;
+        if ((glyphData[offset] &
+             static_cast<std::uint8_t>(0x80U >> (sourceX & 7))) == 0) {
+          continue;
+        }
+        for (std::int32_t dy = 0; dy < scale; ++dy) {
+          for (std::int32_t dx = 0; dx < scale; ++dx) {
+            const std::int32_t x = cursor + sourceX * scale + dx;
+            const std::int32_t y = top + sourceY * scale + dy;
+            if (x >= clip.x && y >= clip.y && x < clip.x + clip.width &&
+                y < clip.y + clip.height) {
+              rawPixel(x, y, black);
+            }
+          }
+        }
+      }
+    }
+    cursor += static_cast<std::int32_t>(glyph->width) * scale;
+    if (value[index + 1] != '\0') {
+      std::uint8_t next = static_cast<std::uint8_t>(value[index + 1]);
+      if (!font.glyph(next)) next = static_cast<std::uint8_t>('?');
+      cursor += static_cast<std::int32_t>(font.tracking +
+                                          font.kerning(codepoint, next)) *
+                scale;
+    }
+  }
 }
 
 void MonoCanvas::drawBitmap(const BitmapView& bitmap, Rect source,

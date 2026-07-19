@@ -22,19 +22,67 @@ cadenza::AppId appFrom(const char* value) {
     default: return cadenza::apps::kLauncherAppId;
   }
 }
+
+void renderTypographySpecimen(cadenza::MonoFramebuffer& framebuffer) {
+  cadenza::MonoCanvas canvas{framebuffer};
+  const bool compact =
+      canvas.typography().density == cadenza::TypographyDensity::Compact;
+  canvas.clear(false);
+  canvas.text(compact ? "TITLE 20 MEDIUM" : "TITLE 24 MEDIUM", 10, 4, 1, true,
+              cadenza::TextAlign::TopLeft, cadenza::TextRole::Title);
+  canvas.text("BODY 20 MEDIUM", 10, 43, 1, true,
+              cadenza::TextAlign::TopLeft, cadenza::TextRole::Body);
+  canvas.text(compact ? "COMPACT 10 BOLD" : "COMPACT 11 BOLD", 10, 79, 1, true,
+              cadenza::TextAlign::TopLeft, cadenza::TextRole::Compact);
+  cadenza::BoundedTextRequest longLabel;
+  longLabel.value = "CAPTION LONG SETTINGS LABEL FOR ELLIPSIS";
+  longLabel.bounds = {10, 103, framebuffer.width() - 20, 22};
+  longLabel.align = cadenza::TextAlign::MiddleLeft;
+  longLabel.overflow = cadenza::TextOverflowPolicy::Ellipsis;
+  longLabel.role = cadenza::TextRole::Caption;
+  canvas.boundedText(longLabel, true);
+  const cadenza::Rect selected{10, framebuffer.height() - 32,
+                               framebuffer.width() - 20, 26};
+  canvas.fillRect(selected.x, selected.y, selected.width, selected.height,
+                  true);
+  canvas.text("SELECTED COMPACT", selected.x + 8,
+              selected.y + selected.height / 2, 1, false,
+              cadenza::TextAlign::MiddleLeft,
+              cadenza::TextRole::Compact);
+}
+
+void renderOverlaySpecimen(cadenza::MonoFramebuffer& framebuffer) {
+  cadenza::MonoCanvas canvas{framebuffer};
+  canvas.clear(false);
+  for (int y = 0; y < framebuffer.height(); y += 16) {
+    canvas.line(0, y, framebuffer.width() - 1, y, true);
+  }
+  cadenza::presentation::SystemSurfaceCoordinator surfaces;
+  surfaces.pushTransient("SAVED", 1.0F);
+  cadenza::presentation::renderTransientFeedback(canvas, surfaces);
+  cadenza::presentation::SystemUi::statusIndicator(
+      canvas, {framebuffer.width() - 82, 4, 78, 26}, "SYNC", true);
+}
 }  // namespace
 
 int main(int argc, char** argv) {
   if (argc < 4 || argc > 7) return 2;
   cadenza::host::HeadlessHost host{profileFrom(argv[1])};
+  const bool typographySpecimen = std::atoi(argv[2]) == 5;
+  const bool overlaySpecimen = std::atoi(argv[2]) == 6;
   const cadenza::AppId app = appFrom(argv[2]);
-  if (app != cadenza::apps::kLauncherAppId) {
+  if (typographySpecimen) {
+    renderTypographySpecimen(host.framebuffer());
+  } else if (overlaySpecimen) {
+    renderOverlaySpecimen(host.framebuffer());
+  } else if (app != cadenza::apps::kLauncherAppId) {
     if (!host.runtime().open(app)) return 3;
     for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
       host.step();
     }
   }
-  if (argc >= 5 && app == cadenza::apps::kTimerAppId &&
+  if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+      app == cadenza::apps::kTimerAppId &&
       (std::strcmp(argv[4], "running") == 0 ||
        std::strcmp(argv[4], "paused") == 0 ||
        std::strcmp(argv[4], "starting-mid") == 0 ||
@@ -68,7 +116,8 @@ int main(int argc, char** argv) {
       host.step(click);
       host.advance(0.09F);
     }
-  } else if (argc >= 5 && std::strcmp(argv[4], "menu") == 0) {
+  } else if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+             std::strcmp(argv[4], "menu") == 0) {
     cadenza::InputFrame held;
     held.longPressed = true;
     host.step(held);
@@ -81,12 +130,14 @@ int main(int argc, char** argv) {
       turn.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
       host.step(turn);
     }
-  } else if (argc >= 5 && app == cadenza::apps::kGalleryAppId) {
+  } else if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+             app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;
     input.turn = static_cast<std::int16_t>(std::atoi(argv[4]));
     host.step(input);
   }
-  if (argc == 6 && app == cadenza::apps::kGalleryAppId) {
+  if (!typographySpecimen && !overlaySpecimen && argc == 6 &&
+      app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame scrubMode;
     scrubMode.clicked = true;
     host.step(scrubMode);
@@ -94,7 +145,8 @@ int main(int argc, char** argv) {
     scrub.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
     host.step(scrub);
   }
-  if (argc == 7 && app == cadenza::apps::kGalleryAppId) {
+  if (!typographySpecimen && !overlaySpecimen && argc == 7 &&
+      app == cadenza::apps::kGalleryAppId) {
     if (std::strcmp(argv[5], "auto") != 0) return 2;
     const int frames = std::max(0, std::atoi(argv[6]));
     for (int frame = 0; frame < frames; ++frame) host.step();

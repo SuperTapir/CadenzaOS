@@ -248,25 +248,25 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       4407872121496200056ULL},
+       11213252772227159273ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kTimerAppId,
-       12921254497184521768ULL},
+       9459123157712897673ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
-       1593956483296057867ULL},
+       2528157750090777159ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
-       9979404855079423954ULL},
+       747746471881827462ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
-       14139291840108583961ULL},
+       5829755783398426753ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       14360345327951497471ULL},
+       10069142775806681793ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kTimerAppId,
-       4523606151491982558ULL},
+       11125504611431129214ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
-       2802791382376082090ULL},
+       17137373998554346811ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
-       8080546343687024773ULL},
+       12548109968953038253ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
-       13234575752027769465ULL},
+       2918520654623268197ULL},
   }};
 
   for (const SnapshotCase& snapshot : cases) {
@@ -279,11 +279,11 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               5036340018148810558ULL) ==
-        5036340018148810558ULL);
+                               16641919077167462540ULL) ==
+        16641919077167462540ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               14427068919777850682ULL) ==
-        14427068919777850682ULL);
+                               15204056308033799282ULL) ==
+        15204056308033799282ULL);
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {
@@ -297,16 +297,16 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
-      {{11499491397859484011ULL, 6209730826262569865ULL,
-        17680111546978194430ULL, 3918379662661787441ULL,
-        9650148204554733528ULL, 5180756807287063495ULL,
-        2777220773754795386ULL,
-        15147037727131073887ULL}},
-      {{15480456207635738281ULL, 4215824825682697411ULL,
-        15715297848503608598ULL, 13340598320569290674ULL,
-        12400022947900115971ULL, 7036746290001031285ULL,
-        13467332806888008427ULL,
-        17759242817167961936ULL}},
+      {{13909681881635154212ULL, 4816314239841008682ULL,
+        11231470178633986755ULL, 16792565712294220658ULL,
+        8089027038418072656ULL, 17578902866895419590ULL,
+        9455139349855891320ULL,
+        14559540616237083441ULL}},
+      {{4893742942710669760ULL, 12536887483445266022ULL,
+        681618496007187272ULL, 2906109029414622728ULL,
+        14975481694991952360ULL, 10760001046756445264ULL,
+        2175321546545016131ULL,
+        15470451298310697573ULL}},
   }};
   for (std::size_t profileIndex = 0; profileIndex < profiles.size();
        ++profileIndex) {

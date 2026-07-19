@@ -331,9 +331,8 @@ void SystemUi::header(MonoCanvas& canvas, Rect bounds,
   BoundedTextRequest request;
   request.value = title;
   request.bounds = {bounds.x + 6, bounds.y, bounds.width - 12, bounds.height};
-  request.preferredScale = 2;
-  request.minimumScale = 1;
   request.align = TextAlign::MiddleLeft;
+  request.role = TextRole::Compact;
   canvas.boundedText(request, false);
 }
 
@@ -350,9 +349,8 @@ void SystemUi::menuRow(MonoCanvas& canvas, Rect bounds, const char* label,
   request.bounds = {bounds.x + 6, bounds.y,
                     bounds.width * 2 / 3 - 6,
                     bounds.height};
-  request.preferredScale = 2;
-  request.minimumScale = 1;
   request.align = TextAlign::MiddleLeft;
+  request.role = TextRole::Menu;
   canvas.boundedText(request, ink);
   value(canvas, {bounds.x + bounds.width * 2 / 3, bounds.y,
                  bounds.width / 3 - 5, bounds.height}, valueText, selected);
@@ -361,8 +359,8 @@ void SystemUi::menuRow(MonoCanvas& canvas, Rect bounds, const char* label,
 void SystemUi::selection(MonoCanvas& canvas, Rect bounds,
                          bool selected) noexcept {
   if (selected) {
-    canvas.fillRect(bounds.x + 2, bounds.y + 1, bounds.width - 4,
-                    bounds.height - 2, true);
+    canvas.fillRoundedRect(bounds.x, bounds.y + 1, bounds.width,
+                           bounds.height - 2, 4, true);
   }
 }
 
@@ -373,6 +371,7 @@ void SystemUi::value(MonoCanvas& canvas, Rect bounds, const char* text,
   request.value = text;
   request.bounds = bounds;
   request.align = TextAlign::MiddleRight;
+  request.role = TextRole::Caption;
   canvas.boundedText(request, !inverted);
 }
 
@@ -420,7 +419,7 @@ void SystemUi::statusIndicator(MonoCanvas& canvas, Rect bounds,
   if (active) canvas.fillRect(bounds.x + 2, bounds.y + 2, 5,
                               bounds.height - 4, true);
   canvas.text(label, bounds.x + 10, bounds.y + bounds.height / 2, 1, true,
-              TextAlign::MiddleLeft);
+              TextAlign::MiddleLeft, TextRole::Compact);
 }
 
 void renderSystemMenu(MonoCanvas& canvas, SystemMenuItem selection,
@@ -523,12 +522,12 @@ void renderTransientFeedback(
   const TransientFeedback* feedback =
       surfaces.transientAt(surfaces.transientCount() - 1);
   if (!feedback) return;
-  const Rect bounds{10, canvas.height() - 29, canvas.width() - 20, 20};
+  const Rect bounds{10, canvas.height() - 35, canvas.width() - 20, 26};
   canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, false);
   canvas.rect(bounds.x, bounds.y, bounds.width, bounds.height, true);
   canvas.text(feedback->text.data(), bounds.x + bounds.width / 2,
               bounds.y + bounds.height / 2, 1, true,
-              TextAlign::MiddleCenter);
+              TextAlign::MiddleCenter, TextRole::Compact);
 }
 
 void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer,
@@ -554,8 +553,8 @@ void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer,
     canvas.fillRect(card.x + card.width - 8, railTop, 2, railHeight, true);
   }
 
-  canvas.text("TIME UP", width / 2, height / 2 - 20,
-              width >= 400 ? 5 : 4, true, TextAlign::MiddleCenter);
+  canvas.text("TIME UP", width / 2, height / 2 - 28, 1, true,
+              TextAlign::MiddleCenter, TextRole::Hero);
   char duration[32];
   const std::uint32_t configuredMinutes =
       (timer.configuredDurationMs +
@@ -563,11 +562,19 @@ void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer,
       static_cast<std::uint32_t>(kTimerMinuteMs);
   std::snprintf(duration, sizeof(duration), "%u MINUTES COMPLETE",
                 static_cast<unsigned>(configuredMinutes));
-  canvas.text(duration, width / 2, height / 2 + 18, 1, true,
-              TextAlign::MiddleCenter);
-  canvas.fillRect(width / 2 - 64, height - 48, 128, 22, true);
-  canvas.text("PRESS TO CONTINUE", width / 2, height - 37, 1, false,
-              TextAlign::MiddleCenter);
+  canvas.text(duration, width / 2, height / 2 + 18, 1,
+              true, TextAlign::MiddleCenter, TextRole::Caption);
+  constexpr const char* kAction = "PRESS TO CONTINUE";
+  const TextMetrics actionMetrics =
+      canvas.measureText(kAction, TextRole::Compact);
+  const int actionWidth =
+      std::min(card.width - 32, actionMetrics.width + 24);
+  const int actionHeight = actionMetrics.height + 8;
+  const int actionX = width / 2 - actionWidth / 2;
+  const int actionY = height - 26 - actionHeight;
+  canvas.fillRoundedRect(actionX, actionY, actionWidth, actionHeight, 4, true);
+  canvas.text(kAction, width / 2, actionY + actionHeight / 2, 1, false,
+              TextAlign::MiddleCenter, TextRole::Compact);
 }
 
 }  // namespace cadenza::presentation

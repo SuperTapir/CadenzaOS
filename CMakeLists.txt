@@ -114,6 +114,22 @@ if(CADENZA_BUILD_TESTS)
     OUTPUT_QUIET ERROR_QUIET
   )
 
+  if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
+    add_test(
+      NAME cadenza_font_converter_tests
+      COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/font_converter_tests.py
+    )
+    add_test(
+      NAME cadenza_roobert_font_asset_check
+      COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_playdate_fonts.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets/fonts/roobert-source
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_core/src/generated/roobert_fonts.h
+        --check
+    )
+  endif()
+
   add_test(
     NAME cadenza_timer_digit_source_check
     COMMAND ${Python3_EXECUTABLE}
@@ -157,10 +173,14 @@ if(CADENZA_BUILD_TESTS)
       "k${launcher_cover_initial}${launcher_cover_tail}Cover")
     if(launcher_cover STREQUAL "timer")
       set(launcher_cover_provenance
-        "Cadenza original AI-assisted artwork, user-approved 2026-07-19; canonical PBM in assets/launcher-covers/timer.pbm")
+        "Cadenza original AI-assisted TIMER interlock artwork, user-selected 2026-07-19; canonical PBM in assets/launcher-covers/timer.pbm")
+      set(launcher_cover_t_embed_provenance
+        "Cadenza original AI-assisted TIMER interlock artwork, user-selected 2026-07-19; direct 280x124 derivative of assets/launcher-covers/source/timer.png")
     else()
       set(launcher_cover_provenance
         "Cadenza original AI-assisted artwork, user-approved 2026-07-18; canonical PBM in assets/launcher-covers/${launcher_cover}.pbm")
+      set(launcher_cover_t_embed_provenance
+        "Cadenza original AI-assisted artwork; direct 280x124 derivative of assets/launcher-covers/source/${launcher_cover}.png")
     endif()
     if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
       if(launcher_cover STREQUAL "timer")
@@ -171,7 +191,7 @@ if(CADENZA_BUILD_TESTS)
             ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/timer.png
             ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers
             --name timer --levels 5
-            --solid-light-region 0.026 0.465 0.686 0.961 --check
+            --solid-light-region 0.026 0.40 0.70 0.92 --check
         )
       else()
         add_test(
@@ -204,7 +224,7 @@ if(CADENZA_BUILD_TESTS)
             ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/timer.png
             ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers
             --name timer --levels 5
-            --solid-light-region 0.026 0.465 0.686 0.961 --check
+            --solid-light-region 0.026 0.40 0.70 0.92 --check
         )
       else()
         add_test(
@@ -225,8 +245,7 @@ if(CADENZA_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}_t_embed.pbm
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/src/generated/${launcher_cover}_t_embed_cover.h
         --symbol "k${launcher_cover_initial}${launcher_cover_tail}TEmbedCover"
-        --provenance
-          "Cadenza original AI-assisted artwork; direct 280x124 derivative of assets/launcher-covers/source/${launcher_cover}.png"
+        --provenance "${launcher_cover_t_embed_provenance}"
         --check
     )
   endforeach()
@@ -714,6 +733,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_timer_naming.cmake
+  )
+
+  add_test(
+    NAME cadenza_system_typography_source_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_system_typography.cmake
   )
 
   add_test(

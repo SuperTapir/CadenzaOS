@@ -221,19 +221,22 @@ void AnimationGalleryApp::renderHeader(MonoCanvas& canvas) noexcept {
   std::snprintf(pageLabel, sizeof(pageLabel), "%02u/%02u",
                 static_cast<unsigned>(page_ + 1),
                 static_cast<unsigned>(kPageCount));
-  canvas.fillRect(0, height - 20, width, 20, false);
-  canvas.line(0, height - 20, width - 1, height - 20, true);
+  canvas.fillRect(0, height - 23, width, 23, false);
+  canvas.line(0, height - 23, width - 1, height - 23, true);
   canvas.text(mode_ == GalleryMode::Scrub ? "SCRUB: TURN  PRESS: PLAY"
                                           : "TURN: PAGE  PRESS: SCRUB",
-              8, height - 10, 1, true, TextAlign::MiddleLeft);
-  canvas.fillRect(width - 70, height - 14,
+              8, height - 11, 1, true, TextAlign::MiddleLeft,
+              TextRole::Footer);
+  canvas.fillRect(width - 70, height - 15,
                   static_cast<int>(progress_ * 62.0F), 7, true);
-  canvas.rect(width - 70, height - 14, 62, 7, true);
-  canvas.fillRect(0, 25, width, 20, false);
-  canvas.text(pageName(page_), width / 2, 35, 1, true,
-              TextAlign::MiddleCenter);
-  canvas.text("ANIMATION GALLERY", 8, 13, 1, false, TextAlign::MiddleLeft);
-  canvas.text(pageLabel, width - 8, 13, 1, false, TextAlign::MiddleRight);
+  canvas.rect(width - 70, height - 15, 62, 7, true);
+  canvas.fillRect(0, 25, width, 23, false);
+  canvas.text(pageName(page_), width / 2, 36, 1, true,
+              TextAlign::MiddleCenter, TextRole::Caption);
+  canvas.text("ANIMATION GALLERY", 8, 13, 1, false, TextAlign::MiddleLeft,
+              TextRole::Compact);
+  canvas.text(pageLabel, width - 8, 13, 1, false, TextAlign::MiddleRight,
+              TextRole::Caption);
 }
 
 void AnimationGalleryApp::renderEasing(MonoCanvas& canvas) noexcept {
@@ -289,12 +292,12 @@ void AnimationGalleryApp::renderTransition(
   from.clear(false);
   to.clear(true);
   from.fillCircle(canvas.width() / 3, canvas.height() / 2, 35, true);
-  from.text("A", canvas.width() / 3, canvas.height() / 2, 3, false,
-            TextAlign::MiddleCenter);
+  from.text("A", canvas.width() / 3, canvas.height() / 2, 1, false,
+            TextAlign::MiddleCenter, TextRole::Title);
   to.fillRect(canvas.width() * 2 / 3 - 35, canvas.height() / 2 - 35, 70, 70,
               false);
-  to.text("B", canvas.width() * 2 / 3, canvas.height() / 2, 3, true,
-          TextAlign::MiddleCenter);
+  to.text("B", canvas.width() * 2 / 3, canvas.height() / 2, 1, true,
+          TextAlign::MiddleCenter, TextRole::Title);
   transition.compose(transitionFrom_, transitionTo_, canvas, progress_);
 }
 
@@ -304,9 +307,9 @@ void AnimationGalleryApp::renderSelection(MonoCanvas& canvas) noexcept {
   const int height = static_cast<int>(52.0F * scale);
   const int x = (canvas.width() - width) / 2;
   const int y = (canvas.height() - height) / 2;
-  canvas.fillRect(x, y, width, height, true);
-  canvas.text("SELECTED", canvas.width() / 2, canvas.height() / 2, 2, false,
-              TextAlign::MiddleCenter);
+  canvas.fillRoundedRect(x, y, width, height, 6, true);
+  canvas.text("SELECTED", canvas.width() / 2, canvas.height() / 2, 1, false,
+              TextAlign::MiddleCenter, TextRole::Body);
 }
 
 void AnimationGalleryApp::renderCamera(MonoCanvas& canvas) noexcept {
@@ -341,7 +344,8 @@ void AnimationGalleryApp::renderSpriteState(MonoCanvas& canvas) noexcept {
     }
   }
   canvas.text(spriteMachine_.currentState(), canvas.width() / 2,
-              canvas.height() - 35, 1, true, TextAlign::MiddleCenter);
+              canvas.height() - 35, 1, true, TextAlign::MiddleCenter,
+              TextRole::Caption);
 }
 
 void AnimationGalleryApp::renderDither(MonoCanvas& canvas) noexcept {
@@ -375,18 +379,18 @@ void AnimationGalleryApp::renderInitialFrame(
   canvas.line(left, top, left, bottom, true);
 
   canvas.fillRect(0, 0, width, 25, true);
-  canvas.fillRect(0, height - 20, width, 20, false);
-  canvas.line(0, height - 20, width - 1, height - 20, true);
-  canvas.text("TURN: PAGE  PRESS: SCRUB", 8, height - 10, 1, true,
-              TextAlign::MiddleLeft);
-  canvas.rect(width - 70, height - 14, 62, 7, true);
-  canvas.fillRect(0, 25, width, 20, false);
-  canvas.text("EASING", width / 2, 35, 1, true,
-              TextAlign::MiddleCenter);
+  canvas.fillRect(0, height - 23, width, 23, false);
+  canvas.line(0, height - 23, width - 1, height - 23, true);
+  canvas.text("TURN: PAGE  PRESS: SCRUB", 8, height - 11, 1, true,
+              TextAlign::MiddleLeft, TextRole::Footer);
+  canvas.rect(width - 70, height - 15, 62, 7, true);
+  canvas.fillRect(0, 25, width, 23, false);
+  canvas.text("EASING", width / 2, 36, 1, true,
+              TextAlign::MiddleCenter, TextRole::Caption);
   canvas.text("ANIMATION GALLERY", 8, 13, 1, false,
-              TextAlign::MiddleLeft);
+              TextAlign::MiddleLeft, TextRole::Compact);
   canvas.text("01/14", width - 8, 13, 1, false,
-              TextAlign::MiddleRight);
+              TextAlign::MiddleRight, TextRole::Caption);
 }
 
 void AnimationGalleryApp::render(MonoCanvas& canvas,

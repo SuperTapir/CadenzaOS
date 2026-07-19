@@ -6,6 +6,7 @@
 
 #include "cadenza/core/diagnostics.h"
 #include "cadenza/core/mono_framebuffer.h"
+#include "cadenza/core/system_typography.h"
 
 namespace cadenza {
 
@@ -60,6 +61,7 @@ struct BoundedTextRequest {
   TextOverflowPolicy overflow = TextOverflowPolicy::Ellipsis;
   std::uint8_t maximumLines = 1;
   float phase = 0.0F;
+  TextRole role = TextRole::Caption;
 };
 
 struct BoundedTextLine {
@@ -77,6 +79,7 @@ struct BoundedTextResult {
   std::uint8_t scale = 0;
   std::uint8_t lineCount = 0;
   bool truncated = false;
+  TextRole role = TextRole::Caption;
   std::array<BoundedTextLine, kBoundedTextMaxLines> lines{};
 
   bool drawable() const noexcept {
@@ -135,6 +138,7 @@ class MonoCanvas {
   std::int16_t width() const noexcept { return framebuffer_.width(); }
   std::int16_t height() const noexcept { return framebuffer_.height(); }
   const Rect& clip() const noexcept { return clip_; }
+  const ResolvedTypography& typography() const noexcept { return typography_; }
 
   bool setClip(Rect clip, bool reportGeometryClips = true) noexcept;
   void resetClip() noexcept;
@@ -149,14 +153,20 @@ class MonoCanvas {
             std::int32_t height, bool black = true) noexcept;
   void fillRect(std::int32_t x, std::int32_t y, std::int32_t width,
                 std::int32_t height, bool black = true) noexcept;
+  void fillRoundedRect(std::int32_t x, std::int32_t y, std::int32_t width,
+                       std::int32_t height, std::int32_t radius,
+                       bool black = true) noexcept;
   void circle(std::int32_t x, std::int32_t y, std::int32_t radius,
               bool black = true) noexcept;
   void fillCircle(std::int32_t x, std::int32_t y, std::int32_t radius,
                   bool black = true) noexcept;
   TextMetrics measureText(const char* value, std::uint8_t scale = 1) noexcept;
+  TextMetrics measureText(const char* value, TextRole role,
+                          std::uint8_t scale = 1) noexcept;
   void text(const char* value, std::int32_t x, std::int32_t y,
             std::uint8_t scale = 1, bool black = true,
-            TextAlign align = TextAlign::TopLeft) noexcept;
+            TextAlign align = TextAlign::TopLeft,
+            TextRole role = TextRole::Caption) noexcept;
   BoundedTextResult layoutText(const BoundedTextRequest& request) noexcept;
   bool drawBoundedText(const BoundedTextResult& result,
                        bool black = true) noexcept;
@@ -188,10 +198,11 @@ class MonoCanvas {
                   bool filled, bool black) noexcept;
   void drawTextRaster(const char* value, std::int32_t left,
                       std::int32_t top, std::uint8_t scale, bool black,
-                      Rect clip) noexcept;
+                      Rect clip, TextRole role) noexcept;
 
   MonoFramebuffer& framebuffer_;
   DiagnosticSink* diagnostics_ = nullptr;
+  ResolvedTypography typography_;
   Rect clip_;
   bool reportGeometryClips_ = true;
   alignas(std::max_align_t) std::byte rasterState_[kRasterStateBytes]{};

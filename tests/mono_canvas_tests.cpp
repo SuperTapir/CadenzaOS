@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "cadenza/core/mono_canvas.h"
+#include "cadenza/core/system_typography.h"
 
 namespace {
 class CountingSink final : public cadenza::DiagnosticSink {
@@ -140,20 +141,75 @@ TEST_CASE("degenerate line and zero-radius circles include their endpoint") {
   CHECK(framebuffer.pixel(7, 7));
 }
 
-TEST_CASE("approved font exposes stable metrics and alignment") {
+TEST_CASE("filled rounded rectangles fill their item width with clear corners") {
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+  canvas.fillRoundedRect(10, 12, 40, 20, 4, true);
+  CHECK_FALSE(framebuffer.pixel(10, 12));
+  CHECK(framebuffer.pixel(14, 12));
+  CHECK(framebuffer.pixel(10, 16));
+  CHECK(framebuffer.pixel(49, 16));
+  CHECK(framebuffer.pixel(14, 31));
+  CHECK_FALSE(framebuffer.pixel(9, 20));
+  CHECK_FALSE(framebuffer.pixel(50, 20));
+}
+
+TEST_CASE("system typography keeps semantic roles while resolving viewport sizes") {
   cadenza::MonoFramebuffer topLeftBuffer{cadenza::FramebufferProfile::TEmbed};
-  cadenza::MonoFramebuffer centeredBuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer centeredBuffer{cadenza::FramebufferProfile::Sharp};
   cadenza::MonoCanvas topLeft{topLeftBuffer};
   cadenza::MonoCanvas centered{centeredBuffer};
 
-  const auto metrics = topLeft.measureText("A", 1);
-  CHECK(metrics.width == 5);
-  CHECK(metrics.height == 9);
-  CHECK(metrics.ascent == 7);
-  CHECK(metrics.descent == -2);
+  const auto compact = topLeft.measureText("AV", cadenza::TextRole::Compact);
+  const auto sharpCompact =
+      centered.measureText("AV", cadenza::TextRole::Compact);
+  CHECK(topLeft.typography().density == cadenza::TypographyDensity::Compact);
+  CHECK(centered.typography().density == cadenza::TypographyDensity::Regular);
+  CHECK(compact.width == 17);
+  CHECK(compact.height == 14);
+  CHECK(compact.ascent == 14);
+  CHECK(compact.descent == 0);
+  CHECK(sharpCompact.width == 28);
+  CHECK(sharpCompact.height == 22);
 
-  topLeft.text("A", 18, 16, 1, true, cadenza::TextAlign::TopLeft);
-  centered.text("A", 20, 20, 1, true, cadenza::TextAlign::MiddleCenter);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Title).width == 32);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Hero).width == 34);
+  CHECK(centered.measureText("AV", cadenza::TextRole::Title).width == 34);
+  CHECK(centered.measureText("AV", cadenza::TextRole::Hero).width == 34);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Body).width == 32);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Menu).width == 28);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Menu).height == 22);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Caption).width == 26);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Footer).width == 16);
+  CHECK(topLeft.measureText("AV", cadenza::TextRole::Footer).height == 14);
+  CHECK(centered.measureText("AV", cadenza::TextRole::Footer).width == 16);
+  CHECK(&topLeft.typography().font(cadenza::TextRole::Body) ==
+        &centered.typography().font(cadenza::TextRole::Body));
+  CHECK(&topLeft.typography().font(cadenza::TextRole::Title) !=
+        &centered.typography().font(cadenza::TextRole::Title));
+}
+
+TEST_CASE("typography density threshold is deterministic and viewport-only") {
+  const auto first = cadenza::resolveTypography(320, 170);
+  const auto second = cadenza::resolveTypography(320, 170);
+  const auto threshold = cadenza::resolveTypography(360, 216);
+  CHECK(first.density == cadenza::TypographyDensity::Compact);
+  CHECK(second.density == first.density);
+  CHECK(&first.font(cadenza::TextRole::Compact) ==
+        &second.font(cadenza::TextRole::Compact));
+  CHECK(threshold.density == cadenza::TypographyDensity::Regular);
+}
+
+TEST_CASE("role text alignment uses the same native metrics as measurement") {
+  cadenza::MonoFramebuffer topLeftBuffer{cadenza::FramebufferProfile::Sharp};
+  cadenza::MonoFramebuffer centeredBuffer{cadenza::FramebufferProfile::Sharp};
+  cadenza::MonoCanvas topLeft{topLeftBuffer};
+  cadenza::MonoCanvas centered{centeredBuffer};
+
+  topLeft.text("A", 91, 82, 1, true, cadenza::TextAlign::TopLeft,
+               cadenza::TextRole::Body);
+  centered.text("A", 100, 98, 1, true, cadenza::TextAlign::MiddleCenter,
+                cadenza::TextRole::Body);
   CHECK(std::equal(topLeftBuffer.data(),
                    topLeftBuffer.data() + topLeftBuffer.sizeBytes(),
                    centeredBuffer.data()));
@@ -164,11 +220,13 @@ TEST_CASE("font integer scaling uses exact nearest-neighbor blocks") {
   cadenza::MonoFramebuffer scaledBuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas normal{normalBuffer};
   cadenza::MonoCanvas scaled{scaledBuffer};
-  normal.text("A", 0, 0, 1);
-  scaled.text("A", 0, 0, 2);
+  normal.text("A", 0, 0, 1, true, cadenza::TextAlign::TopLeft,
+              cadenza::TextRole::Compact);
+  scaled.text("A", 0, 0, 2, true, cadenza::TextAlign::TopLeft,
+              cadenza::TextRole::Compact);
 
-  for (int y = 0; y < 10; ++y) {
-    for (int x = 0; x < 6; ++x) {
+  for (int y = 0; y < 22; ++y) {
+    for (int x = 0; x < 14; ++x) {
       const bool source = normalBuffer.pixel(x, y);
       CHECK(scaledBuffer.pixel(x * 2, y * 2) == source);
       CHECK(scaledBuffer.pixel(x * 2 + 1, y * 2) == source);
@@ -176,6 +234,29 @@ TEST_CASE("font integer scaling uses exact nearest-neighbor blocks") {
       CHECK(scaledBuffer.pixel(x * 2 + 1, y * 2 + 1) == source);
     }
   }
+}
+
+TEST_CASE("white role text clears only glyph pixels inside a black selection") {
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+  std::fill(framebuffer.data() + framebuffer.sizeBytes(),
+            framebuffer.data() + framebuffer.capacityBytes(), 0xA5);
+  canvas.fillRect(10, 10, 100, 30);
+  canvas.text("Body", 14, 14, 1, false, cadenza::TextAlign::TopLeft,
+              cadenza::TextRole::Compact);
+
+  std::size_t whiteInside = 0;
+  for (int y = 10; y < 40; ++y) {
+    for (int x = 10; x < 110; ++x) {
+      whiteInside += framebuffer.pixel(x, y) ? 0U : 1U;
+    }
+  }
+  CHECK(whiteInside > 0);
+  CHECK(framebuffer.pixel(10, 10));
+  CHECK_FALSE(framebuffer.pixel(9, 10));
+  CHECK(std::all_of(framebuffer.data() + framebuffer.sizeBytes(),
+                    framebuffer.data() + framebuffer.capacityBytes(),
+                    [](std::uint8_t byte) { return byte == 0xA5; }));
 }
 
 TEST_CASE("invalid text scale is diagnosed without drawing") {

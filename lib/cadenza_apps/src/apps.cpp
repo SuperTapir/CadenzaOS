@@ -1,6 +1,7 @@
 #include "cadenza/apps/apps.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <cmath>
 #include <cstdio>
 
@@ -13,6 +14,7 @@
 #include "generated/timer_cover.h"
 #include "generated/timer_t_embed_cover.h"
 #include "cadenza/presentation/timer_numerals.h"
+#include "cadenza/presentation/system_surface.h"
 
 namespace cadenza {
 namespace {
@@ -27,19 +29,48 @@ float outCubic(float progress) noexcept {
   return 1.0F - remaining * remaining * remaining;
 }
 
-BoundedTextRequest menuLabel(const char* value, Rect bounds,
-                             std::uint8_t preferredScale,
-                             std::uint8_t minimumScale,
-                             TextAlign align) noexcept {
+BoundedTextRequest menuLabel(const char* value, Rect bounds, TextAlign align,
+                             TextRole role) noexcept {
   BoundedTextRequest request;
   request.value = value;
   request.bounds = bounds;
-  request.preferredScale = preferredScale;
-  request.minimumScale = minimumScale;
   request.align = align;
   request.overflow = TextOverflowPolicy::Ellipsis;
   request.maximumLines = 1;
+  request.role = role;
   return request;
+}
+
+struct VerticalInkBounds {
+  int top = 0;
+  int bottom = -1;
+
+  bool drawable() const noexcept { return bottom >= top; }
+  int height() const noexcept { return drawable() ? bottom - top + 1 : 0; }
+};
+
+VerticalInkBounds textVerticalInkBounds(const BitmapFont& font,
+                                        const char* value) noexcept {
+  VerticalInkBounds bounds{font.height, -1};
+  if (!value || !font.valid()) return bounds;
+  for (std::size_t index = 0; value[index] != '\0'; ++index) {
+    const BitmapGlyph* glyph =
+        font.glyph(static_cast<std::uint8_t>(value[index]));
+    if (!glyph) glyph = font.glyph(static_cast<std::uint8_t>('?'));
+    if (!glyph) continue;
+    const std::uint8_t* glyphData = font.data + glyph->offset;
+    for (int y = 0; y < font.height; ++y) {
+      const std::uint8_t* row = glyphData + y * glyph->stride;
+      bool hasInk = false;
+      for (int byte = 0; byte < glyph->stride; ++byte) {
+        hasInk = hasInk || row[byte] != 0;
+      }
+      if (!hasInk) continue;
+      bounds.top = std::min(bounds.top, y);
+      bounds.bottom = std::max(bounds.bottom, y);
+    }
+  }
+  return bounds;
 }
 
 Rect intersectRect(Rect a, Rect b) noexcept {
@@ -116,7 +147,8 @@ void renderFallbackCover(MonoCanvas& canvas, Rect bounds,
                         bounds.height - 10};
   if (textBounds.width >= 24 && textBounds.height >= 10) {
     canvas.boundedText(
-        menuLabel(title, textBounds, 3, 1, TextAlign::MiddleLeft), true);
+        menuLabel(title, textBounds, TextAlign::MiddleLeft, TextRole::Title),
+        true);
   }
 }
 
@@ -254,21 +286,40 @@ void renderTimerScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
                                       ? selectedDurationMs
                                       : timer.remainingMs;
   const char* state = "READY";
-  const char* action = "TURN: MINUTES   PRESS: START";
+  const char* action = "TURN SET  PRESS";
   if (timer.state == TimerState::Running) {
     state = "ACTIVE";
     action = "PRESS: PAUSE";
   } else if (timer.state == TimerState::Paused) {
     state = "PAUSED";
-    action = "TURN: ADJUST   PRESS: RESUME";
+    action = "TURN SET  PRESS";
   } else if (timer.state == TimerState::Expired) {
     state = "TIME UP";
-    action = "PRESS TO ACKNOWLEDGE";
+    action = "PRESS: ACK";
   }
 
-  canvas.text("TIMER", 12, 16, 1, true, TextAlign::MiddleLeft);
-  canvas.fillRect(width - 72, 7, 60, 18, true);
-  canvas.text(state, width - 42, 16, 1, false, TextAlign::MiddleCenter);
+  canvas.text("TIMER", 12, 14, 1, true, TextAlign::MiddleLeft,
+              TextRole::Compact);
+  const TextMetrics stateMetrics =
+      canvas.measureText(state, TextRole::Compact);
+  const VerticalInkBounds stateInk = textVerticalInkBounds(
+      canvas.typography().font(TextRole::Compact), state);
+  constexpr int kStateVerticalPadding = 4;
+  const int stateWidth = std::max(72, stateMetrics.width + 16);
+  const int stateHeight = stateInk.drawable()
+                              ? stateInk.height() + kStateVerticalPadding * 2
+                              : stateMetrics.height + 4;
+  const int stateX = width - 12 - stateWidth;
+  const int stateY = 2;
+  canvas.fillRoundedRect(stateX, stateY, stateWidth, stateHeight, 3, true);
+  const int stateTextLeft =
+      stateX + stateWidth / 2 - stateMetrics.width / 2;
+  const int stateTextTop =
+      stateInk.drawable()
+          ? stateY + kStateVerticalPadding - stateInk.top
+          : stateY + stateHeight / 2 - stateMetrics.height / 2;
+  canvas.text(state, stateTextLeft, stateTextTop, 1, false, TextAlign::TopLeft,
+              TextRole::Compact);
   const int digitsTop = width >= 400 ? 48 : 34;
   const Rect digits =
       presentation::renderTimerNumerals(canvas, displayMs, digitsTop);
@@ -292,9 +343,10 @@ void renderTimerScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
     const int x = trackX + (trackWidth - 1) * tick / 10;
     canvas.line(x, trackY - (tick % 5 == 0 ? 3 : 2), x, trackY - 1, true);
   }
-  canvas.text(action, 12, height - 5, 1, true, TextAlign::BottomLeft);
-  canvas.text("HOLD: MENU", width - 12, height - 5, 1, true,
-              TextAlign::BottomRight);
+  canvas.text(action, 12, height - 4, 1, true, TextAlign::BottomLeft,
+              TextRole::Footer);
+  canvas.text("HOLD: MENU", width - 12, height - 4, 1, true,
+              TextAlign::BottomRight, TextRole::Footer);
 }
 
 void renderMotionScreen(MonoCanvas& canvas, float position, float target,
@@ -305,10 +357,11 @@ void renderMotionScreen(MonoCanvas& canvas, float position, float target,
   const int ballX = static_cast<int>(position * width);
   const int targetX = static_cast<int>(target * width);
   const int centerY = height / 2;
-  for (int x = 0; x < width; x += 16) canvas.line(x, 30, x, height - 25);
-  for (int y = 30; y <= height - 25; y += 16) canvas.line(0, y, width, y);
-  canvas.fillRect(0, 0, width, 27, true);
-  canvas.text("MOTION STUDY", 10, 14, 2, false, TextAlign::MiddleLeft);
+  for (int x = 0; x < width; x += 16) canvas.line(x, 35, x, height - 25);
+  for (int y = 35; y <= height - 25; y += 16) canvas.line(0, y, width, y);
+  canvas.fillRect(0, 0, width, 34, true);
+  canvas.text("MOTION STUDY", 10, 17, 1, false, TextAlign::MiddleLeft,
+              TextRole::Body);
   canvas.fillCircle(ballX, centerY, 28, false);
   canvas.circle(ballX, centerY, 28, true);
   canvas.fillCircle(ballX, centerY, 19, true);
@@ -320,11 +373,11 @@ void renderMotionScreen(MonoCanvas& canvas, float position, float target,
                 ballX + tail * (40 + index * 11),
                 centerY - 18 + index * 7, true);
   }
-  canvas.fillRect(0, height - 22, width, 22, false);
-  canvas.text("TURN / PRESS TO THROW", 9, height - 11, 1, true,
-              TextAlign::MiddleLeft);
-  canvas.text("HOLD: MENU", width - 9, height - 11, 1, true,
-              TextAlign::MiddleRight);
+  canvas.fillRect(0, height - 24, width, 24, false);
+  canvas.text("TURN/PRESS: GO", 9, height - 12, 1, true,
+              TextAlign::MiddleLeft, TextRole::Footer);
+  canvas.text("HOLD: MENU", width - 9, height - 12, 1, true,
+              TextAlign::MiddleRight, TextRole::Footer);
 }
 
 void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
@@ -338,12 +391,18 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
                       ? static_cast<int>((std::sin(time * 8.0F) + 1.0F) *
                                          35.0F)
                       : 18;
-  canvas.fillRect(0, 0, width * 28 / 100 + bar, height, true);
-  canvas.text("SET", 12, 18, 4, false);
-  canvas.text("TINGS", 12, 50, 4, false);
-  char soundRow[24];
-  std::snprintf(soundRow, sizeof(soundRow), "SOUND: %s",
-                audio::soundVolumeName(system.soundVolume));
+  const TextMetrics titleMetrics =
+      canvas.measureText("SETTINGS", TextRole::Title);
+  const int rowsLeft = std::min(width - 120,
+                                std::max(width * 43 / 100,
+                                         titleMetrics.width + 24));
+  const int panelMinimum = 12 + titleMetrics.width + 4;
+  const int panelMaximum = std::max(panelMinimum, rowsLeft - 8);
+  const int panelRight = std::clamp(width * 28 / 100 + bar,
+                                    panelMinimum, panelMaximum);
+  canvas.fillRect(0, 0, panelRight, height, true);
+  canvas.text("SETTINGS", 12, 28, 1, false, TextAlign::MiddleLeft,
+              TextRole::Title);
   char wifiRow[24];
   const auto& wifi = system.connectivity.wifi;
   const char* wifiState = wifi.networkOnline()
@@ -376,37 +435,49 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
                 provisioningState);
   const char* launcherRow =
       system.launcherOrientation == LauncherOrientation::Vertical
-          ? "LAUNCHER: VERTICAL"
-          : "LAUNCHER: HORIZONTAL";
-  const char* rows[6] = {energetic ? "MOTION: FULL" : "MOTION: QUIET",
-                         soundRow, wifiRow, provisioningRow, launcherRow,
-                         "ABOUT: CADENZA OS"};
-  const int rowHeight = height < 200 ? 20 : 24;
-  const int rowStep = height < 200 ? 22 : 27;
-  const int rowsHeight = rowHeight + rowStep * 5;
-  const int rowsTop = std::max(24, (height - rowsHeight) / 2);
-  const int rowsLeft = width * 43 / 100;
-  const int rowsWidth = width * 53 / 100;
+          ? "LAUNCH: VERT"
+          : "LAUNCH: HORIZ";
+  const char* rows[6] = {"MOTION", "SOUND", wifiRow,
+                         provisioningRow, launcherRow,
+                         "ABOUT: OS"};
+  const int compactHeight =
+      canvas.measureText("A", TextRole::Compact).height;
+  const int rowHeight = compactHeight + 8;
+  const int rowGap = std::max(4, rowHeight / 5);
+  const int rowStep = rowHeight + rowGap;
+  const int rowsHeight = rowHeight * 6 + rowGap * 5;
+  const int rowsTop = std::max(4, (height - rowsHeight) / 2);
+  const int rowsWidth = width - rowsLeft - 12;
   for (int index = 0; index < 6; ++index) {
     const int y = rowsTop + index * rowStep;
+    const bool usesMenuIcon = index < 2;
+    const int labelWidth = rowsWidth - (usesMenuIcon ? 50 : 12);
     if (index == selected) {
-      canvas.fillRect(rowsLeft, y, rowsWidth, rowHeight, true);
+      canvas.fillRoundedRect(rowsLeft, y, rowsWidth, rowHeight, 4, true);
       canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
-                                  rowHeight - 4},
-                    2, 1, TextAlign::MiddleLeft),
+          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
+                                  rowHeight},
+                    TextAlign::MiddleLeft, TextRole::Menu),
           false);
     } else {
-      canvas.rect(rowsLeft, y, rowsWidth, rowHeight, true);
       canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y + 2, rowsWidth - 12,
-                                  rowHeight - 4},
-                    2, 1, TextAlign::MiddleLeft),
+          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
+                                  rowHeight},
+                    TextAlign::MiddleLeft, TextRole::Menu),
           true);
+    }
+    const Rect indicator{rowsLeft + rowsWidth - 36,
+                         y + (rowHeight - 14) / 2, 30, 14};
+    if (index == 0) {
+      presentation::SystemUi::toggle(canvas, indicator, energetic,
+                                     index == selected);
+    } else if (index == 1) {
+      presentation::SystemUi::volumeIndicator(
+          canvas, indicator, system.soundVolume, index == selected);
     }
   }
   canvas.text("HOLD: MENU", 12, height - 8, 1, false,
-              TextAlign::BottomLeft);
+              TextAlign::BottomLeft, TextRole::Footer);
 }
 
 void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,

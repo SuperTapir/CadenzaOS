@@ -54,18 +54,18 @@ std::uint64_t capture(cadenza::FramebufferProfile profile,
 
 TEST_CASE("approved Gallery midpoint snapshots cover representative effects") {
   const std::array<GallerySnapshot, 12> cases{{
-      {cadenza::FramebufferProfile::TEmbed, 0, 11440640267301194983ULL},
-      {cadenza::FramebufferProfile::TEmbed, 3, 4137199271609631912ULL},
-      {cadenza::FramebufferProfile::TEmbed, 8, 9878436293935264858ULL},
-      {cadenza::FramebufferProfile::TEmbed, 11, 15752268237214576054ULL},
-      {cadenza::FramebufferProfile::TEmbed, 12, 9026563825525625221ULL},
-      {cadenza::FramebufferProfile::TEmbed, 13, 13029273646656056373ULL},
-      {cadenza::FramebufferProfile::Sharp, 0, 17615136595640686815ULL},
-      {cadenza::FramebufferProfile::Sharp, 3, 15534794435185275820ULL},
-      {cadenza::FramebufferProfile::Sharp, 8, 13438891652020997183ULL},
-      {cadenza::FramebufferProfile::Sharp, 11, 7942465137056474000ULL},
-      {cadenza::FramebufferProfile::Sharp, 12, 1640077496920006473ULL},
-      {cadenza::FramebufferProfile::Sharp, 13, 17314096927354342150ULL},
+      {cadenza::FramebufferProfile::TEmbed, 0, 7218233691746110281ULL},
+      {cadenza::FramebufferProfile::TEmbed, 3, 52789196828127763ULL},
+      {cadenza::FramebufferProfile::TEmbed, 8, 17454494746855855220ULL},
+      {cadenza::FramebufferProfile::TEmbed, 11, 16647341090174199224ULL},
+      {cadenza::FramebufferProfile::TEmbed, 12, 2103464674736729981ULL},
+      {cadenza::FramebufferProfile::TEmbed, 13, 5737315058911570614ULL},
+      {cadenza::FramebufferProfile::Sharp, 0, 8659909150425046677ULL},
+      {cadenza::FramebufferProfile::Sharp, 3, 8975635946972778472ULL},
+      {cadenza::FramebufferProfile::Sharp, 8, 6245108958511167040ULL},
+      {cadenza::FramebufferProfile::Sharp, 11, 11560105373010971515ULL},
+      {cadenza::FramebufferProfile::Sharp, 12, 5121065697262548578ULL},
+      {cadenza::FramebufferProfile::Sharp, 13, 17498389982264523906ULL},
   }};
   for (const auto& snapshot : cases) {
     CAPTURE(static_cast<int>(snapshot.profile));

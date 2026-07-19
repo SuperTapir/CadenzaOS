@@ -37,12 +37,12 @@ TIMER 的可复现生成与检查命令：
 python3 .codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py \
   assets/launcher-covers/source/timer.png assets/launcher-covers \
   --name timer --levels 5 \
-  --solid-light-region 0.026 0.465 0.686 0.961
+  --solid-light-region 0.026 0.40 0.70 0.92
 
 python3 .codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py \
   assets/launcher-covers/source/timer.png assets/launcher-covers \
   --name timer --levels 5 \
-  --solid-light-region 0.026 0.465 0.686 0.961 --check
+  --solid-light-region 0.026 0.40 0.70 0.92 --check
 ```
 
 生成 packed headers：

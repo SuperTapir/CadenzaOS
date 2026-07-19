@@ -173,10 +173,9 @@ bool AppRuntime::renderHandoffFrame(
   request.bounds = {bounds.x + 8, bounds.y + 8,
                     std::max<std::int32_t>(0, bounds.width - 16),
                     std::max<std::int32_t>(0, bounds.height - 16)};
-  request.preferredScale = 3;
-  request.minimumScale = 1;
   request.align = TextAlign::MiddleCenter;
   request.overflow = TextOverflowPolicy::Ellipsis;
+  request.role = TextRole::Title;
   canvas.boundedText(request, true);
   return false;
 }
@@ -355,8 +354,8 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
   const AppCatalogEntry* current = catalog_.find(currentId_);
   if (!begun_ || !current) {
     canvas.clear(false);
-    canvas.text("RUNTIME: NO APP", canvas.width() / 2, canvas.height() / 2, 2,
-                true, TextAlign::MiddleCenter);
+    canvas.text("RUNTIME: NO APP", canvas.width() / 2, canvas.height() / 2, 1,
+                true, TextAlign::MiddleCenter, TextRole::Body);
     return;
   }
   if (transitioning_) {
@@ -398,10 +397,10 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
     std::snprintf(indicator, sizeof(indicator), "%c %02u",
                   frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
                   static_cast<unsigned>(remainingMinutes));
-    const int indicatorWidth = 42;
-    canvas.fillRect(2, 2, indicatorWidth, 14, true);
-    canvas.text(indicator, 2 + indicatorWidth / 2, 9, 1, false,
-                TextAlign::MiddleCenter);
+    const int indicatorWidth = 54;
+    canvas.fillRect(2, 2, indicatorWidth, 24, true);
+    canvas.text(indicator, 2 + indicatorWidth / 2, 14, 1, false,
+                TextAlign::MiddleCenter, TextRole::Compact);
   }
   if (surfaces_.menuActive()) {
     presentation::renderSystemMenu(

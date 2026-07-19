@@ -23,6 +23,21 @@ linked into `cadenza_core`. The verified macOS build used SDL 3.4.12.
 U8g2 fonts have independent provenance. No other font is approved merely by
 being present upstream.
 
+## Playdate Roobert fonts
+
+- Source: Playdate SDK 3.0.6 `Resources/Fonts/Roobert`, downloaded from the
+  official Playdate SDK Linux endpoint on 2026-07-19.
+- Copyright/attribution: Playdate fonts from Panic, Inc.
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0); copied
+  at `third_party/licenses/Playdate-fonts-CC-BY-4.0.txt`.
+- Vendored scope: source metrics and 1-bit image tables for Roobert 24 Medium,
+  20 Medium, 11 Bold, 11 Medium, 10 Bold, and 9 Mono Condensed only. SHA-256
+  values are recorded in
+  `assets/fonts/roobert-source/README.md`.
+- Modification: CadenzaOS converts an explicit glyph subset into packed,
+  read-only C++ bitmap descriptors. Panic and Playdate do not endorse
+  CadenzaOS.
+
 ## doctest
 
 - Upstream: <https://github.com/doctest/doctest>

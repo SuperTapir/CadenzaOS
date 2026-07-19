@@ -5,6 +5,9 @@ set(required_files
   "third_party/licenses/doctest-LICENSE.txt"
   "third_party/licenses/stb-LICENSE.txt"
   "third_party/licenses/gif-h-LICENSE.txt"
+  "third_party/licenses/Playdate-fonts-CC-BY-4.0.txt"
+  "assets/fonts/roobert-source/README.md"
+  "lib/cadenza_core/src/generated/roobert_fonts.h"
   "third_party/doctest/doctest.h"
   "third_party/stb/stb_image_write.h"
   "third_party/gif/gif.h"
@@ -19,6 +22,7 @@ endforeach()
 file(READ "${PROJECT_ROOT}/docs/visual-assets.md" asset_manifest)
 foreach(asset IN ITEMS
     "u8g2_font_6x10_tf"
+    "Roobert 24 Medium / 20 Medium / 11 Bold / 11 Medium / 10 Bold / 9 Mono Condensed"
     "ordered 8×8 threshold table"
     "Gallery four-frame 2×4 sprite")
   string(FIND "${asset_manifest}" "${asset}" asset_position)
@@ -28,6 +32,16 @@ foreach(asset IN ITEMS
 endforeach()
 
 file(READ "${PROJECT_ROOT}/THIRD_PARTY_NOTICES.md" notices)
+foreach(font_notice IN ITEMS
+    "Playdate SDK 3.0.6"
+    "Creative Commons Attribution 4.0 International"
+    "Panic, Inc.")
+  string(FIND "${notices}" "${font_notice}" font_notice_position)
+  if(font_notice_position EQUAL -1)
+    message(FATAL_ERROR "THIRD_PARTY_NOTICES.md is missing ${font_notice}")
+  endif()
+endforeach()
+
 set(required_pins
   "ab9e48b2228351e9476682a70b7f3ee4909cd585"
   "d44d4f6e66232d716af82f00a063759e9d0e50d6"
