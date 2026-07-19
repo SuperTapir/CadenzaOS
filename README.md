@@ -1,5 +1,11 @@
 # Cadenza
 
+[![Cadenza OS application walkthrough](docs/media/cadenza-os-demo-poster.png)](docs/media/cadenza-os-demo.mp4)
+
+点击头图观看带声音的完整应用流程演示（MP4）：Launcher、Timer、后台 Timer
+指示器、System Menu、Motion、Settings 与 Animation Gallery，以及不同显示屏
+profile 下的表现。
+
 **Cadenza** 是由 Tapir 创作的个人互动设备与创作平台；它的系统称为
 **Cadenza OS**。第一版 Cadenza OS 面向原版 LILYGO T-Embed（非 CC1101 版本）
 构建，以它作为交互与软件架构的原型硬件。
