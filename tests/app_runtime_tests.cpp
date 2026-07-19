@@ -380,46 +380,106 @@ TEST_CASE("system menu setting action commits through typed system command") {
   CHECK(fixture.runtime.systemMenuActive());
 }
 
-TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
+TEST_CASE("background Timer indicator is HomeOnly") {
   Fixture fixture;
-  REQUIRE(fixture.runtime.begin(kTimerAppId));
+  REQUIRE(fixture.runtime.begin(kHomeAppId));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
 
   cadenza::SystemSnapshot snapshot;
   fixture.runtime.renderWithSystem(canvas, snapshot);
-  const std::uint64_t baseline = frameHash(framebuffer);
+  const std::uint64_t homeBaseline = frameHash(framebuffer);
 
   snapshot.timer.state = cadenza::TimerState::Running;
   snapshot.timer.owner = kTimerAppId;
   snapshot.timer.remainingMs = 7 * 60000 + 18000;
   fixture.runtime.renderWithSystem(canvas, snapshot);
-  CHECK(frameHash(framebuffer) == baseline);
-
-  snapshot.timer.owner = kHomeAppId;
-  fixture.runtime.renderWithSystem(canvas, snapshot);
-  const std::uint64_t running = frameHash(framebuffer);
-  CHECK(running != baseline);
+  const std::uint64_t homeRunning = frameHash(framebuffer);
+  CHECK(homeRunning != homeBaseline);
   CHECK_FALSE(framebuffer.pixel(2, 2));
   CHECK_FALSE(framebuffer.pixel(31, 3));
   CHECK(framebuffer.pixel(31, 4));
 
   snapshot.timer.state = cadenza::TimerState::Paused;
   fixture.runtime.renderWithSystem(canvas, snapshot);
-  CHECK(frameHash(framebuffer) != running);
+  CHECK(frameHash(framebuffer) != homeRunning);
+
+  REQUIRE(fixture.runtime.open(kMotionAppId));
+  while (fixture.runtime.transitioning()) {
+    fixture.update(1.0F / 60.0F);
+  }
+  snapshot.timer.state = cadenza::TimerState::Ready;
+  framebuffer.clear(false);
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  const std::uint64_t motionReady = frameHash(framebuffer);
+  snapshot.timer.state = cadenza::TimerState::Running;
+  framebuffer.clear(false);
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  CHECK(frameHash(framebuffer) == motionReady);
+  CHECK_FALSE(framebuffer.pixel(31, 4));
 }
 
-TEST_CASE("background Timer indicator contains 99-minute label") {
+TEST_CASE("passive indicators retract on leave Home and pop on return") {
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kHomeAppId));
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+  cadenza::SystemSnapshot snapshot;
+  snapshot.timer.state = cadenza::TimerState::Running;
+  snapshot.timer.owner = kTimerAppId;
+  snapshot.timer.remainingMs = 8 * 60000;
+  fixture.runtime.bindSystem(snapshot, fixture.services);
+  CHECK(fixture.runtime.passiveIndicatorSlide() == doctest::Approx(1.0F));
+
+  REQUIRE(fixture.runtime.open(kMotionAppId));
+  float previous = fixture.runtime.passiveIndicatorSlide();
+  bool sawDecrease = false;
+  while (fixture.runtime.transitioning()) {
+    fixture.services.beginFrame(1.0F / 60.0F);
+    fixture.runtime.updateWithSystem(1.0F / 60.0F, {},
+                                     fixture.services.snapshot(),
+                                     fixture.services);
+    fixture.services.commitCommands();
+    const float slide = fixture.runtime.passiveIndicatorSlide();
+    if (slide < previous) sawDecrease = true;
+    previous = slide;
+  }
+  CHECK(sawDecrease);
+  CHECK(fixture.runtime.passiveIndicatorSlide() == doctest::Approx(0.0F));
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  CHECK_FALSE(framebuffer.pixel(31, 4));
+
+  REQUIRE(fixture.runtime.open(kHomeAppId));
+  bool sawIncrease = false;
+  previous = fixture.runtime.passiveIndicatorSlide();
+  while (fixture.runtime.transitioning()) {
+    cadenza::SystemSnapshot returning = fixture.services.beginFrame(1.0F / 60.0F);
+    returning.timer = snapshot.timer;
+    fixture.runtime.updateWithSystem(1.0F / 60.0F, {}, returning,
+                                     fixture.services);
+    fixture.services.commitCommands();
+    const float slide = fixture.runtime.passiveIndicatorSlide();
+    if (slide > previous) sawIncrease = true;
+    previous = slide;
+  }
+  CHECK(sawIncrease);
+  CHECK(fixture.runtime.passiveIndicatorSlide() == doctest::Approx(1.0F));
+  framebuffer.clear(false);
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  CHECK(framebuffer.pixel(31, 4));
+}
+
+TEST_CASE("background Timer indicator contains 99-minute label on Home") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     CAPTURE(static_cast<int>(profile));
     Fixture fixture{profile};
-    REQUIRE(fixture.runtime.begin(kTimerAppId));
+    REQUIRE(fixture.runtime.begin(kHomeAppId));
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer};
 
     cadenza::SystemSnapshot snapshot;
-    snapshot.timer.owner = kHomeAppId;
+    snapshot.timer.owner = kTimerAppId;
     snapshot.timer.remainingMs = 99 * 60000;
     for (const auto state : {cadenza::TimerState::Running,
                              cadenza::TimerState::Paused}) {

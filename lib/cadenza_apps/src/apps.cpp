@@ -406,8 +406,61 @@ void renderMotionScreen(MonoCanvas& canvas, float position, float target,
               TextAlign::MiddleRight, TextRole::Footer);
 }
 
+constexpr int kSettingsItemCount = SettingsApp::kItemCount;
+
+struct SettingsListMetrics {
+  int rowHeight = 0;
+  int rowGap = 0;
+  int rowStep = 0;
+  int listTop = 0;
+  int listBottom = 0;
+  int visibleCount = 0;
+};
+
+SettingsListMetrics settingsListMetrics(std::int32_t width,
+                                        std::int32_t height) noexcept {
+  SettingsListMetrics metrics;
+  const ResolvedTypography typography = resolveTypography(width, height);
+  const int compactHeight =
+      static_cast<int>(typography.font(TextRole::Compact).height);
+  const int footerHeight =
+      static_cast<int>(typography.font(TextRole::Footer).height);
+  metrics.rowHeight = compactHeight + 8;
+  metrics.rowGap = std::max(4, metrics.rowHeight / 5);
+  metrics.rowStep = metrics.rowHeight + metrics.rowGap;
+  metrics.listTop = 4;
+  metrics.listBottom = height - std::max(16, footerHeight + 10);
+  const int viewportHeight =
+      std::max(metrics.rowHeight, metrics.listBottom - metrics.listTop);
+  metrics.visibleCount = std::max(
+      1, (viewportHeight + metrics.rowGap) / metrics.rowStep);
+  if (metrics.visibleCount > kSettingsItemCount) {
+    metrics.visibleCount = kSettingsItemCount;
+  }
+  return metrics;
+}
+
+SettingsListMetrics settingsListMetrics(const MonoCanvas& canvas) noexcept {
+  return settingsListMetrics(canvas.width(), canvas.height());
+}
+
+void clampSettingsScroll(int selected, int visibleCount,
+                         int& scrollOffset) noexcept {
+  if (visibleCount <= 0) {
+    scrollOffset = 0;
+    return;
+  }
+  if (selected < scrollOffset) {
+    scrollOffset = selected;
+  } else if (selected >= scrollOffset + visibleCount) {
+    scrollOffset = selected - visibleCount + 1;
+  }
+  const int maxScroll = std::max(0, kSettingsItemCount - visibleCount);
+  scrollOffset = std::clamp(scrollOffset, 0, maxScroll);
+}
+
 void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
-                          int selected, float time,
+                          int selected, int scrollOffset, float time,
                           bool resetConfirmArmed) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
@@ -465,36 +518,47 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
           : "LAUNCH: HORIZ";
   const char* usbMuteRow =
       system.muteSpeakerDuringUsbMic ? "USB MUTE: ON" : "USB MUTE: OFF";
-  const char* rows[7] = {"MOTION", "SOUND", usbMuteRow, wifiRow,
-                         provisioningRow, launcherRow, "ABOUT: OS"};
-  const int compactHeight =
-      canvas.measureText("A", TextRole::Compact).height;
-  const int rowHeight = compactHeight + 8;
-  const int rowGap = std::max(4, rowHeight / 5);
-  const int rowStep = rowHeight + rowGap;
-  const int rowsHeight = rowHeight * 7 + rowGap * 6;
-  const int rowsTop = std::max(4, (height - rowsHeight) / 2);
+  const char* rows[kSettingsItemCount] = {
+      "MOTION",       "SOUND",         usbMuteRow, wifiRow,
+      provisioningRow, launcherRow, "ABOUT: OS"};
+  const SettingsListMetrics metrics = settingsListMetrics(canvas);
+  int effectiveScroll = scrollOffset;
+  clampSettingsScroll(selected, metrics.visibleCount, effectiveScroll);
+  const int rowsHeight =
+      metrics.rowHeight * metrics.visibleCount +
+      metrics.rowGap * std::max(0, metrics.visibleCount - 1);
+  const int rowsTop =
+      metrics.visibleCount >= kSettingsItemCount
+          ? std::max(metrics.listTop,
+                     metrics.listTop +
+                         (metrics.listBottom - metrics.listTop - rowsHeight) /
+                             2)
+          : metrics.listTop;
   const int rowsWidth = width - rowsLeft - 12;
-  for (int index = 0; index < 7; ++index) {
-    const int y = rowsTop + index * rowStep;
+  for (int slot = 0; slot < metrics.visibleCount; ++slot) {
+    const int index = effectiveScroll + slot;
+    if (index < 0 || index >= kSettingsItemCount) continue;
+    const int y = rowsTop + slot * metrics.rowStep;
+    if (y + metrics.rowHeight > metrics.listBottom) continue;
     const bool usesMenuIcon = index < 3;
     const int labelWidth = rowsWidth - (usesMenuIcon ? 50 : 12);
     if (index == selected) {
-      canvas.fillRoundedRect(rowsLeft, y, rowsWidth, rowHeight, 4, true);
+      canvas.fillRoundedRect(rowsLeft, y, rowsWidth, metrics.rowHeight, 4,
+                             true);
       canvas.boundedText(
           menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
-                                  rowHeight},
+                                  metrics.rowHeight},
                     TextAlign::MiddleLeft, TextRole::Menu),
           false);
     } else {
       canvas.boundedText(
           menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
-                                  rowHeight},
+                                  metrics.rowHeight},
                     TextAlign::MiddleLeft, TextRole::Menu),
           true);
     }
     const Rect indicator{rowsLeft + rowsWidth - 36,
-                         y + (rowHeight - 14) / 2, 30, 14};
+                         y + (metrics.rowHeight - 14) / 2, 30, 14};
     if (index == 0) {
       presentation::SystemUi::toggle(canvas, indicator, energetic,
                                      index == selected);
@@ -847,6 +911,15 @@ bool MotionApp::renderLaunchFrame(MonoCanvas& canvas,
 void SettingsApp::onEnter() noexcept {
   showingAbout_ = false;
   resetConfirmArmed_ = false;
+  scrollOffset_ = 0;
+}
+
+void SettingsApp::syncScroll(std::int32_t canvasHeight,
+                             std::int32_t canvasWidth) noexcept {
+  clampSettingsScroll(
+      selected_,
+      settingsListMetrics(canvasWidth, canvasHeight).visibleCount,
+      scrollOffset_);
 }
 
 void SettingsApp::update(const AppUpdateContext& context) noexcept {
@@ -865,8 +938,9 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
     return;
   }
   if (input.turn) {
-    selected_ = wrap(selected_ + input.turn, 7);
+    selected_ = wrap(selected_ + input.turn, kItemCount);
     resetConfirmArmed_ = false;
+    syncScroll(context.displayHeight, context.displayWidth);
     context.commands.submit(
         SystemCommand::playSound(audio::SoundCue::Navigate));
   }
@@ -946,7 +1020,9 @@ void SettingsApp::render(MonoCanvas& canvas,
     renderAboutScreen(canvas);
     return;
   }
-  renderSettingsScreen(canvas, context.system, selected_, time_,
+  clampSettingsScroll(selected_, settingsListMetrics(canvas).visibleCount,
+                      scrollOffset_);
+  renderSettingsScreen(canvas, context.system, selected_, scrollOffset_, time_,
                        resetConfirmArmed_);
 }
 
@@ -960,7 +1036,10 @@ bool SettingsApp::renderLaunchFrame(MonoCanvas& canvas,
                                     float progress,
                                     const AppRenderContext& context) const noexcept {
   const float p = launchProgress(progress);
-  renderSettingsScreen(canvas, context.system, selected_, time_,
+  int scroll = scrollOffset_;
+  clampSettingsScroll(selected_, settingsListMetrics(canvas).visibleCount,
+                      scroll);
+  renderSettingsScreen(canvas, context.system, selected_, scroll, time_,
                        resetConfirmArmed_);
   blendCenteredCoverIntoTarget(canvas, p, kSettingsTEmbedCover,
                                kSettingsCover, false);

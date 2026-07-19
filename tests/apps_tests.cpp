@@ -1366,7 +1366,22 @@ TEST_CASE("Settings switches Launcher orientation immediately at both profiles")
   }
 }
 
-TEST_CASE("Settings About opens a dedicated identity screen and click returns") {
+bool hasWideBlackBand(const cadenza::MonoFramebuffer& framebuffer, int x0,
+                      int x1, int y0, int y1) {
+  const int span = std::max(1, x1 - x0);
+  for (int y = std::max(0, y0);
+       y < std::min<int>(framebuffer.height(), y1); ++y) {
+    int ink = 0;
+    for (int x = std::max(0, x0);
+         x < std::min<int>(framebuffer.width(), x1); ++x) {
+      if (framebuffer.pixel(x, y)) ++ink;
+    }
+    if (ink * 4 >= span * 3) return true;
+  }
+  return false;
+}
+
+TEST_CASE("Settings keeps the last item fully visible and opens About") {
   for (const cadenza::FramebufferProfile profile : {
            cadenza::FramebufferProfile::TEmbed,
            cadenza::FramebufferProfile::Sharp}) {
@@ -1384,11 +1399,26 @@ TEST_CASE("Settings About opens a dedicated identity screen and click returns") 
     cadenza::MonoCanvas canvas{framebuffer};
     cadenza::test::renderApp(settings, canvas, runtime, services);
     const std::uint64_t settingsHash = framebufferHash(framebuffer);
+    const int rowsLeft = std::min(
+        framebuffer.width() - 120,
+        std::max(framebuffer.width() * 43 / 100,
+                 static_cast<int>(
+                     canvas.measureText("SETTINGS", cadenza::TextRole::Title)
+                         .width) +
+                     24));
 
     cadenza::InputFrame selectAbout;
     selectAbout.turn = 6;
     cadenza::test::updateApp(settings, 0.0F, selectAbout, runtime, services,
                              cadenza::apps::kSettingsAppId);
+    CHECK(settings.selectedIndex() == 6);
+    if (profile == cadenza::FramebufferProfile::TEmbed) {
+      CHECK(settings.scrollOffset() > 0);
+    }
+    cadenza::test::renderApp(settings, canvas, runtime, services);
+    CHECK(hasWideBlackBand(framebuffer, rowsLeft, framebuffer.width() - 12, 4,
+                           framebuffer.height() - 16));
+
     cadenza::InputFrame click;
     click.clicked = true;
     cadenza::test::updateApp(settings, 0.0F, click, runtime, services,

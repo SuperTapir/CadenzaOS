@@ -290,7 +290,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        2528157750090777159ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
-       16788121549965009994ULL},
+       10255963290226060893ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        5829755783398426753ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
@@ -324,26 +324,36 @@ TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
         7356285947542530892ULL);
 }
 
-TEST_CASE("background Timer indicator stays legible over every built-in App") {
-  const std::array<SnapshotCase, 8> cases{{
+TEST_CASE("background Timer indicator is HomeOnly across profiles") {
+  const std::array<SnapshotCase, 2> homeCases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
        12458770175868205636ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
-       11763888816598266585ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
-       18154333125594602996ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
-       115148013231880568ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
        14628784248661360040ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
-       16730610446322141212ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
-       10178945738731410042ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
-       15779898515471318158ULL},
   }};
-  for (const SnapshotCase& snapshot : cases) {
+  for (const SnapshotCase& snapshot : homeCases) {
+    CAPTURE(static_cast<int>(snapshot.profile));
+    CAPTURE(static_cast<int>(snapshot.app.value()));
+    CHECK(captureBackgroundTimer(snapshot.profile, snapshot.app,
+                                 snapshot.expected) == snapshot.expected);
+  }
+
+  // Non-Home apps must match their plain approved baselines (no indicator).
+  const std::array<SnapshotCase, 6> nonHomeCases{{
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
+       2528157750090777159ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
+       10255963290226060893ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
+       5829755783398426753ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
+       17137373998554346811ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
+       5598788588305196167ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
+       2918520654623268197ULL},
+  }};
+  for (const SnapshotCase& snapshot : nonHomeCases) {
     CAPTURE(static_cast<int>(snapshot.profile));
     CAPTURE(static_cast<int>(snapshot.app.value()));
     CHECK(captureBackgroundTimer(snapshot.profile, snapshot.app,
@@ -365,7 +375,7 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
   constexpr std::array<std::array<std::uint64_t, 9>, 2> expected{{
       {{10246049574384578296ULL, 17910386823993677589ULL,
         2535712096121363172ULL,
-        9797207443492123781ULL, 2107098608496693303ULL,
+        2142383318095024839ULL, 2107098608496693303ULL,
         8089027038418072656ULL, 17578902866895419590ULL,
         16216091776987611102ULL,
         12224806840153236890ULL}},

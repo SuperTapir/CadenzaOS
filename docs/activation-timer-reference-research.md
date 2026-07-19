@@ -86,7 +86,7 @@ Reset 不进入 System Menu。它是 App 领域动作，而当前系统菜单只
 
 全局 presentation 分两级：
 
-- Running/Paused 且 Timer App 不在前台：右上角持久 indicator 显示 timer 状态和向上取整分钟，不抢 input；
+- Running/Paused 且 Launcher（Home）前台：右上角持久 indicator 显示 timer 状态和向上取整分钟，不抢 input；非 Home App 上不绘制该角标；
 - Expired：critical surface 覆盖当前 App/Menu，显示完成状态、原始时长和确认提示，提醒音按有界间隔重复直到确认。
 
 视觉第一版必须同时适配 320×170 与 400×240；禁止通过逐帧 heap、浮点三角函数密集扫描或额外全屏 framebuffer 实现。

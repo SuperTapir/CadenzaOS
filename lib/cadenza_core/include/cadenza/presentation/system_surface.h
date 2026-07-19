@@ -18,6 +18,26 @@ enum class SurfaceKind : std::uint8_t {
   TimerAlert,
 };
 
+enum class IndicatorScope : std::uint8_t {
+  HomeOnly,
+  Global,
+  NonOwner,
+};
+
+inline bool shouldShowPassiveIndicator(IndicatorScope scope, AppId currentId,
+                                       AppId homeId,
+                                       AppId owner = {}) noexcept {
+  switch (scope) {
+    case IndicatorScope::HomeOnly:
+      return currentId.valid() && currentId == homeId;
+    case IndicatorScope::Global:
+      return true;
+    case IndicatorScope::NonOwner:
+      return currentId.valid() && owner.valid() && currentId != owner;
+  }
+  return false;
+}
+
 enum class SystemMenuItem : std::uint8_t {
   Resume,
   Home,

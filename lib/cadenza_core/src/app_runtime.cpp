@@ -103,6 +103,7 @@ bool AppRuntime::begin(AppId initial) noexcept {
   currentId_ = initial;
   pendingId_ = initial;
   begun_ = true;
+  indicatorSlide_ = initial == homeId_ ? 1.0F : 0.0F;
   initialEntry->app->onEnter();
   return true;
 }
@@ -310,38 +311,135 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
     }
   }
   handleSystemSurfaceIntent(surfaceFrame.intent, snapshot);
-  if (surfaces_.timerAlertActive()) return;
-  if (!transitioning_) {
-    if (surfaceFrame.consumeInput || surfaces_.appSuspended()) return;
-    const AppCatalogView catalog{catalog_};
-    AppCommandPort commandPort{currentId_, current->capabilities, commands};
-    const AppUpdateContext context{std::max(0.0F, dt), input, catalog, *this,
-                                   frameSnapshot_, commandPort, canvasWidth(),
-                                   canvasHeight()};
-    current->app->update(context);
-    return;
+  if (!surfaces_.timerAlertActive()) {
+    if (!transitioning_) {
+      if (!surfaceFrame.consumeInput && !surfaces_.appSuspended()) {
+        const AppCatalogView catalog{catalog_};
+        AppCommandPort commandPort{currentId_, current->capabilities, commands};
+        const AppUpdateContext context{std::max(0.0F, dt), input, catalog, *this,
+                                       frameSnapshot_, commandPort,
+                                       canvasWidth(), canvasHeight()};
+        current->app->update(context);
+      }
+    } else {
+      transition_ += std::max(0.0F, dt) / activeTransitionDuration_;
+      if (!swapped_ && transition_ >= 0.5F) {
+        if (stagedTransition_) {
+          if (launchHandoff_) {
+            renderHandoffFrame(pendingId_, 1.0F,
+                               launchRendererAvailable_);
+          }
+          outgoingFrame_ = incomingFrame_;
+        }
+        current->app->onExit();
+        currentId_ = pendingId_;
+        current = catalog_.find(currentId_);
+        current->app->onEnter();
+        swapped_ = true;
+        incomingRendered_ = false;
+      }
+      if (transition_ >= 1.0F) {
+        transition_ = 1.0F;
+        transitioning_ = false;
+        surfaces_.notifyTransitionStable();
+      }
+    }
+  }
+  updatePassiveIndicatorSlide(dt);
+}
+
+namespace {
+float smoothstep01(float t) noexcept {
+  t = std::max(0.0F, std::min(1.0F, t));
+  return t * t * (3.0F - 2.0F * t);
+}
+
+bool passiveIndicatorContentVisible(const SystemSnapshot& snapshot) noexcept {
+  return snapshot.timer.state == TimerState::Running ||
+         snapshot.timer.state == TimerState::Paused ||
+         snapshot.voice.microphoneInUse;
+}
+}  // namespace
+
+void AppRuntime::updatePassiveIndicatorSlide(Seconds dt) noexcept {
+  const bool hasContent = passiveIndicatorContentVisible(frameSnapshot_);
+  if (transitioning_) {
+    if (pendingId_ != homeId_) {
+      if (currentId_ == homeId_ && !swapped_) {
+        indicatorSlide_ = 1.0F - smoothstep01(transition_ * 2.0F);
+      } else {
+        indicatorSlide_ = 0.0F;
+      }
+      return;
+    }
+    if (pendingId_ == homeId_) {
+      if (swapped_) {
+        indicatorSlide_ = hasContent
+                              ? smoothstep01((transition_ - 0.5F) * 2.0F)
+                              : 0.0F;
+      } else {
+        indicatorSlide_ = 0.0F;
+      }
+      return;
+    }
   }
 
-  transition_ += std::max(0.0F, dt) / activeTransitionDuration_;
-  if (!swapped_ && transition_ >= 0.5F) {
-    if (stagedTransition_) {
-      if (launchHandoff_) {
-        renderHandoffFrame(pendingId_, 1.0F,
-                           launchRendererAvailable_);
-      }
-      outgoingFrame_ = incomingFrame_;
-    }
-    current->app->onExit();
-    currentId_ = pendingId_;
-    current = catalog_.find(currentId_);
-    current->app->onEnter();
-    swapped_ = true;
-    incomingRendered_ = false;
+  const float target =
+      (hasContent && currentId_ == homeId_) ? 1.0F : 0.0F;
+  if (indicatorSlide_ == target) return;
+  const Seconds duration =
+      frameSnapshot_.motionProfile == MotionProfile::Reduced
+          ? presentation_defaults::kReducedPassiveIndicatorMotionDuration
+          : presentation_defaults::kPassiveIndicatorMotionDuration;
+  const float step =
+      duration > 0.0F ? std::max(0.0F, dt) / duration : 1.0F;
+  if (indicatorSlide_ < target) {
+    indicatorSlide_ = std::min(target, indicatorSlide_ + step);
+  } else {
+    indicatorSlide_ = std::max(target, indicatorSlide_ - step);
   }
-  if (transition_ >= 1.0F) {
-    transition_ = 1.0F;
-    transitioning_ = false;
-    surfaces_.notifyTransitionStable();
+}
+
+void AppRuntime::renderPassiveIndicators(MonoCanvas& canvas) noexcept {
+  if (indicatorSlide_ <= 0.001F) return;
+  const bool showTimer = frameSnapshot_.timer.state == TimerState::Running ||
+                         frameSnapshot_.timer.state == TimerState::Paused;
+  const bool showMic = frameSnapshot_.voice.microphoneInUse;
+  if (!showTimer && !showMic) return;
+
+  const std::int32_t y =
+      presentation_defaults::kPassiveIndicatorRestY -
+      static_cast<std::int32_t>(
+          (1.0F - indicatorSlide_) *
+              static_cast<float>(
+                  presentation_defaults::kPassiveIndicatorTravelY) +
+          0.5F);
+  if (y + 28 <= 0) return;
+
+  if (showTimer) {
+    const std::uint32_t remainingMinutes =
+        (frameSnapshot_.timer.remainingMs +
+         static_cast<std::uint32_t>(kTimerMinuteMs) - 1U) /
+        static_cast<std::uint32_t>(kTimerMinuteMs);
+    char indicator[16];
+    std::snprintf(indicator, sizeof(indicator), "%c %02u",
+                  frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
+                  static_cast<unsigned>(remainingMinutes));
+    const TextMetrics indicatorMetrics =
+        canvas.measureText(indicator, TextRole::Compact);
+    constexpr std::int32_t kIndicatorMinimumWidth = 58;
+    constexpr std::int32_t kIndicatorHorizontalChrome = 18;
+    const std::int32_t indicatorWidth = std::max(
+        kIndicatorMinimumWidth,
+        indicatorMetrics.width + kIndicatorHorizontalChrome);
+    presentation::SystemUi::statusIndicator(
+        canvas, {2, y, indicatorWidth, 28}, indicator,
+        frameSnapshot_.timer.state == TimerState::Running);
+  }
+  if (showMic) {
+    canvas.fillRect(canvas.width() - 43, y, 41, 24, true);
+    canvas.text("MIC", canvas.width() - 22, y + 12, 1, false,
+                TextAlign::MiddleCenter, TextRole::Compact);
   }
 }
 
@@ -411,28 +509,7 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
                            0, 0);
   }
   presentation::renderTransientFeedback(canvas, surfaces_);
-  if ((frameSnapshot_.timer.state == TimerState::Running ||
-       frameSnapshot_.timer.state == TimerState::Paused) &&
-      frameSnapshot_.timer.owner != currentId_) {
-    const std::uint32_t remainingMinutes =
-        (frameSnapshot_.timer.remainingMs +
-         static_cast<std::uint32_t>(kTimerMinuteMs) - 1U) /
-        static_cast<std::uint32_t>(kTimerMinuteMs);
-    char indicator[16];
-    std::snprintf(indicator, sizeof(indicator), "%c %02u",
-                  frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
-                  static_cast<unsigned>(remainingMinutes));
-    const TextMetrics indicatorMetrics =
-        canvas.measureText(indicator, TextRole::Compact);
-    constexpr std::int32_t kIndicatorMinimumWidth = 58;
-    constexpr std::int32_t kIndicatorHorizontalChrome = 18;
-    const std::int32_t indicatorWidth = std::max(
-        kIndicatorMinimumWidth,
-        indicatorMetrics.width + kIndicatorHorizontalChrome);
-    presentation::SystemUi::statusIndicator(
-        canvas, {2, 2, indicatorWidth, 28}, indicator,
-        frameSnapshot_.timer.state == TimerState::Running);
-  }
+  renderPassiveIndicators(canvas);
   if (surfaces_.menuActive()) {
     presentation::renderSystemMenu(
         canvas, incomingFrame_, surfaces_.selection(),

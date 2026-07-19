@@ -711,7 +711,16 @@ TEST_CASE("USB voice streaming suppresses cues only when mute setting is enabled
   CHECK(host.snapshot().muteSpeakerDuringUsbMic);
 }
 
-TEST_CASE("USB voice streaming suppresses cues and keeps a visual privacy overlay") {
+bool micIndicatorVisible(const cadenza::MonoFramebuffer& framebuffer) {
+  for (int y = 2; y < 14; ++y) {
+    for (int x = framebuffer.width() - 31; x < framebuffer.width() - 2; ++x) {
+      if (framebuffer.pixel(x, y)) return true;
+    }
+  }
+  return false;
+}
+
+TEST_CASE("USB voice streaming suppresses cues and keeps a HomeOnly MIC overlay") {
   cadenza::system::SystemServiceHost host;
   REQUIRE(host.submit(cadenza::SystemCommand::setMuteSpeakerDuringUsbMic(true)));
   host.commitCommands();
@@ -729,22 +738,30 @@ TEST_CASE("USB voice streaming suppresses cues and keeps a visual privacy overla
   CHECK(host.snapshot().voice.microphoneInUse);
 
   cadenza::AppRuntime runtime;
-  FrameProbeApp app;
+  FrameProbeApp home;
+  FrameProbeApp other;
   constexpr cadenza::AppId kHome{0x7200};
-  REQUIRE(runtime.registerApp(kHome, app, false));
+  constexpr cadenza::AppId kOther{0x7201};
+  REQUIRE(runtime.registerApp(kHome, home, false));
+  REQUIRE(runtime.registerApp(kOther, other, true));
   REQUIRE(runtime.configureHome(kHome));
   REQUIRE(runtime.begin(kHome));
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
   cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.0F,
                                                {});
-  bool indicatorVisible = false;
-  for (int y = 2; y < 14; ++y) {
-    for (int x = framebuffer.width() - 31; x < framebuffer.width() - 2; ++x) {
-      indicatorVisible = indicatorVisible || framebuffer.pixel(x, y);
-    }
+  CHECK(micIndicatorVisible(framebuffer));
+
+  REQUIRE(runtime.open(kOther));
+  while (runtime.transitioning()) {
+    cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas,
+                                                 1.0F / 60.0F, {});
   }
-  CHECK(indicatorVisible);
+  framebuffer.clear(false);
+  cadenza::system::FrameCoordinator::runFrame(host, runtime, canvas, 0.0F,
+                                               {});
+  CHECK_FALSE(micIndicatorVisible(framebuffer));
+  CHECK(host.snapshot().voice.microphoneInUse);
 
   REQUIRE(host.postPlatformEvent(
       cadenza::system::PlatformEvent::usbVoiceStreaming(false)));

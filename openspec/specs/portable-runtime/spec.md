@@ -60,7 +60,7 @@ Raw turn and button events SHALL be reduced by one core `InputReducer` into a pe
 
 ### Requirement: Application lifecycle is platform-independent
 
-Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; the configured Home App SHALL be reached through an explicit System Menu action rather than a direct long-press transition. System Menu SHALL suspend the active App without changing AppId, while system-owned Timer state continues independently.
+Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; the configured Home App SHALL be reached through an explicit System Menu action rather than a direct long-press transition. System Menu SHALL suspend the active App without changing AppId, while system-owned Timer state continues independently. Timer service remaining active SHALL NOT imply that its passive status indicator is visible on non-Home Apps.
 
 #### Scenario: App is switched
 - **WHEN** the runtime opens a registered App and completes its transition
@@ -80,4 +80,5 @@ Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static A
 
 #### Scenario: Timer owner leaves foreground
 - **WHEN** Timer App starts a Timer and transitions to Launcher or another App
-- **THEN** Timer App stops receiving normal updates but the Timer service remains owned, visible through system snapshot/indicator and continues toward its deadline
+- **THEN** Timer App stops receiving normal updates but the Timer service remains owned, continues toward its deadline, remains visible in system snapshot, and its passive indicator is shown only while Home/Launcher is the current App
+

@@ -150,7 +150,7 @@ TEST_CASE("desktop Settings changes Launcher axis and moving selection opens") {
   harness.tapEnter();
   REQUIRE(harness.host.runtime().currentId() ==
           cadenza::apps::kSettingsAppId);
-  harness.turnRight(4);
+  harness.turnRight(5);
   harness.tapEnter();
   CHECK(harness.host.services().snapshot().launcherOrientation ==
         cadenza::LauncherOrientation::Horizontal);

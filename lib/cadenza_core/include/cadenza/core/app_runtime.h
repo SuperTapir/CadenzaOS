@@ -51,6 +51,8 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   void emitDiagnostic(const DiagnosticEvent& event) const noexcept;
 
   AppId currentId() const noexcept { return currentId_; }
+  AppId homeId() const noexcept { return homeId_; }
+  float passiveIndicatorSlide() const noexcept { return indicatorSlide_; }
   std::uint8_t launcherAppCount() const noexcept;
   AppId launcherAppAt(std::uint8_t position) const noexcept;
   const char* appName(AppId id) const noexcept;
@@ -99,12 +101,15 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
       const SystemSnapshot& snapshot) noexcept;
   void renderAppWithContext(App& app, MonoCanvas& canvas,
                             const SystemSnapshot& snapshot) noexcept;
+  void updatePassiveIndicatorSlide(Seconds dt) noexcept;
+  void renderPassiveIndicators(MonoCanvas& canvas) noexcept;
 
   AppCatalog catalog_{};
   AppId homeId_{};
   AppId currentId_{};
   AppId pendingId_{};
   float transition_ = 0.0F;
+  float indicatorSlide_ = 0.0F;
   bool begun_ = false;
   bool transitioning_ = false;
   bool swapped_ = false;

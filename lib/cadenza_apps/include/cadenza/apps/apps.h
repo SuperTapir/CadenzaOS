@@ -186,6 +186,8 @@ class MotionApp final : public App {
 
 class SettingsApp final : public App {
  public:
+  static constexpr int kItemCount = 7;
+
   const char* name() const noexcept override { return "Settings"; }
   void onEnter() noexcept override;
   void update(const AppUpdateContext& context) noexcept override;
@@ -197,9 +199,14 @@ class SettingsApp final : public App {
                          float progress,
                          const AppRenderContext& context) const noexcept override;
   bool showingAbout() const noexcept { return showingAbout_; }
+  int selectedIndex() const noexcept { return selected_; }
+  int scrollOffset() const noexcept { return scrollOffset_; }
 
  private:
+  void syncScroll(std::int32_t canvasHeight, std::int32_t canvasWidth) noexcept;
+
   int selected_ = 0;
+  int scrollOffset_ = 0;
   float time_ = 0.0F;
   bool resetConfirmArmed_ = false;
   bool showingAbout_ = false;
