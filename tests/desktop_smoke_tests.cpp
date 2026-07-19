@@ -76,17 +76,23 @@ class SmokeHarness final : public cadenza::MonotonicClock {
     }
   }
 
+  void advanceWallMilliseconds(cadenza::MonotonicMillis milliseconds) {
+    now_ += milliseconds;
+    deliver();
+  }
+
   cadenza::host::HeadlessHost host;
 
  private:
   void deliver() {
     cadenza::pumpInput(mapper_, *this, reducer_);
-    host.step(reducer_.takeFrame());
+    host.advanceAt(now_, 1.0F / 60.0F, reducer_.takeFrame());
   }
 
   void settle() {
     for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
-      host.step();
+      now_ += 17;
+      deliver();
     }
     REQUIRE_FALSE(host.runtime().transitioning());
   }
@@ -160,4 +166,23 @@ TEST_CASE("desktop Settings changes Launcher axis and moving selection opens") {
   harness.tapEnter();
   CHECK(harness.host.runtime().currentId() ==
         cadenza::apps::kGalleryAppId);
+}
+
+TEST_CASE("desktop input path starts background Timer and acknowledges expiry") {
+  SmokeHarness harness;
+  harness.tapEnter();
+  REQUIRE(harness.host.runtime().currentId() ==
+          cadenza::apps::kClockAppId);
+  harness.tapEnter();
+  REQUIRE(harness.host.services().snapshot().timer.state ==
+          cadenza::TimerState::Running);
+  harness.returnHomeThroughSystemMenu();
+  REQUIRE(harness.host.runtime().currentId() ==
+          cadenza::apps::kLauncherAppId);
+
+  harness.advanceWallMilliseconds(10 * 60000);
+  REQUIRE(harness.host.runtime().systemSurfaces().timerAlertActive());
+  harness.tapEnter();
+  CHECK(harness.host.services().snapshot().timer.state ==
+        cadenza::TimerState::Ready);
 }

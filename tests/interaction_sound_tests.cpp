@@ -102,12 +102,12 @@ TEST_CASE("confirm and back preserve approved two-strike calibration") {
         doctest::Approx(0.210F).epsilon(0.02));
 }
 
-TEST_CASE("semantic hierarchy exposes all fifteen stable cue names") {
-  constexpr std::array<const char*, 15> expected{{
+TEST_CASE("semantic hierarchy exposes fifteen stable cues plus Timer Complete") {
+  constexpr std::array<const char*, 16> expected{{
       "navigate",     "boundary",     "confirm",    "back",
       "toggle-on",    "toggle-off",   "reject",     "complete",
       "warning",      "failure",      "notification", "connect",
-      "disconnect",   "power-on",     "power-off",
+      "disconnect",   "power-on",     "power-off", "timer-complete",
   }};
   CHECK(static_cast<std::size_t>(cadenza::audio::SoundCue::Count) ==
         expected.size());
@@ -146,6 +146,16 @@ TEST_CASE("every authored cue has bounded nonzero edge ramps") {
   CHECK(boundary.durationSeconds != reject.durationSeconds);
 }
 
+TEST_CASE("Timer Complete is a distinct bounded four-strike alert") {
+  const auto timerComplete = cadenza::audio::InteractionSoundService::profile(
+      cadenza::audio::SoundCue::TimerComplete);
+  const auto complete = cadenza::audio::InteractionSoundService::profile(
+      cadenza::audio::SoundCue::Complete);
+  CHECK(timerComplete.toneCount == 4);
+  CHECK(timerComplete.durationSeconds > complete.durationSeconds);
+  CHECK(timerComplete.durationSeconds <= 0.82F);
+}
+
 TEST_CASE("delayed cue events start on schedule and are cleared by stop") {
   cadenza::audio::InteractionSoundService service;
   REQUIRE(service.play(cadenza::audio::SoundCue::Confirm));
@@ -163,7 +173,7 @@ TEST_CASE("delayed cue events start on schedule and are cleared by stop") {
 
 TEST_CASE("all semantic hierarchy cues render deterministically and end silent") {
   constexpr std::size_t kSamples = 44100;
-  constexpr std::array<std::uint64_t, 15> kGolden{{
+  constexpr std::array<std::uint64_t, 16> kGolden{{
       0x42ECB646DBC2F138ULL, 0x4DA394CE9C2148C2ULL,
       0x718BD5DCD3F36003ULL, 0x1AA4B6B726F7D759ULL,
       0x093E015B6B49C061ULL, 0xE184E7C5DF4F77CFULL,
@@ -171,7 +181,7 @@ TEST_CASE("all semantic hierarchy cues render deterministically and end silent")
       0x13E57E34362B7C70ULL, 0xF85F91ED8053C0ACULL,
       0x1E33454BC817A8F4ULL, 0x544F48552963AB96ULL,
       0xE18B997BCB79D023ULL, 0xCAB9268E54DCD0EEULL,
-      0xFF77B74687A40111ULL,
+      0xFF77B74687A40111ULL, 0x1D5913CD94A70AFAULL,
   }};
   for (std::size_t cueIndex = 0;
        cueIndex < static_cast<std::size_t>(cadenza::audio::SoundCue::Count);

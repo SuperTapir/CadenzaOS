@@ -103,7 +103,7 @@ bool renderDemos(const std::filesystem::path& directory) {
          renderDemo(directory / "demo-system.wav",
                     {SoundCue::Notification, SoundCue::Connect,
                      SoundCue::Disconnect, SoundCue::PowerOn,
-                     SoundCue::PowerOff});
+                     SoundCue::PowerOff, SoundCue::TimerComplete});
 }
 
 bool cueFromName(const std::string& name, cadenza::audio::SoundCue& cue) {

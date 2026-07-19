@@ -64,6 +64,12 @@ sources.
 - F6: lossless PNG screenshot;
 - F7: start/stop PNG sequence plus convenience GIF recording.
 
+Clock / Activation Timer 中，Left/Right 或滚轮按整分钟调整，Enter/Space 短按依
+Ready/Running/Paused 状态执行开始、暂停或继续。运行中长按仍打开 System Menu；
+返回 Launcher 后 Timer 继续，并显示向上取整的后台分钟指示。到期 alert 捕获按钮，
+短按确认后回到最近时长。软件暂停/倍速只影响 presentation；desktop Timer 使用
+SDL 单调 wall time。
+
 Useful launch options are `--profile t-embed|sharp`, `--scale 1..4`,
 `--palette reflective|pure`, `--overlay`, `--device-frame`, and `--frames N`.
 `reflective` is the default and maps 1-bit ink/paper to `#322F28`/`#B1AEA7`,

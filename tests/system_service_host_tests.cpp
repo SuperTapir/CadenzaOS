@@ -223,6 +223,197 @@ TEST_CASE("App command port defaults deny and host revalidates adapters") {
         cadenza::MotionProfile::Reduced);
 }
 
+TEST_CASE("TimerControl is denied by default and revalidated at commit") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7500};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  host.bindCapabilityResolver(resolver);
+
+  cadenza::AppCommandPort denied{kCaller, {}, host};
+  CHECK_FALSE(denied.submit(cadenza::SystemCommand::startTimer(120000)));
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::CapabilityDenied);
+  CHECK(host.pendingCommandCount() == 0);
+
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  cadenza::AppCommandPort authorized{kCaller, resolver.capabilities, host};
+  REQUIRE(authorized.submit(cadenza::SystemCommand::startTimer(120000)));
+  resolver.capabilities = {};
+  host.commitCommands();
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Ready);
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::CapabilityDenied);
+}
+
+TEST_CASE("Timer commands commit FIFO and preserve the update snapshot") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7501};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  const auto& update = host.beginFrame(0.0F);
+  REQUIRE(commands.submit(cadenza::SystemCommand::startTimer(120000)));
+  REQUIRE(commands.submit(cadenza::SystemCommand::pauseTimer()));
+  CHECK(update.timer.state == cadenza::TimerState::Ready);
+  const auto& render = host.commitCommands();
+  CHECK(render.timer.state == cadenza::TimerState::Paused);
+  CHECK(render.timer.remainingMs == 120000);
+  CHECK(render.timer.owner == kCaller);
+  CHECK(host.diagnostics().committedCommands == 2);
+}
+
+TEST_CASE("Timer command validation and state rejection fail closed") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7502};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  CHECK_FALSE(commands.submit(cadenza::SystemCommand::startTimer(59999)));
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::InvalidCommand);
+  REQUIRE(commands.submit(cadenza::SystemCommand::resumeTimer()));
+  host.commitCommands();
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Ready);
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::InvalidState);
+}
+
+TEST_CASE("Only the system can acknowledge an expired Timer") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7503};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  host.beginFrame(0.0F);
+  REQUIRE(commands.submit(cadenza::SystemCommand::startTimer(60000)));
+  host.commitCommands();
+  host.beginFrame(60.0F);
+  REQUIRE(host.snapshot().timer.state == cadenza::TimerState::Expired);
+
+  REQUIRE(commands.submit(cadenza::SystemCommand::acknowledgeTimer()));
+  host.commitCommands();
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Expired);
+  CHECK(host.diagnostics().lastRejection ==
+        cadenza::system::SystemRejection::InvalidCaller);
+  REQUIRE(host.submit(cadenza::SystemCommand::acknowledgeTimer()));
+  CHECK(host.commitCommands().timer.state == cadenza::TimerState::Ready);
+}
+
+TEST_CASE("Explicit monotonic time advances Timer when presentation delta is zero") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7504};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  host.beginFrameAt(1000, 0.0F);
+  REQUIRE(commands.submit(cadenza::SystemCommand::startTimer(60000)));
+  host.commitCommands();
+  CHECK(host.beginFrameAt(60999, 0.0F).timer.remainingMs == 1);
+  CHECK(host.beginFrameAt(61000, 0.0F).timer.state ==
+        cadenza::TimerState::Expired);
+}
+
+TEST_CASE("Frame coordinator keeps monotonic Timer independent of clamped dt") {
+  cadenza::system::SystemServiceHost host;
+  cadenza::AppRuntime runtime;
+  FrameProbeApp app;
+  constexpr cadenza::AppId kHome{0x7505};
+  REQUIRE(runtime.registerApp(
+      kHome, app, false,
+      cadenza::AppCapabilitySet{cadenza::AppCapability::SettingsWrite} |
+          cadenza::AppCapability::TimerControl));
+  REQUIRE(runtime.configureHome(kHome));
+  REQUIRE(runtime.begin(kHome));
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+
+  cadenza::system::FrameCoordinator::runFrameAt(host, runtime, canvas, 5000,
+                                                0.05F, {});
+  REQUIRE(host.submit({cadenza::ResourceOwner::app(kHome),
+                       cadenza::SystemCommand::startTimer(60000), 0}));
+  host.commitCommands();
+  cadenza::system::FrameCoordinator::runFrameAt(host, runtime, canvas, 65000,
+                                                0.05F, {});
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Expired);
+}
+
+TEST_CASE("Timer expiry emits one alert per bounded cadence and ack stops it") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7506};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  host.beginFrameAt(1000, 0.0F);
+  REQUIRE(commands.submit(cadenza::SystemCommand::startTimer(60000)));
+  host.commitCommands();
+  host.beginFrameAt(61000, 0.0F);
+  CHECK(host.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::TimerComplete);
+  CHECK(host.sound().pendingCommandCount() == 1);
+
+  host.beginFrameAt(61000 + 60 * 60000, 0.0F);
+  CHECK(host.sound().pendingCommandCount() == 2);
+  host.beginFrameAt(61000 + 60 * 60000 + 1, 0.0F);
+  CHECK(host.sound().pendingCommandCount() == 2);
+
+  REQUIRE(host.submit(cadenza::SystemCommand::acknowledgeTimer()));
+  host.commitCommands();
+  std::array<std::int16_t, 2048> samples{};
+  samples.fill(1234);
+  host.renderAudio(samples.data(), samples.size());
+  CHECK(std::all_of(samples.begin(), samples.end(),
+                    [](std::int16_t sample) { return sample == 0; }));
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Ready);
+}
+
+TEST_CASE("Muted Timer expiry remains visually expired and renders silence") {
+  cadenza::system::SystemServiceHost host;
+  constexpr cadenza::AppId kCaller{0x7507};
+  FixedCapabilityResolver resolver;
+  resolver.id = kCaller;
+  resolver.capabilities =
+      cadenza::AppCapabilitySet{cadenza::AppCapability::TimerControl};
+  host.bindCapabilityResolver(resolver);
+  cadenza::AppCommandPort commands{kCaller, resolver.capabilities, host};
+
+  REQUIRE(host.submit(cadenza::SystemCommand::setSoundVolume(
+      cadenza::audio::SoundVolume::Muted)));
+  host.commitCommands();
+  std::array<std::int16_t, 64> samples{};
+  host.renderAudio(samples.data(), samples.size());
+  host.beginFrameAt(0, 0.0F);
+  REQUIRE(commands.submit(cadenza::SystemCommand::startTimer(60000)));
+  host.commitCommands();
+  host.beginFrameAt(60000, 0.0F);
+  CHECK(host.snapshot().timer.state == cadenza::TimerState::Expired);
+  samples.fill(1234);
+  host.renderAudio(samples.data(), samples.size());
+  CHECK(std::all_of(samples.begin(), samples.end(),
+                    [](std::int16_t sample) { return sample == 0; }));
+}
+
 TEST_CASE("foreground voice analyzer lease is released when owning App exits") {
   cadenza::system::SystemServiceHost host;
   REQUIRE(host.postPlatformEvent(

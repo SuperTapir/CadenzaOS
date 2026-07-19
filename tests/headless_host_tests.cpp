@@ -98,6 +98,119 @@ TEST_CASE("fresh HeadlessHost replays produce equal per-frame hashes") {
   CHECK(first.runtime().currentId() == second.runtime().currentId());
 }
 
+TEST_CASE("Activation Timer completes through Menu and requires a fresh click") {
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  REQUIRE(host.runtime().open(cadenza::apps::kClockAppId));
+  host.advance(0.81F);
+  REQUIRE_FALSE(host.runtime().transitioning());
+
+  cadenza::InputFrame start;
+  start.clicked = true;
+  host.step(start);
+  REQUIRE(host.services().snapshot().timer.state ==
+          cadenza::TimerState::Running);
+
+  cadenza::InputFrame menuHold;
+  menuHold.longPressed = true;
+  menuHold.heldMs = 650;
+  host.step(menuHold);
+  cadenza::InputFrame menuRelease;
+  menuRelease.released = true;
+  host.step(menuRelease);
+  REQUIRE(host.runtime().systemMenuActive());
+
+  cadenza::InputFrame heldAtExpiry;
+  heldAtExpiry.heldMs = 700;
+  host.advance(600.0F, heldAtExpiry);
+  REQUIRE(host.services().snapshot().timer.state ==
+          cadenza::TimerState::Expired);
+  CHECK(host.runtime().systemSurfaces().timerAlertActive());
+  CHECK_FALSE(host.runtime().systemMenuActive());
+  CHECK(host.services().sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::TimerComplete);
+
+  cadenza::InputFrame staleRelease;
+  staleRelease.released = true;
+  staleRelease.clicked = true;
+  host.step(staleRelease);
+  CHECK(host.services().snapshot().timer.state ==
+        cadenza::TimerState::Expired);
+
+  cadenza::InputFrame acknowledge;
+  acknowledge.released = true;
+  acknowledge.clicked = true;
+  host.step(acknowledge);
+  CHECK(host.services().snapshot().timer.state == cadenza::TimerState::Ready);
+  CHECK(host.services().snapshot().timer.remainingMs == 10 * 60000);
+  host.step();
+  CHECK_FALSE(host.runtime().systemSurfaces().timerAlertActive());
+}
+
+TEST_CASE("Activation Timer supports the complete Launcher repeat workflow") {
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
+  cadenza::InputFrame click;
+  click.clicked = true;
+  click.released = true;
+  host.step(click);
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+  REQUIRE(host.runtime().currentId() == cadenza::apps::kClockAppId);
+
+  host.step(click);
+  REQUIRE(host.services().snapshot().timer.state ==
+          cadenza::TimerState::Running);
+  cadenza::InputFrame menuHold;
+  menuHold.longPressed = true;
+  menuHold.heldMs = 650;
+  host.step(menuHold);
+  cadenza::InputFrame release;
+  release.released = true;
+  host.step(release);
+  cadenza::InputFrame home;
+  home.turn = 1;
+  host.step(home);
+  host.step(click);
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+  REQUIRE(host.runtime().currentId() == cadenza::apps::kLauncherAppId);
+  REQUIRE(host.services().snapshot().timer.state ==
+          cadenza::TimerState::Running);
+
+  host.advance(600.0F);
+  REQUIRE(host.runtime().systemSurfaces().timerAlertActive());
+  host.step(click);
+  REQUIRE(host.services().snapshot().timer.state == cadenza::TimerState::Ready);
+  host.step();
+  host.step(click);
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+  REQUIRE(host.runtime().currentId() == cadenza::apps::kClockAppId);
+  host.step(click);
+  CHECK(host.services().snapshot().timer.state ==
+        cadenza::TimerState::Running);
+}
+
+TEST_CASE("Activation Timer expiry freezes an App transition") {
+  cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::Sharp};
+  REQUIRE(host.runtime().open(cadenza::apps::kClockAppId));
+  host.advance(0.81F);
+  cadenza::InputFrame start;
+  start.clicked = true;
+  host.step(start);
+  REQUIRE(host.runtime().open(cadenza::apps::kMotionAppId));
+  host.advance(0.10F);
+  REQUIRE(host.runtime().transitioning());
+  const float beforeExpiry = host.runtime().transitionProgress();
+  host.advance(600.0F);
+  REQUIRE(host.runtime().systemSurfaces().timerAlertActive());
+  CHECK(host.runtime().transitionProgress() == doctest::Approx(beforeExpiry));
+  host.advance(1.0F);
+  CHECK(host.runtime().transitionProgress() == doctest::Approx(beforeExpiry));
+}
+
 TEST_CASE("framebuffer hash is stable and pixel-sensitive at both profiles") {
   for (const cadenza::FramebufferProfile profile : {
            cadenza::FramebufferProfile::TEmbed,

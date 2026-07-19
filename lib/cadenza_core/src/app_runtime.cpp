@@ -1,6 +1,7 @@
 #include "cadenza/core/app_runtime.h"
 
 #include <algorithm>
+#include <cstdio>
 
 namespace cadenza {
 
@@ -170,8 +171,8 @@ bool AppRuntime::renderHandoffFrame(
   BoundedTextRequest request;
   request.value = catalog.appName(id);
   request.bounds = {bounds.x + 8, bounds.y + 8,
-                    std::max(0, bounds.width - 16),
-                    std::max(0, bounds.height - 16)};
+                    std::max<std::int32_t>(0, bounds.width - 16),
+                    std::max<std::int32_t>(0, bounds.height - 16)};
   request.preferredScale = 3;
   request.minimumScale = 1;
   request.align = TextAlign::MiddleCenter;
@@ -275,6 +276,9 @@ void AppRuntime::handleSystemSurfaceIntent(
                                           : audio::SoundCue::ToggleOn));
       break;
     }
+    case SystemSurfaceIntent::TimerAcknowledge:
+      submit(SystemCommand::acknowledgeTimer());
+      break;
   }
 }
 
@@ -297,7 +301,7 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
   const bool deferredMenuBeforeUpdate = surfaces_.hasDeferredMenu();
   const presentation::SystemSurfaceFrame surfaceFrame =
       surfaces_.update(dt, input, transitioning_, currentId_ == homeId_,
-                       snapshot.motionProfile);
+                       snapshot.motionProfile, snapshot.timer);
   if (surfaceFrame.captureFrozenFrame) {
     if (deferredMenuBeforeUpdate) {
       captureFrozenApp(snapshot);
@@ -306,6 +310,7 @@ void AppRuntime::updateWithSystem(Seconds dt, const InputFrame& input,
     }
   }
   handleSystemSurfaceIntent(surfaceFrame.intent, snapshot);
+  if (surfaces_.timerAlertActive()) return;
   if (!transitioning_) {
     if (surfaceFrame.consumeInput || surfaces_.appSuspended()) return;
     const AppCatalogView catalog{catalog_};
@@ -382,11 +387,30 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
                            0, 0);
   }
   presentation::renderTransientFeedback(canvas, surfaces_);
+  if ((frameSnapshot_.timer.state == TimerState::Running ||
+       frameSnapshot_.timer.state == TimerState::Paused) &&
+      frameSnapshot_.timer.owner != currentId_) {
+    const std::uint32_t remainingMinutes =
+        (frameSnapshot_.timer.remainingMs +
+         static_cast<std::uint32_t>(kTimerMinuteMs) - 1U) /
+        static_cast<std::uint32_t>(kTimerMinuteMs);
+    char indicator[16];
+    std::snprintf(indicator, sizeof(indicator), "%c %02u",
+                  frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
+                  static_cast<unsigned>(remainingMinutes));
+    const int indicatorWidth = 42;
+    canvas.fillRect(2, 2, indicatorWidth, 14, true);
+    canvas.text(indicator, 2 + indicatorWidth / 2, 9, 1, false,
+                TextAlign::MiddleCenter);
+  }
   if (surfaces_.menuActive()) {
     presentation::renderSystemMenu(
         canvas, incomingFrame_, surfaces_.selection(),
         currentId_ == homeId_, frameSnapshot_, surfaces_.revealProgress(),
         surfaces_.menuClosing());
+  }
+  if (surfaces_.timerAlertActive()) {
+    presentation::renderTimerAlert(canvas, frameSnapshot_.timer);
   }
 }
 

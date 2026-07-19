@@ -11,7 +11,12 @@
 
 namespace cadenza::presentation {
 
-enum class SurfaceKind : std::uint8_t { None, SystemMenu, Dialog };
+enum class SurfaceKind : std::uint8_t {
+  None,
+  SystemMenu,
+  Dialog,
+  TimerAlert,
+};
 
 enum class SystemMenuItem : std::uint8_t {
   Resume,
@@ -38,6 +43,7 @@ enum class SystemSurfaceIntent : std::uint8_t {
   Sound,
   Motion,
   Boundary,
+  TimerAcknowledge,
 };
 
 struct SystemSurfaceDiagnostics {
@@ -68,7 +74,8 @@ class SystemSurfaceCoordinator {
                             bool appTransitioning,
                             bool homeCurrent = false,
                             MotionProfile motionProfile =
-                                MotionProfile::Normal) noexcept;
+                                MotionProfile::Normal,
+                            TimerSnapshot timer = {}) noexcept;
   void notifyTransitionStable() noexcept;
 
   bool requestInteractive(SurfaceKind kind) noexcept;
@@ -82,8 +89,12 @@ class SystemSurfaceCoordinator {
     return interactive_ == SurfaceKind::SystemMenu;
   }
   bool menuClosing() const noexcept { return menuClosing_; }
+  bool timerAlertActive() const noexcept {
+    return interactive_ == SurfaceKind::TimerAlert;
+  }
   bool appSuspended() const noexcept {
-    return menuActive() || deferredMenu_ || captureUntilRelease_;
+    return menuActive() || timerAlertActive() || deferredMenu_ ||
+           captureUntilRelease_;
   }
   bool hasDeferredMenu() const noexcept { return deferredMenu_; }
   SurfaceKind interactiveKind() const noexcept { return interactive_; }
@@ -111,6 +122,8 @@ class SystemSurfaceCoordinator {
   bool deferredMenu_ = false;
   bool openWhenStable_ = false;
   bool menuClosing_ = false;
+  bool timerAlertArmed_ = false;
+  bool buttonSequenceActive_ = false;
   float revealProgress_ = 0.0F;
   MotionProfile menuMotionProfile_ = MotionProfile::Normal;
   std::array<TransientFeedback, kTransientCapacity> transients_{};
@@ -159,5 +172,6 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
                       bool closing) noexcept;
 void renderTransientFeedback(MonoCanvas& canvas,
                              const SystemSurfaceCoordinator& surfaces) noexcept;
+void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer = {}) noexcept;
 
 }  // namespace cadenza::presentation

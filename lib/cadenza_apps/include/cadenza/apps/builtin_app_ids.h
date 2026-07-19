@@ -21,7 +21,11 @@ constexpr AppCapabilitySet builtinAppCapabilities(AppId id) noexcept {
            AppCapability::NetworkAcquire |
            AppCapability::ProvisioningManage;
   }
-  if (id == kClockAppId || id == kMotionAppId || id == kGalleryAppId) {
+  if (id == kClockAppId) {
+    return AppCapabilitySet{AppCapability::SoundPlay} |
+           AppCapability::TimerControl;
+  }
+  if (id == kMotionAppId || id == kGalleryAppId) {
     return AppCapabilitySet{AppCapability::SoundPlay};
   }
   return {};

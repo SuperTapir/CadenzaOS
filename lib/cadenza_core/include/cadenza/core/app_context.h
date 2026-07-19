@@ -10,6 +10,7 @@
 #include "cadenza/core/core_types.h"
 #include "cadenza/core/diagnostics.h"
 #include "cadenza/core/input.h"
+#include "cadenza/core/timer_types.h"
 #include "cadenza/core/voice_types.h"
 
 namespace cadenza {
@@ -68,6 +69,7 @@ struct SystemSnapshot {
   bool soundOutputAvailable = false;
   ConnectivitySnapshot connectivity{};
   VoiceSnapshot voice{};
+  TimerSnapshot timer{};
 };
 
 enum class SystemCommandType : std::uint8_t {
@@ -82,6 +84,11 @@ enum class SystemCommandType : std::uint8_t {
   SetBluetoothAdvertisingRequested,
   SetBluetoothScanningRequested,
   EmitDiagnostic,
+  StartTimer,
+  PauseTimer,
+  ResumeTimer,
+  SetTimerRemaining,
+  AcknowledgeTimer,
 };
 
 constexpr AppCapability requiredCapability(
@@ -105,6 +112,12 @@ constexpr AppCapability requiredCapability(
       return AppCapability::BluetoothControl;
     case SystemCommandType::EmitDiagnostic:
       return AppCapability::DiagnosticEmit;
+    case SystemCommandType::StartTimer:
+    case SystemCommandType::PauseTimer:
+    case SystemCommandType::ResumeTimer:
+    case SystemCommandType::SetTimerRemaining:
+    case SystemCommandType::AcknowledgeTimer:
+      return AppCapability::TimerControl;
   }
   return AppCapability::Count;
 }
@@ -120,6 +133,7 @@ struct SystemCommand {
   bool resetCredentialsConfirmed = false;
   bool bluetoothRoleRequested = false;
   DiagnosticEvent diagnostic{};
+  std::uint64_t timerDurationMs = 0;
 
   static SystemCommand playSound(audio::SoundCue cue) noexcept {
     SystemCommand command;
@@ -197,6 +211,38 @@ struct SystemCommand {
     SystemCommand command;
     command.type = SystemCommandType::EmitDiagnostic;
     command.diagnostic = event;
+    return command;
+  }
+
+  static SystemCommand startTimer(std::uint64_t durationMs) noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::StartTimer;
+    command.timerDurationMs = durationMs;
+    return command;
+  }
+
+  static SystemCommand pauseTimer() noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::PauseTimer;
+    return command;
+  }
+
+  static SystemCommand resumeTimer() noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::ResumeTimer;
+    return command;
+  }
+
+  static SystemCommand setTimerRemaining(std::uint64_t durationMs) noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::SetTimerRemaining;
+    command.timerDurationMs = durationMs;
+    return command;
+  }
+
+  static SystemCommand acknowledgeTimer() noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::AcknowledgeTimer;
     return command;
   }
 };

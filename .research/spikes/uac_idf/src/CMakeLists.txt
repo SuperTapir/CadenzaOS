@@ -22,6 +22,7 @@ if(CONFIG_CADENZA_T_EMBED_RUNTIME)
     "${cadenza_root}/lib/cadenza_system/src/system_service_host.cpp"
     "${cadenza_root}/lib/cadenza_system/src/system_resource_leases.cpp"
     "${cadenza_root}/lib/cadenza_system/src/connectivity_service.cpp"
+    "${cadenza_root}/lib/cadenza_system/src/timer_service.cpp"
     "${cadenza_root}/third_party/u8g2/src/u8g2_bitmap.c"
     "${cadenza_root}/third_party/u8g2/src/u8g2_box.c"
     "${cadenza_root}/third_party/u8g2/src/u8g2_buffer.c"

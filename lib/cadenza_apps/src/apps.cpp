@@ -58,16 +58,16 @@ void fillWithin(MonoCanvas& canvas, Rect rect, Rect viewport,
 void borderWithin(MonoCanvas& canvas, Rect rect, Rect viewport,
                   bool black) noexcept {
   if (rect.width <= 0 || rect.height <= 0) return;
-  const int left = rect.x;
-  const int right = rect.x + rect.width - 1;
-  const int top = rect.y;
-  const int bottom = rect.y + rect.height - 1;
-  const int viewportRight = viewport.x + viewport.width - 1;
-  const int viewportBottom = viewport.y + viewport.height - 1;
-  const int horizontalLeft = std::max(left, viewport.x);
-  const int horizontalRight = std::min(right, viewportRight);
-  const int verticalTop = std::max(top, viewport.y);
-  const int verticalBottom = std::min(bottom, viewportBottom);
+  const std::int32_t left = rect.x;
+  const std::int32_t right = rect.x + rect.width - 1;
+  const std::int32_t top = rect.y;
+  const std::int32_t bottom = rect.y + rect.height - 1;
+  const std::int32_t viewportRight = viewport.x + viewport.width - 1;
+  const std::int32_t viewportBottom = viewport.y + viewport.height - 1;
+  const std::int32_t horizontalLeft = std::max(left, viewport.x);
+  const std::int32_t horizontalRight = std::min(right, viewportRight);
+  const std::int32_t verticalTop = std::max(top, viewport.y);
+  const std::int32_t verticalBottom = std::min(bottom, viewportBottom);
   if (horizontalLeft <= horizontalRight && top >= viewport.y &&
       top <= viewportBottom) {
     canvas.line(horizontalLeft, top, horizontalRight, top, black);
@@ -89,8 +89,8 @@ void borderWithin(MonoCanvas& canvas, Rect rect, Rect viewport,
 Rect inset(Rect rect, int amount) noexcept {
   if (amount <= 0) return rect;
   return {rect.x + amount, rect.y + amount,
-          std::max(0, rect.width - amount * 2),
-          std::max(0, rect.height - amount * 2)};
+          std::max<std::int32_t>(0, rect.width - amount * 2),
+          std::max<std::int32_t>(0, rect.height - amount * 2)};
 }
 
 void renderFallbackCover(MonoCanvas& canvas, Rect bounds,
@@ -98,8 +98,10 @@ void renderFallbackCover(MonoCanvas& canvas, Rect bounds,
   if (!hasArea(bounds)) return;
   canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, false);
   if (bounds.width < 34 || bounds.height < 20) return;
-  const int iconSize = std::min(24, std::max(8, bounds.height / 4));
-  const int iconX = bounds.x + std::max(7, bounds.width / 14);
+  const std::int32_t iconSize =
+      std::min<std::int32_t>(24, std::max<std::int32_t>(8, bounds.height / 4));
+  const std::int32_t iconX =
+      bounds.x + std::max<std::int32_t>(7, bounds.width / 14);
   const int iconY = bounds.y + (bounds.height - iconSize) / 2;
   canvas.rect(iconX, iconY, iconSize, iconSize, true);
   const Rect textBounds{iconX + iconSize + 8, bounds.y + 5,
@@ -199,27 +201,57 @@ void blendCenteredCoverIntoTarget(
   }
 }
 
-void renderClockScreen(MonoCanvas& canvas, float elapsed, float phase,
-                       bool running) noexcept {
+void renderClockScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
+                       std::uint32_t selectedDurationMs) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
-  const int seconds = static_cast<int>(elapsed);
+  const std::uint32_t displayMs = timer.state == TimerState::Ready
+                                      ? selectedDurationMs
+                                      : timer.remainingMs;
+  const std::uint32_t seconds = (displayMs + 999U) / 1000U;
   char value[16];
-  std::snprintf(value, sizeof(value), "%02d:%02d", (seconds / 60) % 100,
-                seconds % 60);
-  const int sweep = static_cast<int>(std::fmod(elapsed, 1.0F) * width);
-  canvas.fillRect(0, 0, sweep, 9, true);
-  canvas.text("CHRONO 01", 12, 24, 2, true);
-  canvas.text(value, width / 2, height / 2, 4, true,
-              TextAlign::MiddleCenter);
-  for (int x = -10; x < width + 10; x += 16) {
-    const int wobble =
-        static_cast<int>(std::sin(phase * 5.0F + x * 0.08F) * 5.0F);
-    canvas.fillCircle(x, height - 35 + wobble, 3, true);
+  std::snprintf(value, sizeof(value), "%02u:%02u",
+                static_cast<unsigned>((seconds / 60U) % 100U),
+                static_cast<unsigned>(seconds % 60U));
+
+  const char* state = "READY";
+  const char* action = "TURN: MINUTES   PRESS: START";
+  if (timer.state == TimerState::Running) {
+    state = "ACTIVE";
+    action = "PRESS: PAUSE";
+  } else if (timer.state == TimerState::Paused) {
+    state = "PAUSED";
+    action = "TURN: ADJUST   PRESS: RESUME";
+  } else if (timer.state == TimerState::Expired) {
+    state = "TIME UP";
+    action = "PRESS TO ACKNOWLEDGE";
   }
-  canvas.text(running ? "PRESS TO PAUSE" : "PRESS TO RUN", 12,
-              height - 12, 1, true, TextAlign::BottomLeft);
+
+  canvas.text("ACTIVATION TIMER", 12, 16, 1, true,
+              TextAlign::MiddleLeft);
+  canvas.fillRect(width - 72, 7, 60, 18, true);
+  canvas.text(state, width - 42, 16, 1, false,
+              TextAlign::MiddleCenter);
+  canvas.text(value, width / 2, height / 2 - 8,
+              width >= 400 ? 5 : 4, true,
+              TextAlign::MiddleCenter);
+
+  const std::uint32_t total = std::max<std::uint32_t>(
+      1, timer.state == TimerState::Ready ? selectedDurationMs
+                                         : timer.configuredDurationMs);
+  const int trackX = 12;
+  const int trackWidth = width - 24;
+  const int trackY = height - 48;
+  canvas.rect(trackX, trackY, trackWidth, 13, true);
+  const int mass = static_cast<int>(
+      (static_cast<std::uint64_t>(trackWidth - 4) * displayMs) / total);
+  if (mass > 0) canvas.fillRect(trackX + 2, trackY + 2, mass, 9, true);
+  for (int tick = 0; tick <= 10; ++tick) {
+    const int x = trackX + (trackWidth - 1) * tick / 10;
+    canvas.line(x, trackY - (tick % 5 == 0 ? 5 : 3), x, trackY - 1, true);
+  }
+  canvas.text(action, 12, height - 12, 1, true, TextAlign::BottomLeft);
   canvas.text("HOLD: HOME", width - 12, height - 12, 1, true,
               TextAlign::BottomRight);
 }
@@ -487,29 +519,79 @@ void LauncherApp::render(MonoCanvas& canvas,
   }
 }
 
-void ClockApp::onEnter() noexcept { phase_ = 0.0F; }
-
 void ClockApp::update(const AppUpdateContext& context) noexcept {
-  const Seconds dt = context.dt;
   const InputFrame& input = context.input;
-  phase_ += dt;
-  if (running_) elapsed_ += dt;
+  const TimerSnapshot& timer = context.system.timer;
+  if (!hasObservedTimerState_ || timer.state != observedTimerState_) {
+    if (timer.state == TimerState::Ready) {
+      selectedDurationMs_ = timer.configuredDurationMs;
+    }
+    observedTimerState_ = timer.state;
+    hasObservedTimerState_ = true;
+  }
+
   if (input.clicked) {
-    running_ = !running_;
-    context.commands.submit(SystemCommand::playSound(
-        running_ ? audio::SoundCue::ToggleOn : audio::SoundCue::ToggleOff));
+    SystemCommand command;
+    audio::SoundCue cue = audio::SoundCue::Boundary;
+    bool actionable = true;
+    switch (timer.state) {
+      case TimerState::Ready:
+        command = SystemCommand::startTimer(selectedDurationMs_);
+        cue = audio::SoundCue::ToggleOn;
+        break;
+      case TimerState::Running:
+        command = SystemCommand::pauseTimer();
+        cue = audio::SoundCue::ToggleOff;
+        break;
+      case TimerState::Paused:
+        command = SystemCommand::resumeTimer();
+        cue = audio::SoundCue::ToggleOn;
+        break;
+      case TimerState::Expired:
+        actionable = false;
+        break;
+    }
+    if (actionable && context.commands.submit(command)) {
+      context.commands.submit(SystemCommand::playSound(cue));
+    }
+    return;
   }
-  if (input.turn) {
-    const float previous = elapsed_;
-    elapsed_ = std::max(0.0F, elapsed_ + input.turn * 10.0F);
-    context.commands.submit(SystemCommand::playSound(
-        elapsed_ == previous ? audio::SoundCue::Boundary
-                             : audio::SoundCue::Navigate));
+
+  if (input.turn == 0) return;
+  if (timer.state == TimerState::Running ||
+      timer.state == TimerState::Expired) {
+    if (timer.state == TimerState::Running) {
+      context.commands.submit(
+          SystemCommand::playSound(audio::SoundCue::Boundary));
+    }
+    return;
   }
+
+  const std::uint64_t current = timer.state == TimerState::Ready
+                                    ? selectedDurationMs_
+                                    : timer.remainingMs;
+  const std::int64_t requested =
+      static_cast<std::int64_t>(current) +
+      static_cast<std::int64_t>(input.turn) *
+          static_cast<std::int64_t>(kTimerMinuteMs);
+  const auto adjusted = static_cast<std::uint32_t>(std::max<std::int64_t>(
+      static_cast<std::int64_t>(kTimerMinimumDurationMs),
+      std::min<std::int64_t>(requested,
+                             static_cast<std::int64_t>(
+                                 kTimerMaximumDurationMs))));
+  if (timer.state == TimerState::Ready) {
+    selectedDurationMs_ = adjusted;
+  } else {
+    context.commands.submit(SystemCommand::setTimerRemaining(adjusted));
+  }
+  context.commands.submit(SystemCommand::playSound(
+      adjusted == current ? audio::SoundCue::Boundary
+                          : audio::SoundCue::Navigate));
 }
 
-void ClockApp::render(MonoCanvas& canvas, const AppRenderContext&) noexcept {
-  renderClockScreen(canvas, elapsed_, phase_, running_);
+void ClockApp::render(MonoCanvas& canvas,
+                      const AppRenderContext& context) noexcept {
+  renderClockScreen(canvas, context.system.timer, selectedDurationMs_);
 }
 
 bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
@@ -520,9 +602,9 @@ bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
 
 bool ClockApp::renderLaunchFrame(MonoCanvas& canvas,
                                  float progress,
-                                 const AppRenderContext&) const noexcept {
+                                 const AppRenderContext& context) const noexcept {
   const float p = launchProgress(progress);
-  renderClockScreen(canvas, elapsed_, 0.0F, running_);
+  renderClockScreen(canvas, context.system.timer, selectedDurationMs_);
   blendCenteredCoverIntoTarget(canvas, p, kClockTEmbedCover, kClockCover,
                                true);
   return true;

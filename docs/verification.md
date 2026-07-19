@@ -42,11 +42,20 @@ contract were added:
 | Research/adoption | 16 fixed repositories with commit/license/source boundaries, official Playdate docs, public-device recording analysis, and explicit adopt/reject decisions in the three `audio-*-research.md` documents |
 | Portable synth | wavetable sine, triangle, PolyBLEP square, deterministic xorshift noise, precomputed exponential envelope, finite parameter rejection, minimum ramps, saturating mix, exact ending silence and four-voice priority/age/smooth-steal tests |
 | Concurrency/control | fixed 16-slot SPSC FIFO, four critical slots, no producer overwrite, Navigate cooldown, full-queue overflow evidence, and out-of-band Muted/StopAll safety mailbox; a saturated 16-critical-cue queue still renders immediate zero |
-| Semantic integration | Input/Action/Outcome/System expose 15 stable cues; Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes remain covered in bundled Apps, app-open and System Menu tests；长按现在打开系统菜单，显式 Home 动作使用 Back transition |
+| Semantic integration | Input/Action/Outcome/System expose 16 stable cues including TimerComplete; Navigate/Boundary/Confirm/Back/ToggleOn/ToggleOff/Reject routes remain covered in bundled Apps, app-open and System Menu tests；长按现在打开系统菜单，显式 Home 动作使用 Back transition |
 | Headless PCM | a real Launcher turn renders 2,048 deterministic samples, hash `14994789996363689834`, nonzero bounded peak; every cue also has a 44,100-sample golden and exact silent tail |
 | SDL | SDL3 3.4.12 dummy callback consumes independently of App updates, no-device failure preserves portable service, stop prevents later callbacks; real executable passes three frames at both profiles with dummy video+audio drivers |
 | T-Embed adapter | host test locks GPIO 7/5/6 and right-left mono duplication; the real adapter is compiled against ESP-IDF/FreeRTOS stubs and injected with install, pin, task, partial-write and fatal-write failures; locked PlatformIO Arduino-ESP32 2.0.17 release compiles and links the independent core-0 legacy-I²S task |
-| Asset workflow | all 15 cues plus four family demos export as valid 44.1 kHz, 16-bit mono RIFF/WAVE; local Select/Turn On/Turn Off references are rejected by the shared-source audit and are not build inputs |
+| Asset workflow | all 16 cues plus four family demos export as valid 44.1 kHz, 16-bit mono RIFF/WAVE; local Select/Turn On/Turn Off references are rejected by the shared-source audit and are not build inputs |
+
+## Activation Timer 软件验证
+
+2026-07-19 的 `build-activation-timer-app` 结果见
+[`activation-timer-implementation-report.md`](activation-timer-implementation-report.md)：
+normal/strict/ASan+UBSan 各 73/73，双 profile SDL dummy、PlatformIO T-Embed、
+OpenSpec/source/research/diff gates 通过。headless 和 desktop InputReducer E2E 覆盖
+后台计时、System Menu Home、其他 App/transition 到期、held-button capture、确认停音
+和再次开始。实体旋钮手感、屏幕、响度、疲劳与长时间运行仍待真机，不以软件结果代替。
 
 Fresh gates after integration with the system-service foundation and the
 Confirm/Back calibration fix:
@@ -145,7 +154,7 @@ single broad green build:
 | four voices/smooth steal | priority, oldest-age selection, low-priority rejection, 64-sample release and outgoing-gain regression | automated pass |
 | saturating mix | four over-gain voices reach int16 bounds without wrapping; ASan/UBSan pass | automated pass |
 | fixed SPSC queue | FIFO, reserve, overflow/no-replay and saturated-critical-queue immediate mute tests | automated pass |
-| semantic vocabulary | 15 stable names/definitions/goldens across four families; Runtime/App tests preserve all seven existing business routes | automated pass |
+| semantic vocabulary | 16 stable names/definitions/goldens across four families; Runtime/App tests preserve all seven existing business routes and TimerComplete | automated pass |
 | restrained directional language | per-cue duration/tone-count/ramp tests; Confirm/ToggleOn up and Back/ToggleOff down | automated pass; taste pending hardware |
 | high-frequency suppression | one cue for large-turn frame, 25 ms cooldown, drop/no-later-play and post-cooldown tests | automated pass |
 | volume/mute/visual equivalence | four-level cycle/order, active and saturated-queue mute, Settings immediate framebuffer change at both profiles and muted visual interaction | automated pass |

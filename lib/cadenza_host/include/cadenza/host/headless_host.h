@@ -62,6 +62,8 @@ class DeterministicRunner {
   void render() noexcept;
   void step(const InputFrame& input = {}) noexcept;
   void advance(Seconds delta, const InputFrame& input = {}) noexcept;
+  void advanceAt(MonotonicMillis nowMs, Seconds presentationDelta,
+                 const InputFrame& input = {}) noexcept;
 
   template <std::size_t Capacity>
   void runFrames(FrameIndex count,
@@ -85,6 +87,8 @@ class DeterministicRunner {
   system::SystemServiceHost* services_ = nullptr;
   Seconds fixedDelta_ = 1.0F / 60.0F;
   Seconds simulationSeconds_ = 0.0F;
+  MonotonicMillis simulationNowMs_ = 0;
+  double simulationSubmillis_ = 0.0;
   FrameIndex frameIndex_ = 0;
 };
 
@@ -102,6 +106,12 @@ class HeadlessHost {
   void advance(Seconds delta, const InputFrame& input = {}) noexcept {
     connectivity_.pump();
     runner_.advance(delta, input);
+    connectivity_.pump();
+  }
+  void advanceAt(MonotonicMillis nowMs, Seconds presentationDelta,
+                 const InputFrame& input = {}) noexcept {
+    connectivity_.pump();
+    runner_.advanceAt(nowMs, presentationDelta, input);
     connectivity_.pump();
   }
   void renderAudio(std::int16_t* samples, std::size_t count) noexcept {

@@ -20,6 +20,7 @@ raw input ──→ InputReducer ──→ frozen SystemSnapshot + AppUpdateCont
 ES7210/I²S1 ──→ 48 kHz voice coordinator ──┬─→ analyzer snapshot ─→ Apps
                                            └─→ UAC packetizer ───→ macOS
 SoundCue ─────→ 44.1 kHz sound service ───────→ I²S0 / SDL / headless
+monotonic now ─→ TimerService deadline ─→ snapshot / critical TimerAlert
 ```
 
 ## 平台负责什么
@@ -37,6 +38,8 @@ SoundCue ─────→ 44.1 kHz sound service ───────→ I²S
   独立音频消费者；应用不得操作 SDL、I²S、WAV 路径或任意 oscillator。
 - 拥有 voice capture 生命周期、consumer fan-out、隐私状态与错误降级；App 不得
   取得 raw PCM、codec、DMA、USB、Wi-Fi 或 BLE callback。
+- 拥有单一 `TimerService`、单调 deadline、后台 indicator 与 critical alert；App
+  不读取平台时钟，也不在自身 `dt` 中累计倒计时。
 
 ## 应用负责什么
 
@@ -112,7 +115,7 @@ App 与 Runtime 只在状态实际变化时提交 `SoundCue`。16 项固定 SPSC
 44.1 kHz、S16、mono PCM。T-Embed adapter 只负责将 mono 复制为 right-left
 I²S frame；任何平台 adapter 都不得另写一套音色。
 
-当前音色是集中在 `sound_cue_library.cpp` 的 15 项参数合成 palette。四声部
+当前音色是集中在 `sound_cue_library.cpp` 的 16 项参数合成 palette。四声部
 `AudioEngine` 提供 wavetable Sine、预计算指数包络与二次谐波；固定容量的
 consumer-owned event 调度器支持 sample-offset 延迟，Muted/StopAll 会同时清空
 当前声部和未来 event。它不是不可替换的产品资产；未来 WAV 仍映射到相同
@@ -130,6 +133,11 @@ Wi-Fi/Bluetooth LE 等 typed event 摄取进 host。App 只看到稳定的
 `beginFrame()` 在预算内摄取事件并冻结 update snapshot，App update 只排队命令，
 `commitCommands()` 按 FIFO 提交并生成同帧 render snapshot。队列满、拒绝原因和
 high-water 都可观测，避免把中断/SDK 线程变成隐式重入路径。
+
+Timer 使用同一 frame transaction，但时间真相来自显式 `beginFrameAt(nowMs, dt)`：
+firmware、SDL 和 headless 分别注入各自 64-bit 单调时间。动画 `dt` 为零或被 clamp
+不会暂停 Timer；只有 Pause 命令会。到期 edge 在 begin phase 产生一次 bounded
+alert 请求，App command 仍在 commit phase 生效。
 
 ### App 能力路由不是进程沙箱
 

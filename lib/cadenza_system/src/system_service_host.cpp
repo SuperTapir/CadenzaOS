@@ -56,6 +56,14 @@ bool SystemServiceHost::validCommand(const SystemCommand& command) const noexcep
       return true;
     case SystemCommandType::EmitDiagnostic:
       return true;
+    case SystemCommandType::StartTimer:
+    case SystemCommandType::SetTimerRemaining:
+      return command.timerDurationMs >= kTimerMinimumDurationMs &&
+             command.timerDurationMs <= kTimerMaximumDurationMs;
+    case SystemCommandType::PauseTimer:
+    case SystemCommandType::ResumeTimer:
+    case SystemCommandType::AcknowledgeTimer:
+      return true;
   }
   return false;
 }
@@ -295,12 +303,80 @@ bool SystemServiceHost::apply(
         diagnosticSink_->emit(redactedDiagnostic(command.diagnostic));
       }
       return true;
+    case SystemCommandType::StartTimer:
+    case SystemCommandType::PauseTimer:
+    case SystemCommandType::ResumeTimer:
+    case SystemCommandType::SetTimerRemaining: {
+      if (operation.owner.kind != ResourceOwnerKind::App) {
+        reject(SystemRejection::InvalidCaller, true);
+        return false;
+      }
+      TimerRequestResult result = TimerRequestResult::InvalidState;
+      if (command.type == SystemCommandType::StartTimer) {
+        result = timer_.start(operation.owner.appId, command.timerDurationMs);
+      } else if (command.type == SystemCommandType::PauseTimer) {
+        result = timer_.pause(operation.owner.appId);
+      } else if (command.type == SystemCommandType::ResumeTimer) {
+        result = timer_.resume(operation.owner.appId);
+      } else {
+        result = timer_.setRemaining(operation.owner.appId,
+                                     command.timerDurationMs);
+      }
+      snapshot_.timer = timer_.snapshot();
+      if (result == TimerRequestResult::Accepted) return true;
+      reject(result == TimerRequestResult::NotOwner
+                 ? SystemRejection::NotOwner
+                 : result == TimerRequestResult::InvalidDuration
+                       ? SystemRejection::InvalidDuration
+                       : SystemRejection::InvalidState,
+             true);
+      return false;
+    }
+    case SystemCommandType::AcknowledgeTimer: {
+      if (operation.owner.kind != ResourceOwnerKind::System) {
+        reject(SystemRejection::InvalidCaller, true);
+        return false;
+      }
+      const TimerRequestResult result = timer_.acknowledge();
+      snapshot_.timer = timer_.snapshot();
+      if (result == TimerRequestResult::Accepted) {
+        nextTimerAlertMs_ = 0;
+        sound_.stopAll();
+        return true;
+      }
+      reject(SystemRejection::InvalidState, true);
+      return false;
+    }
   }
   return false;
 }
 
 const SystemSnapshot& SystemServiceHost::beginFrame(Seconds dt) noexcept {
-  sound_.advance(std::max(0.0F, dt));
+  const double elapsedMs = static_cast<double>(std::max(0.0F, dt)) * 1000.0 +
+                           fallbackSubmillis_;
+  const auto wholeMs = static_cast<MonotonicMillis>(elapsedMs);
+  fallbackSubmillis_ = elapsedMs - static_cast<double>(wholeMs);
+  fallbackNowMs_ += wholeMs;
+  return beginFrameAt(fallbackNowMs_, dt);
+}
+
+const SystemSnapshot& SystemServiceHost::beginFrameAt(
+    MonotonicMillis nowMs, Seconds presentationDt) noexcept {
+  if (nowMs >= fallbackNowMs_) {
+    fallbackNowMs_ = nowMs;
+    fallbackSubmillis_ = 0.0;
+  }
+  const bool expiredNow = timer_.advanceTo(nowMs);
+  snapshot_.timer = timer_.snapshot();
+  if (expiredNow) {
+    sound_.play(audio::SoundCue::TimerComplete);
+    nextTimerAlertMs_ = nowMs + kTimerAlertRepeatMs;
+  } else if (snapshot_.timer.state == TimerState::Expired &&
+             nextTimerAlertMs_ != 0 && nowMs >= nextTimerAlertMs_) {
+    sound_.play(audio::SoundCue::TimerComplete);
+    nextTimerAlertMs_ = nowMs + kTimerAlertRepeatMs;
+  }
+  sound_.advance(std::max(0.0F, presentationDt));
   const std::size_t eventBudget =
       std::min(config_.platformEventBudgetPerFrame, eventCount_);
   for (std::size_t index = 0; index < eventBudget; ++index) {
@@ -310,7 +386,7 @@ const SystemSnapshot& SystemServiceHost::beginFrame(Seconds dt) noexcept {
     ++diagnostics_.ingestedPlatformEvents;
   }
   connectivity_.advance(static_cast<std::uint32_t>(
-      std::max(0.0F, dt) * 1000.0F));
+      std::max(0.0F, presentationDt) * 1000.0F));
   ResourceOwner releasedProvisioningOwner;
   while (connectivity_.takeReleasedProvisioningOwner(
       releasedProvisioningOwner)) {

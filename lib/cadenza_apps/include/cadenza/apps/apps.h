@@ -41,7 +41,6 @@ class LauncherApp final : public App {
 class ClockApp final : public App {
  public:
   const char* name() const noexcept override { return "Clock"; }
-  void onEnter() noexcept override;
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
@@ -52,9 +51,10 @@ class ClockApp final : public App {
                          const AppRenderContext& context) const noexcept override;
 
  private:
-  bool running_ = true;
-  float elapsed_ = 0.0F;
-  float phase_ = 0.0F;
+  std::uint32_t selectedDurationMs_ =
+      static_cast<std::uint32_t>(kTimerDefaultDurationMs);
+  TimerState observedTimerState_ = TimerState::Ready;
+  bool hasObservedTimerState_ = false;
 };
 
 class MotionApp final : public App {

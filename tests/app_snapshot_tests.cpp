@@ -250,7 +250,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
        5609633100608380107ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
-       2172376209712558838ULL},
+       8752186736345292702ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11046562126395087774ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
@@ -260,7 +260,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
        17517733931075453906ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kClockAppId,
-       8667913246713477979ULL},
+       9246543181918641567ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        2956592992690758759ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
@@ -297,16 +297,16 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
-      {{2978872973827686259ULL, 9220982418828621297ULL,
+      {{7251259520777499076ULL, 9220982418828621297ULL,
         1468151701910592970ULL, 14891017424807287687ULL,
-        9650148204554733528ULL, 3276157608869946292ULL,
-        16680032181822085337ULL,
-        2789452226294592942ULL}},
-      {{6174256849267322839ULL, 9523255443439037511ULL,
+        9650148204554733528ULL, 9728955604062195180ULL,
+        11071243504120899380ULL,
+        13930926307166879760ULL}},
+      {{11858611271484384974ULL, 9523255443439037511ULL,
         419754723397813682ULL, 5530436456025056936ULL,
-        12400022947900115971ULL, 6508265349418756835ULL,
-        10253295035054357084ULL,
-        11715812992187396753ULL}},
+        12400022947900115971ULL, 16231365632287054465ULL,
+        3124774116065354519ULL,
+        13265856509170503687ULL}},
   }};
   for (std::size_t profileIndex = 0; profileIndex < profiles.size();
        ++profileIndex) {

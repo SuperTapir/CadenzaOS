@@ -15,6 +15,7 @@ enum class AppCapability : std::uint8_t {
   ProvisioningManage,
   BluetoothControl,
   DiagnosticEmit,
+  TimerControl,
   Count,
 };
 

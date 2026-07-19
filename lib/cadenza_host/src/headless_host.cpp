@@ -62,9 +62,21 @@ void DeterministicRunner::step(const InputFrame& input) noexcept {
 void DeterministicRunner::advance(Seconds delta,
                                   const InputFrame& input) noexcept {
   if (delta < 0.0F) delta = 0.0F;
+  const double elapsedMs = static_cast<double>(delta) * 1000.0 +
+                           simulationSubmillis_;
+  const auto wholeMs = static_cast<MonotonicMillis>(elapsedMs);
+  simulationSubmillis_ = elapsedMs - static_cast<double>(wholeMs);
+  simulationNowMs_ += wholeMs;
+  advanceAt(simulationNowMs_, delta, input);
+}
+
+void DeterministicRunner::advanceAt(MonotonicMillis nowMs, Seconds delta,
+                                    const InputFrame& input) noexcept {
+  if (delta < 0.0F) delta = 0.0F;
+  if (nowMs >= simulationNowMs_) simulationNowMs_ = nowMs;
   if (services_) {
-    system::FrameCoordinator::runFrame(*services_, runtime_, canvas_, delta,
-                                       input);
+    system::FrameCoordinator::runFrameAt(*services_, runtime_, canvas_, nowMs,
+                                         delta, input);
   } else {
     runtime_.update(delta, input);
     render();

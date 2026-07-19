@@ -167,6 +167,18 @@ const std::array<SoundCueDefinition,
                            2, 0.004F, 0.018F),
                  0.270F)}},
          3},
+        {{{event(resonator(523.25F, 659.25F, 0.160F, 0.30F, 0.060F, 0.00F,
+                           3, 0.002F, 0.012F)),
+           event(resonator(659.25F, 783.99F, 0.160F, 0.28F, 0.060F, 0.11F,
+                           3, 0.002F, 0.012F),
+                 0.180F),
+           event(resonator(523.25F, 659.25F, 0.160F, 0.30F, 0.060F, 0.22F,
+                           3, 0.002F, 0.012F),
+                 0.360F),
+           event(resonator(783.99F, 1046.50F, 0.160F, 0.27F, 0.065F, 0.33F,
+                           3, 0.002F, 0.014F),
+                 0.540F)}},
+         4},
     }};
 }  // namespace
 
@@ -207,6 +219,8 @@ const char* soundCueName(SoundCue cue) noexcept {
       return "power-on";
     case SoundCue::PowerOff:
       return "power-off";
+    case SoundCue::TimerComplete:
+      return "timer-complete";
     case SoundCue::Count:
       return "invalid";
   }

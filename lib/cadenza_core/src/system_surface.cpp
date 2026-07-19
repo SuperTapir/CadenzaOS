@@ -1,6 +1,7 @@
 #include "cadenza/presentation/system_surface.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 
 #include "cadenza/animation/easing.h"
@@ -114,8 +115,50 @@ void SystemSurfaceCoordinator::expireTransients(Seconds dt) noexcept {
 
 SystemSurfaceFrame SystemSurfaceCoordinator::update(
     Seconds dt, const InputFrame& input, bool appTransitioning,
-    bool homeCurrent, MotionProfile motionProfile) noexcept {
+    bool homeCurrent, MotionProfile motionProfile,
+    TimerSnapshot timer) noexcept {
   expireTransients(dt);
+  if (input.pressed) buttonSequenceActive_ = true;
+
+  if (timer.state == TimerState::Expired && !timerAlertActive()) {
+    interactive_ = SurfaceKind::TimerAlert;
+    menuArmed_ = false;
+    menuClosing_ = false;
+    deferredMenu_ = false;
+    openWhenStable_ = false;
+    captureUntilRelease_ = false;
+    revealProgress_ = 1.0F;
+    timerAlertArmed_ =
+        !buttonSequenceActive_ && !input.pressed && !input.released &&
+        !input.clicked && !input.longPressed && input.heldMs == 0;
+    ++diagnostics_.opened;
+    return {true, true, SystemSurfaceIntent::None};
+  }
+
+  if (timerAlertActive()) {
+    if (timer.state != TimerState::Expired) {
+      interactive_ = SurfaceKind::None;
+      timerAlertArmed_ = false;
+      if (input.released) buttonSequenceActive_ = false;
+      ++diagnostics_.closed;
+      return {true, false, SystemSurfaceIntent::None};
+    }
+    if (!timerAlertArmed_) {
+      if (input.released) {
+        buttonSequenceActive_ = false;
+        timerAlertArmed_ = true;
+      }
+      return {true, false, SystemSurfaceIntent::None};
+    }
+    if (input.clicked) {
+      if (input.released) buttonSequenceActive_ = false;
+      return {true, false, SystemSurfaceIntent::TimerAcknowledge};
+    }
+    if (input.released) buttonSequenceActive_ = false;
+    return {true, false, SystemSurfaceIntent::None};
+  }
+
+  if (input.released) buttonSequenceActive_ = false;
   if (menuClosing_) {
     if (captureUntilRelease_ && input.released) {
       captureUntilRelease_ = false;
@@ -463,7 +506,8 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
       const int sourceX = layout.panel.x +
           (x - destinationLeft) * layout.panel.width / visibleWidth;
       canvas.pixel(x, y, scratch.pixel(
-          std::min(layout.panel.x + layout.panel.width - 1, sourceX), y));
+          std::min<std::int32_t>(
+              layout.panel.x + layout.panel.width - 1, sourceX), y));
     }
   }
 }
@@ -479,6 +523,30 @@ void renderTransientFeedback(
   canvas.rect(bounds.x, bounds.y, bounds.width, bounds.height, true);
   canvas.text(feedback->text.data(), bounds.x + bounds.width / 2,
               bounds.y + bounds.height / 2, 1, true,
+              TextAlign::MiddleCenter);
+}
+
+void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer) noexcept {
+  const int width = canvas.width();
+  const int height = canvas.height();
+  canvas.fillRect(0, 0, width, height, true);
+  const Rect card{12, 12, width - 24, height - 24};
+  canvas.fillRect(card.x, card.y, card.width, card.height, false);
+  canvas.rect(card.x, card.y, card.width, card.height, true);
+  canvas.rect(card.x + 4, card.y + 4, card.width - 8, card.height - 8, true);
+  canvas.text("TIME UP", width / 2, height / 2 - 20,
+              width >= 400 ? 5 : 4, true, TextAlign::MiddleCenter);
+  char duration[32];
+  const std::uint32_t configuredMinutes =
+      (timer.configuredDurationMs +
+       static_cast<std::uint32_t>(kTimerMinuteMs) - 1U) /
+      static_cast<std::uint32_t>(kTimerMinuteMs);
+  std::snprintf(duration, sizeof(duration), "%u MINUTES COMPLETE",
+                static_cast<unsigned>(configuredMinutes));
+  canvas.text(duration, width / 2, height / 2 + 18, 1,
+              true, TextAlign::MiddleCenter);
+  canvas.fillRect(width / 2 - 64, height - 48, 128, 22, true);
+  canvas.text("PRESS TO CONTINUE", width / 2, height - 37, 1, false,
               TextAlign::MiddleCenter);
 }
 

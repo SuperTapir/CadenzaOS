@@ -1,7 +1,9 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
+#include <esp_timer.h>
 
 #include <algorithm>
+#include <cstdint>
 
 #include "board_pins.h"
 #include "cadenza/core/app_runtime.h"
@@ -29,7 +31,7 @@ cadenza::ClockApp clockApp;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
-uint32_t lastFrameUs = 0;
+std::int64_t lastFrameUs = 0;
 
 struct LcdCommand {
   uint8_t command;
@@ -95,19 +97,21 @@ void setup() {
   if (!audioAvailable) {
     Serial.println("Audio disabled; graphics runtime remains active");
   }
-  lastFrameUs = micros();
+  lastFrameUs = esp_timer_get_time();
 }
 
 void loop() {
   input.sample();
-  const uint32_t now = micros();
-  if (now - lastFrameUs < 16667U) {
+  const std::int64_t now = esp_timer_get_time();
+  if (now - lastFrameUs < 16667) {
     delay(1);
     return;
   }
   const float dt = std::min((now - lastFrameUs) / 1000000.0f, 0.05f);
   lastFrameUs = now;
-  cadenza::system::FrameCoordinator::runFrame(
-      services, runtime, canvas, dt, input.takeFrame());
+  cadenza::system::FrameCoordinator::runFrameAt(
+      services, runtime, canvas,
+      static_cast<cadenza::MonotonicMillis>(now / 1000), dt,
+      input.takeFrame());
   presenter.present(framebuffer);
 }

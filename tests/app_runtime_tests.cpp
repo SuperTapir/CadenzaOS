@@ -29,6 +29,14 @@ std::uint64_t pcmHash(const std::int16_t* samples, std::size_t count) {
   return hash;
 }
 
+std::uint64_t frameHash(const cadenza::MonoFramebuffer& framebuffer) {
+  std::uint64_t hash = 1469598103934665603ULL;
+  for (std::size_t index = 0; index < framebuffer.sizeBytes(); ++index) {
+    hash = (hash ^ framebuffer.data()[index]) * 1099511628211ULL;
+  }
+  return hash;
+}
+
 class FakeApp final : public cadenza::App {
  public:
   FakeApp(const char* appName, std::vector<std::string>& events)
@@ -362,4 +370,30 @@ TEST_CASE("system menu setting action commits through typed system command") {
   CHECK(fixture.services.snapshot().soundVolume ==
         cadenza::audio::SoundVolume::High);
   CHECK(fixture.runtime.systemMenuActive());
+}
+
+TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
+  Fixture fixture;
+  REQUIRE(fixture.runtime.begin(kClockAppId));
+  cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas canvas{framebuffer};
+
+  cadenza::SystemSnapshot snapshot;
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  const std::uint64_t baseline = frameHash(framebuffer);
+
+  snapshot.timer.state = cadenza::TimerState::Running;
+  snapshot.timer.owner = kClockAppId;
+  snapshot.timer.remainingMs = 7 * 60000 + 18000;
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  CHECK(frameHash(framebuffer) == baseline);
+
+  snapshot.timer.owner = kHomeAppId;
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  const std::uint64_t running = frameHash(framebuffer);
+  CHECK(running != baseline);
+
+  snapshot.timer.state = cadenza::TimerState::Paused;
+  fixture.runtime.renderWithSystem(canvas, snapshot);
+  CHECK(frameHash(framebuffer) != running);
 }
