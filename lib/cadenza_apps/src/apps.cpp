@@ -244,23 +244,63 @@ void blendCenteredCoverIntoTarget(
     return;
   }
 
-  for (int y = 0; y < canvas.height(); ++y) {
-    for (int x = 0; x < canvas.width(); ++x) {
-      if (kOrderedDither8x8.thresholds[(y & 7) * 8 + (x & 7)] <
-          coverage) {
-        continue;
-      }
-      bool coverPixel = true;
-      if (x >= bounds.x && x < bounds.x + bounds.width &&
-          y >= bounds.y && y < bounds.y + bounds.height) {
-        coverPixel = blackBackground;
-        if (x >= bitmapLeft && x < bitmapLeft + copyWidth &&
-            y >= bitmapTop && y < bitmapTop + copyHeight) {
-          coverPixel = bitmap.pixel(source.x + x - bitmapLeft,
-                                    source.y + y - bitmapTop);
+  // Same pixel rule as the previous per-pixel walk, packed by byte so T-Embed
+  // launch frames stay within the frame budget during ordered-dither dissolve.
+  MonoFramebuffer& framebuffer = canvas.framebuffer();
+  std::uint8_t* data = framebuffer.data();
+  const std::size_t stride = framebuffer.stride();
+  const int width = framebuffer.width();
+  const int height = framebuffer.height();
+  const int boundsRight = bounds.x + bounds.width;
+  const int boundsBottom = bounds.y + bounds.height;
+  const int bitmapRight = bitmapLeft + copyWidth;
+  const int bitmapBottom = bitmapTop + copyHeight;
+
+  for (int y = 0; y < height; ++y) {
+    const std::uint8_t* thresholdRow =
+        &kOrderedDither8x8.thresholds[(y & 7) * 8];
+    const bool inBoundsY = y >= bounds.y && y < boundsBottom;
+    const bool inBitmapY = y >= bitmapTop && y < bitmapBottom;
+    const std::uint8_t* bitmapRow =
+        inBitmapY && bitmap.valid()
+            ? bitmap.data +
+                  static_cast<std::size_t>(source.y + (y - bitmapTop)) *
+                      bitmap.stride
+            : nullptr;
+    const std::size_t row = static_cast<std::size_t>(y) * stride;
+
+    for (std::size_t byteIndex = 0; byteIndex < stride; ++byteIndex) {
+      const int baseX = static_cast<int>(byteIndex) * 8;
+      std::uint8_t writeMask = 0;
+      std::uint8_t coverBits = 0;
+      for (int bit = 0; bit < 8; ++bit) {
+        const int x = baseX + bit;
+        if (x >= width) break;
+        if (thresholdRow[x & 7] < coverage) continue;
+
+        const std::uint8_t bitMask =
+            static_cast<std::uint8_t>(0x80U >> bit);
+        writeMask = static_cast<std::uint8_t>(writeMask | bitMask);
+
+        bool coverPixel = true;
+        if (inBoundsY && x >= bounds.x && x < boundsRight) {
+          coverPixel = blackBackground;
+          if (bitmapRow != nullptr && x >= bitmapLeft && x < bitmapRight) {
+            const int sourceX = source.x + (x - bitmapLeft);
+            coverPixel =
+                (bitmapRow[static_cast<std::size_t>(sourceX) >> 3] &
+                 static_cast<std::uint8_t>(0x80U >> (sourceX & 7))) != 0;
+          }
+        }
+        if (coverPixel) {
+          coverBits = static_cast<std::uint8_t>(coverBits | bitMask);
         }
       }
-      canvas.pixel(x, y, coverPixel);
+      if (writeMask == 0) continue;
+      const std::size_t index = row + byteIndex;
+      data[index] = static_cast<std::uint8_t>(
+          (data[index] & static_cast<std::uint8_t>(~writeMask)) |
+          (coverBits & writeMask));
     }
   }
 }
@@ -423,19 +463,34 @@ SettingsListMetrics settingsListMetrics(std::int32_t width,
   const ResolvedTypography typography = resolveTypography(width, height);
   const int compactHeight =
       static_cast<int>(typography.font(TextRole::Compact).height);
-  const int footerHeight =
-      static_cast<int>(typography.font(TextRole::Footer).height);
-  metrics.rowHeight = compactHeight + 8;
-  metrics.rowGap = std::max(4, metrics.rowHeight / 5);
-  metrics.rowStep = metrics.rowHeight + metrics.rowGap;
+  const int minRowHeight = compactHeight + 8;
+  const int minGap = std::max(4, minRowHeight / 5);
+  const int minStep = minRowHeight + minGap;
   metrics.listTop = 4;
-  metrics.listBottom = height - std::max(16, footerHeight + 10);
+  // HOLD: MENU lives on the left rail. Keep a matching bottom pad on the
+  // right list so the last row is not flush against the bezel.
+  constexpr int kListBottomPad = 4;
+  metrics.listBottom = height - kListBottomPad;
   const int viewportHeight =
-      std::max(metrics.rowHeight, metrics.listBottom - metrics.listTop);
-  metrics.visibleCount = std::max(
-      1, (viewportHeight + metrics.rowGap) / metrics.rowStep);
+      std::max(minRowHeight, metrics.listBottom - metrics.listTop);
+  metrics.visibleCount =
+      std::max(1, (viewportHeight + minGap) / minStep);
   if (metrics.visibleCount > kSettingsItemCount) {
     metrics.visibleCount = kSettingsItemCount;
+  }
+
+  // Partition the padded right pane into equal slots so rows fill the list
+  // region without leaving a large empty band under the menu.
+  const int slots = metrics.visibleCount;
+  if (slots <= 1) {
+    metrics.rowHeight = viewportHeight;
+    metrics.rowGap = 0;
+    metrics.rowStep = metrics.rowHeight;
+  } else {
+    metrics.rowGap = 2;
+    metrics.rowStep = viewportHeight / slots;
+    metrics.rowHeight = std::max(minRowHeight, metrics.rowStep - metrics.rowGap);
+    metrics.rowStep = metrics.rowHeight + metrics.rowGap;
   }
   return metrics;
 }
@@ -472,13 +527,14 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
                       : 18;
   const TextMetrics titleMetrics =
       canvas.measureText("SETTINGS", TextRole::Title);
-  const int rowsLeft = std::min(
-      width - 120, std::max(width * 43 / 100,
-                            static_cast<int>(titleMetrics.width) + 24));
+  // Left rail is title-sized; menu owns the entire remaining right pane.
+  // The old 43%-width lock left a persistent white gutter that never filled.
   const int panelMinimum = 12 + static_cast<int>(titleMetrics.width) + 4;
-  const int panelMaximum = std::max(panelMinimum, rowsLeft - 8);
-  const int panelRight = std::clamp(width * 28 / 100 + bar,
-                                    panelMinimum, panelMaximum);
+  const int panelMaximum =
+      std::min(width - 128, std::max(panelMinimum, width * 30 / 100 + 24));
+  const int panelRight =
+      std::clamp(panelMinimum + bar / 2, panelMinimum, panelMaximum);
+  const int rowsLeft = panelRight + 8;
   canvas.fillRect(0, 0, panelRight, height, true);
   canvas.text("SETTINGS", 12, 28, 1, false, TextAlign::MiddleLeft,
               TextRole::Title);
@@ -516,49 +572,49 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
       system.launcherOrientation == LauncherOrientation::Vertical
           ? "LAUNCH: VERT"
           : "LAUNCH: HORIZ";
-  const char* usbMuteRow =
-      system.muteSpeakerDuringUsbMic ? "USB MUTE: ON" : "USB MUTE: OFF";
+  // Toggle already shows state; keep the label short so it fills the row
+  // without ellipsis on T-Embed.
   const char* rows[kSettingsItemCount] = {
-      "MOTION",       "SOUND",         usbMuteRow, wifiRow,
+      "MOTION",       "SOUND",         "USB MUTE", wifiRow,
       provisioningRow, launcherRow, "ABOUT: OS"};
   const SettingsListMetrics metrics = settingsListMetrics(canvas);
   int effectiveScroll = scrollOffset;
   clampSettingsScroll(selected, metrics.visibleCount, effectiveScroll);
-  const int rowsHeight =
-      metrics.rowHeight * metrics.visibleCount +
-      metrics.rowGap * std::max(0, metrics.visibleCount - 1);
-  const int rowsTop =
-      metrics.visibleCount >= kSettingsItemCount
-          ? std::max(metrics.listTop,
-                     metrics.listTop +
-                         (metrics.listBottom - metrics.listTop - rowsHeight) /
-                             2)
-          : metrics.listTop;
-  const int rowsWidth = width - rowsLeft - 12;
+  const int rowsTop = metrics.listTop;
+  const int rowsWidth = width - rowsLeft - 6;
+  const int viewportHeight =
+      std::max(0, metrics.listBottom - metrics.listTop);
   for (int slot = 0; slot < metrics.visibleCount; ++slot) {
     const int index = effectiveScroll + slot;
     if (index < 0 || index >= kSettingsItemCount) continue;
-    const int y = rowsTop + slot * metrics.rowStep;
-    if (y + metrics.rowHeight > metrics.listBottom) continue;
+    // Integer-partition Y so remainder pixels land in the last slots and the
+    // final row always meets the bottom of the right pane.
+    const int y = rowsTop + viewportHeight * slot / metrics.visibleCount;
+    const int nextY =
+        rowsTop + viewportHeight * (slot + 1) / metrics.visibleCount;
+    const int rowHeight = std::max(1, nextY - y - (slot + 1 < metrics.visibleCount
+                                                       ? metrics.rowGap
+                                                       : 0));
+    if (rowHeight <= 0) continue;
     const bool usesMenuIcon = index < 3;
-    const int labelWidth = rowsWidth - (usesMenuIcon ? 50 : 12);
+    const int labelWidth = rowsWidth - (usesMenuIcon ? 38 : 8);
+    // Every visible slot paints a full-width row so the right pane reads as a
+    // filled list, not sparse labels floating in white.
     if (index == selected) {
-      canvas.fillRoundedRect(rowsLeft, y, rowsWidth, metrics.rowHeight, 4,
-                             true);
+      canvas.fillRoundedRect(rowsLeft, y, rowsWidth, rowHeight, 4, true);
       canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
-                                  metrics.rowHeight},
+          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth, rowHeight},
                     TextAlign::MiddleLeft, TextRole::Menu),
           false);
     } else {
+      canvas.rect(rowsLeft, y, rowsWidth, rowHeight, true);
       canvas.boundedText(
-          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth,
-                                  metrics.rowHeight},
+          menuLabel(rows[index], {rowsLeft + 7, y, labelWidth, rowHeight},
                     TextAlign::MiddleLeft, TextRole::Menu),
           true);
     }
-    const Rect indicator{rowsLeft + rowsWidth - 36,
-                         y + (metrics.rowHeight - 14) / 2, 30, 14};
+    const Rect indicator{rowsLeft + rowsWidth - 34,
+                         y + (rowHeight - 14) / 2, 30, 14};
     if (index == 0) {
       presentation::SystemUi::toggle(canvas, indicator, energetic,
                                      index == selected);

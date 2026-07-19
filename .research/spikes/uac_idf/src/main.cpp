@@ -60,6 +60,11 @@ class LogDiagnosticSink final : public cadenza::DiagnosticSink {
          event.code == cadenza::DiagnosticCode::InvalidGeometry)) {
       return;
     }
+    // Launcher emits SelectionChanged on every detent; logging that over CDC
+    // during scroll was measured to steal frame budget on the UI core.
+    if (event.code == cadenza::DiagnosticCode::SelectionChanged) {
+      return;
+    }
     ESP_LOGI("cadenza_diag", "category=%u code=%u value=%ld %s",
              static_cast<unsigned>(event.category),
              static_cast<unsigned>(event.code), static_cast<long>(event.value),
@@ -265,48 +270,61 @@ extern "C" void app_main(void) {
   ESP_ERROR_CHECK(uac_device_init(&config));
 
 #if CONFIG_CADENZA_T_EMBED_RUNTIME
-  std::int64_t lastFrameUs = esp_timer_get_time();
-  bool holdPresentAfterSystem = false;
-  while (true) {
-    input.sample();
-    const std::int64_t nowUs = esp_timer_get_time();
-    if (nowUs - lastFrameUs < 16'667) {
-      vTaskDelay(pdMS_TO_TICKS(1));
-      continue;
-    }
-    const float dt = std::min(
-        static_cast<float>(nowUs - lastFrameUs) / 1'000'000.0F, 0.05F);
-    lastFrameUs = nowUs;
+  // Match PlatformIO's Arduino loopTask: pin UI to core 1 so the core-0
+  // speaker task (prio 2) cannot slice convert/compose/present. app_main
+  // itself stays on CPU0 and only owns bring-up.
+  constexpr std::uint8_t kUiTaskCore = 1;
+  constexpr UBaseType_t kUiTaskPriority = 2;
+  constexpr std::uint32_t kUiTaskStackBytes = 12288;
+  const BaseType_t uiCreated = xTaskCreatePinnedToCore(
+      [](void*) {
+        std::int64_t lastFrameUs = esp_timer_get_time();
+        bool holdPresentAfterSystem = false;
+        while (true) {
+          input.sample();
+          const std::int64_t nowUs = esp_timer_get_time();
+          if (nowUs - lastFrameUs < 16'667) {
+            vTaskDelay(pdMS_TO_TICKS(1));
+            continue;
+          }
+          const float dt = std::min(
+              static_cast<float>(nowUs - lastFrameUs) / 1'000'000.0F, 0.05F);
+          lastFrameUs = nowUs;
 #if CONFIG_CADENZA_CONNECTIVITY_RUNTIME
-    connectivity.pump();
+          connectivity.pump();
 #endif
-    const auto inputFrame = input.takeFrame();
-    cadenza::system::FrameCoordinator::runFrameAt(
-        services, runtime, canvas,
-        static_cast<cadenza::MonotonicMillis>(nowUs / 1000), dt, inputFrame);
+          const auto inputFrame = input.takeFrame();
+          cadenza::system::FrameCoordinator::runFrameAt(
+              services, runtime, canvas,
+              static_cast<cadenza::MonotonicMillis>(nowUs / 1000), dt,
+              inputFrame);
 #if CONFIG_CADENZA_CONNECTIVITY_RUNTIME
-    connectivity.pump();
+          connectivity.pump();
 #endif
-    const bool systemBusy = runtime.transitioning() ||
-                            runtime.systemMenuActive() ||
-                            runtime.appSuspendedBySystem();
-    if (systemBusy) {
-      holdPresentAfterSystem = true;
-    }
-    if (shouldPresent(runtime, launcher) || holdPresentAfterSystem) {
-      if (!display.present(framebuffer)) {
-        ESP_LOGE("cadenza_display", "frame transfer failed");
-      }
-      if (runtime.currentId() == cadenza::apps::kLauncherAppId) {
-        launcher.markPresented();
-      }
-      if (!systemBusy) {
-        holdPresentAfterSystem = false;
-      }
-    }
-    // Drain encoder edges that arrived during a slow present.
-    input.sample();
-    vTaskDelay(pdMS_TO_TICKS(1));
-  }
+          const bool systemBusy = runtime.transitioning() ||
+                                  runtime.systemMenuActive() ||
+                                  runtime.appSuspendedBySystem();
+          if (systemBusy) {
+            holdPresentAfterSystem = true;
+          }
+          if (shouldPresent(runtime, launcher) || holdPresentAfterSystem) {
+            if (!display.present(framebuffer)) {
+              ESP_LOGE("cadenza_display", "frame transfer failed");
+            }
+            if (runtime.currentId() == cadenza::apps::kLauncherAppId) {
+              launcher.markPresented();
+            }
+            if (!systemBusy) {
+              holdPresentAfterSystem = false;
+            }
+          }
+          // Drain encoder edges that arrived during a slow present.
+          input.sample();
+          vTaskDelay(pdMS_TO_TICKS(1));
+        }
+      },
+      "cadenza_ui", kUiTaskStackBytes, nullptr, kUiTaskPriority, nullptr,
+      kUiTaskCore);
+  ESP_ERROR_CHECK(uiCreated == pdPASS ? ESP_OK : ESP_ERR_NO_MEM);
 #endif
 }

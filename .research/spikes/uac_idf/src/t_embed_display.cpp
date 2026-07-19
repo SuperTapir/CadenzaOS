@@ -199,6 +199,13 @@ bool TEmbedDisplay::present(const MonoFramebuffer& framebuffer) noexcept {
       return false;
     }
   }
+  // Wait for the final DMA chunk so the next frame never starts converting
+  // into `transfer_` while SPI is still reading it.
+  if (xSemaphoreTake(static_cast<SemaphoreHandle_t>(transferDone_),
+                     pdMS_TO_TICKS(50)) != pdTRUE) {
+    return false;
+  }
+  xSemaphoreGive(static_cast<SemaphoreHandle_t>(transferDone_));
   return true;
 }
 

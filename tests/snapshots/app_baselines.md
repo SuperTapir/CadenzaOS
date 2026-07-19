@@ -16,17 +16,17 @@ transition completes. No normal App update runs after completion.
 | 320×170 | Launcher | 4407872121496200056 |
 | 320×170 | Timer Ready 10:00 | 12921254497184521768 |
 | 320×170 | Motion | 1593956483296057867 |
-| 320×170 | Settings | 10255963290226060893 |
+| 320×170 | Settings | 9428840863604149705 |
 | 320×170 | Animation Gallery | 14139291840108583961 |
 | 400×240 | Launcher | 14360345327951497471 |
 | 400×240 | Timer Ready 10:00 | 4523606151491982558 |
 | 400×240 | Motion | 2802791382376082090 |
-| 400×240 | Settings | 5598788588305196167 |
+| 400×240 | Settings | 13956664939219996363 |
 | 400×240 | Animation Gallery | 13234575752027769465 |
 
-Settings hashes were re-approved on 2026-07-19 after adding selection-follow
-scroll for overflow on 320×170 (seven rows no longer force a clipped static
-stack). 400×240 still fits without scrolling; both profile PNGs were inspected.
+Settings hashes were re-approved on 2026-07-19 after the right-pane list was
+changed to fill the full remaining width/height (title-sized left rail, equal
+row partition, outlined rows) while keeping selection-follow scroll on overflow.
 
 Timer hashes were re-approved on 2026-07-19 after adding native industrial
 numerals, centering the enlarged time body, correcting `HOLD: MENU`, and applying

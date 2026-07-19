@@ -4,6 +4,25 @@
 
 OpenSpec 提案默认使用中文书写。
 
+## T-Embed 固件刷写（默认 ESP-IDF）
+
+T-Embed **主固件是 ESP-IDF 5.5**（Runtime + ES7210 + **UAC2 麦克风** + CDC），不是 PlatformIO。
+
+刷机、真机验证、修 USB mic / 扬声器相关问题时：
+
+- **默认**使用 `tools/firmware_uac.sh flash`（或 `tools/check.sh firmware` 构建后再 flash）
+- **禁止**把 `pio run -t upload` / `tools/check.sh firmware-pio` 当作默认刷写路径
+- PlatformIO（`firmware-pio`）是**无 UAC 的回滚路径**；误刷会导致 Mac 上看不到 Cadenza USB 麦克风
+- 只有用户明确要求「刷 PlatformIO / 无 UAC 回滚」时才用 PIO
+- 设备已枚举为 USB Audio 时，串口可能变成 `/dev/cu.usbmodemSPIKE_*`；若 flash 连不上，按 `docs/development.md` 先进入 download mode（按住 BOOT → 点 RST → 松 BOOT）再刷
+
+组合根：`.research/spikes/uac_idf/`。可移植逻辑在 `lib/`，两条固件路径共享；**呈现与能力以 IDF 组合为准**。
+
+手感相关约束（勿回退）：
+
+- UI 帧循环必须钉在 **core 1**（`cadenza_ui`），扬声器任务在 **core 0**；不要再把帧循环放回 `app_main`/CPU0，否则会被 speaker 抢占，Launcher 滚动会明显不如 PlatformIO
+- 硬件构建默认 `CONFIG_COMPILER_OPTIMIZATION_PERF`（`-O2`），不要无故改回 `-Os`
+
 ## 工程决策原则
 
 ### 先充分调研，再快速实现

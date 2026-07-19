@@ -1399,13 +1399,13 @@ TEST_CASE("Settings keeps the last item fully visible and opens About") {
     cadenza::MonoCanvas canvas{framebuffer};
     cadenza::test::renderApp(settings, canvas, runtime, services);
     const std::uint64_t settingsHash = framebufferHash(framebuffer);
-    const int rowsLeft = std::min(
-        framebuffer.width() - 120,
-        std::max(framebuffer.width() * 43 / 100,
-                 static_cast<int>(
-                     canvas.measureText("SETTINGS", cadenza::TextRole::Title)
-                         .width) +
-                     24));
+    const int titleWidth = static_cast<int>(
+        canvas.measureText("SETTINGS", cadenza::TextRole::Title).width);
+    const int panelMinimum = 12 + titleWidth + 4;
+    const int panelMaximum = std::min(
+        framebuffer.width() - 128,
+        std::max(panelMinimum, framebuffer.width() * 30 / 100 + 24));
+    const int rowsLeft = panelMaximum + 8;
 
     cadenza::InputFrame selectAbout;
     selectAbout.turn = 6;

@@ -7,9 +7,11 @@
 namespace cadenza::presentation_defaults {
 
 constexpr Seconds kAppTransitionDuration = 0.32F;
-constexpr Seconds kAppLaunchHandoffDuration = 0.80F;
+// Keep enter ≈ return on T-Embed. Longer enter (0.80s) read as stutter even
+// after packed dissolve; return at 0.44s was the snappy reference.
+constexpr Seconds kAppLaunchHandoffDuration = 0.44F;
 constexpr Seconds kAppReturnHandoffDuration = 0.44F;
-constexpr Seconds kReducedAppLaunchHandoffDuration = 0.56F;
+constexpr Seconds kReducedAppLaunchHandoffDuration = 0.28F;
 constexpr Seconds kReducedAppReturnHandoffDuration = 0.28F;
 constexpr Seconds kGalleryCycleDuration = 2.0F;
 constexpr float kSelectionOvershoot = 0.10F;
