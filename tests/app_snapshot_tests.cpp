@@ -248,7 +248,7 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       11213252772227159273ULL},
+       14918215311978361535ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kTimerAppId,
        9459123157712897673ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
@@ -258,7 +258,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        5829755783398426753ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       10069142775806681793ULL},
+       14894746194681732842ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kTimerAppId,
        11125504611431129214ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
@@ -279,11 +279,11 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               16641919077167462540ULL) ==
-        16641919077167462540ULL);
+                               15896753282562615363ULL) ==
+        15896753282562615363ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               15204056308033799282ULL) ==
-        15204056308033799282ULL);
+                               13499352535080939587ULL) ==
+        13499352535080939587ULL);
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {
@@ -297,13 +297,13 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
-      {{13909681881635154212ULL, 4816314239841008682ULL,
-        11231470178633986755ULL, 16792565712294220658ULL,
+      {{10363111933382688924ULL, 7816090857312221288ULL,
+        13616107464272084726ULL, 5062836223768158047ULL,
         8089027038418072656ULL, 17578902866895419590ULL,
         9455139349855891320ULL,
         14559540616237083441ULL}},
-      {{4893742942710669760ULL, 12536887483445266022ULL,
-        681618496007187272ULL, 2906109029414622728ULL,
+      {{5668728059796249764ULL, 8216619787726592616ULL,
+        7999527108005928230ULL, 15678527797637150066ULL,
         14975481694991952360ULL, 10760001046756445264ULL,
         2175321546545016131ULL,
         15470451298310697573ULL}},

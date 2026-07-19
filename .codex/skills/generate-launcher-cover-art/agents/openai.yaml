@@ -1,4 +1,4 @@
 interface:
-  display_name: "生成并应用 Playdate 美学 Launcher Cover"
-  short_description: "生成兼具易读标题、功能辨识与灰阶立体感的 1-bit Launcher Cover"
-  default_prompt: "Use $generate-launcher-cover-art to create an original, highly legible Playdate-literate Launcher Cover that clearly expresses a CadenzaOS App's function."
+  display_name: "生成并应用 CadenzaOS Launcher Cover"
+  short_description: "生成插画感强、功能鲜明且轮廓干净的 1-bit Cover"
+  default_prompt: "Use $generate-launcher-cover-art to create or refine a CadenzaOS Launcher Cover through illustration-master, pixel-review, approval, and verified-integration gates."

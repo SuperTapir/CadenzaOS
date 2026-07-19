@@ -157,7 +157,7 @@ original restrained industrial 1-bit micro-poster identity art for a reflective 
 Apply these as explicit exclusions:
 
 ```text
-Exclude: imitation of a specific Playdate game cover, copied logo or character, generic “retro game” collage, industrial decoration with no App-specific meaning, photorealistic, glossy UI, cyberpunk neon, colorful, soft drop shadows, continuous photographic gradients, blur, intentionally jagged pixel-font stair-steps in the master, thin lines, tiny text, dense dashboard, generic mobile app UI, multiple panels, external frame, rounded card border, miniature architecture, cables, bolts, screws, railings, antennas, star fields, skyline clutter, debris, decorative particles, extra icons, ornamental instruments, speckle, random texture, invented background props, Playdate logo, copyrighted characters.
+Exclude: imitation of a specific Playdate game cover, copied logo or character, generic “retro game” collage, industrial decoration with no App-specific meaning, photorealistic, studio product photography, smooth 3D product render, glossy UI, cyberpunk neon, colorful, soft drop shadows, contact shadows, ambient occlusion, specular highlights, glossy bevels, continuous photographic gradients, blur, intentionally jagged pixel-font stair-steps in the master, thin lines, tiny text, dense dashboard, generic mobile app UI, multiple panels, external frame, rounded card border, miniature architecture, cables, bolts, screws, railings, antennas, star fields, skyline clutter, debris, decorative particles, extra icons, ornamental instruments, speckle, random texture, invented background props, Playdate logo, copyrighted characters.
 ```
 
 ## Typography and grayscale
@@ -174,6 +174,13 @@ Exclude: imitation of a specific Playdate game cover, copied logo or character, 
 - Design title glyphs as smooth high-resolution shapes first. Pixel hinting and
   1-bit cleanup happen after reduction; do not confuse “bitmap-inspired” with
   deliberately rough diagonal and curved outlines.
+- Treat master antialiasing and final gray material as different signals. During
+  conversion, use `prepare_cover.py --edge-cleanup` to harden soft pixels that
+  bridge near-black and near-white silhouettes and its one-pixel guard band.
+  Keep broad gray planes outside that contour guard eligible for ordered dither.
+- Inspect a nearest-neighbor 4× rendering after conversion. Regular monotonic
+  pixel stair steps are the 1-bit contour; Bayer dots, comb teeth, isolated
+  pinholes, and fuzzy patterned halos touching the contour are defects.
 - Keep final important strokes at least 2 pixels thick. Use generous cap height,
   clear counters, distinguishable letters, and manual cleanup after conversion.
 - Use gray as a small material vocabulary, not generic noise: highlight face,
@@ -262,9 +269,20 @@ Reject or iterate unless every applicable item passes:
   discipline form one family; stylistic uniformity is not rejected by itself.
 - A hard-threshold pure black/white thumbnail preserves both the exact title and
   recall hook before any dither is credited.
+- Before conversion, the grayscale master reads as deliberate print illustration,
+  paper-cut art, or a technical poster built from three to five discrete planes;
+  it does not depend on studio lighting, soft shadows, specular highlights,
+  ambient occlusion, glossy bevels, or continuous gradients for its form.
+- The dominant object's outer silhouette is a continuous solid boundary that
+  remains clear without gray texture; `--edge-cleanup` is not used to rescue a
+  photographic or weakly separated master.
 - No external border, rounded card, page indicator, input hint or Launcher chrome.
 - Master contours are smooth and antialiased; final 1-bit contours are manually
-  hinted with no isolated stair-step noise.
+  hinted with no isolated stair-step noise, Bayer fringe, comb teeth, pinholes,
+  or patterned gray halo touching a critical boundary.
+- Every newly approved Cover was prepared with explicit `--edge-cleanup`; a 4×
+  nearest-neighbor contour review confirms clean regular stair steps while broad
+  structural gray planes still retain intentional ordered dither.
 - Gray planes add intentional hierarchy or volume and survive as controlled
   ordered dither; there are no broad fuzzy auto-dither fields.
 - Every gray plane has a documented role in volume, separation, overlap, motion,

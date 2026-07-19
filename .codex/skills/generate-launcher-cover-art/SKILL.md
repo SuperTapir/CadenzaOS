@@ -1,6 +1,6 @@
 ---
 name: generate-launcher-cover-art
-description: "Generate, simplify, review, convert, and optionally integrate Playdate-literate CadenzaOS Launcher Cover illustrations: highly legible 1-bit micro-posters with large titles, an App-specific functional hook, strong black/white recognition, and controlled gray planes that add depth and fun within a coherent restrained industrial style. Use when adding or iterating TIMER, MOTION, SETTINGS, ANIMATION GALLERY, fallback, or a new App Cover; correcting a generic, unclear, flat, or over-detailed Cover; producing smooth grayscale master PNGs; converting them to reviewed 350×155 and 280×124 1-bit assets; packing C++ headers; or applying an approved Cover to its App. Do not approve visual baselines without explicit user approval."
+description: "Generate, simplify, review, de-fringe, convert, and optionally integrate Playdate-literate CadenzaOS Launcher Cover illustrations: highly legible 1-bit micro-posters with large titles, an App-specific functional hook, strong black/white recognition, clean solid contours, and controlled gray planes that add depth and fun within a coherent restrained industrial style. Use when adding or iterating TIMER, MOTION, SETTINGS, ANIMATION GALLERY, fallback, or a new App Cover; correcting a generic, unclear, flat, over-detailed, jagged, or dither-fringed Cover; producing smooth grayscale master PNGs; converting them to reviewed 350×155 and 280×124 1-bit assets; packing C++ headers; or applying an approved Cover to its App. Do not approve visual baselines without explicit user approval."
 ---
 
 # Generate Launcher Cover Art
@@ -23,78 +23,95 @@ full before composing prompts or reviewing results. Use its optional visual-stra
 shared 1-bit medium-grammar suffix, negative prompt, App-specific scene brief, and
 acceptance checklist.
 
-## Workflow
+## Gated pipeline
 
-1. Confirm the requested App set and output directory from the task or current
-   project context. Inspect the App, existing assets, and any supplied visual
-   references without modifying code.
-2. Write a one-sentence identity brief before prompting: what the App does, the
-   one visual metaphor that makes that function obvious and interesting, the
-   title's role in the composition, and whether the image is predominantly dark
-   or light. Treat title readability and functional recognition as higher
-   priorities than stylistic novelty.
-3. Select one visual strategy from the required reference when it helps. The set
-   may reuse the same restrained industrial dialect, type system, and tonal
-   manner. Do not force variety for its own sake, combine several dialects by
-   default, or reproduce a specific Playdate game's lettering, character, or
-   layout.
-4. Check ownership before writing. Never overwrite images or source files being
-   changed by another task. Generate into a new review/master directory unless
-   the user names an exact destination.
-5. Define a strict element budget before prompting: the exact title, one dominant
-   motif, and at most one supporting shape or directional device. The motif may
-   be an object, character, symbol, or the title itself. Add zero to two small
-   accents only when they communicate App identity. List the permitted elements
-   explicitly; instruct the generator not to invent anything else. Also define a
-   tonal plan: the main black mass, main white mass, and one to three broad gray
-   planes, with a spatial or material purpose for every gray. When using 2D/3D
-   overlap, also state the occlusion order, tilt, front face, and side face.
-6. Generate and apply one App at a time. Assemble the image prompt as:
+Treat the workflow as a state machine. An asset moves through `brief → master
+candidate → pixel candidate → user-approved baseline → integrated → verified`.
+Never let deterministic conversion success stand in for a subjective visual
+gate, and never overwrite formal assets from a pre-approval state. User feedback
+may return the asset to any earlier state.
 
-   ```text
-   identity brief and App-specific scene brief
-   + selected visual-strategy module when useful
-   + explicit permitted-element list
-   + shared 1-bit medium-grammar suffix
-   + negative prompt as explicit exclusions
-   + exact title spelling and 350:155 composition requirement
-   ```
+### Stage 0 — scope and ownership
 
-7. Prefer a smooth lossless PNG master at 1400×620; use 700×310 when the larger size
-   is unavailable. If the generator returns another size, preserve that original
-   and do not claim it is delivery-ready until an explicit 350:155 crop has been
-   reviewed.
-8. Review the composition first as a hard-threshold pure black/white thumbnail,
-   not only as a grayscale image. The exact title and one memorable hook must
-   remain immediately recognizable before any gray texture is credited. If they
-   do not, change the massing or composition; never use dither to rescue them.
-   Then review the actual pixels at 350×155 and 280×124, not just the prompt or
-   enlarged master. Reject misspellings, clipped titles, generic dashboard
-   decoration, extra panels, external frames, tiny details, inconsistent
-   light/dark balance, copied-looking motifs, or any unbudgeted prop. Remove
-   details that disappear at 280×124 or compete with the title and dominant
-   silhouette; never retain them merely because they look attractive enlarged.
-9. When generating a set, use an accepted earlier Cover to calibrate the house
-   style as well as safe margins, minimum contour weight, reduction quality, and
-   texture density. Reusing a cool industrial dialect or readable type system is
-   acceptable. Keep the App-specific functional metaphor and visual hook distinct
-   enough that Covers are not interchangeable.
-10. After the user accepts the composition, locate a Python runtime with Pillow
-   (use Codex bundled workspace dependencies when system Python lacks it), then
-   run `scripts/prepare_cover.py` to preserve the PNG and create 350×155 plus
-   no-crop 280×124 PBMs and pure/reflective previews. Use 3–6 intentional tonal
-   bands; start with 5.
-11. Review both real-size previews. Manually iterate the master when title edges,
-   two-pixel strokes, dominant silhouettes, or dither fields become noisy. An
-   automatic conversion is a candidate, never an approval.
-12. When adding the Cover end to end, pass the repository `tools/pack_bitmap.py`
-   and generated-header directory, wire the two profile bitmaps into the App's
-   const renderer, run asset checks, interaction immutability tests, snapshots,
-   and the firmware size gate. Finish one App before starting the next.
+Confirm the exact App and review root, inspect its behavior and current assets,
+and check whether another task owns any overlapping files. Work on one App at a
+time. Put every unapproved result under a new dated `review/<change>/<app>/`
+directory; keep formal `source/`, PBMs, headers, and goldens untouched.
+
+### Stage 1 — brief and master generation
+
+Write a one-sentence identity brief covering App purpose, one functional metaphor,
+the title's compositional role, and light/dark balance. Choose at most one visual
+strategy from the required reference. Define before prompting:
+
+- exact title;
+- one dominant motif and one broad supporting relationship;
+- zero to two semantic accents;
+- main black and white masses plus one to three named gray planes;
+- a layout decision made for this App, not inherited from the previous Cover.
+
+Assemble the prompt from that brief, the App scene brief, permitted elements,
+shared medium suffix, explicit negative prompt, exact spelling, and 350:155 ratio.
+Generate a smooth lossless PNG, preferably 1400×620. Preserve the generator's
+original separately and make any crop or resize explicit.
+
+### Gate A — illustration master
+
+Review the master before conversion. Reject it immediately if any of these fail:
+
+- the title is exact, inside safe margins, and integrated with the concept;
+- the functional hook and dominant silhouette read without texture;
+- the image uses only budgeted elements and a layout distinct from the set's
+  accidental templates;
+- the form is deliberately illustrated with three to five discrete hard-boundary
+  planes and a continuous solid outer silhouette;
+- it does not depend on studio lighting, continuous gradients, soft contact
+  shadows, ambient occlusion, specular highlights, glossy bevels, or other
+  photo/product-render cues.
+
+Do not ask dither or edge cleanup to rescue a failed master. Record the failure
+and iterate the source concept.
+
+### Stage 2 — deterministic pixel candidate
+
+Run `scripts/prepare_cover.py` in the candidate directory with 3–6 tonal bands
+(start with 5) and explicit `--edge-cleanup`. The script produces both profiles,
+PBMs, ordered-dither pure/reflective previews, texture-independent hard-threshold
+previews, and nearest-neighbor 4× inspection previews. Edge cleanup hardens
+antialiased black/white transitions and a one-pixel guard while preserving broad
+structural gray planes. Keep the flag explicit so legacy assets do not re-hash.
+
+### Gate B — real pixel review
+
+Review, in this order, the hard-threshold 350×155 and 280×124 previews at 1×, the
+ordered-dither reflective previews at 1×, and the 4× nearest-neighbor previews.
+Reject clipped or misspelled titles, collapsed counters, disappearing details,
+weak silhouettes, excessive texture, Bayer dots, comb teeth, pinholes, or fuzzy
+patterned halos touching critical contours. Regular monotonic 1-bit stairs are
+not defects. If the pixel result materially changes the accepted master, return
+it to the user for another explicit visual decision.
+
+### Gate C — explicit user baseline approval
+
+Show the actual pixel candidate, not only the enlarged master. Record the user's
+explicit approval with the candidate path and date. Generation, conversion,
+tests, hashes, silence, or approval of an earlier revision do not approve the
+current pixel baseline.
+
+### Stage 3 — formal integration and verification
+
+Only after Gate C, copy the approved master into formal `source/`, regenerate
+canonical PBMs and packed headers with the same parameters, and update provenance.
+Run source reproducibility, PBM/header, dimensions, tonal, immutability, handoff,
+snapshots, moving-track dither, host, desktop/headless, firmware-compatible build,
+and size-gate checks. Audit untouched Cover hashes and the final diff. A failed
+verification returns to the owning stage; do not patch runtime rendering to fix
+source-art defects.
 
 ```bash
 "$IMAGE_PYTHON" .codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py \
-  /tmp/timer.png assets/launcher-covers --name timer --levels 5 \
+  /tmp/new-cover.png assets/launcher-covers --name new-cover --levels 5 \
+  --edge-cleanup \
   --pack-tool tools/pack_bitmap.py \
   --header-dir lib/cadenza_apps/src/generated
 ```
@@ -123,6 +140,9 @@ acceptance checklist.
   are the dominant App-defining object.
 - Use no more than one dominant dither material plus one small secondary material.
   Keep title counters, focal silhouettes, and critical boundaries solid.
+- Never let ordered dither consume antialiasing pixels on critical black/white
+  contours. Use the pipeline edge-cleanup guard, then inspect at 4× for irregular
+  Bayer fringe; do not confuse clean regular pixel stair steps with defects.
 - Judge complexity at 1× output size. If a feature does not read cleanly at both
   350×155 and 280×124, enlarge it into a primary shape or remove it.
 
@@ -149,8 +169,9 @@ acceptance checklist.
 - Permit a flat title to overlap a tilted volumetric object. Keep the title on a
   clean 2D plane and use only a front face, rim, and side wall for the 3D object;
   the occlusion must remain obvious after hard threshold and at 280×124.
-- Avoid continuous photographic gradients. Translate designed gray planes into
-  regular ordered dither, then clean noisy edge pixels by hand.
+- Avoid continuous photographic gradients and product-render lighting. Translate designed gray planes into
+  regular ordered dither. Harden antialiased silhouette edges with the pipeline
+  cleanup before any remaining intentional hand hinting.
 - Prefer large flat planes over rendered machinery. Grayscale may make one object
   feel dimensional, but must not create additional layers of incidental detail.
 - Keep critical generated contours at least 4–8 pixels wide so they survive
@@ -169,6 +190,7 @@ acceptance checklist.
 
 Return clickable absolute paths for every original PNG, both PBMs, and pure plus
 reflective previews. State which checklist items passed or still need iteration,
-and report packed-header, snapshot, and firmware-size results when integration
-was requested. Do not call an image or hash “approved” without an explicit visual
+including the 1× and 4× contour inspection and whether `--edge-cleanup` was used.
+Report packed-header, snapshot, and firmware-size results when integration was
+requested. Do not call an image or hash “approved” without an explicit visual
 review decision.

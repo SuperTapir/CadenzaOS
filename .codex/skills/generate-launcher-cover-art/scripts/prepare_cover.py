@@ -35,13 +35,53 @@ def fit_without_crop(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     return result
 
 
+def antialias_edge_mask(
+    image: Image.Image,
+    dark_limit: int = 64,
+    light_limit: int = 191,
+) -> list[bool]:
+    """Find and guard soft pixels around a black/white silhouette edge.
+
+    Broad gray material planes do not normally touch both extremes inside the
+    same 3x3 neighborhood, so they remain available for ordered dither. Expand
+    the detected transition by one pixel so patterned gray cannot form a fuzzy
+    fringe directly against a critical contour.
+    """
+    pixels = image.load()
+    width, height = image.size
+    mask = [False] * (width * height)
+    for y in range(height):
+        top = max(0, y - 1)
+        bottom = min(height, y + 2)
+        for x in range(width):
+            value = int(pixels[x, y])
+            if value == 0 or value == 255:
+                continue
+            left = max(0, x - 1)
+            right = min(width, x + 2)
+            has_dark = False
+            has_light = False
+            for neighbor_y in range(top, bottom):
+                for neighbor_x in range(left, right):
+                    neighbor = int(pixels[neighbor_x, neighbor_y])
+                    has_dark = has_dark or neighbor <= dark_limit
+                    has_light = has_light or neighbor >= light_limit
+            mask[y * width + x] = has_dark and has_light
+    mask_image = Image.new("L", image.size, 0)
+    mask_image.putdata([255 if value else 0 for value in mask])
+    guarded = mask_image.filter(ImageFilter.MaxFilter(3))
+    return [value != 0 for value in guarded.getdata()]
+
+
 def ordered_one_bit(
     image: Image.Image,
     levels: int,
     solid_light_region: tuple[float, float, float, float] | None = None,
+    edge_cleanup: bool = False,
 ) -> list[int]:
     output: list[int] = []
     pixels = image.load()
+    clean_edges = antialias_edge_mask(image) if edge_cleanup else None
     hinted = None
     if solid_light_region is not None:
         left, top, right, bottom = solid_light_region
@@ -61,7 +101,9 @@ def ordered_one_bit(
         hinted = core.filter(ImageFilter.MaxFilter(filter_size)).load()
     for y in range(image.height):
         for x in range(image.width):
-            if hinted is not None and hinted[x, y] != 0:
+            index = y * image.width + x
+            if ((hinted is not None and hinted[x, y] != 0) or
+                    (clean_edges is not None and clean_edges[index])):
                 output.append(0 if pixels[x, y] >= 128 else 1)
                 continue
             blackness = 255 - int(pixels[x, y])
@@ -71,14 +113,20 @@ def ordered_one_bit(
     return output
 
 
+def hard_threshold_one_bit(image: Image.Image, threshold: int = 128) -> list[int]:
+    """Return a texture-independent black/white recognition preview."""
+    return [1 if int(value) < threshold else 0 for value in image.getdata()]
+
+
 def write_pbm(path: pathlib.Path, size: tuple[int, int], pixels: list[int],
-              source_name: str, levels: int) -> None:
+              source_name: str, levels: int, edge_cleanup: bool) -> None:
     width, height = size
     with path.open("w", encoding="ascii", newline="\n") as stream:
         stream.write("P1\n")
+        cleanup = "; antialias edge cleanup" if edge_cleanup else ""
         stream.write(
             f"# No-crop derivative of {source_name}; ordered 4x4; "
-            f"{levels} tonal bands\n{width} {height}\n"
+            f"{levels} tonal bands{cleanup}\n{width} {height}\n"
         )
         for y in range(height):
             row = pixels[y * width:(y + 1) * width]
@@ -86,11 +134,15 @@ def write_pbm(path: pathlib.Path, size: tuple[int, int], pixels: list[int],
 
 
 def preview(path: pathlib.Path, size: tuple[int, int], pixels: list[int],
-            reflective: bool) -> None:
+            reflective: bool, scale: int = 1) -> None:
     ink = (50, 47, 40) if reflective else (0, 0, 0)
     paper = (177, 174, 167) if reflective else (255, 255, 255)
     image = Image.new("RGB", size)
     image.putdata([ink if pixel else paper for pixel in pixels])
+    if scale > 1:
+        image = image.resize(
+            (size[0] * scale, size[1] * scale), Image.Resampling.NEAREST
+        )
     image.save(path)
 
 
@@ -124,6 +176,11 @@ def main() -> None:
         help=("normalized region whose near-white contours use solid coverage "
               "thresholding instead of ordered dither"),
     )
+    parser.add_argument(
+        "--edge-cleanup", action="store_true",
+        help=("harden antialiased pixels that bridge near-black and near-white "
+              "contours while preserving broad gray planes for dither"),
+    )
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--pack-tool", type=pathlib.Path)
     parser.add_argument("--header-dir", type=pathlib.Path)
@@ -156,7 +213,10 @@ def main() -> None:
     base_symbol = pascal_case(args.name)
     for suffix, size, symbol_suffix in variants:
         grayscale = fit_without_crop(source, size)
-        pixels = ordered_one_bit(grayscale, args.levels, solid_light_region)
+        threshold_pixels = hard_threshold_one_bit(grayscale)
+        pixels = ordered_one_bit(
+            grayscale, args.levels, solid_light_region, args.edge_cleanup
+        )
         stem = f"{args.name}{suffix}"
         pbm = args.output / f"{stem}.pbm"
         if args.check:
@@ -173,9 +233,33 @@ def main() -> None:
                         f"({differing} differing pixels)"
                     )
             continue
-        write_pbm(pbm, size, pixels, source_path.name, args.levels)
+        write_pbm(
+            pbm, size, pixels, source_path.name, args.levels,
+            args.edge_cleanup,
+        )
         preview(review_dir / f"{stem}_1bit.png", size, pixels, False)
         preview(review_dir / f"{stem}_reflective.png", size, pixels, True)
+        preview(
+            review_dir / f"{stem}_threshold.png",
+            size,
+            threshold_pixels,
+            False,
+        )
+        preview(
+            review_dir / f"{stem}_threshold_4x.png",
+            size,
+            threshold_pixels,
+            False,
+            4,
+        )
+        preview(review_dir / f"{stem}_1bit_4x.png", size, pixels, False, 4)
+        preview(
+            review_dir / f"{stem}_reflective_4x.png",
+            size,
+            pixels,
+            True,
+            4,
+        )
         if args.pack_tool and args.header_dir:
             header = args.header_dir / f"{stem}_cover.h"
             symbol = f"k{base_symbol}{symbol_suffix}Cover"

@@ -138,6 +138,29 @@ fresh gate 为准：
 高频 1-bit 相位闪烁。实体步骤见 `launcher-card-reference-research.md`。当前状态为
 `fixed-ratio Cover artwork and platform gates complete / hardware motion acceptance pending`。
 
+## 2026-07-19 非 Timer Cover 插画升级
+
+- MOTION、SETTINGS 与 ANIMATION GALLERY 的新母图、350×155 / 280×124
+  reflective 像素基线均取得用户明确批准；TIMER source/PBM/T-Embed PBM 的 SHA-256
+  仍分别为 `e5e8455f652268f15614b8d48720e5e11304a3b4d70e30ca62af1bd938a14480`、
+  `8406756202a4a9de974d133cd4e5de740819c34419d90f0ff47fdb51836a85bb`、
+  `87a00f5298e5bfc682a508608ab1b03030f8649f6677be9ef634b323cd764cb7`。
+- SETTINGS v1 因连续棚拍光照、软阴影和弱外轮廓在正式预览中呈现“照片转网点感”
+  而撤销；v2 改用硬边离散插画平面和连续实色控制台轮廓。正式 PBM 与批准候选在
+  两个 profile 中逐像素相同。
+- Cover skill pipeline 重构为 master、pixel、approval、integration 四类门禁；
+  `prepare_cover.py --edge-cleanup` 自动生成硬阈值、ordered-dither pure/reflective
+  和 nearest-neighbor 4× 审阅图。新增 6 项脚本回归测试覆盖轮廓 guard、宽灰面保留、
+  二值输入不变、硬阈值和 4× nearest-neighbor 像素块。
+- source→PBM、PBM→header、静态 Cover、handoff、Launcher/App snapshots 与真实 SDL
+  dummy executable 均通过；完整 host 为 81/81。
+- PlatformIO `cadenza-t-embed` release 编译成功：RAM 100,112 / 327,680 B
+  (30.6%)，Flash 463,981 / 3,145,728 B (14.7%)；`git diff --check` 与 OpenSpec
+  strict validation 通过。
+
+软件预览不能替代 Memory LCD 的一像素移动闪烁、反射环境和真机观看距离验收；
+这些物理项继续标记为 hardware motion acceptance pending。
+
 ## Delta-spec completion audit
 
 This is the requirement-by-requirement audit, rather than an inference from a
