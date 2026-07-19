@@ -1,6 +1,6 @@
 # Cadenza
 
-[![Cadenza OS application walkthrough](docs/media/cadenza-os-demo-poster.png)](docs/media/cadenza-os-demo.mp4)
+[![Cadenza OS application walkthrough](docs/media/cadenza-os-demo-poster.png)](https://raw.githubusercontent.com/SuperTapir/CadenzaOS/main/docs/media/cadenza-os-demo.mp4)
 
 点击头图观看带声音的完整应用流程演示（MP4）：Launcher、Timer、后台 Timer
 指示器、System Menu、Motion、Settings 与 Animation Gallery，以及不同显示屏
