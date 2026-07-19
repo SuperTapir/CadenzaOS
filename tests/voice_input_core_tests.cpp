@@ -124,6 +124,23 @@ TEST_CASE("USB remount while analyzer running forces capture restart") {
   CHECK(capture.state() == VoiceCaptureState::Starting);
 }
 
+TEST_CASE("USB intent can reclaim capture after Error via setAvailable") {
+  using namespace cadenza::voice;
+  VoiceCaptureCoordinator capture;
+  capture.setAvailable(true);
+  REQUIRE(capture.setIntent(VoiceConsumer::Usb, true));
+  REQUIRE(capture.notifyStarted(kVoicePcmFormat));
+  capture.notifyError();
+  CHECK(capture.state() == VoiceCaptureState::Error);
+  // Direct setIntent must stay rejected while Error; adapter recovers by
+  // marking the mic available again without tearing USB down.
+  CHECK_FALSE(capture.setIntent(VoiceConsumer::Usb, true));
+  capture.setAvailable(true);
+  CHECK(capture.state() == VoiceCaptureState::Starting);
+  REQUIRE(capture.notifyStarted(kVoicePcmFormat));
+  CHECK(capture.state() == VoiceCaptureState::Running);
+}
+
 TEST_CASE("analyzer reports deterministic RMS peak clipping and VAD hysteresis") {
   using namespace cadenza::voice;
   VoiceAnalyzer analyzer{{0.10F, 2, 3}};

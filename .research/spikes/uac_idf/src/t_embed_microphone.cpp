@@ -18,17 +18,96 @@ namespace cadenza::idf {
 namespace {
 
 constexpr char kTag[] = "cadenza_mic";
-constexpr std::size_t kDmaSlotsPerRead = 256;
+constexpr std::size_t kDmaBytesPerRead = 512;  // 64 stereo int32 frames
+constexpr int kPrimeReadsAfterEnable = 2;
+constexpr int kResyncAttempts = 8;
+constexpr int kLayoutPickAttempts = 6;
 
 voice::VoiceDmaNormalizerConfig normalizerConfig() noexcept {
   voice::VoiceDmaNormalizerConfig config;
   config.input.sampleRateHz = voice::kVoiceSampleRateHz;
-  config.input.validBits = 32;
+  config.input.validBits = 16;
   config.input.channels = 2;
-  config.input.alignment = voice::VoiceDmaAlignment::MostSignificant;
-  config.input.channelMode = voice::VoiceDmaChannelMode::Average;
+  // expandVoiceDmaSlots always emits LSB-aligned int16 in int32 containers.
+  config.input.alignment = voice::VoiceDmaAlignment::LeastSignificant;
+  config.input.channelMode = voice::VoiceDmaChannelMode::First;
   config.maxConsecutiveReadFailures = 3;
   return config;
+}
+
+const char* layoutName(voice::VoiceDmaLayout layout) noexcept {
+  switch (layout) {
+    case voice::VoiceDmaLayout::Int16Interleaved:
+      return "i16";
+    case voice::VoiceDmaLayout::Int32Msb16:
+      return "i32msb";
+    case voice::VoiceDmaLayout::Int32Lsb16:
+      return "i32lsb";
+  }
+  return "?";
+}
+
+bool enableRx(i2s_chan_handle_t rx, bool& channelEnabled) noexcept {
+  if (channelEnabled) {
+    (void)i2s_channel_disable(rx);
+    channelEnabled = false;
+  }
+  const esp_err_t enabled = i2s_channel_enable(rx);
+  if (enabled != ESP_OK && enabled != ESP_ERR_INVALID_STATE) return false;
+  channelEnabled = true;
+  return true;
+}
+
+bool readRawWindow(i2s_chan_handle_t rx, std::uint8_t* bytes,
+                   std::size_t capacity, std::uint32_t timeoutMs,
+                   std::size_t* bytesReadOut) noexcept {
+  std::size_t bytesRead = 0;
+  const esp_err_t result =
+      i2s_channel_read(rx, bytes, capacity, &bytesRead, timeoutMs);
+  if (result != ESP_OK || bytesRead == 0) return false;
+  if (bytesReadOut != nullptr) *bytesReadOut = bytesRead;
+  return true;
+}
+
+bool primeAndPickLayout(i2s_chan_handle_t rx, bool& channelEnabled,
+                        std::uint8_t* bytes, std::size_t capacity,
+                        std::uint32_t timeoutMs, voice::VoiceLayoutChoice* out,
+                        std::size_t* bytesReadOut) noexcept {
+  voice::VoiceLayoutChoice best{};
+  std::size_t bestBytes = 0;
+  for (int attempt = 0; attempt < kLayoutPickAttempts; ++attempt) {
+    if (!enableRx(rx, channelEnabled)) continue;
+    std::size_t lastBytes = 0;
+    int accepted = 0;
+    for (int spin = 0; spin < kPrimeReadsAfterEnable + 8 &&
+                       accepted < kPrimeReadsAfterEnable;
+         ++spin) {
+      std::size_t bytesRead = 0;
+      if (!readRawWindow(rx, bytes, capacity, timeoutMs, &bytesRead)) continue;
+      // Prefer multiples of 8 bytes so int32 stereo frames are possible.
+      if (bytesRead < 16 || bytesRead % 4 != 0) continue;
+      lastBytes = bytesRead;
+      ++accepted;
+    }
+    if (accepted < kPrimeReadsAfterEnable || lastBytes == 0) {
+      if (channelEnabled) {
+        (void)i2s_channel_disable(rx);
+        channelEnabled = false;
+      }
+      continue;
+    }
+    const auto choice = voice::pickBestVoiceLayout(bytes, lastBytes);
+    if (choice.quality.score > best.quality.score) {
+      best = choice;
+      bestBytes = lastBytes;
+    }
+    // Good enough speech/continuity — stop early.
+    if (best.quality.score >= 0.8F) break;
+  }
+  if (best.quality.score < 0.0F || bestBytes == 0) return false;
+  if (out != nullptr) *out = best;
+  if (bytesReadOut != nullptr) *bytesReadOut = bestBytes;
+  return true;
 }
 
 }  // namespace
@@ -70,6 +149,7 @@ esp_err_t TEmbedMicrophone::start() noexcept {
     return result;
   }
 
+  // Keep 32-bit stereo slots; layout picker decides MSB/LSB/int16 unpack.
   i2s_std_config_t standardConfig{
       .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(voice::kVoiceSampleRateHz),
       .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(
@@ -84,6 +164,7 @@ esp_err_t TEmbedMicrophone::start() noexcept {
               .invert_flags = {},
           },
   };
+  standardConfig.clk_cfg.mclk_multiple = I2S_MCLK_MULTIPLE_256;
   result = i2s_channel_init_std_mode(
       reinterpret_cast<i2s_chan_handle_t>(rxChannel_), &standardConfig);
   if (result != ESP_OK) {
@@ -147,41 +228,61 @@ esp_err_t TEmbedMicrophone::start() noexcept {
     return ESP_FAIL;
   }
   started_ = true;
-  ESP_LOGI(kTag, "ES7210/I2S1 initialized (hardware validation pending)");
+  ESP_LOGI(kTag, "ES7210/I2S1 initialized (dual-MEMS, 32-bit, %.0f dB, layout-pick)",
+           static_cast<double>(config_.inputGainDb));
   return ESP_OK;
 }
 
 void TEmbedMicrophone::run() noexcept {
-  std::array<std::int32_t, kDmaSlotsPerRead> slots{};
-  bool channelEnabled = true;
+  std::array<std::uint8_t, kDmaBytesPerRead> bytes{};
+  std::array<std::int32_t, kDmaBytesPerRead / 2> slots{};
+  bool channelEnabled = false;
+  auto* rx = reinterpret_cast<i2s_chan_handle_t>(rxChannel_);
   while (started_) {
     if (capture_.state() == voice::VoiceCaptureState::Starting) {
       normalizer_.reset();
-      if (channelEnabled) {
-        i2s_channel_disable(
-            reinterpret_cast<i2s_chan_handle_t>(rxChannel_));
-        channelEnabled = false;
-      }
-      const esp_err_t enabled = i2s_channel_enable(
-          reinterpret_cast<i2s_chan_handle_t>(rxChannel_));
-      if (enabled != ESP_OK ||
-          !capture_.notifyStarted(voice::kVoicePcmFormat)) {
-        capture_.notifyError();
+      voice::VoiceLayoutChoice choice{};
+      std::size_t primedBytes = 0;
+      if (!primeAndPickLayout(rx, channelEnabled, bytes.data(), bytes.size(),
+                              config_.readTimeoutMs, &choice, &primedBytes)) {
+        ESP_LOGW(kTag, "layout pick failed; retrying");
+        vTaskDelay(pdMS_TO_TICKS(20));
         continue;
       }
-      channelEnabled = true;
-      // Drop the first DMA window after enable; partial/stale framing here is
-      // what turns a USB replug into sticky harsh audio until the next restart.
-      std::size_t primeBytes = 0;
-      (void)i2s_channel_read(reinterpret_cast<i2s_chan_handle_t>(rxChannel_),
-                             slots.data(), sizeof(slots), &primeBytes,
-                             config_.readTimeoutMs);
+      layout_ = choice.layout;
+      normalizer_.setAlignment(voice::VoiceDmaAlignment::LeastSignificant);
+      normalizer_.setChannelMode(choice.channel);
+      ESP_LOGI(kTag,
+               "capture layout=%s channel=%s score=%.2f rms=%.4f hf=%.2f ac1=%.2f",
+               layoutName(layout_),
+               choice.channel == voice::VoiceDmaChannelMode::Second ? "R"
+                                                                    : "L",
+               static_cast<double>(choice.quality.score),
+               static_cast<double>(choice.quality.rms),
+               static_cast<double>(choice.quality.hfRatio),
+               static_cast<double>(choice.quality.ac1));
+      if (!capture_.notifyStarted(voice::kVoicePcmFormat)) {
+        ESP_LOGW(kTag, "notifyStarted rejected; retrying");
+        vTaskDelay(pdMS_TO_TICKS(20));
+        continue;
+      }
       normalizer_.reset();
+      (void)primedBytes;
+      (void)kResyncAttempts;
+    }
+    if (capture_.state() == voice::VoiceCaptureState::Error) {
+      if (channelEnabled) {
+        (void)i2s_channel_disable(rx);
+        channelEnabled = false;
+      }
+      normalizer_.reset();
+      capture_.setAvailable(true);
+      vTaskDelay(pdMS_TO_TICKS(20));
+      continue;
     }
     if (capture_.state() != voice::VoiceCaptureState::Running) {
       if (channelEnabled) {
-        i2s_channel_disable(
-            reinterpret_cast<i2s_chan_handle_t>(rxChannel_));
+        (void)i2s_channel_disable(rx);
         channelEnabled = false;
       }
       normalizer_.reset();
@@ -189,26 +290,28 @@ void TEmbedMicrophone::run() noexcept {
       continue;
     }
     std::size_t bytesRead = 0;
-    const esp_err_t result = i2s_channel_read(
-        reinterpret_cast<i2s_chan_handle_t>(rxChannel_), slots.data(),
-        sizeof(slots), &bytesRead, config_.readTimeoutMs);
-    if (result == ESP_ERR_TIMEOUT) {
+    if (!readRawWindow(rx, bytes.data(), bytes.size(), config_.readTimeoutMs,
+                       &bytesRead)) {
       normalizer_.notifyTimeout();
-    } else if (result != ESP_OK || bytesRead % sizeof(slots[0]) != 0) {
-      normalizer_.notifyReadError();
     } else {
-      const std::size_t slotCount = bytesRead / sizeof(slots[0]);
-      // Hardware stereo DMA must arrive in channel groups. An odd slot count
-      // after a USB remount would permanently slip L/R pairing.
-      if (slotCount % normalizerConfig().input.channels != 0) {
-        normalizer_.notifyReadError();
+      const std::size_t slotCount = voice::expandVoiceDmaSlots(
+          bytes.data(), bytesRead, layout_, slots.data(), slots.size());
+      if (slotCount == 0 || slotCount % 2 != 0) {
+        ESP_LOGW(kTag, "expand failed (%u bytes, layout=%s); resync",
+                 static_cast<unsigned>(bytesRead), layoutName(layout_));
+        normalizer_.reset();
+        voice::VoiceLayoutChoice choice{};
+        if (primeAndPickLayout(rx, channelEnabled, bytes.data(), bytes.size(),
+                               config_.readTimeoutMs, &choice, nullptr)) {
+          layout_ = choice.layout;
+          normalizer_.setChannelMode(choice.channel);
+          normalizer_.reset();
+        } else {
+          normalizer_.notifyReadError();
+        }
       } else {
         normalizer_.ingest(slots.data(), slotCount);
       }
-    }
-    if (capture_.state() == voice::VoiceCaptureState::Error) {
-      ESP_LOGE(kTag, "capture stopped after bounded DMA read failures");
-      stop();
     }
   }
 }

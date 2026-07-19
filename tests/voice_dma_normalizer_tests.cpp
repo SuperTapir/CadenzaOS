@@ -71,6 +71,49 @@ TEST_CASE("channel selection and averaging are deterministic") {
   CHECK(block.samples.back() == -500);
 }
 
+TEST_CASE("odd leftover slot permanently skews Average L/R pairing") {
+  // HEAD remount path can leave one stereo slot pending (odd prime/read).
+  // The next even DMA window then pairs R[n] with L[n+1] forever — the sticky
+  // dual-MEMS 炸麦 mechanism. Adapter must resync instead of ingesting.
+  VoiceCaptureCoordinator capture;
+  startCapture(capture, VoiceConsumer::Usb);
+  VoiceDmaNormalizerConfig config;
+  config.input.channelMode = VoiceDmaChannelMode::Average;
+  VoiceDmaNormalizer normalizer{capture, config};
+
+  std::array<std::int32_t, kVoiceSamplesPerBlock * 2> slots{};
+  for (std::size_t frame = 0; frame < kVoiceSamplesPerBlock; ++frame) {
+    // Distinct ramps so skewed pairing cannot accidentally match aligned.
+    slots[frame * 2] = static_cast<std::int32_t>(1000 + frame) << 16;      // L
+    slots[frame * 2 + 1] = static_cast<std::int32_t>(-(2000 + frame)) << 16;  // R
+  }
+
+  VoiceBlock aligned;
+  REQUIRE(normalizer.ingest(slots.data(), slots.size()));
+  REQUIRE(capture.tryPop(VoiceConsumer::Usb, aligned));
+  CHECK(aligned.samples[0] == static_cast<std::int16_t>((1000 - 2000) / 2));
+  CHECK(aligned.samples[1] == static_cast<std::int16_t>((1001 - 2001) / 2));
+
+  capture.setIntent(VoiceConsumer::Usb, false);
+  REQUIRE(capture.setIntent(VoiceConsumer::Usb, true));
+  REQUIRE(capture.notifyStarted(kVoicePcmFormat));
+  VoiceDmaNormalizer slipped{capture, config};
+  const std::int32_t orphan = static_cast<std::int32_t>(-9999) * 65536;
+  REQUIRE(slipped.ingest(&orphan, 1));
+  CHECK(slipped.pendingFrameSlots() == 1);
+  REQUIRE(slipped.ingest(slots.data(), slots.size()));
+  VoiceBlock skewed;
+  REQUIRE(capture.tryPop(VoiceConsumer::Usb, skewed));
+  // First emitted sample becomes avg(orphan, L0) instead of avg(L0, R0).
+  CHECK(skewed.samples[0] ==
+        static_cast<std::int16_t>((-9999 + 1000) / 2));
+  CHECK(skewed.samples[0] != aligned.samples[0]);
+  // Subsequent samples stay on the skewed lattice: avg(R[n], L[n+1]).
+  CHECK(skewed.samples[1] ==
+        static_cast<std::int16_t>((-(2000) + 1001) / 2));
+  CHECK(skewed.samples[1] != aligned.samples[1]);
+}
+
 TEST_CASE("24 and 32 bit slots scale and saturate into signed S16") {
   VoiceCaptureCoordinator capture;
   startCapture(capture, VoiceConsumer::Usb);

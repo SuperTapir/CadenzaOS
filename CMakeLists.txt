@@ -64,6 +64,7 @@ add_library(cadenza_system STATIC
   lib/cadenza_system/src/usb_voice_packetizer.cpp
   lib/cadenza_system/src/usb_voice_session_bridge.cpp
   lib/cadenza_system/src/voice_dma_normalizer.cpp
+  lib/cadenza_system/src/voice_dma_layout.cpp
   lib/cadenza_system/src/voice_input.cpp
 )
 add_library(cadenza::system ALIAS cadenza_system)
@@ -586,6 +587,19 @@ if(CADENZA_BUILD_TESTS)
   )
   add_test(NAME cadenza_voice_dma_normalizer_tests
     COMMAND cadenza_voice_dma_normalizer_tests
+  )
+
+  add_executable(cadenza_voice_dma_layout_tests
+    tests/voice_dma_layout_tests.cpp
+  )
+  target_link_libraries(cadenza_voice_dma_layout_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_voice_dma_layout_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_voice_dma_layout_tests
+    COMMAND cadenza_voice_dma_layout_tests
   )
 
   add_executable(cadenza_usb_voice_descriptor_contract_tests

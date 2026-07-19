@@ -64,6 +64,7 @@ idf_component_register(
     "${cadenza_root}/lib/cadenza_system/src/usb_voice_packetizer.cpp"
     "${cadenza_root}/lib/cadenza_system/src/usb_voice_session_bridge.cpp"
     "${cadenza_root}/lib/cadenza_system/src/voice_dma_normalizer.cpp"
+    "${cadenza_root}/lib/cadenza_system/src/voice_dma_layout.cpp"
     "${cadenza_root}/lib/cadenza_system/src/voice_input.cpp"
     ${cadenza_runtime_sources}
     ${cadenza_connectivity_sources}

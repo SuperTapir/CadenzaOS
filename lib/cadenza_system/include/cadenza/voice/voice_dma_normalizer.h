@@ -57,6 +57,15 @@ class VoiceDmaNormalizer {
   void notifyTimeout() noexcept;
   void notifyReadError() noexcept;
   void reset() noexcept;
+  void setChannelMode(VoiceDmaChannelMode mode) noexcept {
+    config_.input.channelMode = mode;
+  }
+  void setAlignment(VoiceDmaAlignment alignment) noexcept {
+    config_.input.alignment = alignment;
+  }
+  VoiceDmaChannelMode channelMode() const noexcept {
+    return config_.input.channelMode;
+  }
 
   const VoiceDmaNormalizerDiagnostics& diagnostics() const noexcept {
     return diagnostics_;

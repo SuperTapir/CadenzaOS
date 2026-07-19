@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "cadenza/voice/voice_dma_layout.h"
 #include "cadenza/voice/voice_dma_normalizer.h"
 #include "cadenza_t_embed_audio_contract.h"
 #include "esp_err.h"
@@ -17,8 +18,8 @@ struct TEmbedMicrophoneConfig {
   int lrckPin = t_embed_audio::kMicrophoneWordSelectPin;
   int dataInPin = t_embed_audio::kMicrophoneDataInPin;
   int mclkPin = t_embed_audio::kMicrophoneMclkPin;
-  // Adopted T-Embed baseline (2026-07-19 hardware check): dual MEMS average,
-  // 24 dB in-gain; USB remount must recycle I²S/DMA framing before streaming.
+  // Dual MEMS selected; mono channel + DMA unpack chosen per capture start by
+  // scoring a prime window (RST packing/channel lottery).
   std::uint8_t microphoneMask = 0x03;  // ES7210_SEL_MIC1 | ES7210_SEL_MIC2
   float inputGainDb = 24.0F;
   std::uint32_t readTimeoutMs = 20;
@@ -46,6 +47,7 @@ class TEmbedMicrophone {
   voice::VoiceCaptureCoordinator& capture_;
   TEmbedMicrophoneConfig config_;
   voice::VoiceDmaNormalizer normalizer_;
+  voice::VoiceDmaLayout layout_ = voice::VoiceDmaLayout::Int32Msb16;
   void* i2cBus_ = nullptr;
   void* rxChannel_ = nullptr;
   const void* controlInterface_ = nullptr;
