@@ -771,6 +771,71 @@ void MonoCanvas::drawBitmap(const BitmapView& bitmap, Rect source,
     return;
   }
 
+  // Hot path for upright 1bpp Copy: byte memcpy when bit-aligned, otherwise
+  // inline bit ops (avoids setPixel/pixel call overhead on Launcher covers).
+  if (options.composition == BitmapComposition::Copy && !options.flipX &&
+      !options.flipY && !overlapsStorage) {
+    std::uint8_t* destination = framebuffer_.data();
+    const std::size_t destinationStride = framebuffer_.stride();
+    const std::int32_t sourceOriginX =
+        clippedSource.x + (visible.x - destinationX);
+    const std::int32_t sourceOriginY =
+        clippedSource.y + (visible.y - destinationY);
+    if ((sourceOriginX & 7) == 0 && (visible.x & 7) == 0) {
+      const std::size_t fullBytes =
+          static_cast<std::size_t>(visible.width) / 8U;
+      const std::int32_t remainder = visible.width & 7;
+      for (std::int32_t row = 0; row < visible.height; ++row) {
+        const std::uint8_t* sourceRow =
+            bitmap.data +
+            static_cast<std::size_t>(sourceOriginY + row) * bitmap.stride +
+            static_cast<std::size_t>(sourceOriginX) / 8U;
+        std::uint8_t* destinationRow =
+            destination +
+            static_cast<std::size_t>(visible.y + row) * destinationStride +
+            static_cast<std::size_t>(visible.x) / 8U;
+        if (fullBytes > 0U) {
+          std::memcpy(destinationRow, sourceRow, fullBytes);
+        }
+        if (remainder != 0) {
+          const std::uint8_t src = sourceRow[fullBytes];
+          std::uint8_t& dst = destinationRow[fullBytes];
+          const std::uint8_t keep =
+              static_cast<std::uint8_t>(0xFFU >> remainder);
+          const std::uint8_t take =
+              static_cast<std::uint8_t>(static_cast<std::uint8_t>(~keep) & src);
+          dst = static_cast<std::uint8_t>((dst & keep) | take);
+        }
+      }
+      return;
+    }
+    for (std::int32_t row = 0; row < visible.height; ++row) {
+      const std::uint8_t* sourceRow =
+          bitmap.data +
+          static_cast<std::size_t>(sourceOriginY + row) * bitmap.stride;
+      std::uint8_t* destinationRow =
+          destination +
+          static_cast<std::size_t>(visible.y + row) * destinationStride;
+      for (std::int32_t column = 0; column < visible.width; ++column) {
+        const std::int32_t sourceX = sourceOriginX + column;
+        const std::int32_t destinationXPixel = visible.x + column;
+        const bool sourceBlack =
+            (sourceRow[static_cast<std::size_t>(sourceX) >> 3] &
+             static_cast<std::uint8_t>(0x80U >> (sourceX & 7))) != 0;
+        const auto mask = static_cast<std::uint8_t>(
+            0x80U >> (destinationXPixel & 7));
+        std::uint8_t& cell =
+            destinationRow[static_cast<std::size_t>(destinationXPixel) >> 3];
+        if (sourceBlack) {
+          cell = static_cast<std::uint8_t>(cell | mask);
+        } else {
+          cell = static_cast<std::uint8_t>(cell & static_cast<std::uint8_t>(~mask));
+        }
+      }
+    }
+    return;
+  }
+
   const bool bottomUp = overlapsStorage && destinationY > clippedSource.y;
   const std::int32_t firstRow = bottomUp ? visible.y + visible.height - 1 : visible.y;
   const std::int32_t lastRow = bottomUp ? visible.y - 1 : visible.y + visible.height;

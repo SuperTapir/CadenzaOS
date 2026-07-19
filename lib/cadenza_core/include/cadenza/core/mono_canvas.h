@@ -137,6 +137,8 @@ class MonoCanvas {
 
   std::int16_t width() const noexcept { return framebuffer_.width(); }
   std::int16_t height() const noexcept { return framebuffer_.height(); }
+  MonoFramebuffer& framebuffer() noexcept { return framebuffer_; }
+  const MonoFramebuffer& framebuffer() const noexcept { return framebuffer_; }
   const Rect& clip() const noexcept { return clip_; }
   const ResolvedTypography& typography() const noexcept { return typography_; }
 

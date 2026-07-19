@@ -210,6 +210,7 @@ bool AppRuntime::startTransition(AppId id, audio::SoundCue cue) noexcept {
   transitioning_ = true;
   swapped_ = false;
   incomingRendered_ = false;
+  lastHandoffCoverage_ = 255;
   frameCommandSink_->submit(
       {ResourceOwner::system(), SystemCommand::playSound(cue), 0});
   emitDiagnostic({DiagnosticCategory::Runtime, DiagnosticCode::AppTransition,
@@ -360,8 +361,32 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
   }
   if (transitioning_) {
     if (stagedTransition_ && launchHandoff_ && !swapped_) {
-      renderHandoffFrame(pendingId_, transition_ * 2.0F,
-                         launchRendererAvailable_);
+      const float localProgress =
+          std::max(0.0F, std::min(1.0F, transition_ * 2.0F));
+      if (!launchRendererAvailable_) {
+        // Static cover bridge: one render is enough for the whole first half.
+        if (lastHandoffCoverage_ == 255) {
+          renderHandoffFrame(pendingId_, localProgress, false);
+          lastHandoffCoverage_ = 0;
+        }
+      } else {
+        // Same discrete coverage steps as blendCenteredCoverIntoTarget.
+        constexpr float kCoverHold = 0.22F;
+        const float blend =
+            localProgress <= kCoverHold
+                ? 0.0F
+                : [&]() {
+                    const float t = (localProgress - kCoverHold) /
+                                   (1.0F - kCoverHold);
+                    return t * t * (3.0F - 2.0F * t);
+                  }();
+        const auto coverage = static_cast<std::uint8_t>(
+            std::max(0.0F, std::min(64.0F, blend * 64.0F)));
+        if (coverage != lastHandoffCoverage_) {
+          renderHandoffFrame(pendingId_, localProgress, true);
+          lastHandoffCoverage_ = coverage;
+        }
+      }
     }
     if (swapped_ && !incomingRendered_) {
       incomingFrame_.clear(false);

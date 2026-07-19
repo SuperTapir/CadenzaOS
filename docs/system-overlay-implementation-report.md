@@ -61,11 +61,12 @@ ESP-IDF 5.5 connectivity candidate 也实际编译 `system_surface.cpp`：binary
 transaction 内同步推进。GCC 14 candidate 发现并修复了 Xtensa 上 `int32_t` 为 `long` 时
 `std::min/std::max(int32_t, int)` 推导失败的问题。
 
-## 尚不能由软件替代的验收
+## 实体验收（2026-07-19）
 
-以下结论必须在实体 320×170 T-Embed 上完成，不能以 simulator 声称通过：
+在实体 320×170 T-Embed 上完成，结论如下：
 
-1. 650 ms 长按是否适合频繁打开；
-2. 触发 release、关闭 held release 和快速连续操作的真实旋钮/按键手感；
-3. Menu 文本、dither、selection、实心/空心音量格与开关在实际面板上的可读性；
-4. Muted/有声反馈等价性以及至少 100 次 open/close 的稳定性。
+1. 650 ms 长按适合频繁打开，保留 `InputConfig::longPressMs = 650`；
+2. 触发 release、关闭 held release 与快速连续开/关手感通过，无误确认与输入泄漏；
+3. Menu 文本、selection、音量格与开关在面板上可读；
+4. Muted/有声反馈等价，反复 open/close 稳定，串口无 panic/TWDT；
+5. 不调整视觉常量，无 contract 回写需求。

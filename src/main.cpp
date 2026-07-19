@@ -33,6 +33,9 @@ cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
 std::int64_t lastFrameUs = 0;
+std::int64_t fpsWindowStartUs = 0;
+std::uint32_t fpsPresentedFrames = 0;
+std::uint32_t fpsLogicFrames = 0;
 
 struct LcdCommand {
   uint8_t command;
@@ -56,7 +59,20 @@ void applyPanelInitialization() {
     if (entry.length & 0x80) delay(120);
   }
 }
+
+bool shouldPresent() noexcept {
+  if (runtime.transitioning() || runtime.systemMenuActive() ||
+      runtime.appSuspendedBySystem()) {
+    return true;
+  }
+  if (runtime.currentId() != cadenza::apps::kLauncherAppId) {
+    return true;
+  }
+  // Settled launcher with an already-presented pose skips TFT present and
+  // recovers the SPI budget that previously capped the device near 8 FPS.
+  return launcher.needsPresent();
 }
+}  // namespace
 
 void setup() {
   pinMode(BoardPins::kPowerOn, OUTPUT);
@@ -73,8 +89,8 @@ void setup() {
   pinMode(BoardPins::kLcdBacklight, OUTPUT);
   digitalWrite(BoardPins::kLcdBacklight, HIGH);
 
-  Serial.printf("Display: T-Embed ST7789, %dx%d\n", framebuffer.width(),
-                framebuffer.height());
+  Serial.printf("Display: T-Embed ST7789, %dx%d SPI=80MHz\n",
+                framebuffer.width(), framebuffer.height());
   input.begin();
   runtime.setDiagnosticSink(&diagnosticSink);
   services.setDiagnosticSink(&diagnosticSink);
@@ -99,8 +115,11 @@ void setup() {
       cadenza::system::PlatformEvent::soundOutputAvailability(audioAvailable));
   if (!audioAvailable) {
     Serial.println("Audio disabled; graphics runtime remains active");
+  } else {
+    Serial.println("I2S audio task started (MAX98357A)");
   }
   lastFrameUs = esp_timer_get_time();
+  fpsWindowStartUs = lastFrameUs;
 }
 
 void loop() {
@@ -112,9 +131,54 @@ void loop() {
   }
   const float dt = std::min((now - lastFrameUs) / 1000000.0f, 0.05f);
   lastFrameUs = now;
+  const auto inputFrame = input.takeFrame();
+  const std::int64_t logicStart = esp_timer_get_time();
   cadenza::system::FrameCoordinator::runFrameAt(
       services, runtime, canvas,
-      static_cast<cadenza::MonotonicMillis>(now / 1000), dt,
-      input.takeFrame());
-  presenter.present(framebuffer);
+      static_cast<cadenza::MonotonicMillis>(now / 1000), dt, inputFrame);
+  const std::int64_t logicUs = esp_timer_get_time() - logicStart;
+  ++fpsLogicFrames;
+
+  // After a system overlay/transition, force one more present so the TFT is
+  // not left showing a stale menu/alert frame once the overlay closes.
+  static bool holdPresentAfterSystem = false;
+  const bool systemBusy = runtime.transitioning() ||
+                          runtime.systemMenuActive() ||
+                          runtime.appSuspendedBySystem();
+  if (systemBusy) {
+    holdPresentAfterSystem = true;
+  }
+  std::int64_t presentUs = 0;
+  if (shouldPresent() || holdPresentAfterSystem) {
+    const std::int64_t presentStart = esp_timer_get_time();
+    presenter.present(framebuffer);
+    presentUs = esp_timer_get_time() - presentStart;
+    ++fpsPresentedFrames;
+    if (runtime.currentId() == cadenza::apps::kLauncherAppId) {
+      launcher.markPresented();
+    }
+    if (!systemBusy) {
+      holdPresentAfterSystem = false;
+    }
+  }
+  // Present can take multiple milliseconds; keep draining encoder edges so a
+  // slow frame never freezes navigation direction tracking.
+  input.sample();
+  if (inputFrame.turn != 0) {
+    Serial.printf("turn=%d logic=%lldus present=%lldus\n",
+                  static_cast<int>(inputFrame.turn),
+                  static_cast<long long>(logicUs),
+                  static_cast<long long>(presentUs));
+  }
+  if (now - fpsWindowStartUs >= 1000000) {
+    Serial.printf("fps present=%u logic=%u\n",
+                  static_cast<unsigned>(fpsPresentedFrames),
+                  static_cast<unsigned>(fpsLogicFrames));
+    fpsPresentedFrames = 0;
+    fpsLogicFrames = 0;
+    fpsWindowStartUs = now;
+  }
+  // Heavy Gallery Transition frames (DIP etc.) can exceed 16 ms. Without a
+  // yield the Arduino loop task never pets the TWDT and the chip reboots.
+  delay(1);
 }

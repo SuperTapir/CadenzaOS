@@ -234,6 +234,16 @@ void blendCenteredCoverIntoTarget(
                     copyWidth, copyHeight};
   const int bitmapLeft = bounds.x + (bounds.width - copyWidth) / 2;
   const int bitmapTop = bounds.y + (bounds.height - copyHeight) / 2;
+
+  // Hold phase: full cover plate without a 54k dither walk.
+  if (coverage == 0) {
+    canvas.clear(true);
+    canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height,
+                    blackBackground);
+    canvas.drawBitmap(bitmap, source, bitmapLeft, bitmapTop);
+    return;
+  }
+
   for (int y = 0; y < canvas.height(); ++y) {
     for (int x = 0; x < canvas.width(); ++x) {
       if (kOrderedDither8x8.thresholds[(y & 7) * 8 + (x & 7)] <
@@ -545,6 +555,7 @@ void LauncherApp::onEnter() noexcept {
   animationStart_ = position_;
   motionElapsed_ = 0.0F;
   settled_ = true;
+  presentPending_ = true;
 }
 
 void LauncherApp::update(const AppUpdateContext& context) noexcept {
@@ -558,12 +569,14 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
     animationStart_ = 0.0F;
     motionElapsed_ = 0.0F;
     settled_ = true;
+    presentPending_ = true;
     return;
   }
   if (motionProfile_ != context.system.motionProfile) {
     motionProfile_ = context.system.motionProfile;
     animationStart_ = position_;
     motionElapsed_ = 0.0F;
+    presentPending_ = true;
   }
   if (input.turn != 0) {
     const int previous = selected_;
@@ -572,6 +585,7 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
     targetPosition_ += static_cast<std::int64_t>(input.turn);
     selected_ = wrap(static_cast<int>(targetPosition_ % appCount), appCount);
     settled_ = false;
+    presentPending_ = true;
     context.commands.submit(SystemCommand::playSound(
         selected_ == previous ? audio::SoundCue::Boundary
                               : audio::SoundCue::Navigate));
@@ -596,6 +610,7 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
       animationStart_ = target;
       motionElapsed_ = 0.0F;
       settled_ = true;
+      presentPending_ = true;
     }
   }
   constexpr std::int64_t kRebaseThreshold = 4096;
@@ -619,8 +634,9 @@ void LauncherApp::render(MonoCanvas& canvas,
   const int height = canvas.height();
   // Maximum-density pure scanlines for a 1-bit framebuffer: one dark row,
   // one light row. The phase is screen-anchored and never crawls with cards.
+  // fillRect/u8g2 box is much cheaper than per-row line() on this density.
   for (int y = 1; y < height; y += 2) {
-    canvas.line(0, y, width - 1, y, true);
+    canvas.fillRect(0, y, width, 1, true);
   }
   const int centerX = width / 2;
   const Rect viewport{0, 0, width, height};

@@ -50,6 +50,7 @@
 
 ## 7. 实体交互验收
 
-- [ ] 7.1 在实体 T-Embed 验证 650 ms 长按、触发 release 不误确认、关闭 held release 不泄漏和快速连续操作
-- [ ] 7.2 在实体 320×170 屏验证 Menu 可读性、旋钮选择、声音/静音反馈和至少 100 次 open/close 稳定性
-- [ ] 7.3 根据真机结果决定是否只调 InputConfig 阈值/视觉常量；任何 contract 变化回写 design/spec 并重跑完整门禁
+- [x] 7.1 在实体 T-Embed 验证 650 ms 长按、触发 release 不误确认、关闭 held release 不泄漏和快速连续操作
+- [x] 7.2 在实体 320×170 屏验证 Menu 可读性、旋钮选择、声音/静音反馈和至少 100 次 open/close 稳定性
+- [x] 7.3 根据真机结果决定是否只调 InputConfig 阈值/视觉常量；任何 contract 变化回写 design/spec 并重跑完整门禁
+  - 决策（2026-07-19 真机）：保留 `longPressMs = 650`；不调整视觉常量；无 contract 变更

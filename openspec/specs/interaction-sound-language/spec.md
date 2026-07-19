@@ -7,13 +7,13 @@
 
 系统 SHALL 定义 Input 家族的 Navigate、Boundary，Action 家族的 Confirm、Back、ToggleOn、ToggleOff、Reject，Surface 家族的 MenuOpen、MenuClose，Outcome 家族的 Complete、Warning、Failure，以及 System 家族的 Notification、Connect、Disconnect、PowerOn、PowerOff；调用方 SHALL 请求交互语义而不是平台设备操作或资源路径。
 
-#### Scenario: Launcher 选择改变
-- **WHEN** 旋钮输入实际改变 Launcher 当前选择
+#### Scenario: Launcher 或 System Menu 选择改变
+- **WHEN** 旋钮输入实际改变 Launcher 或 System Menu 当前选择
 - **THEN** 系统触发一次 Navigate，并保留同步的视觉选择反馈
 
-#### Scenario: 打开与返回
-- **WHEN** 用户确认打开 App 或长按返回 Launcher
-- **THEN** 系统分别触发 Confirm 或 Back，且提示与转场开始属于同一次语义动作
+#### Scenario: 打开 App
+- **WHEN** 用户确认打开 App
+- **THEN** 系统触发 Confirm，且提示与转场开始属于同一次语义动作
 
 #### Scenario: 无效动作
 - **WHEN** 用户动作没有改变状态或被边界拒绝
@@ -22,6 +22,10 @@
 #### Scenario: System Menu 展开与收起
 - **WHEN** System Menu 开始展开或收起
 - **THEN** 系统分别触发 MenuOpen 或 MenuClose，声音与视觉形变同帧开始，且不得复用 Confirm 或 Back
+
+#### Scenario: Menu Home 返回
+- **WHEN** 用户确认 Menu 中的 Home 动作
+- **THEN** 系统触发 Back，且 Menu 关闭与到配置 Home App 的 transition 属于同一次语义动作
 
 #### Scenario: 结果与系统事件
 - **WHEN** 调用方提交一个有效的 Outcome 或 System cue

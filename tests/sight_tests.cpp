@@ -448,6 +448,34 @@ TEST_CASE("musical note replay restarts without accumulating voices") {
                     [](std::int16_t sample) { return sample == 0; }));
 }
 
+TEST_CASE("bass-clef audition peak is not drowned by treble") {
+  using namespace cadenza::audio;
+  auto peakOf = [](std::uint8_t midi) {
+    InteractionSoundService service;
+    REQUIRE(service.setVolume(SoundVolume::Medium));
+    REQUIRE(service.playNotes(MusicalNoteSet::single(midi)));
+    std::array<std::int16_t, 2048> samples{};
+    int peak = 0;
+    // Skip attack; measure a mid-tone block where envelope is stable.
+    service.render(samples.data(), samples.size());
+    service.render(samples.data(), samples.size());
+    for (const std::int16_t sample : samples) {
+      peak = std::max(peak, std::abs(static_cast<int>(sample)));
+    }
+    return peak;
+  };
+
+  const int bassPeak = peakOf(41);   // F2 — bass staff / ledger
+  const int treblePeak = peakOf(72); // C5
+  CHECK(bassPeak > 0);
+  CHECK(treblePeak > 0);
+  // Audible enough, but not the "bass louder than treble" overshoot.
+  CHECK(bassPeak * 100 >= treblePeak * 45);
+  CHECK(bassPeak * 100 <= treblePeak * 130);
+  CHECK(InteractionSoundService::midiFrequency(41) ==
+        doctest::Approx(87.3071F).epsilon(0.0001));
+}
+
 TEST_CASE("four-note audition is deterministic bounded and returns to zero") {
   using namespace cadenza::audio;
   const MusicalNoteSet notes{{48, 60, 72, 84}, 4};

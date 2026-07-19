@@ -74,6 +74,7 @@ void AnimationGalleryApp::update(const AppUpdateContext& context) noexcept {
       demoHeight_ != context.displayHeight) {
     demoWidth_ = context.displayWidth;
     demoHeight_ = context.displayHeight;
+    transitionScenesReady_ = false;
     resetDemo();
   }
   if (context.system.motionProfile != motionProfile_) {
@@ -211,6 +212,7 @@ void AnimationGalleryApp::ensureTransitionBuffers(
                                          : FramebufferProfile::TEmbed;
   transitionFrom_ = MonoFramebuffer{profile};
   transitionTo_ = MonoFramebuffer{profile};
+  transitionScenesReady_ = false;
 }
 
 void AnimationGalleryApp::renderHeader(MonoCanvas& canvas) noexcept {
@@ -287,24 +289,27 @@ void AnimationGalleryApp::renderSpring(MonoCanvas& canvas) noexcept {
 void AnimationGalleryApp::renderTransition(
     MonoCanvas& canvas, const Transition& transition) noexcept {
   ensureTransitionBuffers(canvas);
-  MonoCanvas from{transitionFrom_};
-  MonoCanvas to{transitionTo_};
-  from.clear(false);
-  to.clear(true);
-  from.fillCircle(canvas.width() / 3, canvas.height() / 2, 35, true);
-  from.text("A", canvas.width() / 3, canvas.height() / 2, 1, false,
+  if (!transitionScenesReady_) {
+    MonoCanvas from{transitionFrom_};
+    MonoCanvas to{transitionTo_};
+    from.clear(false);
+    to.clear(true);
+    from.fillCircle(canvas.width() / 3, canvas.height() / 2, 35, true);
+    from.text("A", canvas.width() / 3, canvas.height() / 2, 1, false,
+              TextAlign::MiddleCenter, TextRole::Title);
+    to.fillRect(canvas.width() * 2 / 3 - 35, canvas.height() / 2 - 35, 70, 70,
+                false);
+    to.text("B", canvas.width() * 2 / 3, canvas.height() / 2, 1, true,
             TextAlign::MiddleCenter, TextRole::Title);
-  to.fillRect(canvas.width() * 2 / 3 - 35, canvas.height() / 2 - 35, 70, 70,
-              false);
-  to.text("B", canvas.width() * 2 / 3, canvas.height() / 2, 1, true,
-          TextAlign::MiddleCenter, TextRole::Title);
+    transitionScenesReady_ = true;
+  }
   transition.compose(transitionFrom_, transitionTo_, canvas, progress_);
 }
 
 void AnimationGalleryApp::renderSelection(MonoCanvas& canvas) noexcept {
-  const float scale = selection_.scale();
-  const int width = static_cast<int>(120.0F * scale);
-  const int height = static_cast<int>(52.0F * scale);
+  const float scale = std::max(0.05F, selection_.scale());
+  const int width = std::max(8, static_cast<int>(120.0F * scale));
+  const int height = std::max(8, static_cast<int>(52.0F * scale));
   const int x = (canvas.width() - width) / 2;
   const int y = (canvas.height() - height) / 2;
   canvas.fillRoundedRect(x, y, width, height, 6, true);

@@ -109,6 +109,15 @@ class LauncherApp final : public App {
   std::int64_t targetPosition() const noexcept { return targetPosition_; }
   float visualPosition() const noexcept { return position_; }
   bool settled() const noexcept { return settled_; }
+  // Host may skip TFT present only after the settled pose has been shown once.
+  // render() must still run: AppRuntime clears a scratch buffer every frame.
+  bool needsPresent() const noexcept {
+    return !settled_ || presentPending_;
+  }
+  void markPresented() noexcept {
+    if (settled_) presentPending_ = false;
+  }
+
  private:
   int selected_ = 0;
   std::int64_t targetPosition_ = 0;
@@ -117,6 +126,7 @@ class LauncherApp final : public App {
   Seconds motionElapsed_ = 0.0F;
   MotionProfile motionProfile_ = MotionProfile::Normal;
   bool settled_ = true;
+  bool presentPending_ = true;
 };
 
 enum class TimerPresentationState : std::uint8_t {
@@ -267,6 +277,8 @@ class AnimationGalleryApp final : public App {
   AnimationStateMachine<2, 2> spriteMachine_;
   MonoFramebuffer transitionFrom_{FramebufferProfile::TEmbed};
   MonoFramebuffer transitionTo_{FramebufferProfile::TEmbed};
+  // A/B demo plates are static; rebuild only when buffer size changes.
+  bool transitionScenesReady_ = false;
 };
 
 }  // namespace cadenza

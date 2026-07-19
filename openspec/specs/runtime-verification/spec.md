@@ -11,11 +11,11 @@ Every behavior introduced by this change SHALL first have an automated test or e
 - **THEN** its associated test is present, was capable of failing before implementation, and passes after implementation
 
 ### Requirement: App lifecycle is tested
-Automated tests SHALL cover registration, initial entry, open guards, `onExit`/`onEnter` order, transition input freeze, and system long-press return.
+Automated tests SHALL cover registration, initial entry, open guards, `onExit`/`onEnter` order, transition input freeze, System Menu input ownership, suspend-with-snapshot, transition defer, explicit Menu Home return, capacity diagnostics, and both framebuffer profiles.
 
 #### Scenario: Lifecycle suite runs
-- **WHEN** the host test suite executes lifecycle cases
-- **THEN** all lifecycle calls and active-App updates match the portable-runtime contract
+- **WHEN** the host test suite / runtime test target executes lifecycle cases
+- **THEN** it proves the opening and closing button sequences do not leak, Menu active freezes App update/render without exit/enter, system services continue, transition-time Menu requests open on the stable destination, and Home uses the configured normal Back transition
 
 ### Requirement: Input state machine is tested
 Automated tests SHALL cover debounce, short press, long press, release, repeated samples, turn direction, saturation, and frame reset behavior without GPIO.

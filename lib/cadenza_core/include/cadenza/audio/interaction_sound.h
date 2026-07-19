@@ -80,6 +80,7 @@ class InteractionSoundService {
   void clearScheduled() noexcept;
   void startDueEvents() noexcept;
   void startNotes(const MusicalNoteSet& notes) noexcept;
+  void clearPendingNotes() noexcept;
   static float volumeGain(SoundVolume volume) noexcept;
 
   AudioCommandQueue commands_;
@@ -93,6 +94,11 @@ class InteractionSoundService {
   // Out-of-band safety mailbox: a full SPSC cue queue must never delay silence.
   std::atomic<bool> muteRequested_{false};
   std::atomic<bool> stopRequested_{false};
+  // Latest-wins audition mailbox. PlayNotes stays droppable in the SPSC queue so
+  // mute/stop keep their reserve, but a rejected user audition is not lost when
+  // Navigate spam saturates the ordinary watermark.
+  MusicalNoteSet pendingNotes_{};
+  std::atomic<bool> notesPending_{false};
 };
 
 }  // namespace cadenza::audio

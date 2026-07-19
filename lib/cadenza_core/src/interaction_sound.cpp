@@ -45,32 +45,109 @@ bool InteractionSoundService::play(SoundCue cue) noexcept {
 
 bool InteractionSoundService::playNotes(const MusicalNoteSet& notes) noexcept {
   if (!notes.valid() || volume_ == SoundVolume::Muted) return false;
-  return commands_.tryPush(AudioCommand::playNotes(notes));
+  if (commands_.tryPush(AudioCommand::playNotes(notes))) return true;
+  // Queue push failed at the droppable watermark. Keep the newest audition so
+  // Sight reveal/replay cannot be starved by Navigate/Boundary spam.
+  pendingNotes_ = notes;
+  notesPending_.store(true, std::memory_order_release);
+  return true;
 }
 
 float InteractionSoundService::midiFrequency(std::uint8_t note) noexcept {
   return 440.0F * std::pow(2.0F, (static_cast<float>(note) - 69.0F) / 12.0F);
 }
 
+namespace {
+
+// T-Embed's tiny speaker cannot radiate meaningful energy below ~200 Hz.
+// Raising only the 2nd harmonic still leaves deep bass (F2≈87 Hz → 2f≈174 Hz)
+// in the dead band. Virtual-bass practice: keep the MIDI fundamental for pitch
+// identity, but put most energy on 3f/4f (and 2f) so the ear reconstructs the
+// missing fundamental (MaxxBass / Waves-style).
+ToneSpec makeAuditionPartial(float frequencyHz, float gain,
+                             float secondHarmonicGain) noexcept {
+  ToneSpec tone;
+  tone.waveform = Waveform::Sine;
+  tone.startFrequencyHz = frequencyHz;
+  tone.endFrequencyHz = frequencyHz;
+  tone.attackSeconds = 0.008F;
+  tone.decaySeconds = 0.20F;
+  tone.durationSeconds = 0.70F;
+  tone.releaseSeconds = 0.08F;
+  tone.gain = gain;
+  tone.secondHarmonicGain = secondHarmonicGain;
+  tone.secondHarmonicPhaseCycles = 0.25F;
+  tone.priority = 2;
+  tone.envelopeCurve = EnvelopeCurve::Exponential;
+  return tone;
+}
+
+float auditionVoiceGain(std::uint8_t midiNote, std::size_t count) noexcept {
+  const float base = 0.48F / std::sqrt(static_cast<float>(count));
+  float boost = 1.0F;
+  if (midiNote < 48) {
+    boost = 1.80F;
+  } else if (midiNote < 60) {
+    boost = 1.45F;
+  } else if (midiNote < 67) {
+    boost = 1.12F;
+  }
+  return std::min(0.85F, base * boost);
+}
+
+float auditionSecondHarmonicGain(std::uint8_t midiNote) noexcept {
+  if (midiNote < 48) return 0.85F;
+  if (midiNote < 60) return 0.60F;
+  if (midiNote < 67) return 0.28F;
+  return 0.18F;
+}
+
+bool startVirtualBassNote(AudioEngine& engine, std::uint8_t midiNote) noexcept {
+  const float fundamentalHz = InteractionSoundService::midiFrequency(midiNote);
+  // Mild virtual bass: enough 3f/4f to hear pitch on the stock capsule, but
+  // keep loudness near treble (earlier gains made bass louder than C5).
+  const bool deep = midiNote < 48;
+  const float fGain = deep ? 0.14F : 0.20F;
+  const float h2 = deep ? 0.55F : 0.42F;
+  const float thirdGain = deep ? 0.28F : 0.22F;
+  const float fourthGain = deep ? 0.18F : 0.14F;
+
+  if (!engine.play(makeAuditionPartial(fundamentalHz, fGain, h2))) {
+    return false;
+  }
+  if (!engine.play(makeAuditionPartial(fundamentalHz * 3.0F, thirdGain, 0.20F))) {
+    return false;
+  }
+  if (!engine.play(makeAuditionPartial(fundamentalHz * 4.0F, fourthGain, 0.0F))) {
+    return false;
+  }
+  return true;
+}
+
+}  // namespace
+
 void InteractionSoundService::startNotes(
     const MusicalNoteSet& notes) noexcept {
   engine_.stopAll();
   clearScheduled();
-  const float voiceGain = 0.42F / std::sqrt(static_cast<float>(notes.count));
+
+  // Single bass-clef notes get a multi-partial virtual-bass stack. Chords keep
+  // one voice per MIDI note so we stay within the 4-voice engine.
+  if (notes.count == 1 && notes.notes[0] < 60) {
+    startVirtualBassNote(engine_, notes.notes[0]);
+    return;
+  }
+
   for (std::size_t index = 0; index < notes.count; ++index) {
-    ToneSpec tone;
-    tone.waveform = Waveform::Sine;
-    tone.startFrequencyHz = midiFrequency(notes.notes[index]);
-    tone.endFrequencyHz = tone.startFrequencyHz;
-    tone.attackSeconds = 0.008F;
-    tone.decaySeconds = 0.20F;
-    tone.durationSeconds = 0.70F;
-    tone.releaseSeconds = 0.08F;
-    tone.gain = voiceGain;
-    tone.secondHarmonicGain = 0.18F;
-    tone.secondHarmonicPhaseCycles = 0.25F;
-    tone.priority = 2;
-    tone.envelopeCurve = EnvelopeCurve::Exponential;
+    const std::uint8_t midiNote = notes.notes[index];
+    ToneSpec tone = makeAuditionPartial(
+        midiFrequency(midiNote), auditionVoiceGain(midiNote, notes.count),
+        auditionSecondHarmonicGain(midiNote));
+    if (midiNote < 60) {
+      // Chord member in bass register: slight brighten only.
+      tone.gain = std::min(0.72F, tone.gain * 1.10F);
+      tone.secondHarmonicGain = std::min(0.75F, tone.secondHarmonicGain + 0.12F);
+    }
     engine_.play(tone);
   }
 }
@@ -82,6 +159,7 @@ bool InteractionSoundService::setVolume(SoundVolume volume) noexcept {
     // Silence is a safety/control operation, not a best-effort UI cue. Publish
     // it even when the normal command queue is saturated; render() applies it
     // after draining older commands so none can revive queued sound.
+    clearPendingNotes();
     muteRequested_.store(true, std::memory_order_release);
     commands_.tryPush(AudioCommand::setVolume(volume));
     volume_ = volume;
@@ -94,8 +172,14 @@ bool InteractionSoundService::setVolume(SoundVolume volume) noexcept {
 }
 
 void InteractionSoundService::stopAll() noexcept {
+  clearPendingNotes();
   stopRequested_.store(true, std::memory_order_release);
   commands_.tryPush(AudioCommand::stopAll());
+}
+
+void InteractionSoundService::clearPendingNotes() noexcept {
+  notesPending_.store(false, std::memory_order_release);
+  pendingNotes_ = {};
 }
 
 void InteractionSoundService::advance(Seconds delta) noexcept {
@@ -178,12 +262,21 @@ void InteractionSoundService::consumeCommands() noexcept {
         if (consumerVolume_ == SoundVolume::Muted) {
           engine_.stopAll();
           clearScheduled();
+          clearPendingNotes();
         }
         break;
       case AudioCommandKind::StopAll:
         engine_.stopAll();
         clearScheduled();
+        clearPendingNotes();
         break;
+    }
+  }
+  if (notesPending_.exchange(false, std::memory_order_acq_rel)) {
+    const MusicalNoteSet notes = pendingNotes_;
+    pendingNotes_ = {};
+    if (consumerVolume_ != SoundVolume::Muted && notes.valid()) {
+      startNotes(notes);
     }
   }
 }
@@ -196,10 +289,12 @@ void InteractionSoundService::render(std::int16_t* samples,
     engine_.setMasterGain(0.0F);
     engine_.stopAll();
     clearScheduled();
+    clearPendingNotes();
   }
   if (stopRequested_.exchange(false, std::memory_order_acq_rel)) {
     engine_.stopAll();
     clearScheduled();
+    clearPendingNotes();
   }
 
   std::size_t rendered = 0;

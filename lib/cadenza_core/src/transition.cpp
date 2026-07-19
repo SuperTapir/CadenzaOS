@@ -15,15 +15,115 @@ float normalized(float progress) noexcept {
   return std::max(0.0F, std::min(1.0F, progress));
 }
 
+// Pack incoming where selector is true, outgoing otherwise. Avoids per-pixel
+// MonoCanvas::pixel / MonoFramebuffer::pixel call overhead on T-Embed.
 template <typename Selector>
-void selectPixels(const MonoFramebuffer& outgoing,
-                  const MonoFramebuffer& incoming, MonoCanvas& output,
-                  Selector&& useIncoming) noexcept {
+void selectPixelsPacked(const MonoFramebuffer& outgoing,
+                        const MonoFramebuffer& incoming, MonoCanvas& output,
+                        Selector&& useIncoming) noexcept {
   output.resetClip();
-  for (std::int32_t y = 0; y < output.height(); ++y) {
-    for (std::int32_t x = 0; x < output.width(); ++x) {
-      output.pixel(x, y, useIncoming(x, y) ? incoming.pixel(x, y)
-                                            : outgoing.pixel(x, y));
+  MonoFramebuffer& destination = output.framebuffer();
+  const std::int32_t width = destination.width();
+  const std::int32_t height = destination.height();
+  const std::size_t stride = destination.stride();
+  std::uint8_t* out = destination.data();
+  const std::uint8_t* srcOut = outgoing.data();
+  const std::uint8_t* srcIn = incoming.data();
+  for (std::int32_t y = 0; y < height; ++y) {
+    const std::size_t row = static_cast<std::size_t>(y) * stride;
+    for (std::size_t byteIndex = 0; byteIndex < stride; ++byteIndex) {
+      std::uint8_t mask = 0;
+      const std::int32_t baseX = static_cast<std::int32_t>(byteIndex) * 8;
+      for (std::int32_t bit = 0; bit < 8; ++bit) {
+        const std::int32_t x = baseX + bit;
+        if (x >= width) break;
+        if (useIncoming(x, y)) {
+          mask = static_cast<std::uint8_t>(mask | (0x80U >> bit));
+        }
+      }
+      const std::size_t index = row + byteIndex;
+      out[index] = static_cast<std::uint8_t>((srcIn[index] & mask) |
+                                             (srcOut[index] &
+                                              static_cast<std::uint8_t>(~mask)));
+    }
+  }
+}
+
+// Ordered-dither dissolve without per-pixel MonoCanvas/MonoFramebuffer calls.
+void dissolvePacked(const MonoFramebuffer& outgoing,
+                    const MonoFramebuffer& incoming, MonoCanvas& output,
+                    std::uint8_t coverage) noexcept {
+  selectPixelsPacked(outgoing, incoming, output,
+                     [coverage](std::int32_t x, std::int32_t y) {
+                       return kOrderedDither8x8
+                                  .thresholds[(y & 7) * 8 + (x & 7)] <
+                              coverage;
+                     });
+}
+
+void dipPacked(const MonoFramebuffer& outgoing,
+               const MonoFramebuffer& incoming, MonoCanvas& output,
+               float progress) noexcept {
+  output.resetClip();
+  MonoFramebuffer& destination = output.framebuffer();
+  const std::int32_t width = destination.width();
+  const std::int32_t height = destination.height();
+  const std::size_t stride = destination.stride();
+  std::uint8_t* out = destination.data();
+  const std::uint8_t* srcOut = outgoing.data();
+  const std::uint8_t* srcIn = incoming.data();
+  const float p = normalized(progress);
+  if (p == 0.5F) {
+    destination.clear(true);
+    return;
+  }
+  if (p < 0.5F) {
+    const std::uint8_t coverage =
+        static_cast<std::uint8_t>(p * 2.0F * 64.0F);
+    for (std::int32_t y = 0; y < height; ++y) {
+      const std::size_t row = static_cast<std::size_t>(y) * stride;
+      const std::uint8_t* thresholdRow =
+          &kOrderedDither8x8.thresholds[(y & 7) * 8];
+      for (std::size_t byteIndex = 0; byteIndex < stride; ++byteIndex) {
+        std::uint8_t ditherMask = 0;
+        const std::int32_t baseX = static_cast<std::int32_t>(byteIndex) * 8;
+        for (std::int32_t bit = 0; bit < 8; ++bit) {
+          const std::int32_t x = baseX + bit;
+          if (x >= width) break;
+          if (thresholdRow[x & 7] < coverage) {
+            ditherMask =
+                static_cast<std::uint8_t>(ditherMask | (0x80U >> bit));
+          }
+        }
+        const std::size_t index = row + byteIndex;
+        // black = outgoing || dither — same as original Dip mid-phase.
+        out[index] = static_cast<std::uint8_t>(srcOut[index] | ditherMask);
+      }
+    }
+    return;
+  }
+  const std::uint8_t reveal =
+      static_cast<std::uint8_t>((p - 0.5F) * 2.0F * 64.0F);
+  for (std::int32_t y = 0; y < height; ++y) {
+    const std::size_t row = static_cast<std::size_t>(y) * stride;
+    const std::uint8_t* thresholdRow =
+        &kOrderedDither8x8.thresholds[(y & 7) * 8];
+    for (std::size_t byteIndex = 0; byteIndex < stride; ++byteIndex) {
+      std::uint8_t revealMask = 0;
+      const std::int32_t baseX = static_cast<std::int32_t>(byteIndex) * 8;
+      for (std::int32_t bit = 0; bit < 8; ++bit) {
+        const std::int32_t x = baseX + bit;
+        if (x >= width) break;
+        if (thresholdRow[x & 7] < reveal) {
+          revealMask =
+              static_cast<std::uint8_t>(revealMask | (0x80U >> bit));
+        }
+      }
+      const std::size_t index = row + byteIndex;
+      // Unrevealed stays black; revealed takes incoming.
+      out[index] = static_cast<std::uint8_t>(
+          (srcIn[index] & revealMask) |
+          static_cast<std::uint8_t>(~revealMask));
     }
   }
 }
@@ -59,11 +159,7 @@ void dissolveFrames(const MonoFramebuffer& outgoing,
   if (endpoint(outgoing, incoming, output, progress)) return;
   const std::uint8_t coverage = static_cast<std::uint8_t>(
       normalized(progress) * 64.0F);
-  selectPixels(outgoing, incoming, output,
-               [coverage](std::int32_t x, std::int32_t y) {
-                 return kOrderedDither8x8
-                            .thresholds[(y & 7) * 8 + (x & 7)] < coverage;
-               });
+  dissolvePacked(outgoing, incoming, output, coverage);
 }
 
 float outQuad(float progress) noexcept {
@@ -113,25 +209,7 @@ void DipTransition::compose(const MonoFramebuffer& outgoing,
                             const MonoFramebuffer& incoming,
                             MonoCanvas& output, float progress) const noexcept {
   if (endpoint(outgoing, incoming, output, progress)) return;
-  const float p = normalized(progress);
-  output.resetClip();
-  for (std::int32_t y = 0; y < output.height(); ++y) {
-    for (std::int32_t x = 0; x < output.width(); ++x) {
-      const std::uint8_t threshold =
-          kOrderedDither8x8.thresholds[(y & 7) * 8 + (x & 7)];
-      bool black = true;
-      if (p < 0.5F) {
-        const std::uint8_t coverage =
-            static_cast<std::uint8_t>(p * 2.0F * 64.0F);
-        black = outgoing.pixel(x, y) || threshold < coverage;
-      } else if (p > 0.5F) {
-        const std::uint8_t reveal =
-            static_cast<std::uint8_t>((p - 0.5F) * 2.0F * 64.0F);
-        black = threshold < reveal ? incoming.pixel(x, y) : true;
-      }
-      output.pixel(x, y, black);
-    }
-  }
+  dipPacked(outgoing, incoming, output, progress);
 }
 
 void HorizontalWipeTransition::compose(
@@ -140,8 +218,8 @@ void HorizontalWipeTransition::compose(
   if (endpoint(outgoing, incoming, output, progress)) return;
   const std::int32_t edge =
       static_cast<std::int32_t>(normalized(progress) * output.width());
-  selectPixels(outgoing, incoming, output,
-               [edge](std::int32_t x, std::int32_t) { return x < edge; });
+  selectPixelsPacked(outgoing, incoming, output,
+                     [edge](std::int32_t x, std::int32_t) { return x < edge; });
 }
 
 void DiagonalWipeTransition::compose(
@@ -150,10 +228,10 @@ void DiagonalWipeTransition::compose(
   if (endpoint(outgoing, incoming, output, progress)) return;
   const float edge = normalized(progress) *
                      static_cast<float>(output.width() + output.height() - 2);
-  selectPixels(outgoing, incoming, output,
-               [edge](std::int32_t x, std::int32_t y) {
-                 return static_cast<float>(x + y) <= edge;
-               });
+  selectPixelsPacked(outgoing, incoming, output,
+                     [edge](std::int32_t x, std::int32_t y) {
+                       return static_cast<float>(x + y) <= edge;
+                     });
 }
 
 void IrisTransition::compose(const MonoFramebuffer& outgoing,
@@ -166,13 +244,13 @@ void IrisTransition::compose(const MonoFramebuffer& outgoing,
   const float maximum = std::sqrt(centerX * centerX + centerY * centerY);
   const float radius = normalized(progress) * maximum;
   const float radiusSquared = radius * radius;
-  selectPixels(outgoing, incoming, output,
-               [centerX, centerY, radiusSquared](std::int32_t x,
-                                                 std::int32_t y) {
-                 const float dx = x - centerX;
-                 const float dy = y - centerY;
-                 return dx * dx + dy * dy <= radiusSquared;
-               });
+  selectPixelsPacked(outgoing, incoming, output,
+                     [centerX, centerY, radiusSquared](std::int32_t x,
+                                                       std::int32_t y) {
+                       const float dx = x - centerX;
+                       const float dy = y - centerY;
+                       return dx * dx + dy * dy <= radiusSquared;
+                     });
 }
 
 void CheckerDissolveTransition::compose(
@@ -181,11 +259,7 @@ void CheckerDissolveTransition::compose(
   if (endpoint(outgoing, incoming, output, progress)) return;
   const std::uint8_t coverage =
       static_cast<std::uint8_t>(normalized(progress) * 64.0F);
-  selectPixels(outgoing, incoming, output,
-               [coverage](std::int32_t x, std::int32_t y) {
-                 return kOrderedDither8x8
-                            .thresholds[(y & 7) * 8 + (x & 7)] < coverage;
-               });
+  dissolvePacked(outgoing, incoming, output, coverage);
 }
 
 void AppLaunchHandoffTransition::compose(

@@ -113,6 +113,8 @@ class AppRuntime : public AppNavigator, public AppCapabilityResolver {
   bool stagedTransition_ = false;
   bool launchHandoff_ = false;
   bool launchRendererAvailable_ = false;
+  // 255 = unset. Otherwise last dither coverage used for the launch plate.
+  std::uint8_t lastHandoffCoverage_ = 255;
   DiagnosticSink* diagnosticSink_ = nullptr;
   MonoFramebuffer outgoingFrame_;
   MonoFramebuffer incomingFrame_;
