@@ -4,11 +4,20 @@
 定义建立在动画核心之上的转场、选择反馈、相机效果、粒子和 Gallery 展示契约，并保证 reduced-motion、可逆预览与双分辨率行为一致。
 ## Requirements
 ### Requirement: Runtime transitions are selectable strategies
-AppRuntime SHALL accept a transition strategy and duration without requiring Apps to know transition details, and the existing venetian-blinds behavior SHALL be one selectable strategy rather than hard-coded runtime drawing.
+
+AppRuntime SHALL accept a direct or staged transition strategy and duration without requiring Apps to know transition details. The default Launcher/App route SHALL select directional staged Cover handoffs, while venetian blinds and the existing direct transition set SHALL remain selectable rather than hard-coded runtime drawing.
 
 #### Scenario: Transition is selected
 - **WHEN** an App is opened with a specified transition
 - **THEN** that strategy composes captured outgoing and incoming frames while lifecycle ordering remains correct
+
+#### Scenario: Direct transition is selected
+- **WHEN** an App is opened with a specified direct transition
+- **THEN** that strategy composes captured outgoing and incoming frames while lifecycle ordering remains correct
+
+#### Scenario: Default Launcher handoff is selected
+- **WHEN** the default Runtime opens an App from Launcher or returns from an App to Launcher
+- **THEN** it selects the corresponding staged Cover handoff and preserves the same lifecycle ordering contract
 
 ### Requirement: Core transition set is complete
 The presentation layer SHALL implement Dip/Fade, horizontal wipe, diagonal wipe, iris, venetian blinds, and checker/dither dissolve for 1-bit source and destination frames.
