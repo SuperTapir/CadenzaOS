@@ -14,12 +14,12 @@ transition completes. No normal App update runs after completion.
 | Profile | App | Hash (decimal) |
 | --- | --- | ---: |
 | 320×170 | Launcher | 2968281691757874956 |
-| 320×170 | Clock | 2172376209712558838 |
+| 320×170 | Clock / Activation Timer Ready 10:00 | 8752186736345292702 |
 | 320×170 | Motion | 11046562126395087774 |
 | 320×170 | Settings | 15594660916157055540 |
 | 320×170 | Animation Gallery | 14139291840108583961 |
 | 400×240 | Launcher | 5421283046709258962 |
-| 400×240 | Clock | 8667913246713477979 |
+| 400×240 | Clock / Activation Timer Ready 10:00 | 9246543181918641567 |
 | 400×240 | Motion | 2956592992690758759 |
 | 400×240 | Settings | 16739858513966786026 |
 | 400×240 | Animation Gallery | 13234575752027769465 |
@@ -29,6 +29,10 @@ secure-setup status rows. Both rendered PNGs were visually inspected; the
 320×170 footer was moved into the left title panel to avoid overlap with the
 fifth row. No credential, SSID, IP address, or peer identity appears in either
 profile.
+
+Clock hashes were re-approved on 2026-07-19 after replacing the elapsed-time
+demo with the Activation Timer Ready screen. Both profile PNGs were visually
+inspected; the approved Launcher Cover itself is unchanged.
 
 Launcher selection baselines:
 

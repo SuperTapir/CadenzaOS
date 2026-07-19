@@ -289,7 +289,7 @@ int main(int argc, char** argv) {
     cadenza::pumpInput(mapper, clock, reducer);
     const cadenza::InputFrame input = reducer.takeFrame();
     const float simulationDelta = simulation.consumeDelta(realDelta);
-    if (simulationDelta > 0.0F) host.advance(simulationDelta, input);
+    host.advanceAt(nowMs, simulationDelta, input);
     if (recordingToggleRequested) {
       if (recording.active()) {
         std::printf("Recording: %s\n", recording.stop() ? "saved" : "failed");

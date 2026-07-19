@@ -216,7 +216,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
        5609633100608380107ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
-       2172376209712558838ULL},
+       8752186736345292702ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11046562126395087774ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
@@ -226,7 +226,7 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
        17517733931075453906ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kClockAppId,
-       8667913246713477979ULL},
+       9246543181918641567ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        2956592992690758759ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
@@ -265,14 +265,14 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
       {{2636948144671584762ULL, 2220986957663627415ULL,
         2341049785401331514ULL, 17380819794847192855ULL,
-        9650148204554733528ULL, 10620415418877875313ULL,
-        16680032181822085337ULL,
-        2789452226294592942ULL}},
+        9650148204554733528ULL, 10700840020128318591ULL,
+        11071243504120899380ULL,
+        13930926307166879760ULL}},
       {{1623482382721019563ULL, 16166378414349366659ULL,
         9361844745573499914ULL, 7537389031036977447ULL,
-        9756231723368371849ULL, 18150222162577020456ULL,
-        10253295035054357084ULL,
-        11715812992187396753ULL}},
+        9756231723368371849ULL, 13170743398485905688ULL,
+        3124774116065354519ULL,
+        13265856509170503687ULL}},
   }};
   for (std::size_t profileIndex = 0; profileIndex < profiles.size();
        ++profileIndex) {

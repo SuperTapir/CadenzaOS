@@ -7,6 +7,7 @@
 #include "cadenza/core/app_context.h"
 #include "cadenza/system/system_resource_leases.h"
 #include "cadenza/system/connectivity_service.h"
+#include "cadenza/system/timer_service.h"
 #include "cadenza/voice/voice_input.h"
 
 namespace cadenza::system {
@@ -140,6 +141,8 @@ enum class SystemRejection : std::uint8_t {
   StaleGeneration,
   ServiceBusy,
   NotOwner,
+  InvalidState,
+  InvalidDuration,
 };
 
 struct SystemServiceHostConfig {
@@ -167,6 +170,7 @@ class SystemServiceHost final : public SystemCommandSink {
  public:
   static constexpr std::size_t kMaxCommandCapacity = 32;
   static constexpr std::size_t kMaxPlatformEventCapacity = 32;
+  static constexpr MonotonicMillis kTimerAlertRepeatMs = 5000;
 
   explicit SystemServiceHost(
       SystemServiceHostConfig config = {}) noexcept;
@@ -191,6 +195,8 @@ class SystemServiceHost final : public SystemCommandSink {
     return voiceCapture_.publish(block, format);
   }
   const SystemSnapshot& beginFrame(Seconds dt) noexcept;
+  const SystemSnapshot& beginFrameAt(MonotonicMillis nowMs,
+                                     Seconds presentationDt) noexcept;
   const SystemSnapshot& commitCommands() noexcept;
 
   const SystemSnapshot& snapshot() const noexcept { return snapshot_; }
@@ -248,6 +254,10 @@ class SystemServiceHost final : public SystemCommandSink {
   voice::VoiceAnalyzer voiceAnalyzer_{};
   SystemResourceLeaseTable leases_{};
   ConnectivityService connectivity_{};
+  TimerService timer_{};
+  MonotonicMillis fallbackNowMs_ = 0;
+  double fallbackSubmillis_ = 0.0;
+  MonotonicMillis nextTimerAlertMs_ = 0;
   DiagnosticSink* diagnosticSink_ = nullptr;
   const AppCapabilityResolver* capabilityResolver_ = nullptr;
 };

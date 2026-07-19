@@ -619,7 +619,7 @@ TEST_CASE("bundled Apps emit success and boundary cues from actual state") {
   cadenza::test::updateApp(clock, 0.0F, click, runtime, services,
                            cadenza::apps::kClockAppId);
   CHECK(services.sound().lastAcceptedCue() ==
-        cadenza::audio::SoundCue::ToggleOff);
+        cadenza::audio::SoundCue::ToggleOn);
 
   cadenza::InputFrame largeTurn;
   largeTurn.turn = 100;
@@ -634,6 +634,105 @@ TEST_CASE("bundled Apps emit success and boundary cues from actual state") {
                            cadenza::apps::kMotionAppId);
   CHECK(services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Boundary);
+}
+
+TEST_CASE("Activation Timer uses turn to choose minutes and click to start") {
+  cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
+  cadenza::LauncherApp launcher;
+  cadenza::ClockApp timer;
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                          false));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
+  timer.onEnter();
+
+  cadenza::InputFrame turn;
+  turn.turn = 3;
+  cadenza::test::updateApp(timer, 0.0F, turn, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Ready);
+  CHECK(services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Navigate);
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+  CHECK(services.snapshot().timer.configuredDurationMs == 13 * 60000);
+  CHECK(services.snapshot().timer.owner == cadenza::apps::kClockAppId);
+}
+
+TEST_CASE("Activation Timer pauses adjusts whole minutes and resumes") {
+  cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
+  cadenza::LauncherApp launcher;
+  cadenza::ClockApp timer;
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                          false));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kClockAppId);
+  services.beginFrame(42.0F);
+
+  cadenza::InputFrame runningTurn;
+  runningTurn.turn = 5;
+  const auto beforeTurn = services.snapshot().timer.remainingMs;
+  cadenza::test::updateApp(timer, 0.0F, runningTurn, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.remainingMs == beforeTurn);
+  CHECK(services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Boundary);
+
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kClockAppId);
+  REQUIRE(services.snapshot().timer.state == cadenza::TimerState::Paused);
+  REQUIRE(services.snapshot().timer.remainingMs == 9 * 60000 + 18000);
+
+  cadenza::InputFrame adjust;
+  adjust.turn = 2;
+  cadenza::test::updateApp(timer, 0.0F, adjust, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.remainingMs == 11 * 60000 + 18000);
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+}
+
+TEST_CASE("Expired Activation Timer ignores App input and survives App handoff") {
+  cadenza::AppRuntime runtime{cadenza::FramebufferProfile::TEmbed,
+                              cadenza::kCutTransition};
+  cadenza::system::SystemServiceHost services;
+  cadenza::LauncherApp launcher;
+  cadenza::ClockApp timer;
+  cadenza::MotionApp motion;
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                          false));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
+  REQUIRE(runtime.begin(cadenza::apps::kClockAppId));
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kClockAppId);
+  REQUIRE(runtime.open(cadenza::apps::kMotionAppId));
+  runtime.updateWithSystem(1.0F, {}, services.snapshot(), services);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+  services.beginFrame(600.0F);
+  REQUIRE(services.snapshot().timer.state == cadenza::TimerState::Expired);
+
+  cadenza::InputFrame noisy;
+  noisy.clicked = true;
+  noisy.turn = 8;
+  cadenza::test::updateApp(timer, 0.0F, noisy, runtime, services,
+                           cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Expired);
 }
 
 TEST_CASE("Settings exposes a sound row and cycles session volume") {

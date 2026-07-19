@@ -60,6 +60,7 @@ add_library(cadenza_system STATIC
   lib/cadenza_system/src/connectivity_service.cpp
   lib/cadenza_system/src/system_service_host.cpp
   lib/cadenza_system/src/system_resource_leases.cpp
+  lib/cadenza_system/src/timer_service.cpp
   lib/cadenza_system/src/usb_voice_packetizer.cpp
   lib/cadenza_system/src/usb_voice_session_bridge.cpp
   lib/cadenza_system/src/voice_dma_normalizer.cpp
@@ -332,6 +333,19 @@ if(CADENZA_BUILD_TESTS)
     COMMAND cadenza_system_service_host_tests
   )
 
+  add_executable(cadenza_timer_service_tests
+    tests/timer_service_tests.cpp
+  )
+  target_link_libraries(cadenza_timer_service_tests PRIVATE
+    cadenza::system
+  )
+  target_include_directories(cadenza_timer_service_tests PRIVATE
+    third_party/doctest
+  )
+  add_test(NAME cadenza_timer_service_tests
+    COMMAND cadenza_timer_service_tests
+  )
+
   add_executable(cadenza_connectivity_boundary_tests
     tests/connectivity_boundary_tests.cpp
   )
@@ -471,7 +485,9 @@ if(CADENZA_BUILD_TESTS)
   add_executable(cadenza_system_overlay_size_probe
     tools/system_overlay_size_probe.cpp
   )
-  target_link_libraries(cadenza_system_overlay_size_probe PRIVATE cadenza::core)
+  target_link_libraries(cadenza_system_overlay_size_probe PRIVATE
+    cadenza::core cadenza::system
+  )
   add_test(NAME cadenza_system_overlay_size_probe
     COMMAND cadenza_system_overlay_size_probe
   )
@@ -628,6 +644,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_system_overlay_research.cmake
+  )
+
+  add_test(
+    NAME cadenza_activation_timer_research_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_activation_timer_research.cmake
   )
 
   add_test(

@@ -9,6 +9,7 @@
 #include "cadenza/core/app_runtime.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/system/system_service_host.h"
+#include "cadenza/system/frame_coordinator.h"
 
 namespace {
 std::size_t gAllocationCount = 0;
@@ -101,5 +102,50 @@ TEST_CASE("App handoff and warped Menu perform no runtime allocations") {
     CHECK_FALSE(runtime.systemMenuActive());
     CHECK(runtime.currentId() == cadenza::apps::kLauncherAppId);
     CHECK(after == before);
+  }
+}
+
+TEST_CASE("Timer critical alert and acknowledgement allocate no memory") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::LauncherApp launcher;
+    cadenza::ClockApp clock;
+    cadenza::system::SystemServiceHost services;
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::MonoFramebuffer framebuffer{profile};
+    cadenza::MonoCanvas canvas{framebuffer};
+    REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, launcher,
+                                false));
+    REQUIRE(runtime.registerApp(
+        cadenza::apps::kClockAppId, clock, true,
+        cadenza::apps::builtinAppCapabilities(cadenza::apps::kClockAppId)));
+    REQUIRE(runtime.configureHome(cadenza::apps::kLauncherAppId));
+    REQUIRE(runtime.begin(cadenza::apps::kClockAppId));
+
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas, 1000, 0.0F, {});
+    REQUIRE(services.submit(
+        {cadenza::ResourceOwner::app(cadenza::apps::kClockAppId),
+         cadenza::SystemCommand::startTimer(60000), 0}));
+    services.commitCommands();
+    const std::size_t before = gAllocationCount;
+
+    cadenza::InputFrame held;
+    held.heldMs = 700;
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas, 61000, 0.0F, held);
+    cadenza::InputFrame staleRelease;
+    staleRelease.released = true;
+    staleRelease.clicked = true;
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas, 61001, 0.0F, staleRelease);
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas, 61002, 0.0F, staleRelease);
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas, 61003, 0.0F, {});
+
+    CHECK(services.snapshot().timer.state == cadenza::TimerState::Ready);
+    CHECK_FALSE(runtime.systemSurfaces().timerAlertActive());
+    CHECK(gAllocationCount == before);
   }
 }

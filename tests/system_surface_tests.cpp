@@ -160,6 +160,93 @@ TEST_CASE("transition menu request is captured and deferred to stable frame") {
   CHECK(surfaces.menuActive());
 }
 
+TEST_CASE("Timer alert preempts Menu and owns the acknowledgement click") {
+  using namespace cadenza::presentation;
+  SystemSurfaceCoordinator surfaces;
+  cadenza::TimerSnapshot ready;
+  cadenza::TimerSnapshot expired;
+  expired.state = cadenza::TimerState::Expired;
+  expired.remainingMs = 0;
+  expired.expirationGeneration = 1;
+
+  surfaces.update(0.01F, longPress(), false, false,
+                  cadenza::MotionProfile::Normal, ready);
+  surfaces.update(0.01F, release(), false, false,
+                  cadenza::MotionProfile::Normal, ready);
+  REQUIRE(surfaces.menuActive());
+
+  const auto alert = surfaces.update(0.01F, {}, false, false,
+                                     cadenza::MotionProfile::Normal, expired);
+  CHECK(alert.consumeInput);
+  CHECK(alert.captureFrozenFrame);
+  CHECK(surfaces.timerAlertActive());
+  CHECK_FALSE(surfaces.menuActive());
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  click.released = true;
+  const auto acknowledged = surfaces.update(
+      0.01F, click, false, false, cadenza::MotionProfile::Normal, expired);
+  CHECK(acknowledged.intent == SystemSurfaceIntent::TimerAcknowledge);
+  CHECK(surfaces.timerAlertActive());
+}
+
+TEST_CASE("Button sequence held at expiry cannot acknowledge Timer alert") {
+  using namespace cadenza::presentation;
+  SystemSurfaceCoordinator surfaces;
+  cadenza::TimerSnapshot ready;
+  cadenza::TimerSnapshot expired;
+  expired.state = cadenza::TimerState::Expired;
+  expired.expirationGeneration = 4;
+
+  cadenza::InputFrame pressed;
+  pressed.pressed = true;
+  pressed.heldMs = 10;
+  surfaces.update(0.01F, pressed, false, false,
+                  cadenza::MotionProfile::Normal, ready);
+  cadenza::InputFrame held;
+  held.heldMs = 700;
+  const auto opened = surfaces.update(
+      0.01F, held, false, false, cadenza::MotionProfile::Normal, expired);
+  CHECK(opened.consumeInput);
+  REQUIRE(surfaces.timerAlertActive());
+
+  cadenza::InputFrame oldRelease;
+  oldRelease.released = true;
+  oldRelease.clicked = true;
+  CHECK(surfaces.update(0.01F, oldRelease, false, false,
+                        cadenza::MotionProfile::Normal, expired)
+            .intent == SystemSurfaceIntent::None);
+
+  cadenza::InputFrame freshClick;
+  freshClick.clicked = true;
+  freshClick.released = true;
+  CHECK(surfaces.update(0.01F, freshClick, false, false,
+                        cadenza::MotionProfile::Normal, expired)
+            .intent == SystemSurfaceIntent::TimerAcknowledge);
+}
+
+TEST_CASE("Timer alert renderer is deterministic on both profiles") {
+  constexpr std::array<std::uint64_t, 2> expected{{
+      11299818760683844865ULL, 17672932458818425821ULL}};
+  std::size_t profileIndex = 0;
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::MonoFramebuffer first{profile};
+    cadenza::MonoFramebuffer second{profile};
+    first.clear(true);
+    second.clear(true);
+    cadenza::MonoCanvas firstCanvas{first};
+    cadenza::MonoCanvas secondCanvas{second};
+    cadenza::presentation::renderTimerAlert(firstCanvas);
+    cadenza::presentation::renderTimerAlert(secondCanvas);
+    CHECK(framebufferHash(first) == framebufferHash(second));
+    CHECK(framebufferHash(first) == expected[profileIndex++]);
+    CHECK(first.pixel(0, 0));
+    CHECK_FALSE(first.pixel(first.width() / 2, first.height() / 2));
+  }
+}
+
 TEST_CASE("interactive and transient capacities reject deterministically") {
   using namespace cadenza::presentation;
   SystemSurfaceCoordinator surfaces;

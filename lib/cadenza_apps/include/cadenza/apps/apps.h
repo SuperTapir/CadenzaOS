@@ -51,8 +51,10 @@ class ClockApp final : public App {
                          float progress) const noexcept override;
 
  private:
-  bool running_ = true;
-  float elapsed_ = 0.0F;
+  std::uint32_t selectedDurationMs_ =
+      static_cast<std::uint32_t>(kTimerDefaultDurationMs);
+  TimerState observedTimerState_ = TimerState::Ready;
+  bool hasObservedTimerState_ = false;
   float phase_ = 0.0F;
 };
 
