@@ -316,7 +316,7 @@ TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
 TEST_CASE("background Timer indicator stays legible over every built-in App") {
   const std::array<SnapshotCase, 8> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       10651148509124138305ULL},
+       13957566213992405174ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
        11763888816598266585ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
@@ -324,7 +324,7 @@ TEST_CASE("background Timer indicator stays legible over every built-in App") {
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        115148013231880568ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       4159340156871682690ULL},
+       65166265943844197ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
        16730610446322141212ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
@@ -354,13 +354,13 @@ TEST_CASE("approved App handoff and warped Menu keyframes") {
       {{10363111933382688924ULL, 7816090857312221288ULL,
         13616107464272084726ULL, 5062836223768158047ULL,
         8089027038418072656ULL, 17578902866895419590ULL,
-        9455139349855891320ULL,
-        14559540616237083441ULL}},
+        16216091776987611102ULL,
+        12224806840153236890ULL}},
       {{5668728059796249764ULL, 8216619787726592616ULL,
         7999527108005928230ULL, 15678527797637150066ULL,
         14975481694991952360ULL, 10760001046756445264ULL,
-        2175321546545016131ULL,
-        15470451298310697573ULL}},
+        926094830975975231ULL,
+        10499074208059608780ULL}},
   }};
   for (std::size_t profileIndex = 0; profileIndex < profiles.size();
        ++profileIndex) {

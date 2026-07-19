@@ -17,9 +17,9 @@
 | `PixPin_2026-07-19_00-34-52.mp4` | 460×452 / 5.75 s | 约 2.85 s 启动；3.00 s chrome 退场；3.15–3.20 s dither 到黑；3.65 s App 首屏 | 系统先完成 Card/Launcher 交接，再揭示 App |
 | `PixPin_2026-07-19_00-46-18.mp4` | 660×654 / 5.625 s | 约 1.25 s pressed 反馈；1.75–1.95 s chrome 退场；2.05–3.65 s `MUSIC BOX` 专属标题/扫描线；3.75 s 曲目 UI | launch sequence 属于 Music Box 自身，不是统一系统缩放 |
 | `PixPin_2026-07-19_00-47-57.mp4` | 622×376 / 5.792 s | 约 1.85 s Launcher chrome 消失；人物画面继续占满屏幕并持续变化 | 另一 App 使用完全不同的内容连续入场 |
-| `PixPin_2026-07-19_00-50-54.mp4` | 946×506 / 4.5 s | 约 1.25–1.35 s 右侧菜单滑入；约 3.35–3.65 s 向右滑出 | Menu close 不是瞬切；底层 App 在全过程冻结可见 |
+| `PixPin_2026-07-19_00-50-54.mp4` | 946×506 / 4.5 s / 24 FPS | 1.208 s 尚未出现，1.250–1.417 s 为 5 个打开关键帧；3.833 s 稳定，3.875–4.042 s 为关闭形变，4.083 s 已离屏 | 打开顶部首帧到位、底部以近似 `out-cubic` 追上；关闭仍由顶部先离开而非倒放；底层 App 全程冻结可见 |
 
-抽帧使用本机 FFmpeg 7.1，以 10 FPS contact sheet 和转场区间 20 FPS 复核；时间点用于确定阶段与数量级，不作为未经真机批准的永久毫秒 golden。
+最初抽帧使用本机 FFmpeg 7.1，以 10 FPS contact sheet 和转场区间 20 FPS 复核。2026-07-19 的菜单二次校准改用 AVFoundation 按源视频 24 FPS 逐帧提取：打开前缘从左上到右下，第一可见帧顶部已在最终分界而底部仍接近屏幕右缘；随后底部可见比例约按 `0 → 0.5 → 0.87 → 1` 收束。关闭前缘方向反转为右上到左下，证明它不是打开帧的简单倒序。这些时间点用于确定阶段、曲线和数量级，不作为未经真机批准的永久像素 golden。
 
 ## 锁定上游契约
 
@@ -51,6 +51,8 @@
 实现采用两阶段 handoff：默认 Launcher → App 为 0.80 秒，App → Launcher 为 0.44 秒；Reduced Motion 分别为 0.56 秒和 0.28 秒。Timer、Motion、Settings、Animation Gallery 均提供独立的代码原生全屏 launch renderer；未实现该能力的 App 使用居中的静态 Cover/受约束名称卡。System Menu 在右边缘锚定，逐 scanline 形成斜向前缘，并把完整面板横向重采样进当前可见宽度；Resume 关闭期间仍冻结 App、消费输入，Home 则直接交给 return handoff，避免叠加两条系统动画。
 
 首轮视觉审阅指出 Cover、独立概念动画与真实 App UI 仍是三段不连续构图。连续版因此取消中间海报：progress 0 逐像素等于居中 Cover，progress 1 逐像素等于同一 App 状态和 SystemSnapshot 在 `onEnter` 后的真实首屏，中间以固定相位 ordered-dither 单调交接像素。Settings launch renderer 接收只读 AppRenderContext，避免 Motion/Sound/Connectivity 非默认状态在中点跳变；Timer、Motion、Settings 抽取与普通 render 共用的首屏 helper，Gallery 使用与 page 0/Easing 完全一致的初始帧 helper。
+
+菜单二次校准把 Normal 开关时长从 0.16 秒调整为 0.20 秒。打开不再让整个面板统一 `out-quad` 平移，也不再使用只有 28% 的浅逐行 stagger；顶部 scanline 在第一可见帧直接锚定最终左边界，底部先等待 22% 行程再按 `out-cubic` 追上，各行线性插值形成强斜边并继续横向重采样内容。关闭单独建模：顶部立即向右离开，底部延迟 40% 行程后跟随。真实 HeadlessHost 以 24 FPS 捕获后，打开底部轨迹约为 `0 → 0.58 → 0.89 → 0.99 → 1`，与参考逐帧估计的 `0 → 0.5 → 0.87 → 0.99 → 1` 接近；关闭斜边方向、约 5 帧形变和 0.20 秒端点同样一致。这样保留端点与两 framebuffer/零分配约束，同时复现参考中的拉伸与回收方向；Reduced Motion 仍为 0.10 秒。
 
 返回动画的完整 30 FPS 审阅又发现：原 `inOutQuad` 把 App → Cover 的 dither 变化集中到中间两帧，T-Embed 的旧 Clock/Gallery 峰值为 20.96%/21.50%，Sharp 最坏达到 22.90%；同时 Sharp 的 bridge 使用整数向下居中落在 `y=42`，与 Launcher 和 Playdate card 契约的 `(25,43,350,155)` 相差 1 px。修订后前半段改为匀速 threshold 交接，奇数剩余空间统一用向上取整的视觉中心；中点后 Cover 内容矩形逐像素保持不动，只让边框、scanline 与相邻卡片恢复。新版 T-Embed 四 App 峰值依次为 11.70%、7.07%、8.02%、12.23%，Sharp 为 12.17%、7.92%、8.49%、13.05%，均低于 16% 回归上限。
 

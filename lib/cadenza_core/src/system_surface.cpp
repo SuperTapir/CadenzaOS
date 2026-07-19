@@ -34,6 +34,12 @@ std::size_t visibleMenuPosition(bool homeCurrent,
   return 0;
 }
 
+float outCubic(float progress) noexcept {
+  const float t = std::max(0.0F, std::min(1.0F, progress));
+  const float remaining = 1.0F - t;
+  return 1.0F - remaining * remaining * remaining;
+}
+
 void overlayDitherMask(MonoCanvas& canvas, Rect bounds,
                        std::uint8_t coverage) noexcept {
   coverage = std::min<std::uint8_t>(coverage, 64);
@@ -169,7 +175,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
       captureUntilRelease_ = false;
     }
     const float duration =
-        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.16F;
+        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.20F;
     revealProgress_ = std::max(
         0.0F, revealProgress_ - std::max(0.0F, dt) / duration);
     if (revealProgress_ <= 0.0F) releaseMenu();
@@ -177,7 +183,7 @@ SystemSurfaceFrame SystemSurfaceCoordinator::update(
   }
   if (menuActive()) {
     const float kRevealDuration =
-        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.16F;
+        menuMotionProfile_ == MotionProfile::Reduced ? 0.10F : 0.20F;
     revealProgress_ = std::min(
         1.0F, revealProgress_ + std::max(0.0F, dt) / kRevealDuration);
   }
@@ -501,15 +507,35 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
   const SystemMenuLayout layout =
       SystemMenuLayout::forCanvas(canvas.width(), canvas.height());
   const float raw = std::max(0.0F, std::min(1.0F, revealProgress));
-  // revealProgress is the single source of presentation truth. The
-  // coordinator already runs it forwards while opening and backwards while
-  // closing, so using one geometry function makes every closing frame the
-  // exact temporal inverse of its opening counterpart.
-  (void)closing;
-  const float eased = ease(Easing::OutQuad, raw);
+  const float eased = outCubic(raw);
   overlayDitherMask(
       canvas, {0, 0, canvas.width(), canvas.height()},
       static_cast<std::uint8_t>(8.0F * eased + 0.5F));
+
+  if (raw <= 0.0F) return;
+
+  // The reference Menu is a directional sheet rather than a rigid drawer.
+  // Opening pins the top edge to its settled position immediately while the
+  // bottom waits through the first 24 FPS step, then catches up out-cubic.
+  // Closing starts at the top again and lets the bottom trail for 40% of the
+  // travel. Linear interpolation between those endpoints preserves the
+  // reference's strong, straight diagonal leading edge; horizontal
+  // resampling supplies the visible stretch/snap.
+  constexpr float kOpenBottomDelay = 0.22F;
+  constexpr float kCloseBottomDelay = 0.40F;
+  const float closeProgress = 1.0F - raw;
+  const float openingTopReveal = 1.0F;
+  const float openingBottomProgress = std::max(
+      0.0F, std::min(1.0F,
+          (raw - kOpenBottomDelay) / (1.0F - kOpenBottomDelay)));
+  const float openingBottomReveal = outCubic(openingBottomProgress);
+  const float closingTopReveal = 1.0F - outCubic(closeProgress);
+  const float closingBottomProgress = std::max(
+      0.0F, std::min(1.0F,
+          (closeProgress - kCloseBottomDelay) /
+              (1.0F - kCloseBottomDelay)));
+  const float closingBottomReveal =
+      1.0F - outCubic(closingBottomProgress);
 
   const int panelRight = layout.panel.x + layout.panel.width;
   for (std::int32_t y = layout.panel.y;
@@ -518,9 +544,12 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
                           ? 0.0F
                           : static_cast<float>(y - layout.panel.y) /
                                 static_cast<float>(layout.panel.height - 1);
-    const float stagger = 0.28F * row;
-    const float rowReveal = std::max(
-        0.0F, std::min(1.0F, (eased - stagger) / (1.0F - stagger)));
+    const float topReveal =
+        closing ? closingTopReveal : openingTopReveal;
+    const float bottomReveal =
+        closing ? closingBottomReveal : openingBottomReveal;
+    const float rowReveal =
+        topReveal + (bottomReveal - topReveal) * row;
     const int visibleWidth = static_cast<int>(
         static_cast<float>(layout.panel.width) * rowReveal + 0.5F);
     if (visibleWidth <= 0) continue;

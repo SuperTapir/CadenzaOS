@@ -236,10 +236,10 @@ void AppRuntime::handleSystemSurfaceIntent(
   switch (intent) {
     case SystemSurfaceIntent::None: break;
     case SystemSurfaceIntent::Opened:
-      submit(SystemCommand::playSound(audio::SoundCue::Confirm));
+      submit(SystemCommand::playSound(audio::SoundCue::MenuOpen));
       break;
     case SystemSurfaceIntent::Closed:
-      submit(SystemCommand::playSound(audio::SoundCue::Back));
+      submit(SystemCommand::playSound(audio::SoundCue::MenuClose));
       break;
     case SystemSurfaceIntent::Navigate:
       submit(SystemCommand::playSound(audio::SoundCue::Navigate));

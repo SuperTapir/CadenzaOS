@@ -247,14 +247,14 @@ TEST_CASE("long press opens system menu without updating active App") {
   CHECK(fixture.runtime.currentId() == kTimerAppId);
   CHECK(fixture.timer.updates == 0);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
-        cadenza::audio::SoundCue::Confirm);
+        cadenza::audio::SoundCue::MenuOpen);
   CHECK(fixture.services.sound().pendingCommandCount() == 1);
   fixture.update(0.17F);
   CHECK(fixture.runtime.currentId() == kTimerAppId);
   CHECK(fixture.events == std::vector<std::string>{"Timer:enter"});
 }
 
-TEST_CASE("App open and system menu use approved semantic cues") {
+TEST_CASE("App actions and system menu surfaces use distinct semantic cues") {
   constexpr std::size_t kSamples = 44100;
   Fixture fixture;
   REQUIRE(fixture.runtime.begin(kHomeAppId));
@@ -273,7 +273,10 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   input.longPressed = true;
   fixture.update(0.01F, input);
   CHECK(fixture.services.sound().lastAcceptedCue() ==
-        cadenza::audio::SoundCue::Confirm);
+        cadenza::audio::SoundCue::MenuOpen);
+  pcm.fill(0);
+  fixture.services.renderAudio(pcm.data(), pcm.size());
+  CHECK(pcmHash(pcm.data(), pcm.size()) == 0xFFD867CDEBDCD06AULL);
 
   cadenza::InputFrame released;
   released.released = true;
@@ -282,7 +285,10 @@ TEST_CASE("App open and system menu use approved semantic cues") {
   CHECK(fixture.runtime.systemMenuActive());
   CHECK(fixture.runtime.systemSurfaces().menuClosing());
   CHECK(fixture.services.sound().lastAcceptedCue() ==
-        cadenza::audio::SoundCue::Back);
+        cadenza::audio::SoundCue::MenuClose);
+  pcm.fill(0);
+  fixture.services.renderAudio(pcm.data(), pcm.size());
+  CHECK(pcmHash(pcm.data(), pcm.size()) == 0xBC8674B8C5CA39A5ULL);
   CHECK(fixture.runtime.systemSurfaces().diagnostics().closed == 1);
   const auto pendingAfterClose =
       fixture.services.sound().pendingCommandCount();
