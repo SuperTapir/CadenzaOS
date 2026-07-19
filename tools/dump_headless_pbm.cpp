@@ -158,13 +158,15 @@ int main(int argc, char** argv) {
       turn.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
       host.step(turn);
     }
-  } else if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+  } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+             argc >= 5 &&
              app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;
     input.turn = static_cast<std::int16_t>(std::atoi(argv[4]));
     host.step(input);
   }
-  if (!typographySpecimen && !overlaySpecimen && argc == 6 &&
+  if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+      argc == 6 &&
       app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame scrubMode;
     scrubMode.clicked = true;
@@ -173,7 +175,8 @@ int main(int argc, char** argv) {
     scrub.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
     host.step(scrub);
   }
-  if (!typographySpecimen && !overlaySpecimen && argc == 7 &&
+  if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+      argc == 7 &&
       app == cadenza::apps::kGalleryAppId) {
     if (std::strcmp(argv[5], "auto") != 0) return 2;
     const int frames = std::max(0, std::atoi(argv[6]));
