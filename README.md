@@ -1,80 +1,114 @@
 # Cadenza
 
-**Cadenza** 是由 Tapir 创作的个人互动设备与创作平台；它的系统称为
-**Cadenza OS**。当前版本以原版 LILYGO T-Embed（非 CC1101 版本）为原型硬件，
-探索资源受限设备上的 1-bit App/Runtime、系统交互与动画体验。
+**English** · [简体中文](README.zh-CN.md)
+
+**Cadenza** is a personal interactive-device and creative platform by Tapir.
+Its system, **Cadenza OS**, explores a portable 1-bit App/Runtime, system
+interaction model, and animation language for resource-constrained hardware.
+The current prototype targets the original LILYGO T-Embed (not the CC1101
+edition).
 
 https://github.com/user-attachments/assets/4cbb17ba-b52b-44dc-b557-88dd9fdf3d63
 
-上方视频展示带声音的完整应用流程：Launcher、Timer、后台 Timer 指示器、
-System Menu、Motion、Settings 与 Animation Gallery，以及 T-Embed 320×170 和
-Sharp Memory LCD 400×240 两种显示 profile 下的表现。
+The walkthrough above includes sound and covers Launcher, Timer, the background
+Timer indicator, System Menu, Motion, Settings, Animation Gallery, and the
+T-Embed 320×170 and Sharp Memory LCD 400×240 display profiles.
 
-> 当前处于原型阶段。桌面、headless 与固件编译门禁已经建立；编码器手感、
-> 屏幕表现、真实帧率和扬声器听感仍需在原版 T-Embed 真机上验证。
+> **Prototype status:** desktop, headless, and firmware build gates are in
+> place. Encoder feel, display behavior, real frame rate, and speaker quality
+> still require validation on an original T-Embed device.
 
-## 核心能力
+> **Non-commercial hobby project:** Cadenza is a personal project made for the
+> enjoyment of designing and building it. There is no plan to commercialize
+> it, sell it, or turn it into a business.
 
-- 320×170 T-Embed 与 400×240 Sharp profile 共用同一套 1-bit framebuffer、
-  App/Runtime 和布局规则；
-- Launcher、Timer、Motion、Settings、Animation Gallery 五个内置 App，支持
-  旋转选择、短按进入、长按系统菜单与显式返回 Launcher；
-- 后台 Timer、到期提示、系统菜单、会话音量、Reduced Motion 与 Launcher
-  横竖方向等系统级服务；
-- 18 项语义音效，桌面 SDL callback 与 T-Embed I²S task 共用 44.1 kHz
-  四声部合成核心；
-- allocation-free Tween、Timeline、Spring、转场、camera effects、粒子与
-  atlas 序列帧状态机；
-- SDL3 桌面模拟器、headless deterministic host、PNG/GIF 录制、像素快照与
-  生命周期、输入、动画、音频和系统服务测试。
+## Motivation
 
-项目定位是“1-bit 交互与动画运行时”，不是完整游戏引擎。物理、碰撞、
-Tilemap、ECS 和关卡系统当前明确不在范围内。
+A *cadenza* is a passage in music where a performer is given room for free
+expression. That idea fits this project: a restrained and coherent device that
+leaves space for small games, tools, animation, and interaction experiments.
 
-## macOS 快速开始
+Cadenza grows out of Tapir's deep affection for Playdate's design and art
+direction—not simply for it as a handheld, but for it as a carefully designed
+digital object: a reflective black-and-white display, direct physical input,
+expressive motion, and a small set of features with a strong point of view.
+Many Launcher behaviors, interaction rhythms, animations, and visual details
+in Cadenza deliberately study and attempt to recreate how Playdate works and
+feels. Rebuilding those ideas is a way to understand the craft behind them and
+to carry that learning into a personal platform, rather than an attempt to run
+or replace Playdate software.
+
+The T-Embed is the first software and interaction prototype. The longer-term
+hardware direction centers on a 400×240 Sharp `LS027B7DH01` Memory LCD and a
+dedicated handheld design. The software is structured so the prototype proves
+the platform without defining the final device.
+
+## Highlights
+
+- One 1-bit framebuffer, App/Runtime, and layout model shared by the 320×170
+  T-Embed and 400×240 Sharp profiles;
+- five built-in Apps—Launcher, Timer, Motion, Settings, and Animation
+  Gallery—with encoder navigation, button input, a System Menu, and explicit
+  return to Launcher;
+- system-owned background Timer, expiry alert, session volume, Reduced Motion,
+  and vertical or horizontal Launcher orientation;
+- 18 semantic sound cues backed by the same 44.1 kHz, four-voice synthesis core
+  in the SDL callback and T-Embed I²S task;
+- allocation-free Tween, Timeline, Spring, transitions, camera effects,
+  particles, and atlas animation state machines;
+- an SDL3 desktop simulator, deterministic headless host, PNG/GIF capture,
+  pixel snapshots, and tests for lifecycle, input, animation, audio, and system
+  services.
+
+Cadenza is currently a 1-bit interaction and animation runtime, not a complete
+game engine. Physics, collision, tilemaps, ECS, and level systems are
+deliberately out of scope.
+
+## Quick start on macOS
 
 ```bash
 brew install cmake sdl3
 ./tools/simulator.py run --profile t-embed --scale 2 --overlay
 ```
 
-开发时可以启用源码监听；增量编译成功后模拟器会自动重启，编译失败时保留
-当前进程并等待下一次保存：
+For the source-watching development loop:
 
 ```bash
 ./tools/simulator.py dev --profile t-embed --scale 2 --overlay
 ```
 
-常用显示选项包括 `--profile t-embed|sharp`、`--scale 1..4`、
-`--palette reflective|pure`、`--overlay` 与 `--device-frame`。默认的
-`reflective` 色板近似反射式 Memory LCD；`pure` 用于检查纯黑白输出。两者只改变
-桌面呈现，不改变 framebuffer、截图、快照 hash 或固件输出。
+Common presentation options are `--profile t-embed|sharp`, `--scale 1..4`,
+`--palette reflective|pure`, `--overlay`, and `--device-frame`. The default
+`reflective` palette approximates a reflective Memory LCD; `pure` is for strict
+black-and-white inspection. These options do not change the framebuffer,
+captures, snapshot hashes, or firmware output.
 
-## 桌面操作
+## Desktop controls
 
-| 输入 | 行为 |
+| Input | Action |
 | --- | --- |
-| 鼠标滚轮或 `Left` / `Right` | 旋转编码器 |
-| 短按 `Space` / `Enter` | 按钮点击 |
-| 长按 `Space` / `Enter` | 打开 System Menu |
-| `F1` | 切换调试 HUD |
-| `F2` / `F3` | 暂停或恢复 / 暂停时单步 |
-| `F4` / `F5` | 切换 fixed/real step / 循环时间倍率 |
-| `F6` / `F7` | PNG 截图 / 开始或停止 PNG+GIF 录制 |
+| Mouse wheel or `Left` / `Right` | Rotate the encoder |
+| Tap `Space` / `Enter` | Click the button |
+| Hold `Space` / `Enter` | Open the System Menu |
+| `F1` | Toggle the debug HUD |
+| `F2` / `F3` | Pause or resume / single-step while paused |
+| `F4` / `F5` | Toggle fixed/real step / cycle time scale |
+| `F6` / `F7` | Capture PNG / start or stop PNG+GIF recording |
 
-完整控制、Timer 行为、显示参数与 Launcher Cover 工作流见
-[`docs/development.md`](docs/development.md)。
+See [`docs/development.md`](docs/development.md) for complete controls, Timer
+behavior, display options, and the Launcher Cover workflow.
 
-## 构建与验证
+## Build and verification
 
 ```bash
-tools/check.sh host      # host 构建与完整测试
-tools/check.sh desktop   # SDL3 构建与启动 smoke
-tools/check.sh firmware  # PlatformIO T-Embed 编译
-tools/check.sh all       # 完整验证矩阵
+tools/check.sh host      # host build and full test suite
+tools/check.sh desktop   # SDL3 build and launch smoke test
+tools/check.sh firmware  # PlatformIO T-Embed build
+tools/check.sh all       # complete verification matrix
 ```
 
-固件也可以直接通过仓库旁的 PlatformIO 环境构建、烧录和查看串口日志：
+The firmware can also be built, flashed, and monitored directly through the
+repository-adjacent PlatformIO environment:
 
 ```bash
 ../.platformio-env/bin/pio run
@@ -82,34 +116,67 @@ tools/check.sh all       # 完整验证矩阵
 ../.platformio-env/bin/pio device monitor --baud 115200
 ```
 
-桌面模拟器可以打包为包含 SDL3 的 ad-hoc-signed macOS `.app` 和 zip：
+Create an ad-hoc-signed macOS development package with:
 
 ```bash
 ./tools/simulator.py package
 ```
 
-该产物适合本机和同架构 Mac 的开发验证，不是经过 Developer ID 签名与公证的
-正式发行包。
+The resulting `.app` and zip are intended for local or same-architecture Mac
+development. They are not Developer ID signed or notarized releases.
 
-## 硬件安全与验证状态
+## Hardware safety
 
-当前引脚来自 LILYGO 官方原版 T-Embed 配置。**不要烧录到 T-Embed CC1101**；
-收到设备后应先根据包装和主板丝印确认版本。
+The current pin configuration comes from the official original LILYGO T-Embed
+configuration. **Do not flash it to a T-Embed CC1101.** Check the packaging and
+board markings before using firmware from this repository.
 
-P0–P7 与音频的主机、桌面和固件编译门禁已经建立；编码器手感、TFT 撕裂、
-真实 FPS/最慢帧、模拟器/真机像素实拍和扬声器听感仍必须在实体硬件上完成，
-不能用桌面结果冒充。当前证据与真机脚本见
-[`docs/verification.md`](docs/verification.md)。
+## Development disclosure
 
-## 延伸文档
+Most source code in this repository has been generated and iterated with
+**OpenAI Codex** under Tapir's direction. Tapir defines the product vision,
+requirements, architecture decisions, review standards, and acceptance
+criteria; Codex performs much of the implementation, refactoring,
+documentation, and test authoring.
 
-- [`docs/project-vision.md`](docs/project-vision.md)：长期目标、设计动机与硬件路线；
-- [`docs/platform-architecture.md`](docs/platform-architecture.md)：平台职责边界与路线；
-- [`docs/development.md`](docs/development.md)：完整开发、测试和模拟器说明；
-- [`docs/verification.md`](docs/verification.md)：当前证据、门禁与真机验证脚本；
-- [`docs/engine-adoption-decision.md`](docs/engine-adoption-decision.md)：引擎与库的
-  复用边界；
-- [`docs/audio-reference-research.md`](docs/audio-reference-research.md)：音频调研与
-  采用决策；
-- [`docs/audio-asset-contract.md`](docs/audio-asset-contract.md)：未来 WAV 资产的
-  交付与验收规则。
+AI-generated code is not treated as independently trustworthy. Accepted
+changes are reviewed and checked through builds, tests, snapshots, research
+records, and hardware gates where hardware is available. Tapir remains the
+project's author and maintainer and is responsible for the work accepted into
+the repository.
+
+## Acknowledgements
+
+- Deepest thanks to [Panic](https://panic.com/) and the
+  [Playdate](https://play.date/) team. Cadenza would not exist without the
+  affection and respect Tapir has for Playdate's industrial design, art
+  direction, interaction design, and animation craft. The project openly
+  studies and attempts to recreate many of those interaction patterns and
+  qualities. Cadenza remains an independent project, is not compatible with
+  Playdate software, and is not endorsed by Panic. The vendored Playdate
+  Roobert font subset is used under CC BY 4.0 as documented in
+  [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+- [LILYGO](https://www.lilygo.cc/) created the T-Embed hardware used for the
+  first prototype and publishes the reference material used by the platform
+  adapter.
+- SDL3, U8g2, doctest, stb_image_write, and gif-h make the portable build,
+  rendering, testing, and desktop tooling possible. Exact versions, source
+  boundaries, and licenses are recorded in
+  [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+## Further reading
+
+- [`docs/project-vision.md`](docs/project-vision.md): long-term goals,
+  motivation, and hardware direction;
+- [`docs/platform-architecture.md`](docs/platform-architecture.md): platform
+  responsibilities and architectural boundaries;
+- [`docs/development.md`](docs/development.md): development, testing, and
+  simulator reference;
+- [`docs/verification.md`](docs/verification.md): current evidence, gates, and
+  device verification scripts;
+- [`docs/engine-adoption-decision.md`](docs/engine-adoption-decision.md): engine
+  and library adoption boundaries;
+- [`docs/audio-reference-research.md`](docs/audio-reference-research.md): audio
+  research and adoption decisions;
+- [`docs/audio-asset-contract.md`](docs/audio-asset-contract.md): delivery and
+  acceptance rules for future WAV assets.
