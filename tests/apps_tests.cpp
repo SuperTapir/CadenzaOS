@@ -686,7 +686,7 @@ TEST_CASE("empty Launcher ignores navigation and open safely") {
   CHECK(std::isfinite(launcher.visualPosition()));
 }
 
-TEST_CASE("Launcher motion profiles stay continuous with bounded behavior") {
+TEST_CASE("Launcher motion profiles ease monotonically and settle exactly") {
   cadenza::LauncherApp launcher;
   NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
@@ -699,13 +699,18 @@ TEST_CASE("Launcher motion profiles stay continuous with bounded behavior") {
   cadenza::InputFrame turn;
   turn.turn = 1;
   cadenza::test::updateApp(launcher, 1.0F / 60.0F, turn, runtime, services);
-  float maximum = launcher.visualPosition();
-  for (int frame = 0; frame < 120; ++frame) {
+  float previous = launcher.visualPosition();
+  CHECK(previous > 0.0F);
+  CHECK(previous < 1.0F);
+  int normalFrames = 1;
+  while (!launcher.settled() && normalFrames < 120) {
     cadenza::test::updateApp(launcher, 1.0F / 60.0F, {}, runtime, services);
-    maximum = std::max(maximum, launcher.visualPosition());
+    CHECK(launcher.visualPosition() >= previous);
+    CHECK(launcher.visualPosition() <= 1.0F);
+    previous = launcher.visualPosition();
+    ++normalFrames;
   }
-  CHECK(maximum > 1.0F);
-  CHECK(maximum < 1.2F);
+  CHECK(normalFrames == 15);
   CHECK(launcher.settled());
   CHECK(launcher.visualPosition() == doctest::Approx(1.0F));
 
@@ -715,17 +720,53 @@ TEST_CASE("Launcher motion profiles stay continuous with bounded behavior") {
   cadenza::test::updateApp(launcher, 0.0F, {}, runtime, services);
   turn.turn = 1;
   cadenza::test::updateApp(launcher, 1.0F / 60.0F, turn, runtime, services);
-  float previous = launcher.visualPosition();
+  previous = launcher.visualPosition();
   CHECK(previous > 1.0F);
   CHECK(previous < 2.0F);
-  for (int frame = 0; frame < 120; ++frame) {
+  int reducedFrames = 1;
+  while (!launcher.settled() && reducedFrames < 120) {
     cadenza::test::updateApp(launcher, 1.0F / 60.0F, {}, runtime, services);
     CHECK(launcher.visualPosition() >= previous);
     CHECK(launcher.visualPosition() <= 2.0F);
     previous = launcher.visualPosition();
+    ++reducedFrames;
   }
+  CHECK(reducedFrames < normalFrames);
   CHECK(launcher.settled());
   CHECK(launcher.visualPosition() == doctest::Approx(2.0F));
+}
+
+TEST_CASE("Launcher reverse retarget never crosses either target") {
+  cadenza::LauncherApp launcher;
+  NamedApp clock{"Clock"};
+  NamedApp motion{"Motion"};
+  NamedApp settings{"Settings"};
+  NamedApp gallery{"Gallery"};
+  cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
+  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+
+  cadenza::InputFrame turn;
+  turn.turn = 1;
+  cadenza::test::updateApp(launcher, 1.0F / 60.0F, turn, runtime, services);
+  const float beforeReverse = launcher.visualPosition();
+  REQUIRE(beforeReverse > 0.0F);
+  REQUIRE(beforeReverse < 1.0F);
+
+  turn.turn = -1;
+  cadenza::test::updateApp(launcher, 0.0F, turn, runtime, services);
+  CHECK(launcher.visualPosition() == doctest::Approx(beforeReverse));
+  CHECK(launcher.targetPosition() == 0);
+
+  float previous = beforeReverse;
+  for (int frame = 0; frame < 120 && !launcher.settled(); ++frame) {
+    cadenza::test::updateApp(launcher, 1.0F / 60.0F, {}, runtime, services);
+    CHECK(launcher.visualPosition() >= 0.0F);
+    CHECK(launcher.visualPosition() <= previous);
+    previous = launcher.visualPosition();
+  }
+  CHECK(launcher.settled());
+  CHECK(launcher.visualPosition() == doctest::Approx(0.0F));
 }
 
 TEST_CASE("Launcher motion profile switch and long-run rebase do not jump") {

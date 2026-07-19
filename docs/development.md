@@ -99,7 +99,9 @@ Scrub and applies knob steps of 5% each:
 
 Launcher uses a continuous cyclic track. Left/Right or the wheel changes the
 logical selection immediately; a click opens that selection even while the
-track is still moving. Open Settings, move to `LAUNCHER`, and click to switch
+track is still moving. Normal motion uses a monotonic 250 ms out-cubic settle;
+Reduced Motion shortens it to 160 ms. Neither profile overshoots or pulls the
+card back after it reaches center. Open Settings, move to `LAUNCHER`, and click to switch
 between session-only `VERTICAL` and `HORIZONTAL`. Like the current Sound and
 Motion settings, this value resets when a new service session starts; it is not
 persisted to disk or NVS.

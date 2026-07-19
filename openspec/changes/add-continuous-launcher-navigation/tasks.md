@@ -8,7 +8,8 @@
 
 - [x] 2.1 先增加单步中间态、末首最短环绕、多步/反向 retarget、移动中点击和空目录的失败测试
 - [x] 2.2 用无界逻辑目标、连续视觉位置和安全重基替换 Launcher 未消费的 position 状态
-- [x] 2.3 实现 Normal 弹簧与 Reduced Motion 单调收敛，并增加 profile 中途切换、无 overshoot 和 settled 确定性测试
+- [x] 2.3 实现初版 Normal 弹簧与 Reduced Motion 单调收敛，并增加 profile 中途切换、overshoot 边界和 settled 确定性测试（轨道回弹后由 2.4 替换）
+- [x] 2.4 根据体验反馈移除 Normal overshoot，以 250 ms `outCubic` 和较短 Reduced 时长实现两种 profile 的单调精确停靠，并增加反向、时长与无回拉回归测试
 
 ## 3. App Cover 契约与原创内容
 

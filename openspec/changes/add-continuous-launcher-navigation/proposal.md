@@ -10,7 +10,7 @@
 - 为 App 增加固定容量、无分配的 Launcher Cover 绘制契约；Timer、Motion、Settings 和 Gallery 各自使用经人工确认、离线裁切并转换为 1-bit 的原创静态内容场景，没有 Cover 的 App 使用受约束名称 fallback。
 - Cover 明确定义为静态、不可交互的视觉身份；选中、按下、长按、启动和 App lifecycle 状态均不得改变 Cover 像素。未来若需要启动动画，应使用独立资源与契约，不复用或变异 Cover。
 - 重做 Launcher 视觉层级：应用内容成为卡片主体，系统 chrome 收敛为轻量轮廓和简洁标题栏，移除笨重双层大框、通用巨字、重复页码 footer 和抢眼移动纹理。
-- Normal motion 使用轻微受控 overshoot，Reduced Motion 取消 overshoot 但保留连续导航反馈。
+- Normal 与 Reduced Motion 都使用无 overshoot 的单调 ease-out；Normal 参考 Playdate SDK 1.12.3 `gridview` 的 250 ms `outCubic` 默认值，Reduced 缩短位移时间但保留连续导航反馈。
 - 保持背景纹理在屏幕坐标中稳定，避免卡片移动引发高频 1-bit 相位闪烁；对 320×170 与 400×240 profile 定义一致的比例布局和裁剪边界。
 - Mac SDL 模拟器默认以 Playdate 1.12.3 参考色板近似反射式 Memory LCD 的暖灰 ink/paper，并保留显式纯黑白模式；该呈现选项不得改变 canonical 1-bit framebuffer、截图或固件。
 - 增加连续中间帧、快速输入、循环边界、横纵布局、设置传播、点击语义、reduced-motion、文本边界和双分辨率回归验证。
