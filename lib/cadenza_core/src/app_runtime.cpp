@@ -397,8 +397,15 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
     std::snprintf(indicator, sizeof(indicator), "%c %02u",
                   frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
                   static_cast<unsigned>(remainingMinutes));
+    const TextMetrics indicatorMetrics =
+        canvas.measureText(indicator, TextRole::Compact);
+    constexpr std::int32_t kIndicatorMinimumWidth = 58;
+    constexpr std::int32_t kIndicatorHorizontalChrome = 18;
+    const std::int32_t indicatorWidth = std::max(
+        kIndicatorMinimumWidth,
+        indicatorMetrics.width + kIndicatorHorizontalChrome);
     presentation::SystemUi::statusIndicator(
-        canvas, {2, 2, 58, 28}, indicator,
+        canvas, {2, 2, indicatorWidth, 28}, indicator,
         frameSnapshot_.timer.state == TimerState::Running);
   }
   if (surfaces_.menuActive()) {

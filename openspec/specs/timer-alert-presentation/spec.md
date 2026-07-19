@@ -12,6 +12,10 @@ Running 或 Paused Timer 的 owner App 不在前台时，系统 SHALL 在 persis
 - **WHEN** Timer 启动 10 分钟 Timer 后返回 Launcher 且 remaining 为 07:18
 - **THEN** Launcher 保持可操作并显示可读的 Running indicator `T 08`
 
+#### Scenario: 最大分钟数保持在 indicator 内
+- **WHEN** 后台 Running 或 Paused Timer 显示 `T 99` 或 `P 99`
+- **THEN** indicator SHALL 按当前 profile 的 Compact 字体测量宽度，完整包住标签和右侧 padding，不得溢出胶囊
+
 ### Requirement: 到期使用 critical Timer Alert
 Timer 进入 Expired SHALL 打开 system-owned TimerAlert，覆盖任意 App 或 System Menu、冻结 App update/input/render 并保持 system services 推进；确认 SHALL 停止 alert 并恢复原 current AppId，不产生 App exit/enter。
 

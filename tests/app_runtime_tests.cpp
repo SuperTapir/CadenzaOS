@@ -70,7 +70,9 @@ struct Fixture {
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
 
-  Fixture() {
+  explicit Fixture(cadenza::FramebufferProfile profile =
+                       cadenza::FramebufferProfile::TEmbed)
+      : runtime{profile} {
     REQUIRE(runtime.registerApp(kHomeAppId, launcher, false));
     REQUIRE(runtime.registerApp(kTimerAppId, timer));
     REQUIRE(runtime.registerApp(kMotionAppId, motion));
@@ -405,4 +407,34 @@ TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
   snapshot.timer.state = cadenza::TimerState::Paused;
   fixture.runtime.renderWithSystem(canvas, snapshot);
   CHECK(frameHash(framebuffer) != running);
+}
+
+TEST_CASE("background Timer indicator contains 99-minute label") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    CAPTURE(static_cast<int>(profile));
+    Fixture fixture{profile};
+    REQUIRE(fixture.runtime.begin(kTimerAppId));
+    cadenza::MonoFramebuffer framebuffer{profile};
+    cadenza::MonoCanvas canvas{framebuffer};
+
+    cadenza::SystemSnapshot snapshot;
+    snapshot.timer.owner = kHomeAppId;
+    snapshot.timer.remainingMs = 99 * 60000;
+    for (const auto state : {cadenza::TimerState::Running,
+                             cadenza::TimerState::Paused}) {
+      CAPTURE(static_cast<int>(state));
+      framebuffer.clear(false);
+      snapshot.timer.state = state;
+      fixture.runtime.renderWithSystem(canvas, snapshot);
+
+      const char* label = state == cadenza::TimerState::Running ? "T 99"
+                                                                : "P 99";
+      const auto metrics =
+          canvas.measureText(label, cadenza::TextRole::Compact);
+      constexpr int kLabelLeft = 14;
+      const int rightPadding = kLabelLeft + metrics.width;
+      CHECK(framebuffer.pixel(rightPadding, 16));
+    }
+  }
 }
