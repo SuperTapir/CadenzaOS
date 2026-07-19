@@ -110,7 +110,7 @@ Sharp 350×155 与 T-Embed 280×124 Cover SHALL 分别从同一高分辨率 PNG 
 - **THEN** 两个 profile 的 PBM 像素分别与其记录的目标尺寸和阈值直接转换结果完全一致
 
 ### Requirement: Timer 状态机和时间边界先由失败测试锁定
-自动化 SHALL 在实现前覆盖 Ready/Running/Paused/Expired、1/60 分钟边界、非法命令、capability/owner、deadline 前/等于/之后、timestamp regression、large step、generation 和 zero-allocation。
+自动化 SHALL 在实现前覆盖 Ready/Running/Paused/Expired、0/1/99 分钟选择与服务边界、非法命令、capability/owner、deadline 前/等于/之后、timestamp regression、large step、generation 和 zero-allocation。
 
 #### Scenario: Deadline inclusive boundary
 - **WHEN** host 分别推进到 deadline 前 1 ms、恰好 deadline 和 deadline 后 1 ms

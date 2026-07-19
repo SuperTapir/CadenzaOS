@@ -24,7 +24,7 @@ TimerService SHALL 以注入的 nondecreasing monotonic time 建立 deadline 并
 - **THEN** Timer remaining 不增加、deadline 不后移并记录稳定 clock-regression 诊断
 
 ### Requirement: Timer 命令类型化且受 capability 与 owner 约束
-App SHALL 只能以 `TimerControl` capability 提交 Start、Pause、Resume 和 SetRemaining；host SHALL 在提交和 commit 时验证 caller、1–60 分钟范围及合法状态，并 SHALL 允许 system owner Acknowledge Expired。
+App SHALL 只能以 `TimerControl` capability 提交 Start、Pause、Resume 和 SetRemaining；host SHALL 在提交和 commit 时验证 caller、1–99 分钟范围及合法状态，并 SHALL 允许 system owner Acknowledge Expired。
 
 #### Scenario: 无权限 App 启动 Timer
 - **WHEN** 不含 TimerControl 的 App 提交 Start

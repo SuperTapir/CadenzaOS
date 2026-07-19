@@ -11,7 +11,7 @@ inline constexpr std::uint64_t kTimerDefaultDurationMs =
     10 * kTimerMinuteMs;
 inline constexpr std::uint64_t kTimerMinimumDurationMs = kTimerMinuteMs;
 inline constexpr std::uint64_t kTimerMaximumDurationMs =
-    60 * kTimerMinuteMs;
+    99 * kTimerMinuteMs;
 
 enum class TimerState : std::uint8_t {
   Ready,

@@ -888,7 +888,36 @@ TEST_CASE("Activation Timer uses turn to choose minutes and click to start") {
   CHECK(services.snapshot().timer.owner == cadenza::apps::kTimerAppId);
 }
 
-TEST_CASE("Activation Timer pauses adjusts whole minutes and resumes") {
+TEST_CASE("Activation Timer wraps zero through 99 and refuses to start zero") {
+  cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
+  cadenza::TimerApp timer;
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
+  REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
+
+  cadenza::InputFrame turn;
+  turn.turn = 90;
+  cadenza::test::updateApp(timer, 0.0F, turn, runtime, services,
+                           cadenza::apps::kTimerAppId);
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Ready);
+  CHECK(services.sound().lastAcceptedCue() ==
+        cadenza::audio::SoundCue::Boundary);
+
+  turn.turn = -1;
+  cadenza::test::updateApp(timer, 0.0F, turn, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+  CHECK(services.snapshot().timer.configuredDurationMs == 99 * 60000);
+}
+
+TEST_CASE("Activation Timer pauses resets seconds when adjusting minutes and resumes") {
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
   cadenza::LauncherApp launcher;
@@ -922,7 +951,16 @@ TEST_CASE("Activation Timer pauses adjusts whole minutes and resumes") {
   adjust.turn = 2;
   cadenza::test::updateApp(timer, 0.0F, adjust, runtime, services,
                            cadenza::apps::kTimerAppId);
-  CHECK(services.snapshot().timer.remainingMs == 11 * 60000 + 18000);
+  CHECK(services.snapshot().timer.remainingMs == 11 * 60000);
+  CHECK(services.snapshot().timer.configuredDurationMs == 11 * 60000);
+  adjust.turn = 88;
+  cadenza::test::updateApp(timer, 0.0F, adjust, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(services.snapshot().timer.remainingMs == 99 * 60000);
+  adjust.turn = 1;
+  cadenza::test::updateApp(timer, 0.0F, adjust, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(services.snapshot().timer.remainingMs == 1 * 60000);
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
                            cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);

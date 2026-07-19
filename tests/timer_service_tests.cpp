@@ -58,9 +58,9 @@ TEST_CASE("Timer starts Ready at ten minutes and accepts inclusive limits") {
 
   cadenza::system::TimerService maximum;
   maximum.advanceTo(25);
-  REQUIRE(maximum.start(kOwner, minutes(60)) ==
+  REQUIRE(maximum.start(kOwner, minutes(99)) ==
           cadenza::system::TimerRequestResult::Accepted);
-  CHECK(maximum.snapshot().remainingMs == minutes(60));
+  CHECK(maximum.snapshot().remainingMs == minutes(99));
 }
 
 TEST_CASE("Timer deadline is inclusive and expiration generation advances once") {
@@ -162,7 +162,7 @@ TEST_CASE("Invalid duration state and owner requests fail closed") {
   timer.advanceTo(0);
   CHECK(timer.start(kOwner, minutes(1) - 1) ==
         cadenza::system::TimerRequestResult::InvalidDuration);
-  CHECK(timer.start(kOwner, minutes(60) + 1) ==
+  CHECK(timer.start(kOwner, minutes(99) + 1) ==
         cadenza::system::TimerRequestResult::InvalidDuration);
   CHECK(timer.pause(kOwner) ==
         cadenza::system::TimerRequestResult::InvalidState);
