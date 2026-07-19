@@ -25,19 +25,15 @@ int wrap(int value, int count) noexcept {
   return value < 0 ? value + count : value;
 }
 
-std::uint32_t wrapTimerDuration(std::uint64_t currentMs, int turn,
-                                bool allowZero) noexcept {
+std::uint32_t wrapTimerDuration(std::uint64_t currentMs, int turn) noexcept {
   const std::int64_t currentMinutes =
       static_cast<std::int64_t>(currentMs / kTimerMinuteMs);
-  const std::int64_t count = allowZero ? 100 : 99;
-  std::int64_t index = currentMinutes;
-  if (!allowZero) {
-    index = currentMinutes == 0 ? (turn > 0 ? -1 : 0)
-                                : currentMinutes - 1;
-  }
-  index = (index + static_cast<std::int64_t>(turn)) % count;
-  if (index < 0) index += count;
-  const std::int64_t minutes = allowZero ? index : index + 1;
+  const std::int64_t currentIndex =
+      currentMinutes == 0 ? (turn > 0 ? -1 : 0) : currentMinutes - 1;
+  std::int64_t index =
+      (currentIndex + static_cast<std::int64_t>(turn)) % 99;
+  if (index < 0) index += 99;
+  const std::int64_t minutes = index + 1;
   return static_cast<std::uint32_t>(
       minutes * static_cast<std::int64_t>(kTimerMinuteMs));
 }
@@ -306,9 +302,6 @@ void renderTimerScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
                                       : timer.remainingMs;
   const char* state = "READY";
   const char* action = "TURN SET  PRESS";
-  if (timer.state == TimerState::Ready && selectedDurationMs == 0) {
-    action = "TURN TO SET";
-  }
   if (timer.state == TimerState::Running) {
     state = "ACTIVE";
     action = "PRESS: PAUSE";
@@ -703,11 +696,6 @@ void TimerApp::update(const AppUpdateContext& context) noexcept {
   }
 
   if (input.clicked) {
-    if (timer.state == TimerState::Ready && selectedDurationMs_ == 0) {
-      context.commands.submit(
-          SystemCommand::playSound(audio::SoundCue::Boundary));
-      return;
-    }
     SystemCommand command;
     audio::SoundCue cue = audio::SoundCue::Boundary;
     bool actionable = true;
@@ -755,8 +743,7 @@ void TimerApp::update(const AppUpdateContext& context) noexcept {
   const std::uint64_t current = timer.state == TimerState::Ready
                                     ? selectedDurationMs_
                                     : timer.remainingMs;
-  const auto adjusted =
-      wrapTimerDuration(current, input.turn, timer.state == TimerState::Ready);
+  const auto adjusted = wrapTimerDuration(current, input.turn);
   if (timer.state == TimerState::Ready) {
     selectedDurationMs_ = adjusted;
   } else {

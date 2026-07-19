@@ -6,19 +6,15 @@
 ## Requirements
 
 ### Requirement: Activation Timer 提供低摩擦分钟设定
-Timer App SHALL 在没有活动倒计时时进入 Ready，默认配置 10 分钟，并 SHALL 允许旋钮以整分钟在 0–99 分钟内循环调整；单帧任意 turn delta SHALL 只产生一次语义反馈。00:00 SHALL 可被选择和显示，但 SHALL NOT 启动 Timer。
+Timer App SHALL 在没有活动倒计时时进入 Ready，默认配置 10 分钟，并 SHALL 允许旋钮以整分钟在 1–99 分钟内循环调整；单帧任意 turn delta SHALL 只产生一次语义反馈。
 
 #### Scenario: 首次进入 Timer
 - **WHEN** 系统尚未启动或恢复任何 Timer 且用户打开 Timer App
 - **THEN** App 显示 10:00、Ready 状态、可见时间体和按下开始提示
 
 #### Scenario: 设定穿越边界
-- **WHEN** Ready 为 99 分钟继续增加，或为 00 分钟继续减少
-- **THEN** duration 分别循环到 00:00 或 99:00，视觉保持两位分钟并产生一次 Navigate
-
-#### Scenario: 零时长不能启动
-- **WHEN** Ready 选择 00:00 后短按
-- **THEN** Timer 保持 Ready、服务不收到 StartTimer，并产生一次 Boundary
+- **WHEN** Ready 为 99 分钟继续增加，或为 01 分钟继续减少
+- **THEN** duration 分别循环到 01:00 或 99:00，视觉保持两位分钟并产生一次 Navigate
 
 ### Requirement: 单按钮控制开始暂停和继续
 Timer App SHALL 在 Ready 短按开始，在 Running 短按暂停，在 Paused 短按继续；长按 SHALL 始终保留给 System Menu。
@@ -41,6 +37,10 @@ Paused 状态 SHALL 允许旋钮按整分钟在 1–99 分钟间循环调整 rem
 #### Scenario: 暂停调整穿越边界
 - **WHEN** Paused remaining 为 99:00 且旋钮增加 1 分钟
 - **THEN** remaining 和 configured duration 均变为 01:00，并产生一次 Navigate
+
+#### Scenario: 最后一分钟暂停后调整
+- **WHEN** Paused remaining 为 00:18 且旋钮增加 1 分钟
+- **THEN** remaining 和 configured duration 均变为 01:00，而不是 02:00 或 01:18
 
 #### Scenario: 运行时误转旋钮
 - **WHEN** Running 收到任意 turn delta

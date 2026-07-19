@@ -66,7 +66,7 @@ sources.
 
 Timer 中，Left/Right 或滚轮按整分钟调整，Enter/Space 短按依
 Ready/Running/Paused 状态执行开始、暂停或继续。运行中长按仍打开 System Menu；
-Ready 可在 00–99 分钟间循环选择，00:00 可停留但不能启动；Paused 调整会将秒数归零。
+Ready 可在 01–99 分钟间循环选择；Paused 调整会将秒数归零并在同一范围循环。
 返回 Launcher 后 Timer 继续，并显示向上取整的后台分钟指示。到期 alert 捕获按钮，
 短按确认后回到最近时长。软件暂停/倍速只影响 presentation；desktop Timer 使用
 SDL 单调 wall time。
