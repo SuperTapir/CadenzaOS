@@ -33,7 +33,8 @@ class LauncherApp final : public App {
   int selected_ = 0;
   std::int64_t targetPosition_ = 0;
   float position_ = 0.0F;
-  Spring trackSpring_{0.0F};
+  float animationStart_ = 0.0F;
+  Seconds motionElapsed_ = 0.0F;
   MotionProfile motionProfile_ = MotionProfile::Normal;
   bool settled_ = true;
 };

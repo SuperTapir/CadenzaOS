@@ -279,11 +279,11 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               10381184867980651961ULL) ==
-        10381184867980651961ULL);
+                               9890496980292269565ULL) ==
+        9890496980292269565ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               10395072706391661531ULL) ==
-        10395072706391661531ULL);
+                               1703058903164229430ULL) ==
+        1703058903164229430ULL);
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {

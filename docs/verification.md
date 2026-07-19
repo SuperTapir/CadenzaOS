@@ -94,8 +94,8 @@ fresh gate 为准：
 
 - 逻辑目标使用无界整数、视觉位置连续追赶，并在 settled 后安全重基；单步中间态、
   首尾单 pitch 环绕、快速同向/反向 retarget、移动中打开和空目录均有自动化用例；
-- Normal Spring 与 Reduced Motion 分别覆盖受限 overshoot、单调无 overshoot、
-  profile 中途切换和确定 settled；
+- Normal 与 Reduced Motion 均覆盖单调无 overshoot、精确 settled、反向 retarget
+  不越界和 profile 中途切换；Normal 为 250 ms，Reduced 为 160 ms；
 - Settings 的 Launcher 行通过 `SettingsWrite` command 同帧切换 Vertical/Horizontal，
   新 service session 默认恢复 Vertical；
 - Launcher 快照矩阵覆盖 320×170/400×240、横纵 settled、确定中间帧、内置 Cover、

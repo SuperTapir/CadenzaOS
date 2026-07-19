@@ -108,12 +108,16 @@ Settings SHALL 显示可发现的 Launcher orientation 行，并 SHALL 通过要
 - **WHEN** 创建新的 SystemServiceHost 会话
 - **THEN** Launcher orientation 使用默认 Vertical，不依赖前一会话状态
 
-### Requirement: Motion profile 保留连续导航并控制超调
-Normal motion SHALL 允许幅度受限的短促 overshoot；Reduced Motion SHALL 使用无 overshoot 的单调收敛。两种 profile SHALL 保留连续位移、方向信息和相邻卡片，不得把 Reduced Motion 降级为瞬切。
+### Requirement: Motion profile 保留连续导航并精确停靠
+Normal 与 Reduced Motion SHALL 都使用无 overshoot 的单调 ease-out，并 SHALL 精确停靠目标位置。Normal SHALL 使用 250 ms 的快速响应节奏；Reduced Motion SHALL 缩短运动时间但保留连续位移、方向信息和相邻卡片，不得降级为瞬切。
+
+#### Scenario: Normal Motion 下改变选择
+- **WHEN** motion profile 为 Normal 且用户从静止状态旋转一个选择步
+- **THEN** 轨道通过多个确定性中间帧单调接近目标，在 250 ms 内精确停靠且不越过目标位置后回拉
 
 #### Scenario: Reduced Motion 下改变选择
 - **WHEN** motion profile 为 Reduced 且用户旋转一个选择步
-- **THEN** 轨道通过多个确定性中间帧单调接近目标且不越过目标位置
+- **THEN** 轨道通过多个确定性中间帧单调接近目标、运动时间短于 Normal 且不越过目标位置
 
 #### Scenario: 移动中切换 Motion profile
 - **WHEN** motion profile 在 Launcher 尚未 settled 时改变

@@ -20,6 +20,12 @@ int wrap(int value, int count) noexcept {
   return value < 0 ? value + count : value;
 }
 
+float outCubic(float progress) noexcept {
+  const float t = std::max(0.0F, std::min(1.0F, progress));
+  const float remaining = 1.0F - t;
+  return 1.0F - remaining * remaining * remaining;
+}
+
 BoundedTextRequest menuLabel(const char* value, Rect bounds,
                              std::uint8_t preferredScale,
                              std::uint8_t minimumScale,
@@ -390,7 +396,8 @@ void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
 
 void LauncherApp::onEnter() noexcept {
   position_ = static_cast<float>(targetPosition_);
-  trackSpring_.reset(position_);
+  animationStart_ = position_;
+  motionElapsed_ = 0.0F;
   settled_ = true;
 }
 
@@ -402,17 +409,20 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
     selected_ = 0;
     targetPosition_ = 0;
     position_ = 0.0F;
-    trackSpring_.reset(0.0F);
+    animationStart_ = 0.0F;
+    motionElapsed_ = 0.0F;
     settled_ = true;
     return;
   }
   if (motionProfile_ != context.system.motionProfile) {
     motionProfile_ = context.system.motionProfile;
-    trackSpring_.reset(position_);
-    trackSpring_.setTarget(static_cast<float>(targetPosition_));
+    animationStart_ = position_;
+    motionElapsed_ = 0.0F;
   }
   if (input.turn != 0) {
     const int previous = selected_;
+    animationStart_ = position_;
+    motionElapsed_ = 0.0F;
     targetPosition_ += static_cast<std::int64_t>(input.turn);
     selected_ = wrap(static_cast<int>(targetPosition_ % appCount), appCount);
     settled_ = false;
@@ -424,30 +434,23 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
          "launcher selection", selected_}));
   }
   const float target = static_cast<float>(targetPosition_);
-  if (motionProfile_ == MotionProfile::Normal) {
-    trackSpring_.setTarget(target);
-    trackSpring_.update(dt);
-    position_ = trackSpring_.value();
-    settled_ = trackSpring_.settled();
-  } else {
-    const float delta = target - position_;
-    if (std::abs(delta) <= 0.0005F) {
+  if (!settled_) {
+    constexpr Seconds kNormalDuration = 0.25F;
+    constexpr Seconds kReducedDuration = 0.16F;
+    const Seconds duration = motionProfile_ == MotionProfile::Normal
+                                 ? kNormalDuration
+                                 : kReducedDuration;
+    motionElapsed_ = std::min(
+        duration, motionElapsed_ + std::max(0.0F, dt));
+    const float progress = motionElapsed_ / duration;
+    position_ = animationStart_ +
+                (target - animationStart_) * outCubic(progress);
+    if (motionElapsed_ >= duration) {
       position_ = target;
+      animationStart_ = target;
+      motionElapsed_ = 0.0F;
       settled_ = true;
-    } else {
-      const float next =
-          position_ + delta * (1.0F - std::pow(0.0005F, dt));
-      if ((dt > 0.0F && next == position_) ||
-          std::abs(target - next) <= 0.0005F) {
-        position_ = target;
-        settled_ = true;
-      } else {
-        position_ = next;
-        settled_ = false;
-      }
     }
-    trackSpring_.reset(position_);
-    trackSpring_.setTarget(target);
   }
   constexpr std::int64_t kRebaseThreshold = 4096;
   if (settled_ && std::abs(targetPosition_) >= kRebaseThreshold) {
@@ -455,8 +458,8 @@ void LauncherApp::update(const AppUpdateContext& context) noexcept {
     const std::int64_t shift = targetPosition_ - canonical;
     targetPosition_ = canonical;
     position_ -= static_cast<float>(shift);
-    trackSpring_.reset(position_);
-    trackSpring_.setTarget(static_cast<float>(targetPosition_));
+    animationStart_ = position_;
+    motionElapsed_ = 0.0F;
   }
   if (input.clicked) {
     context.navigator.open(context.catalog.launcherAppAt(selected_));
