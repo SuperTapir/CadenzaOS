@@ -17,6 +17,7 @@ namespace cadenza {
 
 class MonoCanvas;
 struct Rect;
+struct AppRenderContext;
 
 class AppCatalogView {
  public:
@@ -48,7 +49,8 @@ class AppCatalogView {
   bool renderLauncherCover(AppId id, MonoCanvas& canvas,
                            Rect bounds) const noexcept;
   bool renderLaunchFrame(AppId id, MonoCanvas& canvas,
-                         float progress) const noexcept;
+                         float progress,
+                         const AppRenderContext& context) const noexcept;
 
  private:
   const AppCatalog* catalog_;

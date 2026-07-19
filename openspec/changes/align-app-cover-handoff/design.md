@@ -30,9 +30,11 @@
 
 ### 1. 静态 Cover 与 App launch sequence 是两个独立契约
 
-`App::renderLauncherCover()` 继续是静态、const、无进度输入的 App 身份。新增可选 `renderLaunchFrame(MonoCanvas&, float progress) const`，只接受归一化进度并绘制一张全屏 1-bit frame；它可以在 `onEnter` 之前调用，不得读取或改变 interactive/lifecycle 状态。`AppCatalogView` 只读转发这项能力，不把可变 App 暴露给 Runtime。
+`App::renderLauncherCover()` 继续是静态、const、无进度输入的 App 身份。新增可选 `renderLaunchFrame(MonoCanvas&, float progress, const AppRenderContext&) const`，接受归一化进度与只读 render context 并绘制一张全屏 1-bit frame；它可以在 `onEnter` 之前调用，不得读取命令接口或改变 interactive/lifecycle 状态。只读 system snapshot 是必要输入，因为 Settings 首屏取决于 Motion/Sound/Connectivity 状态，若 launch 末帧假定默认设置，就会在 lifecycle 中点再次跳变。`AppCatalogView` 只读转发这项能力，不把可变 App 暴露给 Runtime。
 
-四个内置 App 使用代码原生 renderer 建立明显不同的入场：Clock 强调刻度/扫线，Motion 强调轨迹与聚焦，Settings 强调校准栅格，Gallery 强调 frame/dither 组合。每个序列的首帧必须从自身 Cover 的构图或关键元素继续，末帧必须提供稳定的 handoff frame；没有实现 launch renderer 的 App 使用静态 Cover bridge 与受约束名称 fallback。
+四个内置 App 使用代码原生 renderer 建立明显不同的入场，但差异来自各自 Cover 与真实 UI 的关系，而不是插入独立海报：Clock 从计时 Cover 溶解到 Chrono 首屏，Motion 让同一球/轨道落入交互网格，Settings 让 Cover 的标题与控制器归并为实际左栏/设置行，Gallery 让封面标题与漂浮 frame 归并为 Gallery header/Easing 首屏。每个序列的首帧必须逐像素等于自身居中 Cover bridge，末帧必须逐像素等于同一 App 状态与 system snapshot 在 `onEnter` 后的首帧；没有实现 launch renderer 的 App 使用静态 Cover bridge 与受约束名称 fallback。
+
+首轮实现曾在前 18% 直接绘制 Cover，随后整帧切到独立概念动画，末帧又与 App UI 无共享布局；这满足“每 App 不同”却不满足视觉连续。修订后使用固定相位 ordered-dither 将 Cover 像素单调交给真实首屏 preview，并复用 App 的首屏绘制 helper，消除两处硬切。30 FPS 相邻采样增加像素变化上限回归，避免未来重新引入整帧替换。
 
 未把 `progress` 加到 Cover renderer，因为那会推翻已批准的静态像素契约；未让 launch renderer 调用普通 `render()`，因为目标 App 尚未 `onEnter`，普通 render 可能依赖 lifecycle 状态。未在首版定义外部逐帧文件格式，因为安装包、flash、解码与失败恢复尚未调研。
 
@@ -67,6 +69,8 @@
 - 非 Home App -> 非 Home App：保留直接 Dip，避免臆造 Home/card 空间语义。
 
 这不是简单倒放：启动需要 anticipation 和 App 自我介绍，返回则应响应更快并明确落回原卡片。未统一使用较长时长，因为系统返回会显得迟钝；未继续使用 0.32 秒，因为三段参考视频都显示 App 专属 sequence 是被感知到的完整阶段，而不是一次短 crossfade。
+
+返回逐帧审阅进一步发现两个离散问题：`inOutQuad` 会把 App → Cover 的 ordered-dither threshold 挤在中间两帧，双 profile 峰值达到约 21–23%；Sharp 的 155 px 高 Cover 若使用整数向下居中则落在 `y=42`，而 Launcher/Playdate card 契约位于 `y=43`。修订后前半段使用匀速 threshold 交接，把 30 FPS 相邻变化限制在 16% 内；Cover bridge 与 launch renderer 对奇数剩余空间统一向下视觉居中（整数坐标向上取整），使 400×240 内容矩形精确保持 `(25,43,350,155)`，中点后 Cover 区域不再移动或重绘。
 
 ### 4. 1-bit ordered dither 负责层间混合，App renderer 负责内容运动
 

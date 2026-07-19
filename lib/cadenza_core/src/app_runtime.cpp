@@ -14,12 +14,13 @@ bool AppCatalogView::renderLauncherCover(
 }
 
 bool AppCatalogView::renderLaunchFrame(
-    AppId id, MonoCanvas& canvas, float progress) const noexcept {
+    AppId id, MonoCanvas& canvas, float progress,
+    const AppRenderContext& context) const noexcept {
   if (!id.valid()) return false;
   const AppCatalogEntry* entry = catalog_->find(id);
   return entry && entry->app &&
          entry->app->renderLaunchFrame(
-             canvas, std::max(0.0F, std::min(1.0F, progress)));
+             canvas, std::max(0.0F, std::min(1.0F, progress)), context);
 }
 
 AppRuntime::AppRuntime(FramebufferProfile profile) noexcept
@@ -150,8 +151,9 @@ bool AppRuntime::renderHandoffFrame(
   incomingFrame_.clear(true);
   MonoCanvas canvas{incomingFrame_, diagnosticSink_};
   const AppCatalogView catalog{catalog_};
+  const AppRenderContext context{catalog, frameSnapshot_};
   if (preferLaunchSequence &&
-      catalog.renderLaunchFrame(id, canvas, progress)) {
+      catalog.renderLaunchFrame(id, canvas, progress, context)) {
     return true;
   }
 
@@ -160,7 +162,7 @@ bool AppRuntime::renderHandoffFrame(
       std::min<std::int32_t>(350, canvas.width() * 7 / 8);
   const std::int32_t contentHeight = contentWidth * 155 / 350;
   const Rect bounds{(canvas.width() - contentWidth) / 2,
-                    (canvas.height() - contentHeight) / 2,
+                    (canvas.height() - contentHeight + 1) / 2,
                     contentWidth, contentHeight};
   if (catalog.renderLauncherCover(id, canvas, bounds)) return false;
 

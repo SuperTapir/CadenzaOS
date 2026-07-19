@@ -41,21 +41,20 @@ class LauncherApp final : public App {
 class ClockApp final : public App {
  public:
   const char* name() const noexcept override { return "Clock"; }
-  void onEnter() noexcept override;
   void update(const AppUpdateContext& context) noexcept override;
   void render(MonoCanvas& canvas,
               const AppRenderContext& context) noexcept override;
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   std::uint32_t selectedDurationMs_ =
       static_cast<std::uint32_t>(kTimerDefaultDurationMs);
   TimerState observedTimerState_ = TimerState::Ready;
   bool hasObservedTimerState_ = false;
-  float phase_ = 0.0F;
 };
 
 class MotionApp final : public App {
@@ -68,7 +67,8 @@ class MotionApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   float target_ = 0.5F;
@@ -86,7 +86,8 @@ class SettingsApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
  private:
   int selected_ = 0;
@@ -109,7 +110,8 @@ class AnimationGalleryApp final : public App {
   bool renderLauncherCover(MonoCanvas& canvas,
                            Rect bounds) const noexcept override;
   bool renderLaunchFrame(MonoCanvas& canvas,
-                         float progress) const noexcept override;
+                         float progress,
+                         const AppRenderContext& context) const noexcept override;
 
   constexpr std::size_t pageCount() const noexcept { return kPageCount; }
   const char* pageName(std::size_t index) const noexcept;
@@ -138,6 +140,7 @@ class AnimationGalleryApp final : public App {
   void renderParticles(MonoCanvas& canvas) noexcept;
   void renderSpriteState(MonoCanvas& canvas) noexcept;
   void renderDither(MonoCanvas& canvas) noexcept;
+  void renderInitialFrame(MonoCanvas& canvas) const noexcept;
 
   std::size_t page_ = 0;
   GalleryMode mode_ = GalleryMode::AutoPlay;

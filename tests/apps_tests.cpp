@@ -99,6 +99,20 @@ std::uint64_t framebufferHash(const cadenza::MonoFramebuffer& framebuffer) {
   return hash;
 }
 
+std::size_t changedPixels(const cadenza::MonoFramebuffer& first,
+                          const cadenza::MonoFramebuffer& second) {
+  std::size_t changed = 0;
+  for (std::size_t index = 0; index < first.sizeBytes(); ++index) {
+    std::uint8_t bits = static_cast<std::uint8_t>(
+        first.data()[index] ^ second.data()[index]);
+    while (bits != 0) {
+      changed += bits & 1U;
+      bits >>= 1U;
+    }
+  }
+  return changed;
+}
+
 template <typename AppType>
 bool registerBuiltin(cadenza::AppRuntime& runtime, cadenza::AppId id,
                      AppType& app, bool visible = true) {
@@ -198,10 +212,12 @@ TEST_CASE("App catalog forwards optional const Launcher Covers") {
   cadenza::MonoFramebuffer framebuffer{cadenza::FramebufferProfile::TEmbed};
   cadenza::MonoCanvas canvas{framebuffer};
   const cadenza::AppCatalogView catalog = runtime.catalogView();
+  cadenza::SystemSnapshot snapshot;
+  const cadenza::AppRenderContext context{catalog, snapshot};
   CHECK_FALSE(catalog.renderLauncherCover(
       cadenza::AppId{0x0201}, canvas, {8, 8, 80, 48}));
   CHECK_FALSE(catalog.renderLaunchFrame(
-      cadenza::AppId{0x0201}, canvas, 0.5F));
+      cadenza::AppId{0x0201}, canvas, 0.5F, context));
   CHECK(catalog.renderLauncherCover(
       cadenza::AppId{0x0202}, canvas, {8, 8, 80, 48}));
   CHECK(covered.renderCount == 1);
@@ -213,6 +229,10 @@ TEST_CASE("built-in launch sequences are deterministic seekable and distinct") {
   cadenza::SettingsApp settings;
   cadenza::AnimationGalleryApp gallery;
   const cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+  cadenza::AppCatalog emptyCatalog;
+  const cadenza::AppCatalogView catalog{emptyCatalog};
+  cadenza::SystemSnapshot snapshot;
+  const cadenza::AppRenderContext context{catalog, snapshot};
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     std::array<std::uint64_t, 4> middleHashes{};
@@ -223,9 +243,10 @@ TEST_CASE("built-in launch sequences are deterministic seekable and distinct") {
       cadenza::MonoCanvas firstCanvas{first};
       cadenza::MonoCanvas earlierCanvas{earlier};
       cadenza::MonoCanvas repeatedCanvas{repeated};
-      REQUIRE(apps[index]->renderLaunchFrame(firstCanvas, 0.65F));
-      REQUIRE(apps[index]->renderLaunchFrame(earlierCanvas, 0.25F));
-      REQUIRE(apps[index]->renderLaunchFrame(repeatedCanvas, 0.65F));
+      REQUIRE(apps[index]->renderLaunchFrame(firstCanvas, 0.65F, context));
+      REQUIRE(apps[index]->renderLaunchFrame(earlierCanvas, 0.25F, context));
+      REQUIRE(apps[index]->renderLaunchFrame(repeatedCanvas, 0.65F,
+                                             context));
       middleHashes[index] = framebufferHash(first);
       CHECK(middleHashes[index] == framebufferHash(repeated));
       CHECK(middleHashes[index] != framebufferHash(earlier));
@@ -234,6 +255,87 @@ TEST_CASE("built-in launch sequences are deterministic seekable and distinct") {
       for (std::size_t right = left + 1; right < 4; ++right) {
         CHECK(middleHashes[left] != middleHashes[right]);
       }
+    }
+  }
+}
+
+TEST_CASE("built-in launch endpoints match Cover and first App frame") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::LauncherApp launcher;
+    cadenza::ClockApp clock;
+    cadenza::MotionApp motion;
+    cadenza::SettingsApp settings;
+    cadenza::AnimationGalleryApp gallery;
+    cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::system::SystemServiceHost services;
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                            false));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
+    REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
+    const cadenza::AppCatalogView catalog = runtime.catalogView();
+    const cadenza::AppRenderContext context{catalog, services.snapshot()};
+    for (cadenza::App* app : apps) {
+      CAPTURE(app->name());
+      cadenza::MonoFramebuffer cover{profile};
+      cadenza::MonoFramebuffer launchStart{profile};
+      cadenza::MonoFramebuffer launchEnd{profile};
+      cadenza::MonoFramebuffer firstAppFrame{profile};
+      cover.clear(true);
+      const int width = std::min(350, cover.width() * 7 / 8);
+      const int height = width * 155 / 350;
+      cadenza::MonoCanvas coverCanvas{cover};
+      cadenza::MonoCanvas startCanvas{launchStart};
+      cadenza::MonoCanvas endCanvas{launchEnd};
+      cadenza::MonoCanvas firstAppCanvas{firstAppFrame};
+      REQUIRE(app->renderLauncherCover(
+          coverCanvas, {(cover.width() - width) / 2,
+                        (cover.height() - height + 1) / 2, width, height}));
+      REQUIRE(app->renderLaunchFrame(startCanvas, 0.0F, context));
+      REQUIRE(app->renderLaunchFrame(endCanvas, 1.0F, context));
+      app->onEnter();
+      app->render(firstAppCanvas, context);
+      CHECK(framebufferHash(launchStart) == framebufferHash(cover));
+      CHECK(framebufferHash(launchEnd) == framebufferHash(firstAppFrame));
+    }
+  }
+}
+
+TEST_CASE("built-in launch sequences have no 30 FPS full-frame jump") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::ClockApp clock;
+    cadenza::MotionApp motion;
+    cadenza::SettingsApp settings;
+    cadenza::AnimationGalleryApp gallery;
+    const cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+    cadenza::AppCatalog emptyCatalog;
+    const cadenza::AppCatalogView catalog{emptyCatalog};
+    cadenza::SystemSnapshot snapshot;
+    const cadenza::AppRenderContext context{catalog, snapshot};
+    for (const cadenza::App* app : apps) {
+      CAPTURE(app->name());
+      cadenza::MonoFramebuffer previous{profile};
+      cadenza::MonoFramebuffer current{profile};
+      cadenza::MonoCanvas previousCanvas{previous};
+      REQUIRE(app->renderLaunchFrame(previousCanvas, 0.0F, context));
+      std::size_t maximumChanged = 0;
+      for (int sample = 1; sample <= 12; ++sample) {
+        cadenza::MonoCanvas currentCanvas{current};
+        REQUIRE(app->renderLaunchFrame(
+            currentCanvas, static_cast<float>(sample) / 12.0F, context));
+        maximumChanged =
+            std::max(maximumChanged, changedPixels(previous, current));
+        previous = current;
+      }
+      CAPTURE(maximumChanged);
+      const std::size_t pixels =
+          static_cast<std::size_t>(previous.width()) * previous.height();
+      CHECK(maximumChanged <= pixels / 5U);
     }
   }
 }

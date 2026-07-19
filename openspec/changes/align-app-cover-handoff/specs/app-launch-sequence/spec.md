@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Apps can provide an independent launch sequence
-An App SHALL be able to provide an optional const full-screen launch-frame renderer driven only by normalized progress. The Runtime MAY call it before `onEnter`; rendering a launch frame MUST NOT mutate App state, Cover pixels, lifecycle, catalog, or system services.
+An App SHALL be able to provide an optional const full-screen launch-frame renderer driven by normalized progress and a read-only AppRenderContext. The Runtime MAY call it before `onEnter`; rendering a launch frame MUST NOT mutate App state, Cover pixels, lifecycle, catalog, or system services.
 
 #### Scenario: Runtime samples a launch sequence
 - **WHEN** a registered App is launched from Home and implements the launch renderer
@@ -31,3 +31,14 @@ Launch renderers SHALL produce valid frames for forward, repeated, and decreasin
 #### Scenario: Verification seeks backward
 - **WHEN** a test renders progress 0.8 followed by 0.3 and then 0.8 again
 - **THEN** both 0.8 frames match exactly and the 0.3 frame represents the earlier phase
+
+### Requirement: Launch sequence endpoints are visually continuous
+Each built-in launch sequence SHALL begin with the exact centered static Cover bridge and SHALL end with the exact first App framebuffer produced for the same App state and SystemSnapshot after its normal `onEnter` semantics. Intermediate frames SHALL evolve between those identities without a hard replacement by an unrelated full-screen composition.
+
+#### Scenario: Launch endpoints are compared
+- **WHEN** progress 0 and progress 1 are captured for a built-in App at either display profile
+- **THEN** progress 0 matches the centered Cover bridge byte-for-byte and progress 1 matches the App first frame byte-for-byte
+
+#### Scenario: Launch is sampled at 30 FPS
+- **WHEN** the full handoff is rendered at fixed 30 FPS
+- **THEN** adjacent frames change only a bounded portion of framebuffer pixels and no single frame performs an unmasked full-composition jump
