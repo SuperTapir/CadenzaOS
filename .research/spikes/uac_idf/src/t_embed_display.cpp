@@ -98,7 +98,8 @@ esp_err_t TEmbedDisplay::start() noexcept {
   ioConfig.cs_gpio_num = kChipSelectPin;
   ioConfig.dc_gpio_num = kDataCommandPin;
   ioConfig.spi_mode = 0;
-  ioConfig.pclk_hz = 40'000'000;
+  // Match PlatformIO TFT_eSPI SPI_FREQUENCY=80MHz on short T-Embed traces.
+  ioConfig.pclk_hz = 80'000'000;
   ioConfig.trans_queue_depth = 2;
   ioConfig.on_color_trans_done = colorTransferDone;
   ioConfig.user_ctx = transferDone_;
@@ -126,11 +127,15 @@ esp_err_t TEmbedDisplay::start() noexcept {
   }
 
   auto handle = reinterpret_cast<esp_lcd_panel_handle_t>(panel_);
+  // Landscape + MY|MV — 180° from the previous MX|MV mapping so the T-Embed
+  // UI matches the held orientation (PlatformIO setRotation(3) feel on this
+  // panel via esp_lcd).
   if ((result = esp_lcd_panel_reset(handle)) != ESP_OK ||
       (result = esp_lcd_panel_init(handle)) != ESP_OK ||
       (result = esp_lcd_panel_invert_color(handle, true)) != ESP_OK ||
       (result = esp_lcd_panel_swap_xy(handle, true)) != ESP_OK ||
-      (result = esp_lcd_panel_mirror(handle, false, false)) != ESP_OK) {
+      (result = esp_lcd_panel_mirror(handle, false, true)) != ESP_OK ||
+      (result = esp_lcd_panel_set_gap(handle, 0, 35)) != ESP_OK) {
     release();
     return result;
   }
@@ -157,6 +162,9 @@ bool TEmbedDisplay::present(const MonoFramebuffer& framebuffer) noexcept {
       framebuffer.height() != 170) {
     return false;
   }
+  // Bulk 1-bit → RGB565 conversion (same unroll as PlatformIO TftPresenter).
+  const std::uint8_t* data = framebuffer.data();
+  const std::size_t stride = framebuffer.stride();
   for (std::int16_t y = 0; y < framebuffer.height();
        y += static_cast<std::int16_t>(kRowsPerTransfer)) {
     if (xSemaphoreTake(static_cast<SemaphoreHandle_t>(transferDone_),
@@ -166,17 +174,27 @@ bool TEmbedDisplay::present(const MonoFramebuffer& framebuffer) noexcept {
     const auto rows = static_cast<std::size_t>(std::min<std::int16_t>(
         static_cast<std::int16_t>(kRowsPerTransfer), framebuffer.height() - y));
     for (std::size_t row = 0; row < rows; ++row) {
-      for (std::size_t x = 0; x < kWidth; ++x) {
-        transfer_[row * kWidth + x] =
-            framebuffer.pixel(static_cast<std::int32_t>(x),
-                              y + static_cast<std::int16_t>(row))
-                ? 0x0000
-                : 0xFFFF;
+      const std::uint8_t* source =
+          data + static_cast<std::size_t>(y + static_cast<std::int16_t>(row)) *
+                     stride;
+      std::uint16_t* dest = transfer_.data() + row * kWidth;
+      std::size_t x = 0;
+      while (x + 8 <= kWidth) {
+        const std::uint8_t cell = source[x >> 3];
+        dest[x + 0] = (cell & 0x80U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 1] = (cell & 0x40U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 2] = (cell & 0x20U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 3] = (cell & 0x10U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 4] = (cell & 0x08U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 5] = (cell & 0x04U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 6] = (cell & 0x02U) != 0 ? 0x0000 : 0xFFFF;
+        dest[x + 7] = (cell & 0x01U) != 0 ? 0x0000 : 0xFFFF;
+        x += 8;
       }
     }
     if (esp_lcd_panel_draw_bitmap(
             reinterpret_cast<esp_lcd_panel_handle_t>(panel_), 0, y, kWidth,
-            y + rows, transfer_.data()) != ESP_OK) {
+            y + static_cast<std::int16_t>(rows), transfer_.data()) != ESP_OK) {
       xSemaphoreGive(static_cast<SemaphoreHandle_t>(transferDone_));
       return false;
     }

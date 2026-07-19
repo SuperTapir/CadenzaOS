@@ -29,6 +29,8 @@ esp_err_t TEmbedSpeaker::start(
       I2S_ROLE_MASTER);
   channelConfig.dma_desc_num = t_embed_audio::kSpeaker.dmaDescriptors;
   channelConfig.dma_frame_num = t_embed_audio::kSpeaker.dmaFrames;
+  // Match PlatformIO tx_desc_auto_clear: underruns send silence, not stalls.
+  channelConfig.auto_clear_after_cb = true;
   auto* tx = reinterpret_cast<i2s_chan_handle_t*>(&txChannel_);
   esp_err_t result = i2s_new_channel(&channelConfig, tx, nullptr);
   if (result != ESP_OK) {
@@ -87,6 +89,7 @@ void TEmbedSpeaker::taskEntry(void* context) noexcept {
 void TEmbedSpeaker::run() noexcept {
   std::array<std::int16_t, t_embed_audio::kSpeaker.dmaFrames> mono{};
   std::array<audio::StereoI2sFrame, t_embed_audio::kSpeaker.dmaFrames> stereo{};
+  bool partialWriteReported = false;
   while (running()) {
     service_->render(mono.data(), mono.size());
     audio::duplicateMonoToStereo(mono.data(), stereo.data(), mono.size());
@@ -94,10 +97,22 @@ void TEmbedSpeaker::run() noexcept {
     const esp_err_t result = i2s_channel_write(
         reinterpret_cast<i2s_chan_handle_t>(txChannel_), stereo.data(),
         sizeof(stereo), &bytesWritten, kWriteTimeoutMs);
-    if (result != ESP_OK || bytesWritten != sizeof(stereo)) {
-      ESP_LOGE(kTag, "I2S0 write failed: err=%d bytes=%u", result,
-               static_cast<unsigned>(bytesWritten));
+    if (result != ESP_OK) {
+      ESP_LOGE(kTag, "I2S0 write failed: err=%s", esp_err_to_name(result));
       running_.store(false, std::memory_order_release);
+      break;
+    }
+    // Partial writes are underruns under load; keep the task alive like
+    // PlatformIO I2sAudioOutput so UI cues do not permanently die.
+    if (bytesWritten != sizeof(stereo)) {
+      if (!partialWriteReported) {
+        ESP_LOGW(kTag, "I2S0 partial write: %u/%u",
+                 static_cast<unsigned>(bytesWritten),
+                 static_cast<unsigned>(sizeof(stereo)));
+        partialWriteReported = true;
+      }
+    } else {
+      partialWriteReported = false;
     }
   }
   task_.store(nullptr, std::memory_order_release);

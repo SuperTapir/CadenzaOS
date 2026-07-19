@@ -1,4 +1,5 @@
-/* Build-only spike: prove Arduino + portable Cadenza voice + UAC2/CDC. */
+/* CadenzaOS ESP-IDF 5.5 T-Embed firmware: Runtime + UAC2 mic + CDC. */
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -15,6 +16,7 @@
 #if CONFIG_CADENZA_T_EMBED_RUNTIME
 #include "cadenza/apps/apps.h"
 #include "cadenza/core/app_runtime.h"
+#include "cadenza/core/diagnostics.h"
 #include "cadenza/core/mono_canvas.h"
 #include "cadenza/core/mono_framebuffer.h"
 #include "cadenza/system/frame_coordinator.h"
@@ -50,12 +52,32 @@ struct VoiceAdapter {
 class LogDiagnosticSink final : public cadenza::DiagnosticSink {
  public:
   void emit(const cadenza::DiagnosticEvent& event) noexcept override {
+    // Same filter as PlatformIO SerialDiagnosticSink: Gallery Transition
+    // clip noise over CDC can starve the loop task and trip the TWDT.
+    if (event.category == cadenza::DiagnosticCategory::Graphics &&
+        (event.code == cadenza::DiagnosticCode::ClippedGeometry ||
+         event.code == cadenza::DiagnosticCode::FullyClipped ||
+         event.code == cadenza::DiagnosticCode::InvalidGeometry)) {
+      return;
+    }
     ESP_LOGI("cadenza_diag", "category=%u code=%u value=%ld %s",
              static_cast<unsigned>(event.category),
              static_cast<unsigned>(event.code), static_cast<long>(event.value),
              event.message ? event.message : "");
   }
 };
+
+bool shouldPresent(const cadenza::AppRuntime& runtime,
+                   const cadenza::LauncherApp& launcher) noexcept {
+  if (runtime.transitioning() || runtime.systemMenuActive() ||
+      runtime.appSuspendedBySystem()) {
+    return true;
+  }
+  if (runtime.currentId() != cadenza::apps::kLauncherAppId) {
+    return true;
+  }
+  return launcher.needsPresent();
+}
 
 cadenza::system::SystemServiceHost services;
 #if CONFIG_CADENZA_CONNECTIVITY_RUNTIME
@@ -70,6 +92,7 @@ cadenza::idf::TEmbedInput input;
 LogDiagnosticSink diagnostics;
 cadenza::LauncherApp launcher;
 cadenza::TimerApp timerApp;
+cadenza::SightApp sight;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
@@ -161,6 +184,12 @@ extern "C" void app_main(void) {
                       ? ESP_OK
                       : ESP_FAIL);
   ESP_ERROR_CHECK(runtime.registerApp(
+                      cadenza::apps::kSightAppId, sight, true,
+                      cadenza::apps::builtinAppCapabilities(
+                          cadenza::apps::kSightAppId))
+                      ? ESP_OK
+                      : ESP_FAIL);
+  ESP_ERROR_CHECK(runtime.registerApp(
                       cadenza::apps::kMotionAppId, motion, true,
                       cadenza::apps::builtinAppCapabilities(
                           cadenza::apps::kMotionAppId))
@@ -191,16 +220,24 @@ extern "C" void app_main(void) {
 
 #if CONFIG_CADENZA_T_EMBED_SPEAKER
 #if CONFIG_CADENZA_T_EMBED_RUNTIME
+  // Match PlatformIO: speaker failure must not kill the graphics runtime.
   const esp_err_t speakerResult = speaker.start(services.sound());
   services.postPlatformEvent(cadenza::system::PlatformEvent::soundOutputAvailability(
       speakerResult == ESP_OK));
-  ESP_ERROR_CHECK(speakerResult);
+  if (speakerResult != ESP_OK) {
+    ESP_LOGW("cadenza_audio", "speaker disabled (%s); graphics remains active",
+             esp_err_to_name(speakerResult));
+  }
 #else
   ESP_ERROR_CHECK(speaker.start(sound));
 #endif
 #endif
 
   voice.capture.setAvailable(true);
+#if CONFIG_CADENZA_T_EMBED_RUNTIME
+  services.postPlatformEvent(
+      cadenza::system::PlatformEvent::microphoneAvailability(true));
+#endif
   cadenza::idf::installUacLifecycleAdapter(voice.sessionBridge, 1);
 #if CONFIG_CADENZA_T_EMBED_MICROPHONE
   ESP_ERROR_CHECK(microphone.start());
@@ -229,25 +266,46 @@ extern "C" void app_main(void) {
 
 #if CONFIG_CADENZA_T_EMBED_RUNTIME
   std::int64_t lastFrameUs = esp_timer_get_time();
+  bool holdPresentAfterSystem = false;
   while (true) {
     input.sample();
     const std::int64_t nowUs = esp_timer_get_time();
-    if (nowUs - lastFrameUs >= 16'667) {
-      const float dt = static_cast<float>(nowUs - lastFrameUs) / 1'000'000.0F;
-      lastFrameUs = nowUs;
+    if (nowUs - lastFrameUs < 16'667) {
+      vTaskDelay(pdMS_TO_TICKS(1));
+      continue;
+    }
+    const float dt = std::min(
+        static_cast<float>(nowUs - lastFrameUs) / 1'000'000.0F, 0.05F);
+    lastFrameUs = nowUs;
 #if CONFIG_CADENZA_CONNECTIVITY_RUNTIME
-      connectivity.pump();
+    connectivity.pump();
 #endif
-      cadenza::system::FrameCoordinator::runFrame(
-          services, runtime, canvas, dt > 0.05F ? 0.05F : dt,
-          input.takeFrame());
+    const auto inputFrame = input.takeFrame();
+    cadenza::system::FrameCoordinator::runFrameAt(
+        services, runtime, canvas,
+        static_cast<cadenza::MonotonicMillis>(nowUs / 1000), dt, inputFrame);
 #if CONFIG_CADENZA_CONNECTIVITY_RUNTIME
-      connectivity.pump();
+    connectivity.pump();
 #endif
+    const bool systemBusy = runtime.transitioning() ||
+                            runtime.systemMenuActive() ||
+                            runtime.appSuspendedBySystem();
+    if (systemBusy) {
+      holdPresentAfterSystem = true;
+    }
+    if (shouldPresent(runtime, launcher) || holdPresentAfterSystem) {
       if (!display.present(framebuffer)) {
         ESP_LOGE("cadenza_display", "frame transfer failed");
       }
+      if (runtime.currentId() == cadenza::apps::kLauncherAppId) {
+        launcher.markPresented();
+      }
+      if (!systemBusy) {
+        holdPresentAfterSystem = false;
+      }
     }
+    // Drain encoder edges that arrived during a slow present.
+    input.sample();
     vTaskDelay(pdMS_TO_TICKS(1));
   }
 #endif

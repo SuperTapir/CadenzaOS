@@ -1338,7 +1338,7 @@ TEST_CASE("Settings switches Launcher orientation immediately at both profiles")
     REQUIRE(runtime.begin(cadenza::apps::kSettingsAppId));
 
     cadenza::InputFrame selectLauncher;
-    selectLauncher.turn = 4;
+    selectLauncher.turn = 5;
     cadenza::test::updateApp(settings, 0.0F, selectLauncher, runtime, services,
                              cadenza::apps::kSettingsAppId);
     cadenza::InputFrame click;
@@ -1386,7 +1386,7 @@ TEST_CASE("Settings About opens a dedicated identity screen and click returns") 
     const std::uint64_t settingsHash = framebufferHash(framebuffer);
 
     cadenza::InputFrame selectAbout;
-    selectAbout.turn = 5;
+    selectAbout.turn = 6;
     cadenza::test::updateApp(settings, 0.0F, selectAbout, runtime, services,
                              cadenza::apps::kSettingsAppId);
     cadenza::InputFrame click;
@@ -1434,7 +1434,7 @@ TEST_CASE("Settings drives Wi-Fi and owner-bound provisioning without credential
   services.connectivityService().setWiFiAvailable(true);
 
   cadenza::InputFrame selectWifi;
-  selectWifi.turn = 2;
+  selectWifi.turn = 3;
   cadenza::test::updateApp(settings, 0.0F, selectWifi, runtime, services,
                            cadenza::apps::kSettingsAppId);
   cadenza::InputFrame click;

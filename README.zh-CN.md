@@ -93,13 +93,16 @@ brew install cmake sdl3
 ## 构建与验证
 
 ```bash
-tools/check.sh host      # host 构建与完整测试
-tools/check.sh desktop   # SDL3 构建与启动 smoke
-tools/check.sh firmware  # PlatformIO T-Embed 编译
-tools/check.sh all       # 完整验证矩阵
+tools/check.sh host           # host 构建与完整测试
+tools/check.sh desktop        # SDL3 构建与启动 smoke
+tools/check.sh firmware       # ESP-IDF 5.5 T-Embed 主路径（UAC+CDC）
+tools/firmware_uac.sh flash   # 烧录主固件到 T-Embed
+tools/check.sh firmware-pio   # PlatformIO 回滚（无 UAC）
+tools/check.sh all            # host + desktop + ESP-IDF 固件 + diff
 ```
 
-固件也可以直接通过仓库旁的 PlatformIO 环境构建、烧录和查看串口日志：
+主固件需要 ESP-IDF v5.5（`CADENZA_IDF_PATH` 或 `../esp-idf-v5.5`）。
+无麦克风的 PlatformIO 回滚：
 
 ```bash
 ../.platformio-env/bin/pio run

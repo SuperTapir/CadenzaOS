@@ -102,6 +102,8 @@ void VoiceDmaNormalizer::noteReadFailure(bool timeout) noexcept {
   } else {
     ++diagnostics_.readErrors;
   }
+  // Drop any half stereo frame so the next successful DMA chunk can realign.
+  clearPending();
   if (consecutiveReadFailures_ <
       std::numeric_limits<std::uint8_t>::max()) {
     ++consecutiveReadFailures_;
@@ -109,7 +111,6 @@ void VoiceDmaNormalizer::noteReadFailure(bool timeout) noexcept {
   if (consecutiveReadFailures_ >= config_.maxConsecutiveReadFailures) {
     ++diagnostics_.fatalReadFailures;
     consecutiveReadFailures_ = 0;
-    clearPending();
     capture_.notifyError();
   }
 }

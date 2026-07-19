@@ -32,11 +32,18 @@ bool VoiceCaptureCoordinator::setIntent(VoiceConsumer consumer,
                                   ? analyzerIntent_
                                   : usbIntent_;
   if (active) {
-    if (!intent.load(std::memory_order_acquire)) {
+    const bool wasActive = intent.load(std::memory_order_acquire);
+    if (!wasActive) {
       queue(consumer).clear();
       intent.store(true, std::memory_order_release);
     }
     if (state() == VoiceCaptureState::Stopped) {
+      clearQueues();
+      state_.store(VoiceCaptureState::Starting, std::memory_order_release);
+    } else if (!wasActive && consumer == VoiceConsumer::Usb &&
+               state() == VoiceCaptureState::Running) {
+      // USB remount while another consumer kept capture running must recycle
+      // I²S/DMA framing; otherwise a sticky stereo slot slip sounds harsh.
       clearQueues();
       state_.store(VoiceCaptureState::Starting, std::memory_order_release);
     }

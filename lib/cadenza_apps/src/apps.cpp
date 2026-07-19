@@ -330,7 +330,8 @@ void renderTimerScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
   const VerticalInkBounds stateInk = textVerticalInkBounds(
       canvas.typography().font(TextRole::Compact), state);
   constexpr int kStateVerticalPadding = 4;
-  const int stateWidth = std::max(72, stateMetrics.width + 16);
+  const int stateWidth =
+      std::max(72, static_cast<int>(stateMetrics.width) + 16);
   const int stateHeight = stateInk.drawable()
                               ? stateInk.height() + kStateVerticalPadding * 2
                               : stateMetrics.height + 4;
@@ -418,10 +419,10 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
                       : 18;
   const TextMetrics titleMetrics =
       canvas.measureText("SETTINGS", TextRole::Title);
-  const int rowsLeft = std::min(width - 120,
-                                std::max(width * 43 / 100,
-                                         titleMetrics.width + 24));
-  const int panelMinimum = 12 + titleMetrics.width + 4;
+  const int rowsLeft = std::min(
+      width - 120, std::max(width * 43 / 100,
+                            static_cast<int>(titleMetrics.width) + 24));
+  const int panelMinimum = 12 + static_cast<int>(titleMetrics.width) + 4;
   const int panelMaximum = std::max(panelMinimum, rowsLeft - 8);
   const int panelRight = std::clamp(width * 28 / 100 + bar,
                                     panelMinimum, panelMaximum);
@@ -462,20 +463,21 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
       system.launcherOrientation == LauncherOrientation::Vertical
           ? "LAUNCH: VERT"
           : "LAUNCH: HORIZ";
-  const char* rows[6] = {"MOTION", "SOUND", wifiRow,
-                         provisioningRow, launcherRow,
-                         "ABOUT: OS"};
+  const char* usbMuteRow =
+      system.muteSpeakerDuringUsbMic ? "USB MUTE: ON" : "USB MUTE: OFF";
+  const char* rows[7] = {"MOTION", "SOUND", usbMuteRow, wifiRow,
+                         provisioningRow, launcherRow, "ABOUT: OS"};
   const int compactHeight =
       canvas.measureText("A", TextRole::Compact).height;
   const int rowHeight = compactHeight + 8;
   const int rowGap = std::max(4, rowHeight / 5);
   const int rowStep = rowHeight + rowGap;
-  const int rowsHeight = rowHeight * 6 + rowGap * 5;
+  const int rowsHeight = rowHeight * 7 + rowGap * 6;
   const int rowsTop = std::max(4, (height - rowsHeight) / 2);
   const int rowsWidth = width - rowsLeft - 12;
-  for (int index = 0; index < 6; ++index) {
+  for (int index = 0; index < 7; ++index) {
     const int y = rowsTop + index * rowStep;
-    const bool usesMenuIcon = index < 2;
+    const bool usesMenuIcon = index < 3;
     const int labelWidth = rowsWidth - (usesMenuIcon ? 50 : 12);
     if (index == selected) {
       canvas.fillRoundedRect(rowsLeft, y, rowsWidth, rowHeight, 4, true);
@@ -499,6 +501,10 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
     } else if (index == 1) {
       presentation::SystemUi::volumeIndicator(
           canvas, indicator, system.soundVolume, index == selected);
+    } else if (index == 2) {
+      presentation::SystemUi::toggle(canvas, indicator,
+                                     system.muteSpeakerDuringUsbMic,
+                                     index == selected);
     }
   }
   canvas.text("HOLD: MENU", 12, height - 8, 1, false,
@@ -525,9 +531,9 @@ void renderAboutScreen(MonoCanvas& canvas) noexcept {
   const int creditY = logo.height + (footerTop - logo.height) / 2;
   canvas.text(kCredit, width / 2, creditY, 1, true,
               TextAlign::MiddleCenter, TextRole::Footer);
-  canvas.text(kFooter, std::max(4, (width - footerMetrics.width) / 2),
-              footerY, 1, true, TextAlign::BottomLeft,
-              TextRole::Footer);
+  canvas.text(kFooter,
+              std::max(4, (width - static_cast<int>(footerMetrics.width)) / 2),
+              footerY, 1, true, TextAlign::BottomLeft, TextRole::Footer);
 }
 
 void renderLauncherCard(MonoCanvas& canvas, Rect card, Rect viewport,
@@ -859,7 +865,7 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
     return;
   }
   if (input.turn) {
-    selected_ = wrap(selected_ + input.turn, 6);
+    selected_ = wrap(selected_ + input.turn, 7);
     resetConfirmArmed_ = false;
     context.commands.submit(
         SystemCommand::playSound(audio::SoundCue::Navigate));
@@ -881,13 +887,20 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
           SystemCommand::playSound(audio::SoundCue::ToggleOn));
     }
   } else if (input.clicked && selected_ == 2) {
+    const bool becomingMuted = !context.system.muteSpeakerDuringUsbMic;
+    context.commands.submit(
+        SystemCommand::setMuteSpeakerDuringUsbMic(becomingMuted));
+    context.commands.submit(SystemCommand::playSound(
+        becomingMuted ? audio::SoundCue::ToggleOn
+                      : audio::SoundCue::ToggleOff));
+  } else if (input.clicked && selected_ == 3) {
     const bool requested = context.system.connectivity.wifi.desired !=
                            WiFiDesiredPolicy::OnlineRequested;
     context.commands.submit(
         SystemCommand::setNetworkOnlineRequested(requested));
     context.commands.submit(SystemCommand::playSound(
         requested ? audio::SoundCue::ToggleOn : audio::SoundCue::ToggleOff));
-  } else if (input.clicked && selected_ == 3) {
+  } else if (input.clicked && selected_ == 4) {
     const ProvisioningState state =
         context.system.connectivity.provisioning.state;
     const bool active = state == ProvisioningState::Advertising ||
@@ -912,7 +925,7 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
         resetConfirmArmed_ = false;
       }
     }
-  } else if (input.clicked && selected_ == 4) {
+  } else if (input.clicked && selected_ == 5) {
     const bool becomingHorizontal =
         context.system.launcherOrientation == LauncherOrientation::Vertical;
     context.commands.submit(SystemCommand::setLauncherOrientation(
@@ -921,7 +934,7 @@ void SettingsApp::update(const AppUpdateContext& context) noexcept {
     context.commands.submit(SystemCommand::playSound(
         becomingHorizontal ? audio::SoundCue::ToggleOn
                            : audio::SoundCue::ToggleOff));
-  } else if (input.clicked && selected_ == 5) {
+  } else if (input.clicked && selected_ == 6) {
     showingAbout_ = true;
     context.commands.submit(SystemCommand::playSound(audio::SoundCue::Confirm));
   }

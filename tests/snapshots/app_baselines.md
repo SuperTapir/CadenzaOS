@@ -16,19 +16,17 @@ transition completes. No normal App update runs after completion.
 | 320×170 | Launcher | 4407872121496200056 |
 | 320×170 | Timer Ready 10:00 | 12921254497184521768 |
 | 320×170 | Motion | 1593956483296057867 |
-| 320×170 | Settings | 9979404855079423954 |
+| 320×170 | Settings | 16788121549965009994 |
 | 320×170 | Animation Gallery | 14139291840108583961 |
 | 400×240 | Launcher | 14360345327951497471 |
 | 400×240 | Timer Ready 10:00 | 4523606151491982558 |
 | 400×240 | Motion | 2802791382376082090 |
-| 400×240 | Settings | 8080546343687024773 |
+| 400×240 | Settings | 5598788588305196167 |
 | 400×240 | Animation Gallery | 13234575752027769465 |
 
-Settings hashes were re-approved on 2026-07-18 after adding bounded Wi-Fi and
-secure-setup status rows. Both rendered PNGs were visually inspected; the
-320×170 footer was moved into the left title panel to avoid overlap with the
-fifth row. No credential, SSID, IP address, or peer identity appears in either
-profile.
+Settings hashes were re-approved on 2026-07-19 after adding the USB MUTE row
+(mute local speaker while USB mic streams; default OFF). Both profile PNGs
+were visually inspected for layout fit with seven settings rows.
 
 Timer hashes were re-approved on 2026-07-19 after adding native industrial
 numerals, centering the enlarged time body, correcting `HOLD: MENU`, and applying

@@ -111,7 +111,9 @@ TEST_CASE("read failures are bounded and discard incomplete data on fatal error"
   CHECK(normalizer.pendingFrameSlots() == 1);
 
   normalizer.notifyTimeout();
+  CHECK(normalizer.pendingFrameSlots() == 0);
   normalizer.notifyReadError();
+  CHECK(normalizer.pendingFrameSlots() == 0);
   CHECK(capture.state() == VoiceCaptureState::Running);
   normalizer.notifyTimeout();
   CHECK(capture.state() == VoiceCaptureState::Error);

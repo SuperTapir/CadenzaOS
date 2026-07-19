@@ -35,6 +35,16 @@ case "${mode}" in
     SDL_VIDEODRIVER=dummy "${build_dir}/cadenza_desktop" --frames 2
     ;;
   firmware)
+    # Primary ESP-IDF 5.5 T-Embed firmware (Runtime + UAC2 mic + CDC).
+    # Flash with: tools/firmware_uac.sh flash
+    "${project_root}/tools/firmware_uac.sh" build
+    ;;
+  firmware-uac)
+    # Alias kept for existing docs/scripts; same as `firmware`.
+    "${project_root}/tools/firmware_uac.sh" build
+    ;;
+  firmware-pio)
+    # PlatformIO Arduino 2.0.17 rollback path (no UAC microphone).
     "${pio_command}" run --project-dir "${project_root}"
     ;;
   diff)
@@ -43,12 +53,12 @@ case "${mode}" in
   all)
     run_host_tests
     SDL_VIDEODRIVER=dummy "${build_dir}/cadenza_desktop" --frames 2
-    "${pio_command}" run --project-dir "${project_root}"
+    "${project_root}/tools/firmware_uac.sh" build
     git -C "${project_root}" diff --check
     ;;
   *)
     echo "unknown check mode: ${mode}" >&2
-    echo "modes: focused, host, desktop, firmware, diff, all" >&2
+    echo "modes: focused, host, desktop, firmware, firmware-uac, firmware-pio, diff, all" >&2
     exit 2
     ;;
 esac

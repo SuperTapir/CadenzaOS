@@ -66,6 +66,9 @@ struct SystemSnapshot {
   audio::SoundVolume soundVolume = audio::SoundVolume::High;
   MotionProfile motionProfile = MotionProfile::Normal;
   LauncherOrientation launcherOrientation = LauncherOrientation::Vertical;
+  // When true, PlaySound/PlayMusicalNotes are dropped while USB mic streams.
+  // Defaults off so local UI cues remain audible during Mac capture.
+  bool muteSpeakerDuringUsbMic = false;
   bool soundOutputAvailable = false;
   ConnectivitySnapshot connectivity{};
   VoiceSnapshot voice{};
@@ -78,6 +81,7 @@ enum class SystemCommandType : std::uint8_t {
   SetSoundVolume,
   SetMotionProfile,
   SetLauncherOrientation,
+  SetMuteSpeakerDuringUsbMic,
   SetVoiceAnalyzerActive,
   SetNetworkOnlineRequested,
   StartProvisioning,
@@ -101,6 +105,7 @@ constexpr AppCapability requiredCapability(
     case SystemCommandType::SetSoundVolume:
     case SystemCommandType::SetMotionProfile:
     case SystemCommandType::SetLauncherOrientation:
+    case SystemCommandType::SetMuteSpeakerDuringUsbMic:
       return AppCapability::SettingsWrite;
     case SystemCommandType::SetVoiceAnalyzerActive:
       return AppCapability::VoiceAnalyzer;
@@ -131,6 +136,7 @@ struct SystemCommand {
   audio::SoundVolume soundVolume = audio::SoundVolume::High;
   MotionProfile motionProfile = MotionProfile::Normal;
   LauncherOrientation launcherOrientation = LauncherOrientation::Vertical;
+  bool muteSpeakerDuringUsbMic = false;
   bool voiceAnalyzerActive = false;
   bool networkOnlineRequested = false;
   bool resetCredentialsConfirmed = false;
@@ -172,6 +178,13 @@ struct SystemCommand {
     SystemCommand command;
     command.type = SystemCommandType::SetLauncherOrientation;
     command.launcherOrientation = orientation;
+    return command;
+  }
+
+  static SystemCommand setMuteSpeakerDuringUsbMic(bool mute) noexcept {
+    SystemCommand command;
+    command.type = SystemCommandType::SetMuteSpeakerDuringUsbMic;
+    command.muteSpeakerDuringUsbMic = mute;
     return command;
   }
 

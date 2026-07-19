@@ -8,8 +8,9 @@ The desktop simulator requires CMake and SDL3. Install them with Homebrew:
 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install cmake sdl3
 ```
 
-PlatformIO remains the firmware build system. Use the existing repository-local
-PlatformIO environment described in `README.md`.
+The primary T-Embed firmware composition is ESP-IDF 5.5 (`tools/firmware_uac.sh`).
+PlatformIO Arduino 2.0.17 remains available as a no-UAC rollback
+(`tools/check.sh firmware-pio`).
 
 ## Configure, build, and test
 
@@ -199,39 +200,46 @@ The checked-in command wrapper keeps local evidence repeatable:
 tools/check.sh focused vendor_smoke  # red/green for one behavior
 tools/check.sh host                  # all host tests
 tools/check.sh desktop               # SDL3 target and launch smoke
-tools/check.sh firmware              # PlatformIO T-Embed compile
+tools/check.sh firmware              # ESP-IDF 5.5 T-Embed primary (UAC+CDC)
+tools/check.sh firmware-uac          # alias for firmware
+tools/check.sh firmware-pio          # PlatformIO rollback (no UAC)
 tools/check.sh diff                  # whitespace/error audit
-tools/check.sh all                   # complete current matrix
+tools/check.sh all                   # host + desktop + ESP-IDF firmware + diff
 ```
 
-Candidate ESP-IDF 5.5 UAC builds live in an isolated, reproducible spike and
-never patch the installed PlatformIO Arduino framework:
+## ESP-IDF T-Embed firmware (primary)
+
+Primary board firmware is ESP-IDF 5.5 with Runtime apps, ES7210 capture, and
+UAC2 microphone + CDC. It never patches the installed PlatformIO Arduino
+2.0.17 framework. Portable code lives under `lib/`; the board composition root
+is currently `.research/spikes/uac_idf` (invoked via `tools/firmware_uac.sh`).
+UI loop parity with the former PlatformIO path: PCNT encoder, wall-clock
+`runFrameAt`, Launcher skip-present, bulk ST7789 transfer.
 
 ```bash
-cd .research/spikes/uac_idf
-export IDF_PATH=/path/to/esp-idf-v5.5
-export ESP_IDF_VERSION=5.5
-idf.py -B build-idf-arduino-composite build size
-
-# Build the complete Runtime/display/encoder/I2S0/I2S1/UAC candidate;
-# do not flash without an original T-Embed.
-idf.py -B build-idf-hardware \
-  -DSDKCONFIG="$PWD/sdkconfig.hardware" \
-  -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build size
-
-# Build the complete hardware candidate plus Wi-Fi/NimBLE/Security 2.
-# Use -j1 on a memory-constrained runner.
-idf.py -B build-idf-connectivity \
-  -DSDKCONFIG="$PWD/sdkconfig.connectivity" \
-  -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build size
+# Requires CADENZA_IDF_PATH or ../esp-idf-v5.5 (official v5.5 checkout).
+tools/check.sh firmware              # build Runtime + ES7210 + UAC2/CDC
+tools/firmware_uac.sh size           # size report
+tools/firmware_uac.sh flash          # flash connected T-Embed
+tools/firmware_uac.sh connectivity   # optional Wi-Fi/NimBLE/Security 2 build
 ```
 
-The component versions and registry hashes are locked in `dependencies.lock`.
-If configuration or dependency resolution fails, fix the isolated environment
-or lock; modifying `/Users/tapir/.platformio/packages/framework-arduinoespressif32`
-is not an accepted recovery path. The hardware-enabled build is compile-only
-until the display/input, ES7210/I²S concurrency and macOS acceptance matrix has
-been executed.
+Adopted microphone baseline (2026-07-19 hardware check): dual MEMS average,
+24 dB in-gain, USB remount recycles I²S/DMA framing. macOS enumerates the device
+as a 48 kHz mono system microphone (`Microphone streaming` / Cadenza).
+
+Flash when the serial port is held by USB Audio — enter download mode first:
+
+1. Hold BOOT (encoder center)
+2. Tap RST on the back, release RST
+3. Release BOOT
+4. `tools/firmware_uac.sh flash`
+
+`tools/check.sh firmware-pio` remains the PlatformIO rollback path without UAC.
+Component versions and hashes are locked in
+`.research/spikes/uac_idf/dependencies.lock`. Do not modify
+`/Users/tapir/.platformio/packages/framework-arduinoespressif32` to enable
+audio class.
 
 ESP-IDF 5.5 的 BLE provisioning transport 自行拥有 NimBLE host。连接 candidate
 因此让普通 App BLE 与 provisioning BLE 排他运行；不要在未重做 transport ownership

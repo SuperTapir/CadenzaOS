@@ -106,6 +106,24 @@ TEST_CASE("capture state follows aggregate consumer intent and flushes stale dat
   CHECK_FALSE(capture.tryPop(VoiceConsumer::Usb, stale));
 }
 
+TEST_CASE("USB remount while analyzer running forces capture restart") {
+  using namespace cadenza::voice;
+  VoiceCaptureCoordinator capture;
+  capture.setAvailable(true);
+  REQUIRE(capture.setIntent(VoiceConsumer::Analyzer, true));
+  REQUIRE(capture.notifyStarted(kVoicePcmFormat));
+  CHECK(capture.state() == VoiceCaptureState::Running);
+
+  REQUIRE(capture.setIntent(VoiceConsumer::Usb, true));
+  CHECK(capture.state() == VoiceCaptureState::Starting);
+  REQUIRE(capture.notifyStarted(kVoicePcmFormat));
+
+  capture.setIntent(VoiceConsumer::Usb, false);
+  CHECK(capture.state() == VoiceCaptureState::Running);
+  REQUIRE(capture.setIntent(VoiceConsumer::Usb, true));
+  CHECK(capture.state() == VoiceCaptureState::Starting);
+}
+
 TEST_CASE("analyzer reports deterministic RMS peak clipping and VAD hysteresis") {
   using namespace cadenza::voice;
   VoiceAnalyzer analyzer{{0.10F, 2, 3}};

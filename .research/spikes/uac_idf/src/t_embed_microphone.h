@@ -17,8 +17,10 @@ struct TEmbedMicrophoneConfig {
   int lrckPin = t_embed_audio::kMicrophoneWordSelectPin;
   int dataInPin = t_embed_audio::kMicrophoneDataInPin;
   int mclkPin = t_embed_audio::kMicrophoneMclkPin;
-  std::uint8_t microphoneMask = 0x03;
-  float inputGainDb = 30.0F;
+  // Adopted T-Embed baseline (2026-07-19 hardware check): dual MEMS average,
+  // 24 dB in-gain; USB remount must recycle I²S/DMA framing before streaming.
+  std::uint8_t microphoneMask = 0x03;  // ES7210_SEL_MIC1 | ES7210_SEL_MIC2
+  float inputGainDb = 24.0F;
   std::uint32_t readTimeoutMs = 20;
 };
 

@@ -49,6 +49,8 @@ bool SystemServiceHost::validCommand(const SystemCommand& command) const noexcep
     case SystemCommandType::SetLauncherOrientation:
       return command.launcherOrientation == LauncherOrientation::Vertical ||
              command.launcherOrientation == LauncherOrientation::Horizontal;
+    case SystemCommandType::SetMuteSpeakerDuringUsbMic:
+      return true;
     case SystemCommandType::SetVoiceAnalyzerActive:
     case SystemCommandType::SetNetworkOnlineRequested:
     case SystemCommandType::StartProvisioning:
@@ -201,14 +203,16 @@ bool SystemServiceHost::apply(
   const SystemCommand& command = operation.command;
   switch (command.type) {
     case SystemCommandType::PlaySound:
-      if (voiceCapture_.intentActive(voice::VoiceConsumer::Usb)) {
+      if (snapshot_.muteSpeakerDuringUsbMic &&
+          voiceCapture_.intentActive(voice::VoiceConsumer::Usb)) {
         ++diagnostics_.suppressedSoundCues;
       } else {
         sound_.play(command.soundCue);
       }
       return true;
     case SystemCommandType::PlayMusicalNotes:
-      if (voiceCapture_.intentActive(voice::VoiceConsumer::Usb)) {
+      if (snapshot_.muteSpeakerDuringUsbMic &&
+          voiceCapture_.intentActive(voice::VoiceConsumer::Usb)) {
         ++diagnostics_.suppressedSoundCues;
       } else {
         sound_.playNotes(command.musicalNotes);
@@ -223,6 +227,9 @@ bool SystemServiceHost::apply(
       return true;
     case SystemCommandType::SetLauncherOrientation:
       snapshot_.launcherOrientation = command.launcherOrientation;
+      return true;
+    case SystemCommandType::SetMuteSpeakerDuringUsbMic:
+      snapshot_.muteSpeakerDuringUsbMic = command.muteSpeakerDuringUsbMic;
       return true;
     case SystemCommandType::SetVoiceAnalyzerActive:
       if (command.voiceAnalyzerActive) {

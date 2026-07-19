@@ -170,6 +170,13 @@ void TEmbedMicrophone::run() noexcept {
         continue;
       }
       channelEnabled = true;
+      // Drop the first DMA window after enable; partial/stale framing here is
+      // what turns a USB replug into sticky harsh audio until the next restart.
+      std::size_t primeBytes = 0;
+      (void)i2s_channel_read(reinterpret_cast<i2s_chan_handle_t>(rxChannel_),
+                             slots.data(), sizeof(slots), &primeBytes,
+                             config_.readTimeoutMs);
+      normalizer_.reset();
     }
     if (capture_.state() != voice::VoiceCaptureState::Running) {
       if (channelEnabled) {
@@ -177,6 +184,7 @@ void TEmbedMicrophone::run() noexcept {
             reinterpret_cast<i2s_chan_handle_t>(rxChannel_));
         channelEnabled = false;
       }
+      normalizer_.reset();
       vTaskDelay(pdMS_TO_TICKS(5));
       continue;
     }
@@ -189,7 +197,14 @@ void TEmbedMicrophone::run() noexcept {
     } else if (result != ESP_OK || bytesRead % sizeof(slots[0]) != 0) {
       normalizer_.notifyReadError();
     } else {
-      normalizer_.ingest(slots.data(), bytesRead / sizeof(slots[0]));
+      const std::size_t slotCount = bytesRead / sizeof(slots[0]);
+      // Hardware stereo DMA must arrive in channel groups. An odd slot count
+      // after a USB remount would permanently slip L/R pairing.
+      if (slotCount % normalizerConfig().input.channels != 0) {
+        normalizer_.notifyReadError();
+      } else {
+        normalizer_.ingest(slots.data(), slotCount);
+      }
     }
     if (capture_.state() == voice::VoiceCaptureState::Error) {
       ESP_LOGE(kTag, "capture stopped after bounded DMA read failures");

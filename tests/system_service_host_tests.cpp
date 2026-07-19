@@ -689,8 +689,32 @@ TEST_CASE("voice intent exposes privacy state levels and rejects unavailable ser
   CHECK(analyzed.voice.voiceActive);
 }
 
+TEST_CASE("USB voice streaming suppresses cues only when mute setting is enabled") {
+  cadenza::system::SystemServiceHost host;
+  REQUIRE(host.postPlatformEvent(
+      cadenza::system::PlatformEvent::microphoneAvailability(true)));
+  REQUIRE(host.postPlatformEvent(
+      cadenza::system::PlatformEvent::usbVoiceStreaming(true)));
+  host.beginFrame(0.0F);
+  REQUIRE(host.submit(cadenza::SystemCommand::playSound(
+      cadenza::audio::SoundCue::Confirm)));
+  host.commitCommands();
+  CHECK(host.diagnostics().suppressedSoundCues == 0);
+  CHECK(host.sound().lastAcceptedCue() == cadenza::audio::SoundCue::Confirm);
+
+  REQUIRE(host.submit(cadenza::SystemCommand::setMuteSpeakerDuringUsbMic(true)));
+  host.commitCommands();
+  REQUIRE(host.submit(cadenza::SystemCommand::playSound(
+      cadenza::audio::SoundCue::Navigate)));
+  host.commitCommands();
+  CHECK(host.diagnostics().suppressedSoundCues == 1);
+  CHECK(host.snapshot().muteSpeakerDuringUsbMic);
+}
+
 TEST_CASE("USB voice streaming suppresses cues and keeps a visual privacy overlay") {
   cadenza::system::SystemServiceHost host;
+  REQUIRE(host.submit(cadenza::SystemCommand::setMuteSpeakerDuringUsbMic(true)));
+  host.commitCommands();
   REQUIRE(host.postPlatformEvent(
       cadenza::system::PlatformEvent::microphoneAvailability(true)));
   REQUIRE(host.postPlatformEvent(

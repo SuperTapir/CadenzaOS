@@ -15,10 +15,13 @@ if(CONFIG_CADENZA_T_EMBED_RUNTIME)
     "${cadenza_root}/lib/cadenza_core/src/simulation_clock.cpp"
     "${cadenza_root}/lib/cadenza_core/src/spring.cpp"
     "${cadenza_root}/lib/cadenza_core/src/system_surface.cpp"
+    "${cadenza_root}/lib/cadenza_core/src/system_typography.cpp"
+    "${cadenza_root}/lib/cadenza_core/src/timer_numerals.cpp"
     "${cadenza_root}/lib/cadenza_core/src/transition.cpp"
     "${cadenza_root}/lib/cadenza_core/src/version.cpp"
     "${cadenza_root}/lib/cadenza_apps/src/apps.cpp"
     "${cadenza_root}/lib/cadenza_apps/src/gallery.cpp"
+    "${cadenza_root}/lib/cadenza_apps/src/sight.cpp"
     "${cadenza_root}/lib/cadenza_system/src/system_service_host.cpp"
     "${cadenza_root}/lib/cadenza_system/src/system_resource_leases.cpp"
     "${cadenza_root}/lib/cadenza_system/src/connectivity_service.cpp"
@@ -80,6 +83,7 @@ idf_component_register(
     esp_driver_i2s
     esp_driver_gpio
     esp_driver_spi
+    driver
     esp_lcd
     esp_timer
     bt

@@ -1,46 +1,42 @@
-# ESP-IDF 5.5 Arduino UAC2 + CDC spike
+# CadenzaOS ESP-IDF 5.5 UAC / T-Embed firmware composition
 
-这个隔离工程验证 CadenzaOS 候选固件 SDK 的最小组合：ESP32-S3、ESP-IDF
-5.5.0、Arduino-ESP32 3.3.10、`usb_device_uac` 1.3.1、TinyUSB
-0.19.0~3、`esp_codec_dev` 1.5.10、UAC2 microphone-only 与 CDC。
+这是 CadenzaOS **主固件组合根**（ESP-IDF 5.5：Runtime Apps + UAC2 麦 + CDC）。
+PlatformIO Arduino 2.0.17 仅作无 UAC 回滚（`tools/check.sh firmware-pio`）。
 
-它链接仓库内的 fixed-capacity voice coordinator 与 1 ms USB packetizer，并由
-默认由 synthetic capture task 提供静音 PCM，用于证明依赖、配置、descriptor、
-portable 数据路径与链接关系。另一个显式 hardware 配置把 portable Runtime、全部
-bundled Apps、u8g2、ESP-IDF `esp_lcd` ST7789、GPIO encoder、I²S0 speaker、
-ES7210/I²S1 microphone、DMA normalizer 与 UAC 链接进同一 ELF；它仍不证明真机
-显示方向、枚举、采音、音质、时钟稳定性或 macOS 长时间录音。
+```sh
+# 从仓库根目录
+tools/check.sh firmware          # 构建（firmware-uac 为同义别名）
+tools/firmware_uac.sh flash      # 烧录
+tools/firmware_uac.sh size
+tools/firmware_uac.sh connectivity
+```
+
+SDK 组合：ESP32-S3、ESP-IDF 5.5.0、Arduino-ESP32 3.3.10、`usb_device_uac`
+1.3.1、TinyUSB 0.19.0~3、`esp_codec_dev` 1.5.10、UAC2 microphone-only + CDC。
+portable Runtime / voice / Apps 仍在仓库 `lib/`；本目录只做板级装配，不私补
+本机 PlatformIO Arduino 2.0.17 package。
+
+已定麦克风基线（2026-07-19 真机）：双 MEMS 平均、24 dB、USB 重连强制回收
+I²S/DMA 帧对齐；macOS 枚举为 48 kHz mono 系统麦。
 
 ## 前置条件
 
-- 官方 ESP-IDF v5.5 checkout；本次验证 commit 为
+- 官方 ESP-IDF v5.5 checkout；验证 commit 为
   `8c750b088c7cd857d079c0eeb495da199b359461`。
-- 执行该 checkout 的 `install.sh esp32s3` 与 `export.sh`，或提供等价的 IDF
-  5.5 Python 环境和 Xtensa toolchain。
+- `install.sh esp32s3` 与 `export.sh`，或由 `tools/firmware_uac.sh` 通过
+  `CADENZA_IDF_PATH` / `../esp-idf-v5.5` 自动 `source export.sh`。
 
-## 构建
+## 构建（底层命令；优先用 tools/ 入口）
 
 ```sh
 cd .research/spikes/uac_idf
-IDF_TOOLS_PATH=/path/to/esp-tools \
-IDF_PYTHON_ENV_PATH=/path/to/idf5.5-python-env \
-idf.py -B build-idf-arduino-composite build
-idf.py -B build-idf-arduino-composite size
-```
+idf.py -B build-idf-arduino-composite build size
 
-完整真机 candidate 的 build-only 配置（Runtime/display/encoder、I²S0 speaker、
-I²S1 microphone 与 UAC；没有 T-Embed 时只构建，不烧录/运行）：
-
-```sh
 idf.py -B build-idf-hardware \
   -DSDKCONFIG="$PWD/sdkconfig.hardware" \
   -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build
 idf.py -B build-idf-hardware size
-```
 
-带连接能力的完整 candidate 使用同一硬件默认配置，并显式保留独立 build 目录：
-
-```sh
 idf.py -B build-idf-connectivity \
   -DSDKCONFIG="$PWD/sdkconfig.connectivity" \
   -DSDKCONFIG_DEFAULTS='sdkconfig.defaults;sdkconfig.hardware.defaults' build
@@ -54,8 +50,8 @@ software coexistence、`wifi_provisioning` 与 protocomm Security 2。Security 0
 
 `sdkconfig.defaults` 只启用 `esp_codec_dev` 的 ES7210 driver，关闭未使用 codec。
 默认 board config 固定 I²C0 SDA 18/SCL 8、I²S1 MCLK 48/BCLK 47/LRCK 21/DIN 14，
-48 kHz、32-bit stereo DMA 输入在 portable normalizer 中平均为 S16 mono。30 dB
-gain 与双通道平均只是待真机校准的初值，不是产品定案。
+48 kHz、32-bit stereo DMA 输入在 portable normalizer 中平均为 S16 mono。
+已定真机基线：双 MEMS 平均、24 dB in-gain。
 
 当前完整 candidate binary 为 388,032 B（`0x5ebc0`），size tool total image
 387,911 B、DIRAM 146,103 B（42.75%）、Flash Code 235,552 B、Flash Data

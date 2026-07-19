@@ -107,14 +107,16 @@ behavior, display options, and the Launcher Cover workflow.
 ## Build and verification
 
 ```bash
-tools/check.sh host      # host build and full test suite
-tools/check.sh desktop   # SDL3 build and launch smoke test
-tools/check.sh firmware  # PlatformIO T-Embed build
-tools/check.sh all       # complete verification matrix
+tools/check.sh host           # host build and full test suite
+tools/check.sh desktop        # SDL3 build and launch smoke test
+tools/check.sh firmware       # ESP-IDF 5.5 T-Embed primary (UAC+CDC)
+tools/firmware_uac.sh flash   # flash primary firmware to T-Embed
+tools/check.sh firmware-pio   # PlatformIO rollback (no UAC)
+tools/check.sh all            # host + desktop + ESP-IDF firmware + diff
 ```
 
-The firmware can also be built, flashed, and monitored directly through the
-repository-adjacent PlatformIO environment:
+Primary firmware needs ESP-IDF v5.5 (`CADENZA_IDF_PATH` or `../esp-idf-v5.5`).
+PlatformIO rollback (no microphone):
 
 ```bash
 ../.platformio-env/bin/pio run
