@@ -62,7 +62,7 @@ update context 只含 `dt`、`InputFrame`、只读 `SystemSnapshot`、catalog vi
 
 - `cadenza_core`：App 契约/目录/生命周期、输入、图形、动画、声音语义；不知道
   bundled App 与平台 SDK。
-- `cadenza_apps`：Launcher、Clock、Motion、Settings、Gallery；只能依赖窄 App
+- `cadenza_apps`：Launcher、Timer、Motion、Settings、Gallery；只能依赖窄 App
   context。
 - `cadenza_system`：帧事务、权威系统状态、sound/voice services、固定队列、USB
   packetizer 与 DMA normalizer；不含平台 header。

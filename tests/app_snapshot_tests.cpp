@@ -51,20 +51,20 @@ bool sameRect(const cadenza::MonoFramebuffer& first,
 }
 
 enum class HandoffScene : std::uint8_t {
-  ClockLaunch,
+  TimerLaunch,
   MotionLaunch,
   SettingsLaunch,
   GalleryLaunch,
   FallbackLaunch,
-  ClockReturn,
+  TimerReturn,
   MenuOpening,
   MenuClosing,
 };
 
 const char* handoffSceneName(HandoffScene scene) {
   switch (scene) {
-    case HandoffScene::ClockLaunch:
-      return "clock-launch";
+    case HandoffScene::TimerLaunch:
+      return "timer-launch";
     case HandoffScene::MotionLaunch:
       return "motion-launch";
     case HandoffScene::SettingsLaunch:
@@ -73,8 +73,8 @@ const char* handoffSceneName(HandoffScene scene) {
       return "gallery-launch";
     case HandoffScene::FallbackLaunch:
       return "fallback-launch";
-    case HandoffScene::ClockReturn:
-      return "clock-return";
+    case HandoffScene::TimerReturn:
+      return "timer-return";
     case HandoffScene::MenuOpening:
       return "menu-opening";
     case HandoffScene::MenuClosing:
@@ -143,7 +143,7 @@ std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
     return actual;
   }
   cadenza::host::HeadlessHost host{profile};
-  cadenza::AppId target = cadenza::apps::kClockAppId;
+  cadenza::AppId target = cadenza::apps::kTimerAppId;
   switch (scene) {
     case HandoffScene::MotionLaunch:
       target = cadenza::apps::kMotionAppId;
@@ -160,7 +160,7 @@ std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
       break;
   }
   REQUIRE(host.runtime().open(target));
-  if (scene == HandoffScene::ClockLaunch ||
+  if (scene == HandoffScene::TimerLaunch ||
       scene == HandoffScene::MotionLaunch ||
       scene == HandoffScene::SettingsLaunch ||
       scene == HandoffScene::GalleryLaunch ||
@@ -168,7 +168,7 @@ std::uint64_t captureHandoff(cadenza::FramebufferProfile profile,
     host.advance(0.24F);
   } else {
     settle(host);
-    if (scene == HandoffScene::ClockReturn) {
+    if (scene == HandoffScene::TimerReturn) {
       REQUIRE(host.runtime().open(cadenza::apps::kLauncherAppId));
       host.advance(0.14F);
     } else {
@@ -248,23 +248,23 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
 TEST_CASE("approved bundled App framebuffer snapshots") {
   const std::array<SnapshotCase, 10> cases{{
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
-       5609633100608380107ULL},
-      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kClockAppId,
-       8752186736345292702ULL},
+       4407872121496200056ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kTimerAppId,
+       12921254497184521768ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
-       11046562126395087774ULL},
+       1593956483296057867ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
-       7412932320142494479ULL},
+       9979404855079423954ULL},
       {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
        14139291840108583961ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
-       17517733931075453906ULL},
-      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kClockAppId,
-       9246543181918641567ULL},
+       14360345327951497471ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kTimerAppId,
+       4523606151491982558ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
-       2956592992690758759ULL},
+       2802791382376082090ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
-       13007615703856417540ULL},
+       8080546343687024773ULL},
       {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
        13234575752027769465ULL},
   }};
@@ -279,34 +279,34 @@ TEST_CASE("approved bundled App framebuffer snapshots") {
 
 TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::TEmbed,
-                               9890496980292269565ULL) ==
-        9890496980292269565ULL);
+                               5036340018148810558ULL) ==
+        5036340018148810558ULL);
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
-                               1703058903164229430ULL) ==
-        1703058903164229430ULL);
+                               14427068919777850682ULL) ==
+        14427068919777850682ULL);
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {
   constexpr std::array<HandoffScene, 8> scenes{
-      HandoffScene::ClockLaunch, HandoffScene::MotionLaunch,
+      HandoffScene::TimerLaunch, HandoffScene::MotionLaunch,
       HandoffScene::SettingsLaunch, HandoffScene::GalleryLaunch,
-      HandoffScene::FallbackLaunch, HandoffScene::ClockReturn,
+      HandoffScene::FallbackLaunch, HandoffScene::TimerReturn,
       HandoffScene::MenuOpening,
       HandoffScene::MenuClosing};
   constexpr std::array<cadenza::FramebufferProfile, 2> profiles{
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
   constexpr std::array<std::array<std::uint64_t, 8>, 2> expected{{
-      {{7251259520777499076ULL, 9220982418828621297ULL,
-        1468151701910592970ULL, 14891017424807287687ULL,
-        9650148204554733528ULL, 9728955604062195180ULL,
-        11071243504120899380ULL,
-        13930926307166879760ULL}},
-      {{11858611271484384974ULL, 9523255443439037511ULL,
-        419754723397813682ULL, 5530436456025056936ULL,
-        12400022947900115971ULL, 16231365632287054465ULL,
-        3124774116065354519ULL,
-        13265856509170503687ULL}},
+      {{11499491397859484011ULL, 6209730826262569865ULL,
+        17680111546978194430ULL, 3918379662661787441ULL,
+        9650148204554733528ULL, 5180756807287063495ULL,
+        2777220773754795386ULL,
+        15147037727131073887ULL}},
+      {{15480456207635738281ULL, 4215824825682697411ULL,
+        15715297848503608598ULL, 13340598320569290674ULL,
+        12400022947900115971ULL, 7036746290001031285ULL,
+        13467332806888008427ULL,
+        17759242817167961936ULL}},
   }};
   for (std::size_t profileIndex = 0; profileIndex < profiles.size();
        ++profileIndex) {
@@ -325,7 +325,7 @@ TEST_CASE("built-in returns keep the Cover fixed and bound 30 FPS changes") {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
   constexpr std::array<cadenza::AppId, 4> apps{
-      cadenza::apps::kClockAppId, cadenza::apps::kMotionAppId,
+      cadenza::apps::kTimerAppId, cadenza::apps::kMotionAppId,
       cadenza::apps::kSettingsAppId, cadenza::apps::kGalleryAppId};
   constexpr float kMaximumChangedRatio = 0.16F;
 

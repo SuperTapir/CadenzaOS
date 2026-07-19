@@ -69,7 +69,7 @@ cadenza::idf::TEmbedDisplay display;
 cadenza::idf::TEmbedInput input;
 LogDiagnosticSink diagnostics;
 cadenza::LauncherApp launcher;
-cadenza::ClockApp clockApp;
+cadenza::TimerApp timerApp;
 cadenza::MotionApp motion;
 cadenza::SettingsApp settings;
 cadenza::AnimationGalleryApp gallery;
@@ -155,9 +155,9 @@ extern "C" void app_main(void) {
                       ? ESP_OK
                       : ESP_FAIL);
   ESP_ERROR_CHECK(runtime.registerApp(
-                      cadenza::apps::kClockAppId, clockApp, true,
+                      cadenza::apps::kTimerAppId, timerApp, true,
                       cadenza::apps::builtinAppCapabilities(
-                          cadenza::apps::kClockAppId))
+                          cadenza::apps::kTimerAppId))
                       ? ESP_OK
                       : ESP_FAIL);
   ESP_ERROR_CHECK(runtime.registerApp(

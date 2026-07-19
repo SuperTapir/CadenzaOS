@@ -62,7 +62,7 @@ TEST_CASE("App handoff and warped Menu perform no runtime allocations") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     cadenza::LauncherApp launcher;
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::system::SystemServiceHost services;
     cadenza::AppRuntime runtime{profile};
     cadenza::MonoFramebuffer framebuffer{profile};
@@ -70,15 +70,24 @@ TEST_CASE("App handoff and warped Menu perform no runtime allocations") {
 
     REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, launcher,
                                 false));
-    REQUIRE(runtime.registerApp(cadenza::apps::kClockAppId, clock));
+    REQUIRE(runtime.registerApp(cadenza::apps::kTimerAppId, timer));
     REQUIRE(runtime.configureHome(cadenza::apps::kLauncherAppId));
     REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
     runtime.bindSystem(services.snapshot(), services);
     runtime.renderWithSystem(canvas, services.snapshot());
 
     const std::size_t before = gAllocationCount;
-    bool accepted = runtime.open(cadenza::apps::kClockAppId);
+    bool accepted = runtime.open(cadenza::apps::kTimerAppId);
     frames(runtime, services, canvas, 50);
+
+    cadenza::InputFrame toggle;
+    toggle.clicked = true;
+    frame(runtime, services, canvas, toggle);
+    frames(runtime, services, canvas, 15);
+    frame(runtime, services, canvas, toggle);
+    frames(runtime, services, canvas, 12);
+    frame(runtime, services, canvas, toggle);
+    frames(runtime, services, canvas, 12);
 
     cadenza::InputFrame held;
     held.longPressed = true;
@@ -109,7 +118,7 @@ TEST_CASE("Timer critical alert and acknowledgement allocate no memory") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     cadenza::LauncherApp launcher;
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::system::SystemServiceHost services;
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     cadenza::MonoFramebuffer framebuffer{profile};
@@ -117,15 +126,15 @@ TEST_CASE("Timer critical alert and acknowledgement allocate no memory") {
     REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, launcher,
                                 false));
     REQUIRE(runtime.registerApp(
-        cadenza::apps::kClockAppId, clock, true,
-        cadenza::apps::builtinAppCapabilities(cadenza::apps::kClockAppId)));
+        cadenza::apps::kTimerAppId, timer, true,
+        cadenza::apps::builtinAppCapabilities(cadenza::apps::kTimerAppId)));
     REQUIRE(runtime.configureHome(cadenza::apps::kLauncherAppId));
-    REQUIRE(runtime.begin(cadenza::apps::kClockAppId));
+    REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
 
     cadenza::system::FrameCoordinator::runFrameAt(
         services, runtime, canvas, 1000, 0.0F, {});
     REQUIRE(services.submit(
-        {cadenza::ResourceOwner::app(cadenza::apps::kClockAppId),
+        {cadenza::ResourceOwner::app(cadenza::apps::kTimerAppId),
          cadenza::SystemCommand::startTimer(60000), 0}));
     services.commitCommands();
     const std::size_t before = gAllocationCount;

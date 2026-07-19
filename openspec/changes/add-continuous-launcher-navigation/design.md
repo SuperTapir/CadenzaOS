@@ -82,9 +82,9 @@ Normal profile 使用 250 ms `outCubic`，与 Playdate SDK 1.12.3 公共 `gridvi
 
 `App` 增加默认返回 `false` 的 const Cover renderer，只接收 `MonoCanvas` 和已解析 bounds。接口刻意没有 selection、button、launch、time 或 lifecycle 参数；`AppCatalogView` 提供窄的 `renderLauncherCover` 转发，不把可变 App 指针暴露给 Launcher。返回 `false` 时 Launcher 在同一 bounds 内绘制原创的通用 fallback 和受约束 App 名称。
 
-Clock、Motion、Settings 与 Gallery 分别使用人工确认的原创插图。同一高分辨率源图分别以固定 LANCZOS fit 和固定阈值直接转换到 350×155、280×124，再生成 packed 1-bit header；生成物记录来源与转换命令并接受母图→PBM 与 PBM→header 两层可复现性测试。renderer 只根据 bounds 选择 profile 对应图片并执行等尺寸 blit，必须无分配、确定、不得调用或观察 App lifecycle/update 状态，也不得越过传入 bounds。选中、按下、长按、启动以及 App 自身状态变化前后的同 bounds 渲染必须逐像素一致；轨道动画只能改变整张 Cover 的位置与可见裁剪区域。
+Timer、Motion、Settings 与 Gallery 分别使用人工确认的原创插图。同一高分辨率源图分别以固定 LANCZOS fit 和固定阈值直接转换到 350×155、280×124，再生成 packed 1-bit header；生成物记录来源与转换命令并接受母图→PBM 与 PBM→header 两层可复现性测试。renderer 只根据 bounds 选择 profile 对应图片并执行等尺寸 blit，必须无分配、确定、不得调用或观察 App lifecycle/update 状态，也不得越过传入 bounds。选中、按下、长按、启动以及 App 自身状态变化前后的同 bounds 渲染必须逐像素一致；轨道动画只能改变整张 Cover 的位置与可见裁剪区域。
 
-未采用 Launcher 按 `AppId` switch 绘制：这会把 App 身份重新耦合进系统并破坏可扩展注册。未采用在 Cover 接口中预留 Highlighted/Pressed/Launching：预留状态会鼓励输入时变异封面，并已导致 Clock 时间跳变、Motion 圆形变黑等实际缺陷；未来启动动画应独立调研资源、内存和转场契约。未采用运行时图片加载或缩放：当前四张图尺寸固定且随固件发布，离线打包的可审计成本更小；外部 App 资源、缩放算法和许可证边界仍应另立 change 调研。
+未采用 Launcher 按 `AppId` switch 绘制：这会把 App 身份重新耦合进系统并破坏可扩展注册。未采用在 Cover 接口中预留 Highlighted/Pressed/Launching：预留状态会鼓励输入时变异封面，并已导致 Timer 时间跳变、Motion 圆形变黑等实际缺陷；未来启动动画应独立调研资源、内存和转场契约。未采用运行时图片加载或缩放：当前四张图尺寸固定且随固件发布，离线打包的可审计成本更小；外部 App 资源、缩放算法和许可证边界仍应另立 change 调研。
 
 ### 8. Desktop 反射屏色板只属于呈现层
 

@@ -12,6 +12,7 @@
 | ESP-IDF | v5.5 / `8c750b088c7cd857d079c0eeb495da199b359461` | Apache-2.0 | `components/esp_timer/src/esp_timer.c`、官方 ESP Timer 文档 | `esp_timer_get_time()` 提供自启动以来 64-bit 微秒单调时间；light sleep 后计数会按 RTC 时间前移；deep sleep 后归零；one-shot callback 可迟到，回调应短；portable service 可采用单调 deadline 思想，但不应直接依赖 ESP callback |
 | PicoTimer | Catalog 2026-05-04 页面 | 产品行为参考，不复用代码/资源 | 官方 Catalog 产品说明 | 曲柄用于设定、主确认用于 start/pause、Reset 是 App 本地动作；其两页和多按键布局不能直接照搬到 Cadenza 的单按钮模型 |
 | Apple Timer | 2026-07-19 在线支持文档 | 产品行为参考，不复用代码/资源 | Timer 设置、后台、暂停与到期行为 | 用户对 timer 的类别预期是离开 App 或设备休眠后仍继续，并在任意上下文到期提醒；最近时长可快速复用 |
+| Designing for Playdate | SDK 1.12.3 / 2022-08-16 文档快照 | Panic 文档与截图仅供内部设计研究，不复用生产资产 | Text、2x Graphics、System font | 小屏 UI 应优先清晰、宽松和手工 hint；常规文字至少 8 px，HUD cap height 建议至少 10 px，笔画建议至少 2 px；Playdate 系统 UI 使用宽松的 Roobert 20 Medium，标题使用 24 Medium |
 
 源码只用于独立理解语义、失效模式与 trade-off。本变更不复制 AOSP、Zephyr、FreeRTOS 或 ESP-IDF 实现，不新增第三方源文件或运行时依赖。
 
@@ -90,6 +91,10 @@ Reset 不进入 System Menu。它是 App 领域动作，而当前系统菜单只
 
 视觉第一版必须同时适配 320×170 与 400×240；禁止通过逐帧 heap、浮点三角函数密集扫描或额外全屏 framebuffer 实现。
 
+### 小号 UI 标点
+
+Playdate 1.12.3 指南没有规定冒号的具体像素图，但明确要求小屏文字使用清晰强壮的形状并在字体未正确 hint 时手工修整。Cadenza 曾试验全局比例字体与紧凑冒号；真实页面验证显示整体笔画粗细不均，用户要求完整回退，因此系统正文继续使用既有 6×10 字体及其原生标点。Timer 大数字仍使用自有光学校正 atlas，不受该回退影响。
+
 ## 采用 / 不采用
 
 采用：
@@ -127,3 +132,4 @@ Reset 不进入 System Menu。它是 App 领域动作，而当前系统菜单只
 - [ESP-IDF v5.5 ESP Timer](https://docs.espressif.com/projects/esp-idf/en/v5.5/esp32/api-reference/system/esp_timer.html)
 - [PicoTimer Catalog 页面](https://play.date/games/picotimer/)
 - [Apple Timer 支持文档](https://support.apple.com/guide/iphone/set-timers-iph8241d6b2a/ios)
+- 本地锁定的 Panic `Designing for Playdate` SDK 1.12.3 文档快照：`/Users/tapir/Development/playdate-design-reference/designing-for-playdate-1.12.3/source/Designing-for-Playdate.md`

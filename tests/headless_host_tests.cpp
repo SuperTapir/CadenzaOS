@@ -100,7 +100,7 @@ TEST_CASE("fresh HeadlessHost replays produce equal per-frame hashes") {
 
 TEST_CASE("Activation Timer completes through Menu and requires a fresh click") {
   cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::TEmbed};
-  REQUIRE(host.runtime().open(cadenza::apps::kClockAppId));
+  REQUIRE(host.runtime().open(cadenza::apps::kTimerAppId));
   host.advance(0.81F);
   REQUIRE_FALSE(host.runtime().transitioning());
 
@@ -155,7 +155,7 @@ TEST_CASE("Activation Timer supports the complete Launcher repeat workflow") {
   for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
     host.step();
   }
-  REQUIRE(host.runtime().currentId() == cadenza::apps::kClockAppId);
+  REQUIRE(host.runtime().currentId() == cadenza::apps::kTimerAppId);
 
   host.step(click);
   REQUIRE(host.services().snapshot().timer.state ==
@@ -187,7 +187,7 @@ TEST_CASE("Activation Timer supports the complete Launcher repeat workflow") {
   for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
     host.step();
   }
-  REQUIRE(host.runtime().currentId() == cadenza::apps::kClockAppId);
+  REQUIRE(host.runtime().currentId() == cadenza::apps::kTimerAppId);
   host.step(click);
   CHECK(host.services().snapshot().timer.state ==
         cadenza::TimerState::Running);
@@ -195,7 +195,7 @@ TEST_CASE("Activation Timer supports the complete Launcher repeat workflow") {
 
 TEST_CASE("Activation Timer expiry freezes an App transition") {
   cadenza::host::HeadlessHost host{cadenza::FramebufferProfile::Sharp};
-  REQUIRE(host.runtime().open(cadenza::apps::kClockAppId));
+  REQUIRE(host.runtime().open(cadenza::apps::kTimerAppId));
   host.advance(0.81F);
   cadenza::InputFrame start;
   start.clicked = true;

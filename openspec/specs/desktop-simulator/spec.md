@@ -31,9 +31,9 @@ Mouse wheel and Left/Right keys SHALL emit turn events, while Space and Enter SH
 - **WHEN** the user rotates selection with an arrow key and taps Enter
 - **THEN** the same click semantics used by T-Embed open the selected App
 
-#### Scenario: Desktop long press returns home
+#### Scenario: Desktop long press opens system menu
 - **WHEN** Space or Enter is held past the configured long-press threshold in an App
-- **THEN** the runtime returns to Launcher through the system gesture
+- **THEN** the runtime opens the shared system menu, where Home remains an explicit action
 
 ### Requirement: Basic runtime metrics are visible
 The simulator SHALL expose FPS, frame duration, current App, and recent input events without modifying the App framebuffer used for snapshots unless the overlay is explicitly included.
@@ -43,7 +43,7 @@ The simulator SHALL expose FPS, frame duration, current App, and recent input ev
 - **THEN** App state and framebuffer truth remain unchanged
 
 ### Requirement: Existing Apps complete the desktop loop
-Launcher, Clock, Motion, Settings, and Gallery SHALL open, receive input, render, switch, and return home in the macOS simulator.
+Launcher, Timer, Motion, Settings, and Gallery SHALL open, receive input, render, switch, and return home in the macOS simulator.
 
 #### Scenario: Full navigation smoke path runs
 - **WHEN** scripted inputs visit every registered App and return to Launcher

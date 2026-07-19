@@ -12,7 +12,7 @@ An App SHALL be able to provide an optional const full-screen launch-frame rende
 - **THEN** the resulting framebuffer bytes are identical and no allocation or diagnostic failure occurs
 
 ### Requirement: Built-in Apps have distinct launch identities
-Clock, Motion, Settings, and Animation Gallery SHALL each provide a visually distinct code-native launch sequence whose first phase continues its static Cover identity and whose final frame can hand off to the App first frame.
+Timer, Motion, Settings, and Animation Gallery SHALL each provide a visually distinct code-native launch sequence whose first phase continues its static Cover identity and whose final frame can hand off to the App first frame.
 
 #### Scenario: Built-in launch frames are compared
 - **WHEN** representative early, middle, and final launch progress values are captured for all built-in Apps

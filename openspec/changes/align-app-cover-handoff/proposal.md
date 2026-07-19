@@ -5,7 +5,7 @@
 ## What Changes
 
 - 将默认 App 切换改为确定性的两段式 handoff：`Launcher -> App launch sequence -> App first frame`，中点仍是唯一 lifecycle 交接点。
-- 为 App 增加可选、const、无 lifecycle side effect 的 launch-frame renderer；Clock、Motion、Settings 与 Gallery 提供彼此不同的代码原生入场序列，没有实现的 App 走静态 Cover bridge fallback。
+- 为 App 增加可选、const、无 lifecycle side effect 的 launch-frame renderer；Timer、Motion、Settings 与 Gallery 提供彼此不同的代码原生入场序列，没有实现的 App 走静态 Cover bridge fallback。
 - 进入 App 时，Launcher 的选中 Cover 在原位保留，轨道与 card chrome 先退场；App 专属序列的首帧从同一 Cover 身份出发，末帧再通过 1-bit dither 衔接 App 首屏。
 - 返回 Launcher 时使用可理解的反向交互：App 首屏先收束为自身静态 Cover bridge，再恢复 Launcher 轨道与 chrome，而不是简单倒放或再次播放百叶窗。
 - 静态 Cover 契约继续不接收 pressed、launch、time 或 lifecycle 状态；launch renderer 是独立能力，不得变异 Cover，也不得提前激活 App lifecycle。

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "cadenza/apps/apps.h"
+#include "cadenza/presentation/timer_numerals.h"
 #include "app_context_test_support.h"
 
 namespace {
@@ -113,6 +114,27 @@ std::size_t changedPixels(const cadenza::MonoFramebuffer& first,
   return changed;
 }
 
+cadenza::Rect changedBoundsIn(const cadenza::MonoFramebuffer& first,
+                              const cadenza::MonoFramebuffer& second,
+                              cadenza::Rect region) {
+  int left = region.x + region.width;
+  int top = region.y + region.height;
+  int right = region.x - 1;
+  int bottom = region.y - 1;
+  for (int y = region.y; y < region.y + region.height; ++y) {
+    for (int x = region.x; x < region.x + region.width; ++x) {
+      if (first.pixel(x, y) == second.pixel(x, y)) continue;
+      left = std::min(left, x);
+      top = std::min(top, y);
+      right = std::max(right, x);
+      bottom = std::max(bottom, y);
+    }
+  }
+  return right < left ? cadenza::Rect{}
+                      : cadenza::Rect{left, top, right - left + 1,
+                                      bottom - top + 1};
+}
+
 template <typename AppType>
 bool registerBuiltin(cadenza::AppRuntime& runtime, cadenza::AppId id,
                      AppType& app, bool visible = true) {
@@ -121,11 +143,11 @@ bool registerBuiltin(cadenza::AppRuntime& runtime, cadenza::AppId id,
 }
 
 void registerNamedApps(cadenza::AppRuntime& runtime,
-                       cadenza::LauncherApp& launcher, NamedApp& clock,
+                       cadenza::LauncherApp& launcher, NamedApp& timer,
                        NamedApp& motion, NamedApp& settings,
                        NamedApp& gallery) {
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher, false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
@@ -136,7 +158,7 @@ void registerNamedApps(cadenza::AppRuntime& runtime,
 TEST_CASE("bundled Apps declare minimal capabilities and default deny") {
   using cadenza::AppCapability;
   for (const cadenza::AppId id : {
-           cadenza::apps::kLauncherAppId, cadenza::apps::kClockAppId,
+           cadenza::apps::kLauncherAppId, cadenza::apps::kTimerAppId,
            cadenza::apps::kMotionAppId, cadenza::apps::kGalleryAppId}) {
     const auto capabilities = cadenza::apps::builtinAppCapabilities(id);
     CHECK_FALSE(capabilities.contains(AppCapability::NetworkAcquire));
@@ -157,14 +179,14 @@ TEST_CASE("all bundled Apps render through the portable canvas at both profiles"
            cadenza::FramebufferProfile::TEmbed,
            cadenza::FramebufferProfile::Sharp}) {
     cadenza::LauncherApp launcher;
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::MotionApp motion;
     cadenza::SettingsApp settings;
     cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     cadenza::system::SystemServiceHost services;
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher, false));
-    REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
@@ -173,7 +195,7 @@ TEST_CASE("all bundled Apps render through the portable canvas at both profiles"
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer};
     for (cadenza::App* app : std::array<cadenza::App*, 5>{
-             &launcher, &clock, &motion, &settings, &gallery}) {
+             &launcher, &timer, &motion, &settings, &gallery}) {
       framebuffer.clear(false);
       cadenza::test::renderApp(*app, canvas, runtime, services);
       CHECK(hasBlackPixel(framebuffer));
@@ -181,20 +203,73 @@ TEST_CASE("all bundled Apps render through the portable canvas at both profiles"
   }
 }
 
+TEST_CASE("Timer numeral atlases keep approved geometry and optical colon") {
+  constexpr std::array<std::uint32_t, 3> values{
+      10U * 60000U, 5U * 60000U, 1000U};
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    const int expectedWidth =
+        profile == cadenza::FramebufferProfile::Sharp ? 308 : 228;
+    const int expectedHeight =
+        profile == cadenza::FramebufferProfile::Sharp ? 120 : 84;
+    for (const std::uint32_t value : values) {
+      CAPTURE(static_cast<int>(profile));
+      CAPTURE(value);
+      cadenza::MonoFramebuffer framebuffer{profile};
+      TextDiagnosticSink diagnostics;
+      cadenza::MonoCanvas canvas{framebuffer, &diagnostics};
+      const auto metrics =
+          cadenza::presentation::timerNumeralMetrics(canvas.width());
+      const cadenza::Rect bounds =
+          cadenza::presentation::renderTimerNumerals(canvas, value, 12);
+      CHECK(bounds.x == (canvas.width() - expectedWidth) / 2);
+      CHECK(bounds.y == 12);
+      CHECK(bounds.width == expectedWidth);
+      CHECK(bounds.height == expectedHeight);
+      CHECK(metrics.displayWidth() == expectedWidth);
+      CHECK(metrics.digitWidth * 4 + metrics.colonWidth == expectedWidth);
+      CHECK_FALSE(diagnostics.unexpectedGeometryClip);
+      CHECK_FALSE(diagnostics.invalidGeometry);
+
+      const int colonLeft = bounds.x + metrics.digitWidth * 2;
+      int inkLeft = colonLeft + metrics.colonWidth;
+      int inkRight = colonLeft - 1;
+      int rowBands = 0;
+      bool previousRow = false;
+      for (int y = bounds.y; y < bounds.y + bounds.height; ++y) {
+        bool rowHasInk = false;
+        for (int x = colonLeft; x < colonLeft + metrics.colonWidth; ++x) {
+          if (!framebuffer.pixel(x, y)) continue;
+          rowHasInk = true;
+          inkLeft = std::min(inkLeft, x);
+          inkRight = std::max(inkRight, x);
+        }
+        if (rowHasInk && !previousRow) ++rowBands;
+        previousRow = rowHasInk;
+      }
+      REQUIRE(inkRight >= inkLeft);
+      CHECK(rowBands == 2);
+      const int inkCenterTwice = inkLeft + inkRight;
+      const int cellCenterTwice = colonLeft * 2 + metrics.colonWidth - 1;
+      CHECK(std::abs(inkCenterTwice - cellCenterTwice) <= 2);
+    }
+  }
+}
+
 TEST_CASE("portable Launcher opens the selected registered App") {
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp clock;
+  cadenza::TimerApp timer;
   cadenza::AppRuntime runtime;
     cadenza::system::SystemServiceHost services;
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher, false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
   cadenza::InputFrame input;
   input.clicked = true;
   cadenza::test::updateRuntime(runtime, services, 1.0F / 60.0F, input);
   CHECK(runtime.transitioning());
   cadenza::test::updateRuntime(runtime, services, 0.41F);
-  CHECK(runtime.currentId() == cadenza::apps::kClockAppId);
+  CHECK(runtime.currentId() == cadenza::apps::kTimerAppId);
 }
 
 TEST_CASE("App catalog forwards optional const Launcher Covers") {
@@ -224,11 +299,11 @@ TEST_CASE("App catalog forwards optional const Launcher Covers") {
 }
 
 TEST_CASE("built-in launch sequences are deterministic seekable and distinct") {
-  cadenza::ClockApp clock;
+  cadenza::TimerApp timer;
   cadenza::MotionApp motion;
   cadenza::SettingsApp settings;
   cadenza::AnimationGalleryApp gallery;
-  const cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+  const cadenza::App* apps[] = {&timer, &motion, &settings, &gallery};
   cadenza::AppCatalog emptyCatalog;
   const cadenza::AppCatalogView catalog{emptyCatalog};
   cadenza::SystemSnapshot snapshot;
@@ -263,16 +338,16 @@ TEST_CASE("built-in launch endpoints match Cover and first App frame") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
     cadenza::LauncherApp launcher;
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::MotionApp motion;
     cadenza::SettingsApp settings;
     cadenza::AnimationGalleryApp gallery;
-    cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+    cadenza::App* apps[] = {&timer, &motion, &settings, &gallery};
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     cadenza::system::SystemServiceHost services;
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                             false));
-    REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
@@ -308,11 +383,11 @@ TEST_CASE("built-in launch endpoints match Cover and first App frame") {
 TEST_CASE("built-in launch sequences have no 30 FPS full-frame jump") {
   for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
                              cadenza::FramebufferProfile::Sharp}) {
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::MotionApp motion;
     cadenza::SettingsApp settings;
     cadenza::AnimationGalleryApp gallery;
-    const cadenza::App* apps[] = {&clock, &motion, &settings, &gallery};
+    const cadenza::App* apps[] = {&timer, &motion, &settings, &gallery};
     cadenza::AppCatalog emptyCatalog;
     const cadenza::AppCatalogView catalog{emptyCatalog};
     cadenza::SystemSnapshot snapshot;
@@ -411,20 +486,20 @@ TEST_CASE("Launcher clips moving Covers without changing their layout bounds") {
 
 TEST_CASE("built-in Launcher Covers are distinct deterministic and bounded") {
   constexpr std::array<cadenza::AppId, 4> ids{
-      cadenza::apps::kClockAppId, cadenza::apps::kMotionAppId,
+      cadenza::apps::kTimerAppId, cadenza::apps::kMotionAppId,
       cadenza::apps::kSettingsAppId, cadenza::apps::kGalleryAppId};
   for (const cadenza::FramebufferProfile profile : {
            cadenza::FramebufferProfile::TEmbed,
            cadenza::FramebufferProfile::Sharp}) {
     cadenza::LauncherApp launcher;
-    cadenza::ClockApp clock;
+    cadenza::TimerApp timer;
     cadenza::MotionApp motion;
     cadenza::SettingsApp settings;
     cadenza::AnimationGalleryApp gallery;
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                             false));
-    REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
     REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
@@ -473,7 +548,7 @@ TEST_CASE("built-in Launcher Covers are distinct deterministic and bounded") {
 
 TEST_CASE("built-in Cover pixels do not depend on App lifecycle state") {
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp clock;
+  cadenza::TimerApp timer;
   cadenza::MotionApp motion;
   cadenza::SettingsApp settings;
   cadenza::AnimationGalleryApp gallery;
@@ -481,7 +556,7 @@ TEST_CASE("built-in Cover pixels do not depend on App lifecycle state") {
                               cadenza::kCutTransition};
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                           false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kGalleryAppId, gallery));
@@ -489,10 +564,10 @@ TEST_CASE("built-in Cover pixels do not depend on App lifecycle state") {
   const cadenza::AppCatalogView catalog = runtime.catalogView();
   const cadenza::Rect bounds{20, 20, 280, 124};
   const std::array<cadenza::AppId, 4> ids{
-      cadenza::apps::kClockAppId, cadenza::apps::kMotionAppId,
+      cadenza::apps::kTimerAppId, cadenza::apps::kMotionAppId,
       cadenza::apps::kSettingsAppId, cadenza::apps::kGalleryAppId};
   const std::array<cadenza::App*, 4> apps{
-      &clock, &motion, &settings, &gallery};
+      &timer, &motion, &settings, &gallery};
   for (std::size_t index = 0; index < ids.size(); ++index) {
     const cadenza::AppId id = ids[index];
     cadenza::MonoFramebuffer before{cadenza::FramebufferProfile::TEmbed};
@@ -518,13 +593,13 @@ TEST_CASE("built-in Cover pixels do not depend on App lifecycle state") {
 
 TEST_CASE("Launcher selection moves through a continuous unbounded track") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame turn;
   turn.turn = 1;
@@ -544,13 +619,13 @@ TEST_CASE("Launcher selection moves through a continuous unbounded track") {
 
 TEST_CASE("Launcher loop boundaries move one logical card in input direction") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame toLast;
   toLast.turn = 3;
@@ -573,13 +648,13 @@ TEST_CASE("Launcher loop boundaries move one logical card in input direction") {
 
 TEST_CASE("Launcher opens the latest logical selection before motion settles") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame turn;
   turn.turn = 1;
@@ -613,13 +688,13 @@ TEST_CASE("empty Launcher ignores navigation and open safely") {
 
 TEST_CASE("Launcher motion profiles ease monotonically and settle exactly") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame turn;
   turn.turn = 1;
@@ -696,13 +771,13 @@ TEST_CASE("Launcher reverse retarget never crosses either target") {
 
 TEST_CASE("Launcher motion profile switch and long-run rebase do not jump") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame turn;
   turn.turn = 1;
@@ -728,13 +803,13 @@ TEST_CASE("Launcher motion profile switch and long-run rebase do not jump") {
 
 TEST_CASE("one input frame emits at most one semantic navigation cue") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
     cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
 
   cadenza::InputFrame turn;
   turn.turn = 7;
@@ -748,19 +823,19 @@ TEST_CASE("bundled Apps emit success and boundary cues from actual state") {
   cadenza::AppRuntime runtime;
     cadenza::system::SystemServiceHost services;
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp clock;
+  cadenza::TimerApp timer;
   cadenza::MotionApp motion;
   cadenza::SettingsApp settings;
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher, false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, clock));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kSettingsAppId, settings));
   REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
 
   cadenza::InputFrame click;
   click.clicked = true;
-  cadenza::test::updateApp(clock, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
   CHECK(services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::ToggleOn);
 
@@ -783,17 +858,17 @@ TEST_CASE("Activation Timer uses turn to choose minutes and click to start") {
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp timer;
+  cadenza::TimerApp timer;
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                           false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
   timer.onEnter();
 
   cadenza::InputFrame turn;
   turn.turn = 3;
   cadenza::test::updateApp(timer, 0.0F, turn, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Ready);
   CHECK(services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Navigate);
@@ -801,50 +876,229 @@ TEST_CASE("Activation Timer uses turn to choose minutes and click to start") {
   cadenza::InputFrame click;
   click.clicked = true;
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
   CHECK(services.snapshot().timer.configuredDurationMs == 13 * 60000);
-  CHECK(services.snapshot().timer.owner == cadenza::apps::kClockAppId);
+  CHECK(services.snapshot().timer.owner == cadenza::apps::kTimerAppId);
 }
 
 TEST_CASE("Activation Timer pauses adjusts whole minutes and resumes") {
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp timer;
+  cadenza::TimerApp timer;
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                           false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(runtime.begin(cadenza::apps::kLauncherAppId));
 
   cadenza::InputFrame click;
   click.clicked = true;
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   services.beginFrame(42.0F);
 
   cadenza::InputFrame runningTurn;
   runningTurn.turn = 5;
   const auto beforeTurn = services.snapshot().timer.remainingMs;
   cadenza::test::updateApp(timer, 0.0F, runningTurn, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.remainingMs == beforeTurn);
   CHECK(services.sound().lastAcceptedCue() ==
         cadenza::audio::SoundCue::Boundary);
 
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   REQUIRE(services.snapshot().timer.state == cadenza::TimerState::Paused);
   REQUIRE(services.snapshot().timer.remainingMs == 9 * 60000 + 18000);
 
   cadenza::InputFrame adjust;
   adjust.turn = 2;
   cadenza::test::updateApp(timer, 0.0F, adjust, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.remainingMs == 11 * 60000 + 18000);
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
+}
+
+TEST_CASE("Timer presentation feedback has deterministic lifecycle and clears on handoff") {
+  cadenza::AppRuntime runtime;
+  cadenza::system::SystemServiceHost services;
+  cadenza::LauncherApp launcher;
+  cadenza::TimerApp timer;
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
+                          false));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
+  REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
+
+  cadenza::InputFrame click;
+  click.clicked = true;
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(timer.presentationState() ==
+        cadenza::TimerPresentationState::Starting);
+  CHECK(timer.presentationElapsed() == doctest::Approx(0.0F));
+
+  cadenza::MonoFramebuffer first{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoFramebuffer middle{cadenza::FramebufferProfile::TEmbed};
+  cadenza::MonoCanvas firstCanvas{first};
+  cadenza::MonoCanvas middleCanvas{middle};
+  cadenza::test::renderApp(timer, firstCanvas, runtime, services);
+  cadenza::test::updateApp(timer, 0.12F, {}, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  cadenza::test::renderApp(timer, middleCanvas, runtime, services);
+  CHECK(framebufferHash(first) != framebufferHash(middle));
+  CHECK(timer.presentationElapsed() == doctest::Approx(0.12F));
+
+  timer.onExit();
+  CHECK(timer.presentationState() == cadenza::TimerPresentationState::None);
+  CHECK(timer.presentationElapsed() == doctest::Approx(0.0F));
+  timer.onEnter();
+  CHECK(timer.presentationState() == cadenza::TimerPresentationState::None);
+
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(timer.presentationState() ==
+        cadenza::TimerPresentationState::Pausing);
+  cadenza::test::updateApp(timer, 0.18F, {}, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(timer.presentationState() == cadenza::TimerPresentationState::None);
+
+  cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                           cadenza::apps::kTimerAppId);
+  CHECK(timer.presentationState() ==
+        cadenza::TimerPresentationState::Resuming);
+}
+
+TEST_CASE("Timer feedback keyframes preserve direction on both profiles") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    CAPTURE(static_cast<int>(profile));
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::system::SystemServiceHost services;
+    cadenza::TimerApp timer;
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
+    REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
+
+    const cadenza::Rect presentationRegion{
+        0, profile == cadenza::FramebufferProfile::Sharp ? 39 : 25,
+        runtime.canvasWidth(),
+        profile == cadenza::FramebufferProfile::Sharp ? 140 : 105};
+    const auto render = [&]() {
+      cadenza::MonoFramebuffer frame{profile};
+      cadenza::MonoCanvas canvas{frame};
+      cadenza::test::renderApp(timer, canvas, runtime, services);
+      return frame;
+    };
+    cadenza::InputFrame click;
+    click.clicked = true;
+
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    REQUIRE(timer.presentationState() ==
+            cadenza::TimerPresentationState::Starting);
+    const auto startingFirst = render();
+    cadenza::test::updateApp(timer, 0.12F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto startingMiddle = render();
+    cadenza::test::updateApp(timer, 0.12F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto runningStable = render();
+    REQUIRE(timer.presentationState() == cadenza::TimerPresentationState::None);
+    const auto startingFirstDelta = changedBoundsIn(
+        startingFirst, runningStable, presentationRegion);
+    const auto startingMiddleDelta = changedBoundsIn(
+        startingMiddle, runningStable, presentationRegion);
+    REQUIRE(startingFirstDelta.width > 0);
+    REQUIRE(startingMiddleDelta.width > 0);
+    CHECK(startingFirstDelta.x < startingMiddleDelta.x);
+    CHECK(services.sound().lastAcceptedCue() ==
+          cadenza::audio::SoundCue::ToggleOn);
+
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    REQUIRE(timer.presentationState() ==
+            cadenza::TimerPresentationState::Pausing);
+    const auto pausingFirst = render();
+    cadenza::test::updateApp(timer, 0.09F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto pausingMiddle = render();
+    cadenza::test::updateApp(timer, 0.09F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto pausedStable = render();
+    REQUIRE(timer.presentationState() == cadenza::TimerPresentationState::None);
+    const auto pausingFirstDelta = changedBoundsIn(
+        pausingFirst, pausedStable, presentationRegion);
+    const auto pausingMiddleDelta = changedBoundsIn(
+        pausingMiddle, pausedStable, presentationRegion);
+    REQUIRE(pausingFirstDelta.width > 0);
+    REQUIRE(pausingMiddleDelta.width > 0);
+    CHECK(pausingFirstDelta.x > pausingMiddleDelta.x);
+    CHECK(services.sound().lastAcceptedCue() ==
+          cadenza::audio::SoundCue::ToggleOff);
+
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    REQUIRE(timer.presentationState() ==
+            cadenza::TimerPresentationState::Resuming);
+    const auto resumingFirst = render();
+    cadenza::test::updateApp(timer, 0.09F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto resumingMiddle = render();
+    cadenza::test::updateApp(timer, 0.09F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto resumedStable = render();
+    REQUIRE(timer.presentationState() == cadenza::TimerPresentationState::None);
+    const auto resumingFirstDelta = changedBoundsIn(
+        resumingFirst, resumedStable, presentationRegion);
+    const auto resumingMiddleDelta = changedBoundsIn(
+        resumingMiddle, resumedStable, presentationRegion);
+    REQUIRE(resumingFirstDelta.width > 0);
+    REQUIRE(resumingMiddleDelta.width > 0);
+    CHECK(resumingFirstDelta.x < resumingMiddleDelta.x);
+    CHECK(services.sound().lastAcceptedCue() ==
+          cadenza::audio::SoundCue::ToggleOn);
+  }
+}
+
+TEST_CASE("Reduced Motion Timer feedback is static and ends after 100 ms") {
+  for (const auto profile : {cadenza::FramebufferProfile::TEmbed,
+                             cadenza::FramebufferProfile::Sharp}) {
+    cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
+    cadenza::system::SystemServiceHost services;
+    cadenza::TimerApp timer;
+    REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
+    REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
+    REQUIRE(services.submit(cadenza::SystemCommand::setMotionProfile(
+        cadenza::MotionProfile::Reduced)));
+    services.commitCommands();
+
+    const auto render = [&]() {
+      cadenza::MonoFramebuffer frame{profile};
+      cadenza::MonoCanvas canvas{frame};
+      cadenza::test::renderApp(timer, canvas, runtime, services);
+      return frame;
+    };
+    cadenza::InputFrame click;
+    click.clicked = true;
+    cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const cadenza::Rect presentationRegion{
+        0, profile == cadenza::FramebufferProfile::Sharp ? 39 : 25,
+        runtime.canvasWidth(),
+        profile == cadenza::FramebufferProfile::Sharp ? 140 : 105};
+    const auto first = render();
+    cadenza::test::updateApp(timer, 0.05F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto middle = render();
+    CHECK(changedBoundsIn(first, middle, presentationRegion).width == 0);
+    cadenza::test::updateApp(timer, 0.05F, {}, runtime, services,
+                             cadenza::apps::kTimerAppId);
+    const auto stable = render();
+    CHECK(timer.presentationState() == cadenza::TimerPresentationState::None);
+    CHECK(changedBoundsIn(first, stable, presentationRegion).width > 0);
+  }
 }
 
 TEST_CASE("Expired Activation Timer ignores App input and survives App handoff") {
@@ -852,18 +1106,18 @@ TEST_CASE("Expired Activation Timer ignores App input and survives App handoff")
                               cadenza::kCutTransition};
   cadenza::system::SystemServiceHost services;
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp timer;
+  cadenza::TimerApp timer;
   cadenza::MotionApp motion;
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kLauncherAppId, launcher,
                           false));
-  REQUIRE(registerBuiltin(runtime, cadenza::apps::kClockAppId, timer));
+  REQUIRE(registerBuiltin(runtime, cadenza::apps::kTimerAppId, timer));
   REQUIRE(registerBuiltin(runtime, cadenza::apps::kMotionAppId, motion));
-  REQUIRE(runtime.begin(cadenza::apps::kClockAppId));
+  REQUIRE(runtime.begin(cadenza::apps::kTimerAppId));
 
   cadenza::InputFrame click;
   click.clicked = true;
   cadenza::test::updateApp(timer, 0.0F, click, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   REQUIRE(runtime.open(cadenza::apps::kMotionAppId));
   runtime.updateWithSystem(1.0F, {}, services.snapshot(), services);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Running);
@@ -874,7 +1128,7 @@ TEST_CASE("Expired Activation Timer ignores App input and survives App handoff")
   noisy.clicked = true;
   noisy.turn = 8;
   cadenza::test::updateApp(timer, 0.0F, noisy, runtime, services,
-                           cadenza::apps::kClockAppId);
+                           cadenza::apps::kTimerAppId);
   CHECK(services.snapshot().timer.state == cadenza::TimerState::Expired);
 }
 
@@ -1063,7 +1317,7 @@ TEST_CASE("Launcher settles Animation Gallery inside the decorated card") {
            cadenza::FramebufferProfile::Sharp}) {
     CAPTURE(static_cast<int>(profile));
     cadenza::LauncherApp launcher;
-    NamedApp clock{"Clock"};
+    NamedApp timer{"Timer"};
     NamedApp motion{"Motion"};
     NamedApp settings{"Settings"};
     NamedApp gallery{"Animation Gallery"};
@@ -1071,7 +1325,7 @@ TEST_CASE("Launcher settles Animation Gallery inside the decorated card") {
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     cadenza::system::SystemServiceHost services;
     runtime.setDiagnosticSink(&diagnostics);
-    registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+    registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
     cadenza::InputFrame selectGallery;
     selectGallery.turn = 3;
     cadenza::test::updateApp(launcher, 0.0F, selectGallery, runtime, services);
@@ -1119,7 +1373,7 @@ TEST_CASE("Launcher card labels never invade the navigation slot") {
                              shortServices);
 
     cadenza::LauncherApp longLauncher;
-    NamedApp longClock{"CLOCK WITH AN EXTREMELY LONG NAME"};
+    NamedApp longTimer{"TIMER WITH AN EXTREMELY LONG NAME"};
     NamedApp longMotion{"MOTION WITH AN EXTREMELY LONG NAME"};
     NamedApp longSettings{"SETTINGS WITH AN EXTREMELY LONG NAME"};
     NamedApp longGallery{"GALLERY WITH AN EXTREMELY LONG NAME"};
@@ -1127,7 +1381,7 @@ TEST_CASE("Launcher card labels never invade the navigation slot") {
     cadenza::AppRuntime longRuntime{profile, cadenza::kCutTransition};
     cadenza::system::SystemServiceHost longServices;
     longRuntime.setDiagnosticSink(&diagnostics);
-    registerNamedApps(longRuntime, longLauncher, longClock, longMotion,
+    registerNamedApps(longRuntime, longLauncher, longTimer, longMotion,
                       longSettings, longGallery);
     cadenza::MonoFramebuffer longFrame{profile};
     cadenza::MonoCanvas longCanvas{longFrame, &diagnostics};
@@ -1152,13 +1406,13 @@ TEST_CASE("Launcher directions expose neighbors and intermediate motion") {
            cadenza::FramebufferProfile::Sharp}) {
     CAPTURE(static_cast<int>(profile));
     cadenza::LauncherApp launcher;
-    NamedApp clock{"CLOCK WITH AN EXTREMELY LONG NAME"};
+    NamedApp timer{"TIMER WITH AN EXTREMELY LONG NAME"};
     NamedApp motion{"Motion"};
     NamedApp settings{"Settings"};
     NamedApp gallery{"Gallery"};
     cadenza::AppRuntime runtime{profile, cadenza::kCutTransition};
     cadenza::system::SystemServiceHost services;
-    registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+    registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
     TextDiagnosticSink diagnostics;
     cadenza::MonoFramebuffer framebuffer{profile};
     cadenza::MonoCanvas canvas{framebuffer, &diagnostics};
@@ -1209,13 +1463,13 @@ TEST_CASE("Launcher directions expose neighbors and intermediate motion") {
 
 TEST_CASE("settled Launcher framebuffer is independent of elapsed time") {
   cadenza::LauncherApp launcher;
-  NamedApp clock{"Clock"};
+  NamedApp timer{"Timer"};
   NamedApp motion{"Motion"};
   NamedApp settings{"Settings"};
   NamedApp gallery{"Gallery"};
   cadenza::AppRuntime runtime;
   cadenza::system::SystemServiceHost services;
-  registerNamedApps(runtime, launcher, clock, motion, settings, gallery);
+  registerNamedApps(runtime, launcher, timer, motion, settings, gallery);
   for (int frame = 0; frame < 180 && !launcher.settled(); ++frame) {
     cadenza::test::updateApp(launcher, 1.0F / 60.0F, {}, runtime, services);
   }

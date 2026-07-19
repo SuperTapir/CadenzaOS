@@ -21,7 +21,7 @@ def converted_pixels(source: Path, width: int, height: int, threshold: int) -> l
         )
         return [
             1 if value < threshold else 0
-            for value in fitted.get_flattened_data()
+            for value in fitted.getdata()
         ]
 
 
@@ -30,7 +30,7 @@ def read_pbm_pixels(path: Path) -> tuple[tuple[int, int], list[int]]:
         monochrome = image.convert("1")
         return monochrome.size, [
             1 if value == 0 else 0
-            for value in monochrome.get_flattened_data()
+            for value in monochrome.getdata()
         ]
 
 

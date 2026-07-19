@@ -373,10 +373,15 @@ TEST_CASE("Timer expiry emits one alert per bounded cadence and ack stops it") {
         cadenza::audio::SoundCue::TimerComplete);
   CHECK(host.sound().pendingCommandCount() == 1);
 
+  host.beginFrameAt(62999, 0.0F);
+  CHECK(host.sound().pendingCommandCount() == 1);
+  host.beginFrameAt(63000, 0.0F);
+  CHECK(host.sound().pendingCommandCount() == 2);
+
   host.beginFrameAt(61000 + 60 * 60000, 0.0F);
-  CHECK(host.sound().pendingCommandCount() == 2);
+  CHECK(host.sound().pendingCommandCount() == 3);
   host.beginFrameAt(61000 + 60 * 60000 + 1, 0.0F);
-  CHECK(host.sound().pendingCommandCount() == 2);
+  CHECK(host.sound().pendingCommandCount() == 3);
 
   REQUIRE(host.submit(cadenza::SystemCommand::acknowledgeTimer()));
   host.commitCommands();

@@ -32,28 +32,28 @@ class GeometryDiagnostics final : public cadenza::DiagnosticSink {
 };
 
 enum class Scene : std::uint8_t {
-  VerticalClock,
-  HorizontalClock,
+  VerticalTimer,
+  HorizontalTimer,
   HorizontalMidpoint,
   VerticalMotion,
   VerticalSettings,
   VerticalGallery,
   VerticalFallback,
   VerticalPressed,
-  VerticalClockLaunching,
+  VerticalTimerLaunching,
 };
 
 const char* sceneName(Scene scene) {
   switch (scene) {
-    case Scene::VerticalClock: return "vertical-clock";
-    case Scene::HorizontalClock: return "horizontal-clock";
+    case Scene::VerticalTimer: return "vertical-timer";
+    case Scene::HorizontalTimer: return "horizontal-timer";
     case Scene::HorizontalMidpoint: return "horizontal-midpoint";
     case Scene::VerticalMotion: return "vertical-motion";
     case Scene::VerticalSettings: return "vertical-settings";
     case Scene::VerticalGallery: return "vertical-gallery";
     case Scene::VerticalFallback: return "vertical-fallback";
     case Scene::VerticalPressed: return "vertical-pressed";
-    case Scene::VerticalClockLaunching: return "vertical-clock-launching";
+    case Scene::VerticalTimerLaunching: return "vertical-timer-launching";
   }
   return "invalid";
 }
@@ -65,7 +65,7 @@ struct Fixture {
     REQUIRE(runtime.registerApp(cadenza::apps::kLauncherAppId, launcher, false,
                                 cadenza::apps::builtinAppCapabilities(
                                     cadenza::apps::kLauncherAppId)));
-    REQUIRE(runtime.registerApp(cadenza::apps::kClockAppId, clock, true));
+    REQUIRE(runtime.registerApp(cadenza::apps::kTimerAppId, timer, true));
     REQUIRE(runtime.registerApp(cadenza::apps::kMotionAppId, motion, true));
     REQUIRE(runtime.registerApp(cadenza::apps::kSettingsAppId, settings, true));
     REQUIRE(runtime.registerApp(cadenza::apps::kGalleryAppId, gallery, true));
@@ -99,7 +99,7 @@ struct Fixture {
   }
 
   cadenza::LauncherApp launcher;
-  cadenza::ClockApp clock;
+  cadenza::TimerApp timer;
   cadenza::MotionApp motion;
   cadenza::SettingsApp settings;
   cadenza::AnimationGalleryApp gallery;
@@ -115,8 +115,8 @@ std::uint64_t capture(cadenza::FramebufferProfile profile, Scene scene,
                       std::uint64_t expected) {
   Fixture fixture{profile};
   switch (scene) {
-    case Scene::VerticalClock: break;
-    case Scene::HorizontalClock:
+    case Scene::VerticalTimer: break;
+    case Scene::HorizontalTimer:
       fixture.setHorizontal();
       break;
     case Scene::HorizontalMidpoint:
@@ -148,7 +148,7 @@ std::uint64_t capture(cadenza::FramebufferProfile profile, Scene scene,
                                fixture.runtime, fixture.services);
       break;
     }
-    case Scene::VerticalClockLaunching: {
+    case Scene::VerticalTimerLaunching: {
       cadenza::InputFrame clicked;
       clicked.clicked = true;
       cadenza::test::updateApp(fixture.launcher, 0.0F, clicked,
@@ -180,22 +180,22 @@ TEST_CASE("approved Launcher track and Cover snapshots") {
     std::uint64_t expected;
   };
   constexpr std::array<Scene, 9> scenes{
-      Scene::VerticalClock, Scene::HorizontalClock,
+      Scene::VerticalTimer, Scene::HorizontalTimer,
       Scene::HorizontalMidpoint, Scene::VerticalMotion,
       Scene::VerticalSettings, Scene::VerticalGallery,
       Scene::VerticalFallback, Scene::VerticalPressed,
-      Scene::VerticalClockLaunching};
+      Scene::VerticalTimerLaunching};
   constexpr std::array<std::array<std::uint64_t, 9>, 2> expected{{
-      {{14819956144027104414ULL, 10758075623605549074ULL,
-        7427374337099710323ULL, 1148214755358172188ULL,
+      {{1879993285567841385ULL, 11009862203358072309ULL,
+        15112024632163093801ULL, 68623282219750981ULL,
         9164569023145786634ULL, 10930115474075607069ULL,
-        16573272554582944849ULL, 1148214755358172188ULL,
-        14819956144027104414ULL}},
-      {{16141554460486284975ULL, 10155347804930666320ULL,
-        13112089065228565425ULL, 4025029914587953652ULL,
+        14019396269018298996ULL, 68623282219750981ULL,
+        1879993285567841385ULL}},
+      {{10221155488736389842ULL, 2610692686380177957ULL,
+        858697046047160813ULL, 15576437104266519015ULL,
         4231162730687938791ULL, 12506082529590702106ULL,
-        16113312188357867839ULL, 4025029914587953652ULL,
-        16141554460486284975ULL}},
+        8574636334663366796ULL, 15576437104266519015ULL,
+        10221155488736389842ULL}},
   }};
   constexpr std::array<cadenza::FramebufferProfile, 2> profiles{
       cadenza::FramebufferProfile::TEmbed,
@@ -214,6 +214,6 @@ TEST_CASE("approved Launcher track and Cover snapshots") {
       CHECK(actual[sceneIndex] == expected[profileIndex][sceneIndex]);
     }
     CHECK(actual[3] == actual[7]);  // Motion: neutral == pressed.
-    CHECK(actual[0] == actual[8]);  // Clock: 12:34 remains unchanged on launch.
+    CHECK(actual[0] == actual[8]);  // Timer: 12:34 remains unchanged on launch.
   }
 }

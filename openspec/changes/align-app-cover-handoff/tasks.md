@@ -11,7 +11,7 @@
 
 - [x] 2.1 在 App 与 AppCatalogView 实现可选纯绘制 launch-frame renderer，不改变静态 Cover 或 lifecycle API
 - [x] 2.2 实现共享的双 profile Cover bridge/fallback 布局，保证与 Launcher 中央 Cover 首帧对齐且零几何诊断
-- [x] 2.3 为 Clock、Motion、Settings、Gallery 实现四套不同的代码原生 1-bit launch sequence，并锁定代表关键帧
+- [x] 2.3 为 Timer、Motion、Settings、Gallery 实现四套不同的代码原生 1-bit launch sequence，并锁定代表关键帧
 - [x] 2.4 让 launch renderer 接收只读 AppRenderContext，并为四 App 抽取与真实首屏共享的绘制 helper
 - [x] 2.5 将四套独立海报式序列替换为 Cover 到真实首屏的连续 ordered-dither/motif 演变
 

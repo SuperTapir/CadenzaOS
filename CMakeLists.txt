@@ -114,8 +114,34 @@ if(CADENZA_BUILD_TESTS)
     OUTPUT_QUIET ERROR_QUIET
   )
 
-  foreach(launcher_cover IN ITEMS clock motion settings gallery)
-    if(launcher_cover STREQUAL "clock")
+  add_test(
+    NAME cadenza_timer_digit_source_check
+    COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/generate_timer_digits.py --check
+  )
+  add_test(
+    NAME cadenza_timer_digit_t_embed_asset_check
+    COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/pack_bitmap.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/assets/timer-digits/timer_digits_t_embed.pbm
+      ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_core/include/cadenza/presentation/generated/timer_digits_t_embed.h
+      --symbol kTimerDigitsTEmbed
+      --provenance "Cadenza-authored industrial Timer numerals; native 528x84 atlas from tools/generate_timer_digits.py"
+      --check
+  )
+  add_test(
+    NAME cadenza_timer_digit_sharp_asset_check
+    COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/pack_bitmap.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/assets/timer-digits/timer_digits_sharp.pbm
+      ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_core/include/cadenza/presentation/generated/timer_digits_sharp.h
+      --symbol kTimerDigitsSharp
+      --provenance "Cadenza-authored industrial Timer numerals; native 716x120 atlas from tools/generate_timer_digits.py"
+      --check
+  )
+
+  foreach(launcher_cover IN ITEMS timer motion settings gallery)
+    if(launcher_cover STREQUAL "timer")
       set(launcher_cover_threshold 150)
     elseif(launcher_cover STREQUAL "motion")
       set(launcher_cover_threshold 170)
@@ -129,16 +155,35 @@ if(CADENZA_BUILD_TESTS)
     string(SUBSTRING "${launcher_cover}" 1 -1 launcher_cover_tail)
     set(launcher_cover_symbol
       "k${launcher_cover_initial}${launcher_cover_tail}Cover")
+    if(launcher_cover STREQUAL "timer")
+      set(launcher_cover_provenance
+        "Cadenza original AI-assisted artwork, user-approved 2026-07-19; canonical PBM in assets/launcher-covers/timer.pbm")
+    else()
+      set(launcher_cover_provenance
+        "Cadenza original AI-assisted artwork, user-approved 2026-07-18; canonical PBM in assets/launcher-covers/${launcher_cover}.pbm")
+    endif()
     if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
-      add_test(
-        NAME cadenza_launcher_${launcher_cover}_cover_source_check
-        COMMAND ${Python3_EXECUTABLE}
-          ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
-          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
-          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}.pbm
-          --width 350 --height 155 --threshold ${launcher_cover_threshold}
-          --check
-      )
+      if(launcher_cover STREQUAL "timer")
+        add_test(
+          NAME cadenza_launcher_timer_cover_source_check
+          COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/.codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/timer.png
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers
+            --name timer --levels 5
+            --solid-light-region 0.026 0.465 0.686 0.961 --check
+        )
+      else()
+        add_test(
+          NAME cadenza_launcher_${launcher_cover}_cover_source_check
+          COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}.pbm
+            --width 350 --height 155 --threshold ${launcher_cover_threshold}
+            --check
+        )
+      endif()
     endif()
     add_test(
       NAME cadenza_launcher_${launcher_cover}_cover_asset_check
@@ -147,20 +192,31 @@ if(CADENZA_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}.pbm
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/cadenza_apps/src/generated/${launcher_cover}_cover.h
         --symbol ${launcher_cover_symbol}
-        --provenance
-          "Cadenza original AI-assisted artwork, user-approved 2026-07-18; canonical PBM in assets/launcher-covers/${launcher_cover}.pbm"
+        --provenance "${launcher_cover_provenance}"
         --check
     )
     if(CADENZA_PYTHON_HAS_PILLOW EQUAL 0)
-      add_test(
-        NAME cadenza_launcher_${launcher_cover}_t_embed_cover_source_check
-        COMMAND ${Python3_EXECUTABLE}
-          ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
-          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
-          ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}_t_embed.pbm
-          --width 280 --height 124 --threshold ${launcher_cover_threshold}
-          --check
-      )
+      if(launcher_cover STREQUAL "timer")
+        add_test(
+          NAME cadenza_launcher_timer_t_embed_cover_source_check
+          COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/.codex/skills/generate-launcher-cover-art/scripts/prepare_cover.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/timer.png
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers
+            --name timer --levels 5
+            --solid-light-region 0.026 0.465 0.686 0.961 --check
+        )
+      else()
+        add_test(
+          NAME cadenza_launcher_${launcher_cover}_t_embed_cover_source_check
+          COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tools/convert_launcher_cover.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/source/${launcher_cover}.png
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/launcher-covers/${launcher_cover}_t_embed.pbm
+            --width 280 --height 124 --threshold ${launcher_cover_threshold}
+            --check
+        )
+      endif()
     endif()
     add_test(
       NAME cadenza_launcher_${launcher_cover}_t_embed_cover_asset_check
@@ -651,6 +707,13 @@ if(CADENZA_BUILD_TESTS)
     COMMAND ${CMAKE_COMMAND}
       -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_activation_timer_research.cmake
+  )
+
+  add_test(
+    NAME cadenza_timer_naming_audit
+    COMMAND ${CMAKE_COMMAND}
+      -DPROJECT_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/audit_timer_naming.cmake
   )
 
   add_test(

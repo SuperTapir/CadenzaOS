@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Application lifecycle is platform-independent
-Launcher, Clock, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; the configured Home App SHALL be reached through an explicit System Menu action rather than a direct long-press transition.
+Launcher, Timer, Motion, Settings, and Gallery SHALL implement the same static App lifecycle and registry contract on firmware, headless host, and desktop simulator; the configured Home App SHALL be reached through an explicit System Menu action rather than a direct long-press transition.
 
 #### Scenario: App is switched
 - **WHEN** the runtime opens a registered App and completes its transition

@@ -110,7 +110,7 @@ fresh gate 为准：
 2026-07-18 fixed-ratio Cover 最终门禁证据：
 
 - `cadenza_apps_tests`、`cadenza_launcher_snapshot_tests` 与
-  `cadenza_desktop_smoke_tests` 定向门禁 3/3 通过；Clock 启动捕获与 neutral Cover
+  `cadenza_desktop_smoke_tests` 定向门禁 3/3 通过；Timer 启动捕获与 neutral Cover
   hash 相同，Motion press 捕获与 neutral Cover hash 相同；
 - host 全部 target 编译成功；使用带 Pillow 的项目 Python 时 70/70 项 CTest
   通过。八个母图来源检查证明各 profile PBM 直接来自对应 PNG，八个 Cover

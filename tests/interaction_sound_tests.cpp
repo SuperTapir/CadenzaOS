@@ -146,7 +146,7 @@ TEST_CASE("every authored cue has bounded nonzero edge ramps") {
   CHECK(boundary.durationSeconds != reject.durationSeconds);
 }
 
-TEST_CASE("Timer Complete is a distinct bounded four-strike alert") {
+TEST_CASE("Timer Complete is a distinct bounded three-strike bell chord") {
   const auto timerComplete = cadenza::audio::InteractionSoundService::profile(
       cadenza::audio::SoundCue::TimerComplete);
   const auto complete = cadenza::audio::InteractionSoundService::profile(
@@ -181,7 +181,7 @@ TEST_CASE("all semantic hierarchy cues render deterministically and end silent")
       0x13E57E34362B7C70ULL, 0xF85F91ED8053C0ACULL,
       0x1E33454BC817A8F4ULL, 0x544F48552963AB96ULL,
       0xE18B997BCB79D023ULL, 0xCAB9268E54DCD0EEULL,
-      0xFF77B74687A40111ULL, 0x1D5913CD94A70AFAULL,
+      0xFF77B74687A40111ULL, 0xF5AB40E42CF75F78ULL,
   }};
   for (std::size_t cueIndex = 0;
        cueIndex < static_cast<std::size_t>(cadenza::audio::SoundCue::Count);

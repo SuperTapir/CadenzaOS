@@ -15,9 +15,9 @@
 
 - [x] 3.1 先增加静态 Cover 默认 fallback、const 纯绘制、交互/lifecycle 像素不变和 bounds/诊断的失败测试
 - [x] 3.2 在 App 与 AppCatalogView 中实现不接收交互状态的窄 Cover renderer 契约和默认未绘制行为，不暴露可变 App 指针
-- [x] 3.3 为 Clock、Motion、Settings、Gallery 实现可区分的原创代码原生 Cover，并验证双 profile 无越界/无分配
+- [x] 3.3 为 Timer、Motion、Settings、Gallery 实现可区分的原创代码原生 Cover，并验证双 profile 无越界/无分配
 - [x] 3.4 验证按钮按下、长按和 Runtime outgoing 启动捕获不会改变 Cover 像素
-- [x] 3.5 将确认后的 Clock、Motion、Settings、Gallery 插图离线转换为 350×155 与无裁切等比 280×124 的 1-bit packed bitmap，接入整图 renderer，并增加转换可复现性与 flash 体积验证
+- [x] 3.5 将确认后的 Timer、Motion、Settings、Gallery 插图离线转换为 350×155 与无裁切等比 280×124 的 1-bit packed bitmap，接入整图 renderer，并增加转换可复现性与 flash 体积验证
 - [x] 3.6 修正 T-Embed Cover 的二次缩放损失：两个 profile 均直接从高分辨率母图生成目标尺寸，并以像素级来源检查锁定转换参数
 
 ## 4. 横纵卡片轨道与视觉重构

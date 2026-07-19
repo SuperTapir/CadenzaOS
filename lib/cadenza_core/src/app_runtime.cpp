@@ -410,7 +410,9 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
         surfaces_.menuClosing());
   }
   if (surfaces_.timerAlertActive()) {
-    presentation::renderTimerAlert(canvas, frameSnapshot_.timer);
+    presentation::renderTimerAlert(canvas, frameSnapshot_.timer,
+                                   surfaces_.timerAlertElapsed(),
+                                   frameSnapshot_.motionProfile);
   }
 }
 

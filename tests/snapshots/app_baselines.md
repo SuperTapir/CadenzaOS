@@ -3,7 +3,7 @@
 These FNV-1a hashes cover the active bytes of the canonical row-major,
 MSB-first framebuffer plus its dimensions. They were approved after rendering
 PBM artifacts with `cadenza_dump_headless_pbm` and visually inspecting PNG
-conversions on 2026-07-18.
+conversions on 2026-07-19.
 
 Capture point: a fresh `HeadlessHost`; Launcher is its initial render. The two
 Launcher Gallery-selection cases apply one `turn = 3` frame and prove the
@@ -13,15 +13,15 @@ transition completes. No normal App update runs after completion.
 
 | Profile | App | Hash (decimal) |
 | --- | --- | ---: |
-| 320×170 | Launcher | 2968281691757874956 |
-| 320×170 | Clock / Activation Timer Ready 10:00 | 8752186736345292702 |
-| 320×170 | Motion | 11046562126395087774 |
-| 320×170 | Settings | 15594660916157055540 |
+| 320×170 | Launcher | 4407872121496200056 |
+| 320×170 | Timer Ready 10:00 | 12921254497184521768 |
+| 320×170 | Motion | 1593956483296057867 |
+| 320×170 | Settings | 9979404855079423954 |
 | 320×170 | Animation Gallery | 14139291840108583961 |
-| 400×240 | Launcher | 5421283046709258962 |
-| 400×240 | Clock / Activation Timer Ready 10:00 | 9246543181918641567 |
-| 400×240 | Motion | 2956592992690758759 |
-| 400×240 | Settings | 16739858513966786026 |
+| 400×240 | Launcher | 14360345327951497471 |
+| 400×240 | Timer Ready 10:00 | 4523606151491982558 |
+| 400×240 | Motion | 2802791382376082090 |
+| 400×240 | Settings | 8080546343687024773 |
 | 400×240 | Animation Gallery | 13234575752027769465 |
 
 Settings hashes were re-approved on 2026-07-18 after adding bounded Wi-Fi and
@@ -30,13 +30,19 @@ secure-setup status rows. Both rendered PNGs were visually inspected; the
 fifth row. No credential, SSID, IP address, or peer identity appears in either
 profile.
 
-Clock hashes were re-approved on 2026-07-19 after replacing the elapsed-time
-demo with the Activation Timer Ready screen. Both profile PNGs were visually
-inspected; the approved Launcher Cover itself is unchanged.
+Timer hashes were re-approved on 2026-07-19 after adding native industrial
+numerals, centering the enlarged time body, correcting `HOLD: MENU`, and applying
+the approved 2D-title/3D-dial Launcher Cover. Both profile PNGs were visually
+inspected.
 
 Launcher selection baselines:
 
 | Profile | Launcher state | Hash (decimal) |
 | --- | --- | ---: |
-| 320×170 | Animation Gallery selected | 16937710498554101448 |
-| 400×240 | Animation Gallery selected | 5912879823780594669 |
+| 320×170 | Animation Gallery selected | 15533885305252050834 |
+| 400×240 | Animation Gallery selected | 6567266582574601646 |
+
+Launcher and handoff hashes were re-approved on 2026-07-19 after replacing the
+legacy Clock artwork with the approved `TIMER` cover. The horizontal/vertical
+track endpoints, launch/return transition frames, and warped Menu closing frame
+were visually inspected at both profiles before updating their test constants.

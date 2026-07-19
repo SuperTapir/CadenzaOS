@@ -92,6 +92,7 @@ class SystemSurfaceCoordinator {
   bool timerAlertActive() const noexcept {
     return interactive_ == SurfaceKind::TimerAlert;
   }
+  float timerAlertElapsed() const noexcept { return timerAlertElapsed_; }
   bool appSuspended() const noexcept {
     return menuActive() || timerAlertActive() || deferredMenu_ ||
            captureUntilRelease_;
@@ -125,6 +126,7 @@ class SystemSurfaceCoordinator {
   bool timerAlertArmed_ = false;
   bool buttonSequenceActive_ = false;
   float revealProgress_ = 0.0F;
+  float timerAlertElapsed_ = 0.0F;
   MotionProfile menuMotionProfile_ = MotionProfile::Normal;
   std::array<TransientFeedback, kTransientCapacity> transients_{};
   std::size_t transientCount_ = 0;
@@ -172,6 +174,8 @@ void renderSystemMenu(MonoCanvas& canvas, MonoFramebuffer& scratch,
                       bool closing) noexcept;
 void renderTransientFeedback(MonoCanvas& canvas,
                              const SystemSurfaceCoordinator& surfaces) noexcept;
-void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer = {}) noexcept;
+void renderTimerAlert(MonoCanvas& canvas, TimerSnapshot timer,
+                      float visualElapsed,
+                      MotionProfile motionProfile) noexcept;
 
 }  // namespace cadenza::presentation

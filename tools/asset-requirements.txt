@@ -1,0 +1,2 @@
+# Offline visual-asset generation and review only; never linked into firmware.
+Pillow==11.3.0

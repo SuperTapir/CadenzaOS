@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Both display profiles have snapshots
-Approved screenshot/framebuffer snapshots SHALL cover Launcher, Clock, Motion, Settings, Gallery, and representative transitions at 320×170 and 400×240. Launcher coverage SHALL include Vertical and Horizontal settled states, a deterministic navigation midpoint, every built-in App Cover, generic fallback, and press/launch representative captures whose Cover pixels match their neutral counterparts; interactive tests SHALL separately prove continuity, loop direction, retarget, Normal/Reduced Motion monotonicity and exact settling, Cover immutability, bounds safety and moving-click semantics rather than relying only on terminal hashes.
+Approved screenshot/framebuffer snapshots SHALL cover Launcher, Timer, Motion, Settings, Gallery, and representative transitions at 320×170 and 400×240. Launcher coverage SHALL include Vertical and Horizontal settled states, a deterministic navigation midpoint, every built-in App Cover, generic fallback, and press/launch representative captures whose Cover pixels match their neutral counterparts; interactive tests SHALL separately prove continuity, loop direction, retarget, Normal/Reduced Motion monotonicity and exact settling, Cover immutability, bounds safety and moving-click semantics rather than relying only on terminal hashes.
 
 #### Scenario: Snapshot regression runs
 - **WHEN** deterministic fixed-step scenes render their capture frames

@@ -4,14 +4,15 @@
 #include <cmath>
 #include <cstdio>
 
-#include "generated/clock_cover.h"
-#include "generated/clock_t_embed_cover.h"
 #include "generated/gallery_cover.h"
 #include "generated/gallery_t_embed_cover.h"
 #include "generated/motion_cover.h"
 #include "generated/motion_t_embed_cover.h"
 #include "generated/settings_cover.h"
 #include "generated/settings_t_embed_cover.h"
+#include "generated/timer_cover.h"
+#include "generated/timer_t_embed_cover.h"
+#include "cadenza/presentation/timer_numerals.h"
 
 namespace cadenza {
 namespace {
@@ -207,20 +208,51 @@ void blendCenteredCoverIntoTarget(
   }
 }
 
-void renderClockScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
-                       std::uint32_t selectedDurationMs) noexcept {
+float timerPresentationDuration(TimerPresentationState state,
+                                MotionProfile motion) noexcept {
+  if (state == TimerPresentationState::None) return 0.0F;
+  if (motion == MotionProfile::Reduced) return 0.10F;
+  return state == TimerPresentationState::Starting ? 0.24F : 0.18F;
+}
+
+void renderTimerPresentation(MonoCanvas& canvas, Rect digits,
+                             TimerPresentationState state, float elapsed,
+                             MotionProfile motion) noexcept {
+  const float duration = timerPresentationDuration(state, motion);
+  if (state == TimerPresentationState::None || duration <= 0.0F ||
+      elapsed >= duration) {
+    return;
+  }
+  if (motion == MotionProfile::Reduced) {
+    canvas.rect(digits.x - 4, digits.y - 4, digits.width + 8,
+                digits.height + 8, true);
+    canvas.rect(digits.x - 7, digits.y - 7, digits.width + 14,
+                digits.height + 14, true);
+    return;
+  }
+  const float raw = std::max(0.0F, std::min(1.0F, elapsed / duration));
+  const float progress = ease(Easing::OutQuad, raw);
+  const int stripeWidth = canvas.width() >= 400 ? 16 : 12;
+  const int travel = digits.width - stripeWidth;
+  const int offset = static_cast<int>(
+      progress * static_cast<float>(travel) + 0.5F);
+  const int stripeX = state == TimerPresentationState::Pausing
+                          ? digits.x + travel - offset
+                          : digits.x + offset;
+  canvas.invert({stripeX, digits.y - 1, stripeWidth, digits.height + 2});
+}
+
+void renderTimerScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
+                       std::uint32_t selectedDurationMs,
+                       TimerPresentationState presentationState,
+                       float presentationElapsed,
+                       MotionProfile motionProfile) noexcept {
   canvas.clear(false);
   const int width = canvas.width();
   const int height = canvas.height();
   const std::uint32_t displayMs = timer.state == TimerState::Ready
                                       ? selectedDurationMs
                                       : timer.remainingMs;
-  const std::uint32_t seconds = (displayMs + 999U) / 1000U;
-  char value[16];
-  std::snprintf(value, sizeof(value), "%02u:%02u",
-                static_cast<unsigned>((seconds / 60U) % 100U),
-                static_cast<unsigned>(seconds % 60U));
-
   const char* state = "READY";
   const char* action = "TURN: MINUTES   PRESS: START";
   if (timer.state == TimerState::Running) {
@@ -234,31 +266,34 @@ void renderClockScreen(MonoCanvas& canvas, const TimerSnapshot& timer,
     action = "PRESS TO ACKNOWLEDGE";
   }
 
-  canvas.text("ACTIVATION TIMER", 12, 16, 1, true,
-              TextAlign::MiddleLeft);
+  canvas.text("TIMER", 12, 16, 1, true, TextAlign::MiddleLeft);
   canvas.fillRect(width - 72, 7, 60, 18, true);
-  canvas.text(state, width - 42, 16, 1, false,
-              TextAlign::MiddleCenter);
-  canvas.text(value, width / 2, height / 2 - 8,
-              width >= 400 ? 5 : 4, true,
-              TextAlign::MiddleCenter);
+  canvas.text(state, width - 42, 16, 1, false, TextAlign::MiddleCenter);
+  const int digitsTop = width >= 400 ? 48 : 34;
+  const Rect digits =
+      presentation::renderTimerNumerals(canvas, displayMs, digitsTop);
+  renderTimerPresentation(canvas, digits, presentationState,
+                          presentationElapsed, motionProfile);
 
   const std::uint32_t total = std::max<std::uint32_t>(
       1, timer.state == TimerState::Ready ? selectedDurationMs
                                          : timer.configuredDurationMs);
   const int trackX = 12;
   const int trackWidth = width - 24;
-  const int trackY = height - 48;
-  canvas.rect(trackX, trackY, trackWidth, 13, true);
+  const int trackY = height - 34;
+  const int trackHeight = width >= 400 ? 9 : 7;
+  canvas.rect(trackX, trackY, trackWidth, trackHeight, true);
   const int mass = static_cast<int>(
       (static_cast<std::uint64_t>(trackWidth - 4) * displayMs) / total);
-  if (mass > 0) canvas.fillRect(trackX + 2, trackY + 2, mass, 9, true);
+  if (mass > 0) {
+    canvas.fillRect(trackX + 2, trackY + 2, mass, trackHeight - 4, true);
+  }
   for (int tick = 0; tick <= 10; ++tick) {
     const int x = trackX + (trackWidth - 1) * tick / 10;
-    canvas.line(x, trackY - (tick % 5 == 0 ? 5 : 3), x, trackY - 1, true);
+    canvas.line(x, trackY - (tick % 5 == 0 ? 3 : 2), x, trackY - 1, true);
   }
-  canvas.text(action, 12, height - 12, 1, true, TextAlign::BottomLeft);
-  canvas.text("HOLD: HOME", width - 12, height - 12, 1, true,
+  canvas.text(action, 12, height - 5, 1, true, TextAlign::BottomLeft);
+  canvas.text("HOLD: MENU", width - 12, height - 5, 1, true,
               TextAlign::BottomRight);
 }
 
@@ -288,7 +323,7 @@ void renderMotionScreen(MonoCanvas& canvas, float position, float target,
   canvas.fillRect(0, height - 22, width, 22, false);
   canvas.text("TURN / PRESS TO THROW", 9, height - 11, 1, true,
               TextAlign::MiddleLeft);
-  canvas.text("HOLD: HOME", width - 9, height - 11, 1, true,
+  canvas.text("HOLD: MENU", width - 9, height - 11, 1, true,
               TextAlign::MiddleRight);
 }
 
@@ -370,7 +405,7 @@ void renderSettingsScreen(MonoCanvas& canvas, const SystemSnapshot& system,
           true);
     }
   }
-  canvas.text("HOLD: HOME", 12, height - 8, 1, false,
+  canvas.text("HOLD: MENU", 12, height - 8, 1, false,
               TextAlign::BottomLeft);
 }
 
@@ -522,9 +557,25 @@ void LauncherApp::render(MonoCanvas& canvas,
   }
 }
 
-void ClockApp::update(const AppUpdateContext& context) noexcept {
+void TimerApp::onEnter() noexcept {
+  presentationState_ = TimerPresentationState::None;
+  presentationElapsed_ = 0.0F;
+}
+
+void TimerApp::onExit() noexcept { onEnter(); }
+
+void TimerApp::update(const AppUpdateContext& context) noexcept {
   const InputFrame& input = context.input;
   const TimerSnapshot& timer = context.system.timer;
+  if (presentationState_ != TimerPresentationState::None) {
+    presentationElapsed_ += std::max(0.0F, context.dt);
+    if (presentationElapsed_ >= timerPresentationDuration(
+                                    presentationState_,
+                                    context.system.motionProfile)) {
+      presentationState_ = TimerPresentationState::None;
+      presentationElapsed_ = 0.0F;
+    }
+  }
   if (!hasObservedTimerState_ || timer.state != observedTimerState_) {
     if (timer.state == TimerState::Ready) {
       selectedDurationMs_ = timer.configuredDurationMs;
@@ -555,6 +606,14 @@ void ClockApp::update(const AppUpdateContext& context) noexcept {
         break;
     }
     if (actionable && context.commands.submit(command)) {
+      if (timer.state == TimerState::Ready) {
+        presentationState_ = TimerPresentationState::Starting;
+      } else if (timer.state == TimerState::Running) {
+        presentationState_ = TimerPresentationState::Pausing;
+      } else {
+        presentationState_ = TimerPresentationState::Resuming;
+      }
+      presentationElapsed_ = 0.0F;
       context.commands.submit(SystemCommand::playSound(cue));
     }
     return;
@@ -592,23 +651,27 @@ void ClockApp::update(const AppUpdateContext& context) noexcept {
                           : audio::SoundCue::Navigate));
 }
 
-void ClockApp::render(MonoCanvas& canvas,
+void TimerApp::render(MonoCanvas& canvas,
                       const AppRenderContext& context) noexcept {
-  renderClockScreen(canvas, context.system.timer, selectedDurationMs_);
+  renderTimerScreen(canvas, context.system.timer, selectedDurationMs_,
+                    presentationState_, presentationElapsed_,
+                    context.system.motionProfile);
 }
 
-bool ClockApp::renderLauncherCover(MonoCanvas& canvas,
+bool TimerApp::renderLauncherCover(MonoCanvas& canvas,
                                    Rect bounds) const noexcept {
-  return renderBitmapCover(canvas, bounds, kClockTEmbedCover,
-                           kClockCover, true);
+  return renderBitmapCover(canvas, bounds, kTimerTEmbedCover,
+                           kTimerCover, true);
 }
 
-bool ClockApp::renderLaunchFrame(MonoCanvas& canvas,
+bool TimerApp::renderLaunchFrame(MonoCanvas& canvas,
                                  float progress,
                                  const AppRenderContext& context) const noexcept {
   const float p = launchProgress(progress);
-  renderClockScreen(canvas, context.system.timer, selectedDurationMs_);
-  blendCenteredCoverIntoTarget(canvas, p, kClockTEmbedCover, kClockCover,
+  renderTimerScreen(canvas, context.system.timer, selectedDurationMs_,
+                    TimerPresentationState::None, 0.0F,
+                    context.system.motionProfile);
+  blendCenteredCoverIntoTarget(canvas, p, kTimerTEmbedCover, kTimerCover,
                                true);
   return true;
 }
