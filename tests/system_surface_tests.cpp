@@ -528,12 +528,52 @@ TEST_CASE("Motion switch has distinct left and right knob positions") {
   CHECK_FALSE(inverted.pixel(24, 9));
 }
 
+TEST_CASE("floating status indicator isolates itself from hostile backgrounds") {
+  const cadenza::FramebufferProfile profiles[] = {
+      cadenza::FramebufferProfile::TEmbed,
+      cadenza::FramebufferProfile::Sharp};
+  constexpr cadenza::Rect kBounds{8, 8, 78, 28};
+  for (const auto profile : profiles) {
+    for (int background = 0; background < 3; ++background) {
+      CAPTURE(static_cast<int>(profile));
+      CAPTURE(background);
+      cadenza::MonoFramebuffer frame{profile};
+      cadenza::MonoCanvas canvas{frame};
+      frame.clear(background == 0);
+      if (background == 2) {
+        frame.clear(false);
+        for (int y = 0; y < frame.height(); y += 2) {
+          canvas.line(0, y, frame.width() - 1, y, true);
+        }
+      }
+      const bool outsideBefore = frame.pixel(0, 0);
+
+      cadenza::presentation::SystemUi::statusIndicator(
+          canvas, kBounds, "T 10", true);
+
+      const int right = kBounds.x + kBounds.width - 1;
+      const int bottom = kBounds.y + kBounds.height - 1;
+      for (int x = kBounds.x + 5; x <= right - 5; ++x) {
+        CHECK_FALSE(frame.pixel(x, kBounds.y + 1));
+        CHECK_FALSE(frame.pixel(x, bottom - 1));
+      }
+      for (int y = kBounds.y + 5; y <= bottom - 5; ++y) {
+        CHECK_FALSE(frame.pixel(kBounds.x + 1, y));
+        CHECK_FALSE(frame.pixel(right - 1, y));
+      }
+      CHECK(frame.pixel(kBounds.x + kBounds.width / 2, kBounds.y + 2));
+      CHECK(frame.pixel(right - 5, kBounds.y + kBounds.height / 2));
+      CHECK(frame.pixel(0, 0) == outsideBefore);
+    }
+  }
+}
+
 TEST_CASE("passive transient and status indicator have dual-profile goldens") {
   const cadenza::FramebufferProfile profiles[] = {
       cadenza::FramebufferProfile::TEmbed,
       cadenza::FramebufferProfile::Sharp};
-  const std::uint64_t goldenHashes[] = {16251486812105772908ULL,
-                                        1815367600471267849ULL};
+  const std::uint64_t goldenHashes[] = {13413943807203622308ULL,
+                                        7387506746915168240ULL};
   for (std::size_t profileIndex = 0; profileIndex < 2; ++profileIndex) {
     cadenza::MonoFramebuffer frame{profiles[profileIndex]};
     cadenza::MonoCanvas canvas{frame};

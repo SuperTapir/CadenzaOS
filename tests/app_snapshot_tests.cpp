@@ -243,6 +243,33 @@ std::uint64_t captureLauncherGallery(cadenza::FramebufferProfile profile,
   }
   return actual;
 }
+
+std::uint64_t captureBackgroundTimer(cadenza::FramebufferProfile profile,
+                                     cadenza::AppId app,
+                                     std::uint64_t expected) {
+  cadenza::host::HeadlessHost host{profile};
+  REQUIRE(host.runtime().open(cadenza::apps::kTimerAppId));
+  settle(host);
+  cadenza::InputFrame click;
+  click.clicked = true;
+  host.step(click);
+  host.advance(0.30F);
+  REQUIRE(host.runtime().open(app));
+  settle(host);
+
+  const std::uint64_t actual = host.framebufferHash();
+  const auto directory = std::filesystem::current_path() / "snapshot-failures";
+  const auto path = directory /
+      ("background-timer-p" + std::to_string(static_cast<int>(profile)) +
+       "-a" + std::to_string(static_cast<int>(app.value())) + ".png");
+  if (actual != expected) {
+    std::filesystem::create_directories(directory);
+    CHECK(cadenza::desktop::writePng(path.string(), host.framebuffer()));
+  } else {
+    std::filesystem::remove(path);
+  }
+  return actual;
+}
 }  // namespace
 
 TEST_CASE("approved bundled App framebuffer snapshots") {
@@ -284,6 +311,33 @@ TEST_CASE("Launcher gallery selection remains bounded at both profiles") {
   CHECK(captureLauncherGallery(cadenza::FramebufferProfile::Sharp,
                                13499352535080939587ULL) ==
         13499352535080939587ULL);
+}
+
+TEST_CASE("background Timer indicator stays legible over every built-in App") {
+  const std::array<SnapshotCase, 8> cases{{
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kLauncherAppId,
+       10651148509124138305ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kMotionAppId,
+       11763888816598266585ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kSettingsAppId,
+       8541622103309740008ULL},
+      {cadenza::FramebufferProfile::TEmbed, cadenza::apps::kGalleryAppId,
+       115148013231880568ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kLauncherAppId,
+       4159340156871682690ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kMotionAppId,
+       16730610446322141212ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kSettingsAppId,
+       3123713760757168900ULL},
+      {cadenza::FramebufferProfile::Sharp, cadenza::apps::kGalleryAppId,
+       15779898515471318158ULL},
+  }};
+  for (const SnapshotCase& snapshot : cases) {
+    CAPTURE(static_cast<int>(snapshot.profile));
+    CAPTURE(static_cast<int>(snapshot.app.value()));
+    CHECK(captureBackgroundTimer(snapshot.profile, snapshot.app,
+                                 snapshot.expected) == snapshot.expected);
+  }
 }
 
 TEST_CASE("approved App handoff and warped Menu keyframes") {

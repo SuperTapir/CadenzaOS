@@ -397,10 +397,9 @@ void AppRuntime::renderWithSystem(MonoCanvas& canvas,
     std::snprintf(indicator, sizeof(indicator), "%c %02u",
                   frameSnapshot_.timer.state == TimerState::Paused ? 'P' : 'T',
                   static_cast<unsigned>(remainingMinutes));
-    const int indicatorWidth = 54;
-    canvas.fillRect(2, 2, indicatorWidth, 24, true);
-    canvas.text(indicator, 2 + indicatorWidth / 2, 14, 1, false,
-                TextAlign::MiddleCenter, TextRole::Compact);
+    presentation::SystemUi::statusIndicator(
+        canvas, {2, 2, 58, 28}, indicator,
+        frameSnapshot_.timer.state == TimerState::Running);
   }
   if (surfaces_.menuActive()) {
     presentation::renderSystemMenu(

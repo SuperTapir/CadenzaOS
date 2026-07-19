@@ -63,6 +63,12 @@ void renderOverlaySpecimen(cadenza::MonoFramebuffer& framebuffer) {
   cadenza::presentation::SystemUi::statusIndicator(
       canvas, {framebuffer.width() - 82, 4, 78, 26}, "SYNC", true);
 }
+
+void settleTransition(cadenza::host::HeadlessHost& host) {
+  for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
+    host.step();
+  }
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -71,17 +77,39 @@ int main(int argc, char** argv) {
   const bool typographySpecimen = std::atoi(argv[2]) == 5;
   const bool overlaySpecimen = std::atoi(argv[2]) == 6;
   const cadenza::AppId app = appFrom(argv[2]);
+  const bool pausedBackgroundTimer =
+      !typographySpecimen && !overlaySpecimen && argc >= 5 &&
+      std::strcmp(argv[4], "background-timer-paused") == 0;
+  const bool backgroundTimer =
+      !typographySpecimen && !overlaySpecimen && argc >= 5 &&
+      (std::strcmp(argv[4], "background-timer") == 0 ||
+       pausedBackgroundTimer);
   if (typographySpecimen) {
     renderTypographySpecimen(host.framebuffer());
   } else if (overlaySpecimen) {
     renderOverlaySpecimen(host.framebuffer());
+  } else if (backgroundTimer) {
+    if (app == cadenza::apps::kTimerAppId ||
+        !host.runtime().open(cadenza::apps::kTimerAppId)) {
+      return 3;
+    }
+    settleTransition(host);
+    cadenza::InputFrame click;
+    click.clicked = true;
+    host.step(click);
+    host.advance(0.30F);
+    if (pausedBackgroundTimer) {
+      host.step(click);
+      host.advance(0.20F);
+    }
+    if (!host.runtime().open(app)) return 3;
+    settleTransition(host);
   } else if (app != cadenza::apps::kLauncherAppId) {
     if (!host.runtime().open(app)) return 3;
-    for (int frame = 0; frame < 64 && host.runtime().transitioning(); ++frame) {
-      host.step();
-    }
+    settleTransition(host);
   }
-  if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+  if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+      argc >= 5 &&
       app == cadenza::apps::kTimerAppId &&
       (std::strcmp(argv[4], "running") == 0 ||
        std::strcmp(argv[4], "paused") == 0 ||
@@ -130,13 +158,15 @@ int main(int argc, char** argv) {
       turn.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
       host.step(turn);
     }
-  } else if (!typographySpecimen && !overlaySpecimen && argc >= 5 &&
+  } else if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+             argc >= 5 &&
              app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame input;
     input.turn = static_cast<std::int16_t>(std::atoi(argv[4]));
     host.step(input);
   }
-  if (!typographySpecimen && !overlaySpecimen && argc == 6 &&
+  if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+      argc == 6 &&
       app == cadenza::apps::kGalleryAppId) {
     cadenza::InputFrame scrubMode;
     scrubMode.clicked = true;
@@ -145,7 +175,8 @@ int main(int argc, char** argv) {
     scrub.turn = static_cast<std::int16_t>(std::atoi(argv[5]));
     host.step(scrub);
   }
-  if (!typographySpecimen && !overlaySpecimen && argc == 7 &&
+  if (!backgroundTimer && !typographySpecimen && !overlaySpecimen &&
+      argc == 7 &&
       app == cadenza::apps::kGalleryAppId) {
     if (std::strcmp(argv[5], "auto") != 0) return 2;
     const int frames = std::max(0, std::atoi(argv[6]));

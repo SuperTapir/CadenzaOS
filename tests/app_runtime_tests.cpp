@@ -392,6 +392,9 @@ TEST_CASE("background Timer indicator is persistent and owner-suppressed") {
   fixture.runtime.renderWithSystem(canvas, snapshot);
   const std::uint64_t running = frameHash(framebuffer);
   CHECK(running != baseline);
+  CHECK_FALSE(framebuffer.pixel(2, 2));
+  CHECK_FALSE(framebuffer.pixel(31, 3));
+  CHECK(framebuffer.pixel(31, 4));
 
   snapshot.timer.state = cadenza::TimerState::Paused;
   fixture.runtime.renderWithSystem(canvas, snapshot);

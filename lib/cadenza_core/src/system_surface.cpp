@@ -415,10 +415,29 @@ void SystemUi::toggle(MonoCanvas& canvas, Rect bounds, bool enabled,
 
 void SystemUi::statusIndicator(MonoCanvas& canvas, Rect bounds,
                                const char* label, bool active) noexcept {
-  canvas.rect(bounds.x, bounds.y, bounds.width, bounds.height, true);
-  if (active) canvas.fillRect(bounds.x + 2, bounds.y + 2, 5,
-                              bounds.height - 4, true);
-  canvas.text(label, bounds.x + 10, bounds.y + bounds.height / 2, 1, true,
+  constexpr std::int32_t kIsolation = 2;
+  const Rect body{bounds.x + kIsolation, bounds.y + kIsolation,
+                  bounds.width - kIsolation * 2,
+                  bounds.height - kIsolation * 2};
+  canvas.fillRoundedRect(bounds.x, bounds.y, bounds.width, bounds.height, 4,
+                         false);
+  canvas.fillRoundedRect(body.x, body.y, body.width, body.height, 3, true);
+
+  const Rect stateRail{body.x + 3, body.y + 4, 3, body.height - 8};
+  if (active) {
+    canvas.fillRect(stateRail.x, stateRail.y, stateRail.width,
+                    stateRail.height, false);
+  } else {
+    canvas.rect(stateRail.x, stateRail.y, stateRail.width, stateRail.height,
+                false);
+  }
+
+  const TextMetrics labelMetrics =
+      canvas.measureText(label, TextRole::Compact);
+  const std::int32_t opticalOffset =
+      labelMetrics.height > body.height - 4 ? 1 : 0;
+  canvas.text(label, body.x + 10,
+              body.y + body.height / 2 + opticalOffset, 1, false,
               TextAlign::MiddleLeft, TextRole::Compact);
 }
 
