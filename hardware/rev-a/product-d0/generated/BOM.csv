@@ -1,0 +1,13 @@
+ref,mpn_or_spec,lcsc,class,gate
+U1,ESP32-S3-WROOM-1-N16R8,C2913202,JLC-SMT,
+LCD1,LS027B7DH01,OWNER-SUPPLIED,HAND,
+J_LCD,FH34SRJ-10S-0.5SH(50),C324723,conditional,screen contact side
+U_MIC,IM69D130V01XTSA1,C42464166,conditional,stock and bottom-port footprint
+U_AMP,MAX98357AETE+T,TBD,conditional,JLC library availability
+U_CHG,BQ24074RGTR,TBD,conditional,JLC library availability
+U_5V,TPS61023DRLR,TBD,conditional,JLC library availability
+U_3V3,AP2112K-3.3TRG1,TBD,conditional,peak-current prototype
+ENCODER_DB,annular incremental encoder with centre push; 6-wire daughterboard,,external,Taobao/sample-first
+SPK1,"8 ohm, >=1 W, 20-28 mm, <=6 mm depth, JST-PH lead",,external,Taobao/sample-first
+BAT1,"protected 1S LiPo 1200-2000 mAh, JST-PH 2.0",,external,Taobao/sample-first
+SW_PWR,"SPDT latching slide switch, panel actuator",,external,Taobao/sample-first
