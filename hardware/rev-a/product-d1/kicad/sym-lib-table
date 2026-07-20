@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Cadenza_D1")(type "Legacy")(uri "${KIPRJMOD}/Cadenza_D1.lib")(options "")(descr "Cadenza D1 audited symbols"))
+)

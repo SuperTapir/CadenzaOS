@@ -1,0 +1,149 @@
+{
+  "schema": "cadenza-d1-circuit-v1",
+  "revision": "D1",
+  "board": {
+    "layers": 4,
+    "thickness_mm": 1.2,
+    "copper_oz": [1, 0.5, 0.5, 1],
+    "outline_mm": {"width": 116.0, "height": 64.0, "corner_radius": 6.0},
+    "stackup": ["F.Cu signals/components", "In1.Cu solid GND", "In2.Cu power", "B.Cu signals/components"]
+  },
+  "power": {
+    "input": "USB_VBUS_5V or BAT_1S",
+    "rails": {
+      "VBUS": {"nominal_v": 5.0, "source": "J1"},
+      "VBAT": {"range_v": [3.0, 4.2], "source": "J4"},
+      "VSYS": {"range_v": [3.0, 4.4], "source": "U2.OUT"},
+      "+3V3_MAIN": {"nominal_v": 3.3, "source": "U3", "enable": "RUN_EN"},
+      "+5V_MEDIA": {"nominal_v": 5.0, "source": "U4", "enable": "RUN_EN"},
+      "+5V_LCD": {"nominal_v": 5.0, "source": "+5V_MEDIA via FB1"},
+      "+5V_AUDIO": {"nominal_v": 5.0, "source": "+5V_MEDIA via FB2"}
+    }
+  },
+  "blocks": [
+    {
+      "name": "usb_charge",
+      "components": ["J1", "U8", "U2", "R1", "R2", "R3", "R4", "R5", "C1", "C2", "C3", "C4"],
+      "connections": [
+        "J1.A4/A9/B4/B9 -> VBUS",
+        "J1.A1/A12/B1/B12/SHIELD -> GND",
+        "J1.A6/B6 -> USB_D+ -> U8 -> ESP32.GPIO20",
+        "J1.A7/B7 -> USB_D- -> U8 -> ESP32.GPIO19",
+        "J1.CC1 -> R1 5.1k -> GND",
+        "J1.CC2 -> R2 5.1k -> GND",
+        "VBUS -> U2.IN",
+        "U2.BAT -> VBAT",
+        "U2.OUT -> VSYS",
+        "U2.CHG -> CHG_N -> ESP32.GPIO17",
+        "U2.CE -> GND",
+        "U2.EN1/EN2 -> input-current straps",
+        "U2.ILIM -> R3 1.5k -> GND",
+        "U2.ISET -> R4 1.18k -> GND",
+        "U2.ITERM -> R5 1.5k -> GND"
+      ]
+    },
+    {
+      "name": "main_3v3",
+      "components": ["U3", "L1", "R10", "R11", "C10", "C11", "C12", "C13", "C14"],
+      "connections": [
+        "VSYS -> U3.VIN",
+        "U3.L1 -> L1 1.2uH -> U3.L2",
+        "U3.VOUT -> +3V3_MAIN",
+        "U3.FB -> R10 470k -> +3V3_MAIN",
+        "U3.FB -> R11 150k -> GND",
+        "U3.EN -> RUN_EN",
+        "U3.PS_SYNC -> +3V3_MAIN",
+        "U3.VSEL -> GND",
+        "U3.FB2 -> GND"
+      ]
+    },
+    {
+      "name": "media_5v",
+      "components": ["U4", "L2", "R20", "R21", "C20", "C21", "C22", "C23", "FB1", "FB2"],
+      "connections": [
+        "VSYS -> U4.VIN",
+        "U4.SW -> L2 1uH -> VSYS",
+        "U4.VOUT -> +5V_MEDIA",
+        "U4.FB -> R20 732k -> +5V_MEDIA",
+        "U4.FB -> R21 100k -> GND",
+        "U4.EN -> RUN_EN",
+        "+5V_MEDIA -> FB1 -> +5V_LCD",
+        "+5V_MEDIA -> FB2 -> +5V_AUDIO"
+      ]
+    },
+    {
+      "name": "display",
+      "components": ["J2", "LCD1", "C30", "C31", "C32", "R30", "R31"],
+      "connections": [
+        "J2.1 SCLK -> ESP32.GPIO12",
+        "J2.2 SI -> ESP32.GPIO11",
+        "J2.3 SCS -> ESP32.GPIO10",
+        "J2.4 EXTCOMIN -> ESP32.GPIO14",
+        "J2.5 DISP -> ESP32.GPIO13",
+        "J2.6 VDDA -> +5V_LCD",
+        "J2.7 VDD -> +5V_LCD",
+        "J2.8 EXTMODE -> ESP32.GPIO15",
+        "J2.9 VSS -> GND",
+        "J2.10 VSSA -> GND"
+      ]
+    },
+    {
+      "name": "microphone",
+      "components": ["U6", "C40", "R40", "R41"],
+      "connections": [
+        "U6.1 DATA -> R40 100R -> ESP32.GPIO42",
+        "U6.2 VDD -> +3V3_MAIN",
+        "U6.3 CLOCK -> ESP32.GPIO39",
+        "U6.4 LR -> GND",
+        "U6.5 GND -> GND",
+        "C40 100nF between U6.VDD and GND at package"
+      ]
+    },
+    {
+      "name": "speaker",
+      "components": ["U5", "J5", "C50", "C51", "R50", "R51"],
+      "connections": [
+        "U5.VDD -> +5V_AUDIO",
+        "U5.BCLK -> ESP32.GPIO46",
+        "U5.LRCLK -> ESP32.GPIO40",
+        "U5.DIN -> ESP32.GPIO7",
+        "U5.SD_MODE -> ESP32.GPIO41 with 100k default-enable bias",
+        "U5.GAIN_SLOT -> GND for 12dB",
+        "U5.OUTP -> J5.1 SPK+",
+        "U5.OUTN -> J5.2 SPK-"
+      ]
+    },
+    {
+      "name": "storage_controls",
+      "components": ["J3", "J6", "SW1", "SW2", "SW3", "R60", "R61", "R62", "R63", "R64"],
+      "connections": [
+        "J3.CLK/CMD/DAT0/CS -> ESP32.GPIO36/35/37/38; GPIO45 reserved",
+        "J6.1 +3V3_MAIN; J6.2 GND; J6.3 ENC_A GPIO4; J6.4 ENC_B GPIO5; J6.5 A_SW GPIO6; J6.6 LED_CTRL",
+        "SW2 B -> ESP32.GPIO47 -> GND",
+        "SW3 MENU -> ESP32.GPIO48 -> GND",
+        "SW1 RUN -> RUN_EN; OFF -> GND",
+        "GPIO0 reserved for hidden BOOT pad only"
+      ]
+    },
+    {
+      "name": "fuel_gauge",
+      "components": ["U7", "R70", "R71", "R72", "C70"],
+      "connections": [
+        "U7.BAT -> VBAT Kelvin sense",
+        "U7.SDA/SCL -> ESP32.GPIO8/GPIO18",
+        "SDA/SCL each 4.7k pull-up to +3V3_MAIN",
+        "U7.BIN -> 10k -> GND for embedded battery"
+      ]
+    }
+  ],
+  "placement_zones": {
+    "antenna": "top-right board edge, all-layer copper/component keepout per module datasheet",
+    "usb_power": "bottom edge near J1",
+    "switching_power": "bottom-right backside, shortest hot loops",
+    "microphone": "top-left front edge, isolated sound port",
+    "audio_amp": "left backside near J5, away from microphone",
+    "display_fpc": "top-center front, straight FPC path",
+    "sd": "bottom/side edge with shell card slot",
+    "encoder_header": "right edge adjacent daughterboard"
+  }
+}

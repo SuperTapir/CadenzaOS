@@ -1,0 +1,27 @@
+{
+  "revision": "D1-candidate",
+  "rails": ["VBUS_5V", "VSYS", "VBAT", "+3V3_MAIN", "+5V_MEDIA", "+5V_AUDIO"],
+  "interfaces": {
+    "display": ["LCD_SCLK", "LCD_SI", "LCD_SCS", "LCD_EXTCOMIN", "LCD_DISP", "LCD_5V_EN"],
+    "microphone": ["MIC_PDM_CLK", "MIC_PDM_DATA", "MIC_SELECT"],
+    "speaker": ["SPK_BCLK", "SPK_LRCLK", "SPK_DIN", "SPK_SD", "SPK_P", "SPK_N"],
+    "encoder_db": ["+3V3_MAIN", "GND", "ENC_A", "ENC_B", "A_SW", "LED_CTRL"],
+    "buttons": ["B_SW", "MENU_SW"],
+    "storage": ["SD_SCK", "SD_MOSI", "SD_MISO", "SD_CS", "SD_DET"],
+    "usb": ["USB_D_P", "USB_D_N", "USB_CC1", "USB_CC2"],
+    "i2c": ["I2C_SDA", "I2C_SCL"],
+    "power_control": ["PWR_EN", "PWR_GOOD", "MEDIA_5V_EN", "CHG_STAT"]
+  },
+  "gpio": {
+    "USB_D_N": 19, "USB_D_P": 20,
+    "LCD_SCLK": 12, "LCD_SI": 11, "LCD_SCS": 10,
+    "LCD_EXTCOMIN": 14, "LCD_DISP": 13, "LCD_5V_EN": 15,
+    "ENC_A": 4, "ENC_B": 5, "A_SW": 6,
+    "B_SW": 47, "MENU_SW": 48,
+    "MIC_PDM_CLK": 39, "MIC_PDM_DATA": 42,
+    "SPK_BCLK": 46, "SPK_LRCLK": 40, "SPK_DIN": 7, "SPK_SD": 41,
+    "SD_SCK": 36, "SD_MOSI": 35, "SD_MISO": 37, "SD_CS": 38, "SD_DET": 45,
+    "I2C_SDA": 8, "I2C_SCL": 18, "CHG_STAT": 17
+  },
+  "reserved": {"BOOT": 0, "UART_TX": 43, "UART_RX": 44}
+}
