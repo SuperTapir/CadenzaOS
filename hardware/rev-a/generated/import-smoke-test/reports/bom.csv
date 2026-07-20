@@ -1,0 +1,14 @@
+ref,function,mpn,manufacturer,lcsc,status,assembly
+U1,MCU/Wi-Fi/BLE,ESP32-S3-WROOM-1-N16R8,Espressif,C2913202,BASELINE,JLC_SMT
+DS1,Memory LCD,LS027B7DH01,Sharp,,USER_SUPPLIED,HAND_ASSEMBLY
+J_LCD1,LCD FPC connector,FH34SRJ-10S-0.5SH(50),Hirose,C324723,BASELINE,JLC_SMT
+U_MIC1,PDM microphone,IM69D130V01XTSA1,Infineon,C42464166,CANDIDATE_STOCK_RISK,JLC_SMT
+U_AMP1,I2S Class-D amplifier,MAX98357AETE+ or JLC-available non-WLCSP equivalent,Analog Devices,,CANDIDATE,JLC_SMT
+SPK1,Front speaker,TBD 28x18mm 4ohm 2W,TBD,,ACOUSTIC_SAMPLE_REQUIRED,HAND_ASSEMBLY
+U_CHG1,1S charger with power path,BQ24074-class,Texas Instruments or qualified alternate,,CANDIDATE,JLC_SMT
+U_5V1,5V boost,TPS61023,Texas Instruments,,CANDIDATE,JLC_SMT
+U_3V3_1,3.3V buck-boost >=1A peak,TBD,TBD,,POWER_BUDGET_REQUIRED,JLC_SMT
+U_FG1,1S fuel gauge,MAX17048,Analog Devices,,OPTIONAL_VARIANT,JLC_SMT
+ENC1,True quadrature encoder with center A push,TBD high-quality EC11,Alps Alpine or qualified alternate,,MECHANICAL_SAMPLE_REQUIRED,HAND_ASSEMBLY
+"SW_MENU,SW_B",Menu and B tactile keys,TBD 1.6-2.6N tactile,TBD,,MECHANICAL_SAMPLE_REQUIRED,HAND_ASSEMBLY
+BT1,Protected LiPo,TBD 603450-class 900-1200mAh,Qualified battery vendor,,VENDOR_DRAWING_REQUIRED,HAND_ASSEMBLY

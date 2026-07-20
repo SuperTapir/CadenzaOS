@@ -1,0 +1,16 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Smoke_Connector
+#
+DEF Smoke_Connector J 0 40 Y Y 1 F N
+F0 "J" 0 150 50 H V C CNN
+F1 "Smoke_Connector" 0 -150 50 H V C CNN
+DRAW
+S -100 100 100 -100 0 1 10 f
+X 1 1 -250 50 150 R 40 40 1 1 P
+X 2 2 -250 -50 150 R 40 40 1 1 P
+ENDDRAW
+ENDDEF
+#
+#End Library

@@ -1,0 +1,66 @@
+{
+  "schema": "cadenza-import-smoke-manifest/v0.1",
+  "generator": "hardware/rev-a/scripts/generate.py",
+  "compatibility_target": "5.1/5.9 import subset",
+  "expected": {
+    "nets": [
+      "GND",
+      "TEST_SIG"
+    ],
+    "connectors": 2,
+    "mounting_holes": 2,
+    "copper_zones": 1,
+    "routed_segments": 2
+  },
+  "board": {
+    "width": 40.0,
+    "height": 30.0,
+    "layers": 4
+  },
+  "artifacts": {
+    "cadenza_rev_a_smoke-jlc-import.zip": {
+      "bytes": 2810,
+      "sha256": "e3716c74c1c325b6953c67ed10a80aa4f732abc765e5840b4b8dbdee5d62ef17"
+    },
+    "kicad/cadenza_rev_a_smoke-cache.lib": {
+      "bytes": 300,
+      "sha256": "99f54131df05637683fec9dce86e374b91fa160061370861fa49dd87b303aa83"
+    },
+    "kicad/cadenza_rev_a_smoke.kicad_pcb": {
+      "bytes": 3911,
+      "sha256": "09a986732c349928623a87ea2c26b51a461e25edfb0c64f09baeb031dfbd7b69"
+    },
+    "kicad/cadenza_rev_a_smoke.lib": {
+      "bytes": 300,
+      "sha256": "99f54131df05637683fec9dce86e374b91fa160061370861fa49dd87b303aa83"
+    },
+    "kicad/cadenza_rev_a_smoke.pro": {
+      "bytes": 675,
+      "sha256": "debc7f2fc44351fe85e3e9c991f3887645cdede174a90412c719d0e66c34563f"
+    },
+    "kicad/cadenza_rev_a_smoke.sch": {
+      "bytes": 1023,
+      "sha256": "ccd28699af7aac12ac79a43ee03dce17f6087ada6363b2614ed211793c96e827"
+    },
+    "mechanical/rev-a-enclosure-envelope.stl": {
+      "bytes": 1532,
+      "sha256": "c40ed18ce0ec8867e0ed55cb1613708b81d00893a57c7b0bc193239726658528"
+    },
+    "mechanical/smoke-board-outline.dxf": {
+      "bytes": 296,
+      "sha256": "e1cf491cd847e76637a7977a6fda70a8f97651e9f07ceca4bbe2224d6aa0bc78"
+    },
+    "reports/bom.csv": {
+      "bytes": 1244,
+      "sha256": "2f5ddd021d27428bdb50ec9a5c76e7ff6eab38a6ca3342aa237df962cb5251de"
+    },
+    "reports/gpio_rev_a.h": {
+      "bytes": 886,
+      "sha256": "40f08eea0a36ad251668916a8c7bc6eaa85167a7cd6c116cce08b96e0798db8c"
+    },
+    "reports/import-checklist.md": {
+      "bytes": 654,
+      "sha256": "1416014a0f09e6a1263e1832dccbc9c5e09021a83b21328e06269eb72801ded4"
+    }
+  }
+}
