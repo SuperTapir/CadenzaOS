@@ -1,0 +1,365 @@
+{
+  "analyzer_type": "thermal",
+  "schema_version": "1.4.0",
+  "inputs": {
+    "source_files": [
+      "hardware/rev-a/product-d1/review-v40/schematic.json",
+      "hardware/rev-a/product-d1/review-v40/pcb.json"
+    ],
+    "source_hashes": {
+      "hardware/rev-a/product-d1/review-v40/schematic.json": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+      "hardware/rev-a/product-d1/review-v40/pcb.json": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f"
+    },
+    "run_id": "20260721T011705Z-05d91e",
+    "config_hash": null,
+    "upstream_artifacts": {
+      "schematic": {
+        "path": "hardware/rev-a/product-d1/review-v40/schematic.json",
+        "sha256": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      },
+      "pcb": {
+        "path": "hardware/rev-a/product-d1/review-v40/pcb.json",
+        "sha256": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      }
+    }
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "summary": {
+    "total_findings": 4,
+    "components_assessed": 1,
+    "active": 4,
+    "suppressed": 0,
+    "by_severity": {
+      "error": 1,
+      "warning": 1,
+      "info": 2
+    },
+    "thermal_score": 82,
+    "total_board_dissipation_w": 1.0,
+    "hottest_component": {
+      "ref": "R73",
+      "tj_estimated_c": 185.0
+    },
+    "components_analyzed": 1,
+    "components_above_85c": 1,
+    "components_above_tjmax": 1,
+    "ambient_c": 35.0
+  },
+  "findings": [
+    {
+      "category": "thermal_safety",
+      "severity": "error",
+      "rule_id": "TS-001",
+      "confidence": "heuristic",
+      "title": "R73 (0.01R 1%) estimated Tj 185\u00b0C exceeds abs max 125\u00b0C",
+      "description": "shunt_resistor dissipates 1.000W in unknown package (R\u03b8_JA=150\u00b0C/W). Source: 10.000A\u00b2 \u00d7 0.01\u03a9.",
+      "components": [
+        "R73"
+      ],
+      "recommendation": "Reduce power dissipation (lower Vin, reduce load), improve thermal path (add thermal vias, larger copper pour), or use a more efficient topology (switching regulator instead of LDO).",
+      "detector": "analyze_thermal",
+      "summary": "R73 (0.01R 1%) estimated Tj 185\u00b0C exceeds abs max 125\u00b0C",
+      "nets": [],
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Thermal Safety",
+        "impact": "Component reliability",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "thermal:TS-001:r73"
+    },
+    {
+      "category": "thermal_safety",
+      "severity": "warning",
+      "rule_id": "TS-004",
+      "confidence": "deterministic",
+      "title": "R73 (0.01R 1%) dissipates 1.00W with no thermal vias",
+      "description": "shunt_resistor in unknown package dissipates 1.000W but no thermal pad vias were detected. Heat removal relies entirely on surface copper.",
+      "components": [
+        "R73"
+      ],
+      "recommendation": "Add thermal vias under the component's thermal pad or exposed pad. Minimum 5 vias for QFN, more for larger pads.",
+      "detector": "analyze_thermal",
+      "summary": "R73 (0.01R 1%) dissipates 1.00W with no thermal vias",
+      "nets": [],
+      "pins": [],
+      "evidence_source": "geometry",
+      "report_context": {
+        "section": "Thermal Safety",
+        "impact": "Component reliability",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "thermal:TS-004:r73"
+    },
+    {
+      "category": "thermal_proximity",
+      "severity": "info",
+      "rule_id": "TP-001",
+      "confidence": "deterministic",
+      "title": "MLCC C70 is 2.8mm from R73 (0.01R 1%) (Tj=185\u00b0C)",
+      "description": "Ceramic capacitors lose effective capacitance at elevated temperatures. X7R loses ~15% at 85\u00b0C, X5R loses ~30%.",
+      "components": [
+        "C70",
+        "R73"
+      ],
+      "recommendation": "Verify capacitor maintains adequate capacitance at the elevated temperature, or use C0G/NP0 dielectric for temperature-critical applications.",
+      "detector": "analyze_thermal",
+      "summary": "MLCC C70 is 2.8mm from R73 (0.01R 1%) (Tj=185\u00b0C)",
+      "nets": [],
+      "pins": [],
+      "evidence_source": "geometry",
+      "report_context": {
+        "section": "Thermal Proximity",
+        "impact": "Component reliability",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "thermal:TP-001:c70"
+    },
+    {
+      "category": "thermal_proximity",
+      "severity": "info",
+      "rule_id": "TP-001",
+      "confidence": "deterministic",
+      "title": "MLCC C10 is 7.8mm from R73 (0.01R 1%) (Tj=185\u00b0C)",
+      "description": "Ceramic capacitors lose effective capacitance at elevated temperatures. X7R loses ~15% at 85\u00b0C, X5R loses ~30%.",
+      "components": [
+        "C10",
+        "R73"
+      ],
+      "recommendation": "Verify capacitor maintains adequate capacitance at the elevated temperature, or use C0G/NP0 dielectric for temperature-critical applications.",
+      "detector": "analyze_thermal",
+      "summary": "MLCC C10 is 7.8mm from R73 (0.01R 1%) (Tj=185\u00b0C)",
+      "nets": [],
+      "pins": [],
+      "evidence_source": "geometry",
+      "report_context": {
+        "section": "Thermal Proximity",
+        "impact": "Component reliability",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "thermal:TP-001:c10"
+    }
+  ],
+  "assessments": [
+    {
+      "ref": "R73",
+      "value": "0.01R 1%",
+      "component_type": "shunt_resistor",
+      "pdiss_w": 1.0,
+      "pdiss_source": "10.000A\u00b2 \u00d7 0.01\u03a9",
+      "pdiss_confidence": "deterministic",
+      "package": "unknown",
+      "rtheta_ja_raw": 150.0,
+      "rtheta_ja_source": "default",
+      "pcb_correction": 1.0,
+      "pcb_correction_notes": [],
+      "rtheta_ja_effective": 150.0,
+      "ambient_c": 35.0,
+      "tj_estimated_c": 185.0,
+      "tj_max_c": 125.0,
+      "tj_max_source": "default_125",
+      "margin_c": -60.0,
+      "position": {
+        "x": 109.5,
+        "y": 98.0
+      },
+      "detector": "analyze_thermal",
+      "rule_id": "TH-DET",
+      "category": "thermal",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "heuristic_rule",
+      "summary": "Thermal: R73 Tj=185.0C (margin -60.0C)",
+      "description": "Component R73 in unknown package: Tj=185.0C, margin -60.0C to Tj_max (125.0C).",
+      "components": [
+        "R73"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Thermal",
+        "impact": "",
+        "standard_ref": ""
+      }
+    }
+  ],
+  "elapsed_s": 0.001,
+  "missing_info": {
+    "default_rtheta_ja": [
+      "R73"
+    ],
+    "default_tj_max": [
+      "R73"
+    ]
+  },
+  "trust_summary": {
+    "total_findings": 4,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 3,
+      "heuristic": 1,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 0,
+      "heuristic_rule": 1,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 3,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "stage_filter": {
+    "active_stage": "pre_fab",
+    "included_count": 0,
+    "excluded_count": 4
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 4,
+      "by_severity": {
+        "error": 1,
+        "warning": 1,
+        "info": 2
+      },
+      "by_category": {
+        "thermal_safety": 2,
+        "thermal_proximity": 2
+      },
+      "top_issues": [
+        {
+          "category": "thermal_safety",
+          "severity": "error",
+          "rule_id": "TS-001",
+          "confidence": "heuristic",
+          "title": "R73 (0.01R 1%) estimated Tj 185\u00b0C exceeds abs max 125\u00b0C",
+          "description": "shunt_resistor dissipates 1.000W in unknown package (R\u03b8_JA=150\u00b0C/W). Source: 10.000A\u00b2 \u00d7 0.01\u03a9.",
+          "components": [
+            "R73"
+          ],
+          "recommendation": "Reduce power dissipation (lower Vin, reduce load), improve thermal path (add thermal vias, larger copper pour), or use a more efficient topology (switching regulator instead of LDO).",
+          "detector": "analyze_thermal",
+          "summary": "R73 (0.01R 1%) estimated Tj 185\u00b0C exceeds abs max 125\u00b0C",
+          "nets": [],
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Thermal Safety",
+            "impact": "Component reliability",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "thermal:TS-001:r73"
+        },
+        {
+          "category": "thermal_safety",
+          "severity": "warning",
+          "rule_id": "TS-004",
+          "confidence": "deterministic",
+          "title": "R73 (0.01R 1%) dissipates 1.00W with no thermal vias",
+          "description": "shunt_resistor in unknown package dissipates 1.000W but no thermal pad vias were detected. Heat removal relies entirely on surface copper.",
+          "components": [
+            "R73"
+          ],
+          "recommendation": "Add thermal vias under the component's thermal pad or exposed pad. Minimum 5 vias for QFN, more for larger pads.",
+          "detector": "analyze_thermal",
+          "summary": "R73 (0.01R 1%) dissipates 1.00W with no thermal vias",
+          "nets": [],
+          "pins": [],
+          "evidence_source": "geometry",
+          "report_context": {
+            "section": "Thermal Safety",
+            "impact": "Component reliability",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "thermal:TS-004:r73"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 2,
+      "by_category": {
+        "thermal_safety": 2
+      },
+      "top_issues": [
+        {
+          "rule_id": "TS-001",
+          "severity": "error",
+          "summary": "R73 (0.01R 1%) estimated Tj 185\u00b0C exceeds abs max 125\u00b0C",
+          "recommendation": "Reduce power dissipation (lower Vin, reduce load), improve thermal path (add thermal vias, larger copper pour), or use a more efficient topology (switching regulator instead of LDO).",
+          "category": "thermal_safety"
+        },
+        {
+          "rule_id": "TS-004",
+          "severity": "warning",
+          "summary": "R73 (0.01R 1%) dissipates 1.00W with no thermal vias",
+          "recommendation": "Add thermal vias under the component's thermal pad or exposed pad. Minimum 5 vias for QFN, more for larger pads.",
+          "category": "thermal_safety"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 1,
+      "warning_count": 1,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "needs_work",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "1 error, 1 warning across 1 category. Layout stage has blockers."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260721T011705Z-05d91e"
+  }
+}

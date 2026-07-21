@@ -19,8 +19,8 @@
     "ENC_A": 4, "ENC_B": 5, "A_SW": 6,
     "B_SW": 47, "MENU_SW": 48,
     "MIC_PDM_CLK": 39, "MIC_PDM_DATA": 42,
-    "SPK_BCLK": 46, "SPK_LRCLK": 40, "SPK_DIN": 7, "SPK_SD": 41,
-    "SD_SCK": 36, "SD_MOSI": 35, "SD_MISO": 37, "SD_CS": 38, "SD_DET": 45,
+    "SPK_BCLK": 16, "SPK_LRCLK": 40, "SPK_DIN": 7, "SPK_SD": 41,
+    "SD_SCK": 36, "SD_MOSI": 35, "SD_MISO": 37, "SD_CS": 38, "SD_DET": 9,
     "I2C_SDA": 8, "I2C_SCL": 18, "CHG_STAT": 17
   },
   "reserved": {"BOOT": 0, "UART_TX": 43, "UART_RX": 44}

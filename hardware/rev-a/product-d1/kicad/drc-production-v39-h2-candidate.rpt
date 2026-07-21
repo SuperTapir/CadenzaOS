@@ -1,0 +1,34 @@
+** Drc report for cadenza-d1-production-v39-h2-candidate.kicad_pcb **
+** Created on 2026-07-21T08:59:09 **
+** Report includes: Errors, Warnings **
+
+** Found 4 DRC violations **
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.2241 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(108.8557 mm, 56.4241 mm): 走线 [/LCD_SCLK] (F.Cu), 长度: 29.7719 mm
+    @(120.0000 mm, 55.0000 mm): H2 的 NPTH 焊盘
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(109.2991 mm, 56.0224 mm): 走线 [/LCD_SCS] (F.Cu), 长度: 25.1889 mm
+    @(120.0000 mm, 55.0000 mm): H2 的 NPTH 焊盘
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(113.7517 mm, 54.2769 mm): 走线 [/LCD_EXTCOMIN] (F.Cu), 长度: 27.0483 mm
+    @(120.0000 mm, 55.0000 mm): H2 的 NPTH 焊盘
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(117.8113 mm, 54.2430 mm): 走线 [/LCD_EXTMODE] (B.Cu), 长度: 33.0742 mm
+    @(120.0000 mm, 55.0000 mm): H2 的 NPTH 焊盘
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

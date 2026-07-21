@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "project": "cadenza-d1-surface-gnd-solid-candidate.kicad_pro",
+  "current": "2026-07-21_1758",
+  "runs": {
+    "2026-07-21_1753": {
+      "source_hashes": {
+        "cadenza-d1.kicad_sch": "sha256:e586a1e9fb6bacdf1090a791e7fd16f5e2f4d2cba55c3ada4bda02ed65c7c324",
+        "cadenza-d1-rev-a-production.kicad_pcb": "sha256:3a5f9cbc1e83da05e2026490513b3223b213026bb3c1d3e0f4fa06a05cd50f18",
+        "schematic.json": "sha256:a4db26c3d9895c2e768635246aa1d5d64e11aba62a55ae461b8f89463901f554",
+        "pcb.json": "sha256:b5960384eb209e9b680f291bf80564fb02d30867388ef52652f6789546072b22"
+      },
+      "outputs": {
+        "schematic": "schematic.json",
+        "pcb": "pcb.json",
+        "cross_analysis": "cross_analysis.json",
+        "thermal": "thermal.json",
+        "emc": "emc.json",
+        "spice": "spice.json",
+        "gerber": "gerber.json"
+      },
+      "scripts": {
+        "schematic": "analyze_schematic.py cadenza-d1.kicad_sch"
+      },
+      "generated": "2026-07-21T17:58:23+08:00",
+      "pinned": false
+    },
+    "2026-07-21_1758": {
+      "source_hashes": {
+        "schematic.json": "sha256:a4db26c3d9895c2e768635246aa1d5d64e11aba62a55ae461b8f89463901f554"
+      },
+      "outputs": {
+        "schematic": "schematic.json",
+        "pcb": "pcb.json",
+        "cross_analysis": "cross_analysis.json",
+        "thermal": "thermal.json",
+        "emc": "emc.json",
+        "spice": "spice.json",
+        "gerber": "gerber.json"
+      },
+      "scripts": {
+        "spice": "simulate_subcircuits.py"
+      },
+      "generated": "2026-07-21T17:58:49+08:00",
+      "pinned": false
+    }
+  }
+}

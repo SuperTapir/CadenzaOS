@@ -1,0 +1,797 @@
+===== BQ24074RGTR.pdf =====
+matched pages: [1, 2, 3, 5, 6, 17, 29, 30, 31, 32, 33]
+--- PDF page 1 ---
+start up sequence allow the bq2407x to meet USB-IF• Supports up to 1.5-A Charge Current with Current
+inrush current specifications. Additionally, the inputMonitoring Output (ISET) dynamic power management (VIN-DPM) prevents the• Programmable Input Current Limit up to 1.5 A for charger from crashing incorrectly configured USBWall Adapters sources.
+• System Output Tracks Battery Voltage (bq24072) The bq2407x features dynamic power path• Programmable Termination Current (bq24074) management (DPPM) that powers the system while
+• Battery Disconnect Function with SYSOFF Input simultaneously and independently charging the
+battery. The DPPM circuit reduces the charge current(bq24075, bq24079)
+when the input current limit causes the system output• Programmable Pre-Charge and Fast-Charge to fall to the DPPM threshold; thus, supplying theSafety Timers system load at all times while monitoring the charge
+• Reverse Current, Short-Circuit and Thermal current separately. This feature reduces the number
+Protection of charge and discharge cycles on the battery, allows
+for proper charge termination and enables the system• NTC Thermistor Input
+to run with a defective or absent battery pack.• Proprietary Start-up Sequence Limits Inrush
+Current Device Information(1)
+• Status Indication – Charging/Done, Power Good PART NUMBER PACKAGE BODY SIZE (NOM)
+bq24072Typical Application Circuit
+bq24073
+bq24074 VSON (16) 3.00 mm × 3.00 mm
+bq24075
+bq24079
+(1) For all available packages, see the orderable addendum at
+the end of the datasheet.
+1
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications,
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+--- PDF page 2 ---
+bq24072, bq24073, bq24074, bq24075, bq24079
+SLUS810K – SEPTEMBER 2008 – REVISED MARCH 2015 www.ti.com
+Table of Contents
+9.3 Feature Description................................................. 151 Features .................................................................. 1
+9.4 Device Functional Modes........................................ 272 Applications ........................................................... 1
+10 Application and Implementation........................ 293 Description ............................................................. 1
+10.1 Application Information.......................................... 294 Revision History..................................................... 2
+10.2 Typical Application ................................................ 295 Description (continued)......................................... 4
+10.3 System Examples ................................................. 336 Device Comparison Table..................................... 4
+11 Power Supply Recommendations ..................... 357 Pin Configuration and Functions ......................... 5 12 Layout................................................................... 358 Specifications......................................................... 6 12.1 Layout Guidelines ................................................. 358.1 Absolute Maximum Ratings ..................................... 6 12.2 Layout Example .................................................... 368.2 ESD Ratings.............................................................. 6 12.3 Thermal Considerations ........................................ 378.3 Recommended Operating Conditions....................... 7
+13 Device and Documentation Support ................. 388.4 Thermal Information .................................................. 7
+13.1 Device Support...................................................... 388.5 Dissipation Ratings ................................................... 7
+13.2 Related Links ........................................................ 388.6 Electrical Characteristics........................................... 8
+13.3 Trademarks ........................................................... 388.7 Typical Characteristics ............................................ 10
+13.4 Electrostatic Discharge Caution ............................ 389 Detailed Description ............................................ 13 13.5 Glossary ................................................................ 389.1 Overview ................................................................. 13
+14 Mechanical, Packaging, and Orderable9.2 Functional Block Diagram ....................................... 14 Information ........................................................... 38
+4 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision J (January 2015) to Revision K Page
+• Deleted package type code from Device Comparison Table. See the POA at the end of the data sheet. .......................... 4
+• Changed ICHG Battery fast charge current range MIN specification from "150 mA" to "100 mA"........................................... 9
+Changes from Revision I (January 2014) to Revision J Page
+• Added ESD Ratings table, Feature Description section, Device Functional Modes, Application and Implementation
+section, Power Supply Recommendations section, Layout section, Device and Documentation Support section, and
+Mechanical, Packaging, and Orderable Information section .................................................................................................. 1
+Changes from Revision H (December 2013) to Revision I Page
+• Changed resistor value from "3 kΩ" to "8.9 kΩ" in the Pin Functions table ISET Description paragraph.............................. 5
+• Changed RISET spec MAX value from "3000" to "8900" in the Recommended Operating Conditions table. ......................... 7
+• Changed resistor value from "3 kΩ" to "5.9 kΩ" in the Battery Charging section paragraph. .............................................. 21
+Changes from Revision G (July 2011) to Revision H Page
+• Changed ICHG Battery fast charge current range MIN specification from "300 mA" to "150 mA"........................................... 9
+Changes from Revision F (September 2010) to Revision G Page
+• Added ESD human body model specification to Abs Maximum Ratings table. ..................................................................... 6
+2 Submit Documentation Feedback Copyright © 2008–2015, Texas Instruments Incorporated
+Product Folder Links: bq24072 bq24073 bq24074 bq24075 bq24079
+--- PDF page 3 ---
+• Changed 10 x 45 s/kΩ to 10 x 48 s/kΩ under section Program 6.25hour......(TMR) ........................................................... 30
+Changes from Revision D (June 2009) to Revision E Page
+• Changed globally RT1 and RT2 to Rs and Rp..................................................................................................................... 26
+• Added equations 2 and 3 plus explanations and table......................................................................................................... 26
+Changes from Revision C (March 2009) to Revision D Page
+• Added Device number bq24079. ............................................................................................................................................ 1
+Changes from Revision B (January 2009) to Revision C Page
+• Changed Maximum input current factor values. .................................................................................................................... 8
+Changes from Revision A (December 2008) to Revision B Page
+• Changed VBAT(REG) max value From 4.24 V To: 4.23 V.......................................................................................................... 9
+Changes from Original (September 2008) to Revision A Page
+• Changed device Features. ..................................................................................................................................................... 1
+• Changed Typical Application Circuit....................................................................................................................................... 1
+• Changed Description. ............................................................................................................................................................. 1
+• Changed description of CHG pin............................................................................................................................................ 5
+• Changed SYSOFF Description............................................................................................................................................... 5
+• Added Figure 34 through Figure 1. ...................................................................................................................................... 10
+• Changed DETAILED FUNCTIONAL DESCRIPTION section. ............................................................................................. 13
+• Changed the Simplified Block Diagram ................................................................................................................................ 14
+• Changed text in section - STATUS INDICATORS (PGOOD, CHG) .................................................................................... 24
+• Changed Table - CHG STATUS INDICATOR...................................................................................................................... 24
+• Changed Equation 8 and Equation 9 .................................................................................................................................. 26
+• Changed APPLICATION CIRCUITS section........................................................................................................................ 29
+• Added Using bq24075 to Disconnect the Battery from the System, Figure 42.................................................................... 34
+• Changed section - Half-Wave Adaptors ............................................................................................................................... 35
+Copyright © 2008–2015, Texas Instruments Incorporated Submit Documentation Feedback 3
+Product Folder Links: bq24072 bq24073 bq24074 bq24075 bq24079
+--- PDF page 5 ---
+CE
+ISET
+PGOOD
+VSS
+TMR IN
+EN2 EN1
+16 15 14 13
+5 6 7 8
+bq24072
+bq24073
+bq24072, bq24073, bq24074, bq24075, bq24079
+www.ti.com SLUS810K – SEPTEMBER 2008 – REVISED MARCH 2015
+7 Pin Configuration and Functions
+RGT Package
+16 Pins
+Top View
+Pin Functions
+PIN
+I/O DESCRIPTION
+NAME '72, '73 '74 '75, '79
+Charger Power Stage Output and Battery Voltage Sense Input. Connect BAT to the positive terminal of theBAT 2, 3 2, 3 2, 3 I/O battery. Bypass BAT to VSS with a 4.7-μF to 47-μF ceramic capacitor.
+Charge Enable Active-Low Input. Connect CE to a high logic level to place the battery charger in standby
+mode. In standby mode, OUT is active and battery supplement mode is still available. Connect CE to a lowCE 4 4 4 I logic level to enable the battery charger. CE is internally pulled down with approximately 285 kΩ. Do not
+leave CE unconnected to ensure proper operation.
+Open-Drain Charging Status Indication Output. CHG pulls to VSS when the battery is charging. CHG is high
+CHG 9 9 9 O impedance when charging is complete and when charger is disabled. Connect CHG to the desired logic
+voltage rail using a 1kΩ-100kΩ resistor, or use with an LED for visual indication.
+EN1 6 6 6 I Input Current Limit Configuration Inputs. Use EN1 and EN2 control the maximum input current and enable
+USB compliance. See Table 2 for the description of the operation states. EN1 and EN2 are internally pulled
+EN2 5 5 5 I down with ≉285 kΩ. Do not leave EN1 or EN2 unconnected to ensure proper operation.
+Adjustable Current Limit Programming Input. Connect a 1100-Ω to 8-kΩ resistor from ILIM to VSS to program
+ILIM 12 12 12 I the maximum input current (EN2=1, EN1=0). The input current includes the system load and the battery
+charge current. Leaving ILIM unconnected disables all charging.
+Input Power Connection. Connect IN to the external DC supply (AC adapter or USB port). The input operating
+range is 4.35 V to 6.6 V (bq24072, bq24073, bq24075, and bq24079) or 4.35 V to 10.5 V (bq23074). TheIN 13 13 13 I input can accept voltages up to 26 V without damage but operation is suspended. Connect bypass capacitor
+1 μF to 10 μF to VSS.
+Fast Charge Current Programming Input. Connect a 590-Ω to 8.9-kΩ resistor from ISET to VSS to program
+the fast charge current level. Charging is disabled if ISET is left unconnected. While charging, the voltage atISET 16 16 16 I/O ISET reflects the actual charging current and can be used to monitor charge current. See Charge Current
+Translator for more details.
+Termination Current Programming Input. Connect a 0-Ω to 15-kΩ resistor from ITERM to VSS to program the
+ITERM – 15 – I termination current. Leave ITERM unconnected to set the termination current to the default 10% termination
+threshold.
+System Supply Output. OUT provides a regulated output when the input is below the OVP threshold and
+above the regulation voltage. When the input is out of the operation range, OUT is connected to VBAT exceptOUT 10, 11 10, 11 10, 11 O when SYSOFF is high (bq24075 and bq24079 only). Connect OUT to the system load. Bypass OUT to VSS
+with a 4.7-μF to 47-μF ceramic capacitor.
+Open-drain Power Good Status Indication Output. PGOOD pulls to VSS when a valid input source is
+PGOOD 7 7 7 O detected. PGOOD is high-impedance when the input power is not within specified limits. Connect PGOOD to
+the desired logic voltage rail using a 1-kΩ to 100-kΩ resistor, or use with an LED for visual indication.
+System Enable Input. Connect SYSOFF high to turn off the FET connecting the battery to the system output.
+When an adapter is connected, charging is also disabled. Connect SYSOFF low for normal operation.SYSOFF – – 15 I SYSOFF is internally pulled up to VBAT through a large resistor (approximately 5 MΩ). Do not leave SYSOFF
+unconnected to ensure proper operation.
+Termination Disable Input. Connect TD high to disable charger termination. Connect TD to VSS to enable
+charger termination. TD is checked during startup only and cannot be changed during operation. See the TDTD 15 – – I section in this datasheet for a description of the behavior when termination is disabled. TD is internally pulled
+down to VSS with approximately 285 kΩ. Do not leave TD unconnected to ensure proper operation.
+Copyright © 2008–2015, Texas Instruments Incorporated Submit Documentation Feedback 5
+Product Folder Links: bq24072 bq24073 bq24074 bq24075 bq24079
+
+===== BQ27441DRZR-G1A.pdf =====
+matched pages: [2, 4, 15, 16, 17]
+--- PDF page 2 ---
+bq27441-G1
+SLUSBH1C – NOVEMBER 2013 – REVISED DECEMBER 2014 www.ti.com
+Table of Contents
+8.12 SHUTDOWN and WAKE-UP Timing ...................... 91 Features .................................................................. 1
+8.13 Typical Characteristics ............................................ 92 Applications ........................................................... 1
+9 Detailed Description ............................................ 103 Description ............................................................. 1
+9.1 Overview ................................................................. 104 Simplified Schematic............................................. 1
+9.2 Functional Block Diagram ....................................... 105 Revision History..................................................... 2
+9.3 Feature Description................................................. 106 Device Comparison Table..................................... 3 9.4 Device Functional Modes........................................ 117 Pin Configuration and Functions ......................... 4 9.5 Programming........................................................... 11
+8 Specifications......................................................... 5 10 Application and Implementation........................ 158.1 Absolute Maximum Ratings ...................................... 5 10.1 Application Information.......................................... 158.2 ESD Ratings.............................................................. 5 10.2 Typical Applications .............................................. 158.3 Recommended Operating Conditions...................... 5 11 Power Supply Recommendation ....................... 188.4 Thermal Information .................................................. 5 11.1 Power Supply Decoupling ..................................... 188.5 Supply Current ......................................................... 6
+12 Layout................................................................... 188.6 Digital Input and Output DC Characteristics ............ 6
+12.1 Layout Guidelines ................................................. 188.7 LDO Regulator, Wake-up, and Auto-Shutdown DC
+12.2 Layout Example .................................................... 19Characteristics ........................................................... 7
+13 Device and Documentation Support ................. 208.8 LDO Regulator, Wake-up, and Auto-shutdown AC
+Characteristics ........................................................... 7 13.1 Documentation Support ........................................ 20
+8.9 ADC (Temperature and Cell Measurement) 13.2 Trademarks ........................................................... 20
+Characteristics ........................................................... 7 13.3 Electrostatic Discharge Caution ............................ 20
+8.10 Integrating ADC (Coulomb Counter) Characteristics 13.4 Glossary ................................................................ 20................................................................................... 7
+14 Mechanical, Packaging, and Orderable8.11 I2C-Compatible Interface Communication Timing Information ........................................................... 20Characteristics ........................................................... 8
+5 Revision History
+Changes from Revision B (August 2014) to Revision C Page
+• Changed simplified schematic by adding two 1 µF capacitors ............................................................................................. 1
+• Added description for connecting 1-µF capacitor .................................................................................................................. 4
+• Added information for connecting GPOUT ............................................................................................................................ 4
+• Changed Handling Ratings to ESD Ratings........................................................................................................................... 5
+• Changed connection description for BAT pin ...................................................................................................................... 18
+• Changed recommend to required......................................................................................................................................... 18
+• Added arrow to C BAT from text............................................................................................................................................. 19
+Changes from Revision A (January 2014) to Revision B Page
+• Added Handling Ratings table, Feature Description section, Device Functional Modes, Application and
+Implementation section, Power Supply Recommendations section, Layout section, Device and Documentation
+Support section, and Mechanical, Packaging, and Orderable Information section ............................................................... 1
+• Changed LiMnO4 to LiCoO2.................................................................................................................................................... 4
+• Updated BAT pin description ................................................................................................................................................. 4
+• Updated BIN pin description .................................................................................................................................................. 4
+• Updated GPOUT pin description ........................................................................................................................................... 4
+• Updated SRN and SRP pin descriptions................................................................................................................................ 4
+• Changed the Ilkg parameters .................................................................................................................................................. 6
+2 Submit Documentation Feedback Copyright © 2013–2014, Texas Instruments Incorporated
+Product Folder Links: bq27441-G1
+--- PDF page 4 ---
+GPOUT
+BIN
+bq27441-G1
+SLUSBH1C – NOVEMBER 2013 – REVISED DECEMBER 2014 www.ti.com
+7 Pin Configuration and Functions
+Pin Functions
+PIN
+TYPE (1) DESCRIPTION
+NAME NUMBER
+LDO regulator input and battery voltage measurement input. Kelvin sense connect to positive
+BAT 6 PI, AI battery terminal (PACKP). Connect a capacitor (1 µF) between BAT and VSS. Place the capacitor
+close to the gauge.
+Battery insertion detection input. If OpConfig [BI_PU_EN] = 1 (default), a logic low on the pin is
+detected as battery insertion. For a removable pack, the BIN pin can be connected to VSS
+through a pulldown resistor on the pack, typically the 10-kΩ thermistor; the system board should
+use a 1.8-MΩ pullup resistor to VDD to ensure the BIN pin is high when a battery is removed. If
+the battery is embedded in the system, it is recommended to leave [BI_PU_EN] = 1 and use aBIN 10 DI 10-kΩ pulldown resistor from BIN to VSS. If [BI_PU_EN] = 0, then the host must inform the gauge
+of battery insertion and removal with the BAT_INSERT and BAT_REMOVE subcommands. A 10-
+kΩ pulldown resistor should be placed between BIN and VSS, even if this pin is unused.
+NOTE: The BIN pin must not be shorted directly to VCC or VSS and any pullup resistor on the BIN
+pin must be connected only to VDD and not an external voltage rail.
+This open-drain output can be configured to indicate BAT_LOW when the OpConfig
+[BATLOWEN] bit is set. By default [BATLOWEN] is cleared and this pin performs an interrupt
+function (SOC_INT) by pulsing for specific events, such as a change in state-of-charge. Signal
+GPOUT 12 DO polarity for these functions is controlled by the [GPIOPOL] configuration bit. This pin should not
+be left floating, even if unused; therefore, a 10-kΩ pullup resistor is recommended. If the device
+is in shutdown mode, then toggling GPOUT will make the gauge exit shutdown. Therefore, it is
+recommended to connect GPOUT to a GPIO of the host MCU.
+NC 4, 9, 11 — No internal connection. May be left floating or tied to VSS.
+SCL 2 DIO Slave I2C serial bus for communication with system (Master). Open-drain pins. Use with external
+10-kΩ pullup resistors (typical) for each pin. If the external pullup resistors will be disconnected
+from these pins during normal operation, recommend using external 1-MΩ pulldown resistors toSDA 1 DIO
+VSS at each pin to avoid floating inputs.
+SRN 7 AI Coulomb counter differential inputs expecting an external 10 mΩ, 1% sense resistor in the high-
+side current path. Kelvin sense connect SRP to the positive battery terminal (PACKP) side of the
+external sense resistor. Kelvin sense connect SRN to the other side of the external sense
+SRP 8 AI resistor, the positive connection to the system (VSYS). See the Simplified Schematic. No
+calibration is required. The fuel gauge is pre-calibrated for a standard 10 mΩ, 1% sense resistor.
+1.8-V regulator output. Decouple with 0.47-μF ceramic capacitor to VSS. This pin is not intendedVDD 5 PO to provide power for other devices in the system.
+VSS 3 PI Ground pin
+(1) IO = Digital input-output, AI = Analog input, P = Power connection
+4 Submit Documentation Feedback Copyright © 2013–2014, Texas Instruments Incorporated
+Product Folder Links: bq27441-G1
+--- PDF page 15 ---
+NOTE
+Information in the following application section is not part of the TI component
+specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+responsible for determining suitability of components for their purposes. Customers should
+validate and test their design implementation to confirm system functionality.
+10.1 Application Information
+The bq27441-G1 fuel gauge is a microcontroller peripheral that provides system-side fuel gauging for single-cell
+Li-Ion batteries. The device requires minimal configuration and uses One Time Programmable (OTP) Non-
+Volatile Memory (NVM). Battery fuel gauging with the fuel gauge requires connections only to PACK+ and
+PACK– for a removable battery pack or embedded battery circuit. To allow for optimal performance in the end
+application, special considerations must be taken to ensure minimization of measurement error through proper
+printed circuit board (PCB) board layout. Such requirements are detailed in Design Requirements.
+10.2 Typical Applications
+Figure 6. Typical Application
+10.2.1 Design Requirements
+As shipped from the Texas Instruments factory, many bq27441-G1 parameters in OTP NVM are left in the
+unprogrammed state (zero) while some parameters directly associated with the CHEMID are preprogrammed.
+This partially programmed configuration facilitates customization for each end application. Upon device reset, the
+contents of OTP are copied to associated volatile RAM-based Data Memory blocks. For proper operation, all
+parameters in RAM-based Data Memory require initialization — either by updating Data Memory parameters in a
+lab/evaluation situation or by programming the OTP for customer production. Chapter 6 in the bq27441-G1
+Technical Reference Manual (SLUUAC9) shows the default value and a typically expected value appropriate for
+most of applications.
+Copyright © 2013–2014, Texas Instruments Incorporated Submit Documentation Feedback 15
+Product Folder Links: bq27441-G1
+--- PDF page 16 ---
+bq27441-G1
+SLUSBH1C – NOVEMBER 2013 – REVISED DECEMBER 2014 www.ti.com
+Typical Applications (continued)
+10.2.2 Detailed Design Procedure
+10.2.2.1 BAT Voltage Sense Input
+A ceramic capacitor at the input to the BAT pin is used to bypass AC voltage ripple to ground, greatly reducing
+its influence on battery voltage measurements. It proves most effective in applications with load profiles that
+exhibit high-frequency current pulses (that is, cell phones) but is recommended for use in all applications to
+reduce noise on this sensitive high-impedance measurement node.
+10.2.2.2 Integrated LDO Capacitor
+The fuel gauge has an integrated LDO with an output on the VDD pin of approximately 1.8 V. A capacitor of value
+at least 0.47 μF should be connected between the VDD pin and VSS. The capacitor should be placed close to the
+gauge IC and have short traces to both the VDD pin and VSS.
+10.2.2.3 Sense Resistor Selection
+Any variation encountered in the resistance present between the SRP and SRN pins of the fuel gauge will affect
+the resulting differential voltage, and derived current, it senses. As such, it is recommended to select a sense
+resistor with minimal tolerance and temperature coefficient of resistance (TCR) characteristics. The standard
+recommendation based on best compromise between performance and price is a 1% tolerance, 50 ppm drift
+sense resistor with a 1-W power rating.
+16 Submit Documentation Feedback Copyright © 2013–2014, Texas Instruments Incorporated
+Product Folder Links: bq27441-G1
+
+===== DM3AT-SF-PEJM5.pdf =====
+matched pages: []
+
+===== ESP32-S3-WROOM-1-N16R8.pdf =====
+matched pages: []
+
+===== FH34SRJ-10S-0.5SH_50_.pdf =====
+matched pages: [3, 4]
+--- PDF page 3 ---
+FH34SRJ Series● 0.5mm Pitch, 1.0mm above the board Top and Top Bottom Contact, Back-Flip Actuator Flexible Printed Circuit & Flexible Flat Cable ZIF Connectors
+3
+×Number of contacts
+Contact No.1
+Polarization MarkCav No.Number of contacts indicator HRS mark
+Lot No.
+■ Connector Dimensions
+Unit : mm
+Part No. HRS No. No. of Contacts ABCD
+FH34SRJ-4S-0.5SH(50) 580-1238-7 50 4 4 1.5 2.53 3.38
+FH34SRJ-5S-0.5SH(50) 580-1264-7 50 5 4.5 2 3.03 3.88
+FH34SRJ-6S-0.5SH(50) 580-1236-1 50 6 5 2.5 3.53 4.38
+FH34SRJ-7S-0.5SH(50) 580-1200-0 50 7 5.5 3 4.03 4.88
+FH34SRJ-8S-0.5SH(50) 580-1231-8 50 8 6 3.5 4.53 5.38
+FH34SRJ-9S-0.5SH(50) 580-1262-1 50 9 6.5 4 5.03 5.88
+FH34SRJ-10S-0.5SH(50) 580-1251-5 50 10 7 4.5 5.53 6.38
+FH34SRJ-11S-0.5SH(50) 580-1258-4 50 11 7.5 5 6.03 6.88
+FH34SRJ-12S-0.5SH(50) 580-1253-0 50 12 8 5.5 6.53 7.38
+FH34SRJ-14S-0.5SH(50) 580-1252-8 50 14 9 6.5 7.53 8.38
+FH34SRJ-16S-0.5SH(50) 580-1259-7 50 16 10 7.5 8.57 9.38
+FH34SRJ-18S-0.5SH(50) 580-1248-0 50 18 11 8.5 9.57 10.38
+FH34SRJ-20S-0.5SH(50) 580-1256-9 50 20 12 9.5 10.57 11.38
+FH34SRJ-22S-0.5SH(50) 580-1254-3 50 22 13 10.5 11.57 12.38
+FH34SRJ-24S-0.5SH(50) 580-1255-6 50 24 14 11.5 12.57 13.38
+FH34SRJ-26S-0.5SH(50) 580-1247-8 50 26 15 12.5 13.57 14.38
+FH34SRJ-30S-0.5SH(50) 580-1232-0 50 30 17 14.5 15.57 16.38
+FH34SRJ-34S-0.5SH(50) 580-1261-9 50 34 19 16.5 17.53 18.38
+FH34SRJ-40S-0.5SH(50) 580-1260-6 50 40 22 19.5 20.53 21.38
+FH34SRJ-45S-0.5SH(50) 580-1265-0 50 45 24.5 22 23.03 23.88
+FH34SRJ-50S-0.5SH(50) 580-1266-2 50 50 27 24.5 25.53 26.38
+Tape and reel packaging.
+Order by number of reels.
+	
+	
+	
+Note 1 : The coplanarity of each terminal lead within specified dimension is 0.1mm Max.
+Note 2 : Packaged on tape and reel only. Check packaging specification.
+Note 3 : Slight variations in color of the plastic compounds do not affect form, fit or function of the connector.
+Note 4 : After reflow, the terminal plating may change color, however this does not represent a quality issue.
+Nov.1.2018  Copyright 2018 HIROSE ELECTRIC CO., LTD. All Rights Reserved.
+--- PDF page 4 ---
+FH34SRJ Series● 0.5mm Pitch, 1.0mm above the board Top and Top Bottom Contact, Back-Flip Actuator Flexible Printed Circuit & Flexible Flat Cable ZIF Connectors
+4
+Recommended PCB Mounting Pattern
+B X
+0.3±0.05
+0.065
+nX
+X0.1
+Contact No.1
+Connector image : underside
+ʢ0.25ʣ
+ʢ0.25ʣ
+ʢ2.9ʣ
+ʢ0.15ʣ
+ʢ0.15ʣ
+ʢ0.185ʣ
+0.5
+E±0.1
+0.8±0.05 0.8±0.05
+3.3±0.05
+F±0.1
+⿆Recommended FPC/FFC Dimensions
+Unit : mm
+Part No. HRS No. No. of Contacts BEFG
+FH34SRJ-4S-0.5SH(50) 580-1238-7 50 4 1.5 3.1 3.9 2.5
+FH34SRJ-5S-0.5SH(50) 580-1264-7 50 5 2 3.6 4.4 3
+FH34SRJ-6S-0.5SH(50) 580-1236-1 50 6 2.5 4.1 4.9 3.5
+FH34SRJ-7S-0.5SH(50) 580-1200-0 50 7 3 4.6 5.4 4
+FH34SRJ-8S-0.5SH(50) 580-1231-8 50 8 3.5 5.1 5.9 4.5
+FH34SRJ-9S-0.5SH(50) 580-1262-1 50 9 4 5.6 6.4 5
+FH34SRJ-10S-0.5SH(50) 580-1251-5 50 10 4.5 6.1 6.9 5.5
+FH34SRJ-11S-0.5SH(50) 580-1258-4 50 11 5 6.6 7.4 6
+FH34SRJ-12S-0.5SH(50) 580-1253-0 50 12 5.5 7.1 7.9 6.5
+FH34SRJ-14S-0.5SH(50) 580-1252-8 50 14 6.5 8.1 8.9 7.5
+FH34SRJ-16S-0.5SH(50) 580-1259-7 50 16 7.5 9.1 9.9 8.5
+FH34SRJ-18S-0.5SH(50) 580-1248-0 50 18 8.5 10.1 10.9 9.5
+FH34SRJ-20S-0.5SH(50) 580-1256-9 50 20 9.5 11.1 11.9 10.5
+FH34SRJ-22S-0.5SH(50) 580-1254-3 50 22 10.5 12.1 12.9 11.5
+FH34SRJ-24S-0.5SH(50) 580-1255-6 50 24 11.5 13.1 13.9 12.5
+FH34SRJ-26S-0.5SH(50) 580-1247-8 50 26 12.5 14.1 14.9 13.5
+FH34SRJ-30S-0.5SH(50) 580-1232-0 50 30 14.5 16.1 16.9 15.5
+FH34SRJ-34S-0.5SH(50) 580-1261-9 50 34 16.5 18.1 18.9 17.5
+FH34SRJ-40S-0.5SH(50) 580-1260-6 50 40 19.5 21.1 21.9 20.5
+FH34SRJ-45S-0.5SH(50) 580-1265-0 50 45 22 23.6 24.4 23
+FH34SRJ-50S-0.5SH(50) 580-1266-2 50 50 24.5 26.1 26.9 25.5
+nXContact No.1(Top contact)
+(Uncovered area)
+B
+0.5±0.07
+G±0.05
+0.5±0.07
+R0.2±0.1
+0.5 0.3±0.03 0.3±0.030.03Z
+Z
+Contact No.1(Bottom contact)
+1.5±0.3
+2.5±0.3(Stiffener)
+P
+nX
+PCB mounting 
+pattern image
+0.25±0.03
+0.65±0.03
+3.3±0.03
+0.8±0.03
+E±0.03
+F±0.03
+0.5
+B Y
+Y0.03
+Recommended Stencil Pattern (Recommended Stencil 
+ Thickness : t=0.1mm)
+Note 1 :  Dimension P shall be 0.5mm min.
+Note 2 :  The recommended FPC pattern above has been designed only for FH34SRJ series.
+When using the FPC for FH19SC series (lower contact), uncoverd area shall be 2.5±0.3mm and stiffener shall be 
+3.5mm min.
+⿆Recommended PCB mounting pattern and metal mask dimensionsɹ
+Nov.1.2018  Copyright 2018 HIROSE ELECTRIC CO., LTD. All Rights Reserved.
+
+===== HC-TYPE-C-16P-01A-G.pdf =====
+matched pages: []
+
+===== IM73D122V01XTMA1.pdf =====
+matched pages: [11]
+--- PDF page 11 ---
+4 Package information
+Figure 12 IM73D122V01 package drawing
+Table 9 IM73D122V01 pin configuration
+Pin Number Name Description
+1 DATA PDM data output
+2 VDD Power supply
+3 CLOCK PDM clock input
+4 LR PDM left/right  select
+5 GND Ground
+IM73D122V01
+Ultra-low noise high sensitivity digital XENSIVTM MEMS microphone
+Package information
+Datasheet 11 1.00
+2022-08-12
+
+===== MAX98357AETE_T.pdf =====
+matched pages: [2, 15]
+--- PDF page 2 ---
+Class AB Performance
+www.maximintegrated.com
+Maxim Integrated  │ 2
+TABLE OF CONTENTS
+General Description ............................................................................ 1
+Features ..................................................................................... 1
+Applications .................................................................................. 1
+Simplified Block Diagram ........................................................................ 1
+Absolute Maximum Ratings ...................................................................... 4
+Package Thermal Characteristics  ................................................................. 4
+Electrical Characteristics  ........................................................................ 4
+Typical Operating Characteristics  ................................................................. 9
+Pin Configurations  ............................................................................ 15
+Pin Description ............................................................................... 15
+Detailed Description ........................................................................... 16
+Digital Audio Interface Modes .................................................................. 16
+MCLK Elimination ........................................................................ 16
+BCLK Jitter Tolerance ..................................................................... 16
+BCLK Polarity ............................................................................ 16
+LRCLK Polarity .......................................................................... 16
+Standby Mode ........................................................................... 16
+DAC Digital Filters ........................................................................... 17
+S D_M O D E and Shutdown Operation ............................................................. 17
+I2S and Left Justified Mode ................................................................. 19
+TDM Mode .............................................................................. 19
+Class D Speaker Amplifier  .................................................................... 28
+Ultra-Low EMI Filterless Output Stage  ........................................................ 28
+Speaker Current Limit ..................................................................... 28
+Gain Selection ........................................................................... 28
+Click-and-Pop Suppression ................................................................. 28
+Applications Information ........................................................................ 29
+Filterless Class D Operation ................................................................... 33
+Power-Supply Input .......................................................................... 33
+Layout and Grounding........................................................................ 33
+Functional Diagram ........................................................................... 33
+WLP Applications Information .................................................................. 34
+Ordering Information  .......................................................................... 34
+Package Information  .......................................................................... 35
+Revision History .............................................................................. 38
+--- PDF page 15 ---
+N.C.
+TQFN
+MAX98357A
+MAX98357B
+TOP VIEW
++
+MAX98357A/
+MAX98357B
+Tiny, Low-Cost, PCM Class D Amplifier with  
+Class AB Performance
+www.maximintegrated.com
+Maxim Integrated  │ 15
+Pin Description
+Pin Configurations
+
+===== TPS61023DRLR.pdf =====
+matched pages: [2, 3, 12]
+--- PDF page 2 ---
+Table of Contents
+1 特性................................................................................... 1
+2 应用................................................................................... 1
+3 说明................................................................................... 1
+4 Revision History.............................................................. 2
+5 Pin Configuration and Functions...................................3
+Pin Functions.................................................................... 3
+6 Specifications.................................................................. 4
+6.1 Absolute Maximum Ratings........................................ 4
+6.2 ESD Ratings............................................................... 4
+6.3 Recommended Operating Conditions.........................4
+6.4 Thermal Information....................................................4
+6.5 Electrical Characteristics.............................................5
+6.6 Typical Characteristics................................................6
+7 Detailed Description........................................................8
+7.1 Overview.....................................................................8
+7.2 Functional Block Diagram...........................................8
+7.3 Feature Description.....................................................9
+7.4 Device Functional Modes..........................................10
+8 Application and Implementation..................................12
+8.1 Application Information............................................. 12
+8.2 Typical Application.................................................... 12
+9 Power Supply Recommendations................................18
+10 Layout...........................................................................19
+10.1 Layout Guidelines................................................... 19
+10.2 Layout Example...................................................... 19
+10.3 Thermal Considerations..........................................20
+11 Device and Documentation Support..........................21
+11.1 Device Support........................................................21
+11.2 接收文档更新通知................................................... 21
+11.3 支持资源..................................................................21
+11.4 Trademarks............................................................. 21
+11.5 静电放电警告...........................................................21
+11.6 术语表..................................................................... 21
+12 Mechanical, Packaging, and Orderable 
+Information.................................................................... 21
+12.1 Package Option Addendum....................................22
+12.2 Tape and Reel Information......................................24
+4 Revision History
+注：以前版本的页码可能与当前版本的页码不同
+Changes from Revision A (October 2019) to Revision B (August 2020) Page
+• 更新了整个文档中的表格、图和交叉参考的编号格式。..................................................................................... 1
+• Changed unit in 图 6-6 to μA.............................................................................................................................6
+• Changed 80 mA to 800 mA in 图 8-7 ...............................................................................................................17
+Changes from Revision * (September 2019) to Revision A (October 2019) Page
+• 将“产品状态”更改为“量产数据”以说明“量产”版本..................................................................................1
+TPS61023
+ZHCSK97B – SEPTEMBER 2019 – REVISED AUGUST 2020 www.ti.com.cn
+2 Submit Document Feedback Copyright © 2021 Texas Instruments Incorporated
+Product Folder Links: TPS61023
+--- PDF page 3 ---
+5 Pin Configuration and Functions
+FB VOUT
+EN
+VIN
+SW
+GND
+图 5-1. DRL Package 6-Pin SOT563 Top View
+Pin Functions
+PIN
+I/O DESCRIPTION
+NO. NAME
+1 FB I Voltage feedback of adjustable output voltage
+2 EN I Enable logic input. Logic high voltage enables the device. Logic low voltage disables the 
+device and turns it into shutdown mode.
+3 VIN I IC power supply input
+4 GND PWR Ground pin of the IC
+5 SW PWR The switch pin of the converter. It is connected to the drain of the internal low-side power 
+MOSFET and the source of the internal high-side power MOSFET.
+6 VOUT PWR Boost converter output
+www.ti.com.cn
+TPS61023
+ZHCSK97B – SEPTEMBER 2019 – REVISED AUGUST 2020
+Copyright © 2021 Texas Instruments Incorporated Submit Document Feedback 3
+Product Folder Links: TPS61023
+--- PDF page 12 ---
+8 Application and Implementation
+Note
+以下应用部分的信息不属于 TI 组件规范，TI 不担保其准确性和完整性。客户应负责确定 TI 组件是否适
+用于其应用。客户应验证并测试其设计，以确保系统功能。
+8.1 Application Information
+The TPS61023 is a synchronous boost converter designed to operate from an input voltage supply range 
+between 0.5 V and 5.5 V with a typically 3.7-A valley switch current limit. The TPS61023 typically operates at a 
+quasi-constant 1-MHz frequency PWM at moderate-to-heavy load currents when the input voltage is above 1.5 
+V. The switching frequency changes to 0.5 MHz gradually with the input voltage changing from 1.5 V to 1 V for 
+better efficiency and high step-up ratio. When the input voltage is below 1 V, the switching frequency is fixed at a 
+quasi-constant 0.5 MHz. At light load currents, the TPS61023 converter operates in power-save mode with PFM 
+to achieve high efficiency over the entire load current range.
+8.2 Typical Application
+The TPS61023 provides a power supply solution for portable devices powered by batteries or backup 
+applications powered by super-capacitors. With typical 3.7-A switch current capability, the TPS61023 can output 
+5 V and 1.5 A from a single-cell Li-ion battery.
+VIN
+EN
+SW
+VOUT
+FB
+GND
+L1
+R1
+R2OFF
+ON
+C1
+C2
+2.7 V to 4.35 V
+1 µH
+TPS61023
+5 V
+10 µF 
+2 x 22 µF
+100 k
+ 
+732 k
+ 
+图 8-1. Li-ion Battery to 5-V Boost Converter
+8.2.1 Design Requirements
+The design parameters are listed in 表 8-1.
+表 8-1. Design Parameters
+PARAMETERS VALUES
+Input voltage 2.7 V to 4.35 V
+Output voltage 5 V
+Output current 1.5 A
+Output voltage ripple ±50 mV
+TPS61023
+ZHCSK97B – SEPTEMBER 2019 – REVISED AUGUST 2020 www.ti.com.cn
+12 Submit Document Feedback Copyright © 2021 Texas Instruments Incorporated
+Product Folder Links: TPS61023
+
+===== TPS63070RNMR.pdf =====
+matched pages: [2, 3, 13, 16, 17, 20, 21, 26, 27]
+--- PDF page 2 ---
+2
+TPS63070
+ZHCSFB9B – JUNE 2016 – REVISED MARCH 2019 www.ti.com.cn
+Copyright © 2016–2019, Texas Instruments Incorporated
+目目录录
+1 特特性性.......................................................................... 1
+2 应应用用.......................................................................... 1
+3 说说明明.......................................................................... 1
+4 修修订订历历史史记记录录 ........................................................... 2
+5 Device Comparison Table..................................... 3
+6 Pin Configuration and Functions ......................... 3
+7 Specifications......................................................... 4
+7.1 Absolute Maximum Ratings ...................................... 4
+7.2 ESD Ratings ............................................................ 4
+7.3 Recommended Operating Conditions....................... 4
+7.4 Thermal Information ................................................. 5
+7.5 Electrical Characteristics........................................... 6
+7.6 Typical Characteristics .............................................. 8
+8 Detailed Description .............................................. 9
+8.1 Overview ................................................................... 9
+8.2 Functional Block Diagram TPS63070 ....................... 9
+8.3 Functional Block Diagram TPS630701 ................... 10
+8.4 Feature Description................................................. 10
+8.5 Device Functional Modes........................................ 14
+9 Application and Implementation ........................ 16
+9.1 Application Information............................................ 16
+9.2 Typical Application for adjustable version .............. 16
+9.3 Typical Application for Fixed Voltage Version ....... 26
+10 Power Supply Recommendations ..................... 31
+10.1 Thermal Information .............................................. 31
+11 Layout................................................................... 32
+11.1 Layout Guidelines ................................................. 32
+11.2 Layout Example .................................................... 32
+12 器器件件和和文文档档支支持持 ..................................................... 33
+12.1 器件支持 ............................................................... 33
+12.2 相关链接................................................................ 33
+12.3 接收文档更新通知 ................................................. 33
+12.4 社区资源................................................................ 33
+12.5 商标 ....................................................................... 33
+12.6 静电放电警告......................................................... 33
+12.7 术语表 ................................................................... 33
+13 机机械械、、封封装装和和可可订订购购信信息息....................................... 33
+4 修修订订历历史史记记录录
+注：之前版本的页码可能与当前版本有所不同。
+Changes from Revision A (August 2016) to Revision B Page
+• 已添加 添加了多处微小的编辑更新和更正 .............................................................................................................................. 1
+• 已添加 添加了“TPS630702 型号” ........................................................................................................................................... 1
+• Added TPS630702 Variant with "output discharge=on" option .............................................................................................. 3
+• Added TPS630702 VOUT info ............................................................................................................................................... 7
+• Added TPS630702 VFB info at 3 instances ........................................................................................................................... 7
+• Added Parameter Name ROD to output discharge resistance row........................................................................................ 7
+• Added Link to TechNote SLVAE62 ...................................................................................................................................... 13
+• Added more descriptive text for better understanding.......................................................................................................... 15
+• Changed Description of Discharge Feature, reflecting TPS630702..................................................................................... 15
+• Changed description of output voltage programming to match EC table............................................................................. 17
+• Added table of content for application curves ...................................................................................................................... 20
+• 已添加 添加了“TPS630702 型号” ......................................................................................................................................... 33
+Changes from Original (June 2016) to Revision A Page
+• 已添加 完整版量产数据数据表 ................................................................................................................................................ 1
+--- PDF page 3 ---
+FB2 14
+15
+Top View Bottom View
+3
+TPS63070
+www.ti.com.cn ZHCSFB9B – JUNE 2016 – REVISED MARCH 2019
+Copyright © 2016–2019, Texas Instruments Incorporated
+5 Device Comparison Table
+Device Number Features Output Voltage Marking
+TPS63070 output discharge = off adjustable 3070
+TPS630701 output discharge = off fixed 5 V 0701
+TPS630702 output discharge = on adjustable 0702
+6 Pin Configuration and Functions
+QFN PACKAGE
+Pin Functions
+PIN
+I/O DESCRIPTION
+NAME NO.
+EN 14 I Enable input. Pull high to enable the device, pull low to disable the device.
+FB 5 I Voltage feedback of adjustable versions, must be connected to VOUT on fixed output voltage
+versions
+GND 4 Control / logic ground
+L1 11 I Connection for Inductor
+L2 9 I Connection for Inductor
+PS/SYNC 1 I Pull to low for forced PWM, pull high for PWM/PFM (power save) mode. Apply a clock signal to
+synchronize to an external frequency.
+PG 2 O Open drain power good output
+PGND 10 Power ground
+VIN 12, 13 I Supply voltage for power stage
+VOUT 7,8 O Buck-boost converter output
+VAUX 3 O Connection for Capacitor of internal voltage regulator. This pin must not be loaded externally.
+VSEL 15 I Voltage scaling input. A high level on this pin enables a transistor which pulls pin FB2 to GND.
+FB2 6 O Voltage scaling output. Connect a resistor from FB to FB2 to change the voltage divider ratio on the
+feedback pin. A logic high level on VSEL will change the output voltage to a higher value. Leave the
+pin open or connect to GND if not used.
+--- PDF page 13 ---
+0603
+10 kΩ
+Copyright © 2016, Texas Instruments Incorporated
+13
+TPS63070
+www.ti.com.cn ZHCSFB9B – JUNE 2016 – REVISED MARCH 2019
+Copyright © 2016–2019, Texas Instruments Incorporated
+8.4.7 VSEL and FB2 pins
+The VSEL pin allows to dynamically select between two different output voltages on the adjustable version. The
+voltage is set by a resistor that is connected between the FB and the FB2 pin. FB2 is connected to GND if VSEL
+= high. FB2 is high impedance if VSEL= low. The transition speed during a voltage change is defined by the loop
+bandwidth of the device and can be adjusted by adding a feed-forward capacitor in parallel to R1.
+Figure 8. Typical Application using VSEL
+The resistor values for the feedback divider and FB2 are in the 50-500kΩ range. R3 is calculated as follows:
+(1)
+For more details on how to use VSEL see Technote SLVAE62.
+8.4.8 Overvoltage Protection
+TPS6307x has a built in over-voltage protection which limits the output voltage. The voltage is internally sensed
+on the VOUT pin. In case the voltage on the feedback pin is not set correctly or the connection is open, this limits
+the output voltage to a value that protects the output stage from a too high voltage by limiting it to a internally set
+value.
+Input over-voltage protection forces PFM mode to make sure the device is protected against boosting from the
+output to the input. This may happen if there is a large capacitor charged above the nominal voltage on the
+output and the supply on the input is removed. In PWM mode, the device is able to provide current from the
+output to the input causing a rise in the input voltage. In PFM mode, the current to the input is blocked so the
+input voltage can not rise. The input over-voltage protection does not protect the device from a too high voltage
+applied to the input but just from operating such that the device itself causes a rise of the input voltage above
+critical levels. Both over-voltage sensors are de-glitched by approximately 1µs.
+8.4.9 Undervoltage Lockout
+When the input voltage drops, the undervoltage lockout prevents mis-operation by switching off the device. The
+converter starts operation when the input voltage exceeds the threshold by a hysteresis of typically 850 mV. This
+relatively large hysteresis is needed to allow operation down to 2-V of supply voltage for the case when the
+output voltage is up at 3-V or above but restrict start-up for the case when the output voltage is zero. For start-up
+when the output voltage has not yet ramped, the rising UVLO threshold was set to a level that allows to start
+TPS63070 at a supply voltage where the load does not demand much load current.
+8.4.10 Overtemperature Protection
+The junction temperature (Tj) of the device is monitored by an internal temperature sensor. When Tj exceeds the
+thermal shutdown temperature, the device goes into thermal shutdown. The power stage is turned off and PG
+goes low. When Tj decreases below the hysteresis amount, the converter resumes normal operation, beginning
+with a Soft Start cycle. To avoid unstable conditions, a hysteresis of typically 20°C is implemented on the thermal
+shutdown temperature. In addition, the thermal shutdown is debounced by approximately 10 µs.
+--- PDF page 16 ---
+Copyright © 2016–2019, Texas Instruments Incorporated
+9 Application and Implementation
+NOTE
+Information in the following applications sections is not part of the TI component
+specification, and TI does not warrant its accuracy or completeness. TI’s customers are
+responsible for determining suitability of components for their purposes. Customers should
+validate and test their design implementation to confirm system functionality.
+9.1 Application Information
+The TPS6307x is a high efficiency, low quiescent current buck-boost converter suitable for applications where
+the input voltage can be higher or lower than the output voltage. The TPS63070 is internally supplied from the
+higher of the input voltage or output voltage. For proper operation either one or both need to have a voltage of
+3.0 V or above but must not exceed their maximum rating.
+9.2 Typical Application for adjustable version
+Figure 10. Typical Application For Adjustable Version
+9.2.1 Design Requirements
+The design guidelines provide a component selection to operate the device within the recommended operating
+conditions. The input and output capacitors have been split into a small 0603 size capacitor close to the device
+pins and 0805 size capacitors to get the required capacitance.
+Table 2. Bill of Materials
+REFERENCE DESCRIPTION VALUE MANUFACTURER
+IC TPS63070RNM Texas Instruments
+L XFL4020-152ME 1.5 µH Coilcraft
+CIN GRM21BC71E106ME11L 2 x 10 µF / 25 V /
+X7S / 0805 Murata
+C1 TMK107BBJ106MA-T 10 µF / 25 V / X5R /
+0603 Taiyo Yuden
+COUT GRM21BC81C226ME44L 3 x 22 µF / 16 V /
+X6S / 0805 Murata
+C4 TMK107BBJ106MA-T 10 µF / 25 V / X5R /
+0603 Taiyo Yuden
+
+===== USBLC6-2SC6.pdf =====
+matched pages: []
+

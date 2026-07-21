@@ -1,0 +1,1085 @@
+** Drc report for cadenza-d1-rev-a-production-v48.kicad_pcb **
+** Created on 2026-07-21T14:16:16 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 283 DRC violations **
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1937 mm)
+    Local override; error
+    @(126.2328 mm, 86.7327 mm): 过孔 [/VSYS] (F.Cu - B.Cu)
+    @(123.3712 mm, 88.7547 mm): 走线 [/RUN_EN] (B.Cu), 长度: 7.7851 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1650 mm)
+    Local override; error
+    @(128.8761 mm, 83.2498 mm): 走线 [/RUN_EN] (B.Cu), 长度: 0.9347 mm
+    @(129.6750 mm, 81.0000 mm): 走线 [/FB_5V] (B.Cu), 长度: 2.1213 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1650 mm)
+    Local override; error
+    @(128.8761 mm, 82.3151 mm): 走线 [/RUN_EN] (B.Cu), 长度: 0.7992 mm
+    @(129.6750 mm, 81.0000 mm): 走线 [/FB_5V] (B.Cu), 长度: 2.1213 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1687 mm)
+    Local override; error
+    @(129.8250 mm, 81.0000 mm): B.Cu 上 R20 的焊盘 2 [/FB_5V]
+    @(130.2129 mm, 81.7500 mm): 走线 [/RUN_EN] (B.Cu), 长度: 2.4749 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1750 mm)
+    Local override; error
+    @(129.8250 mm, 81.0000 mm): B.Cu 上 R20 的焊盘 2 [/FB_5V]
+    @(129.4412 mm, 81.7500 mm): 走线 [/RUN_EN] (B.Cu), 长度: 0.7717 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1584 mm)
+    Local override; error
+    @(105.7500 mm, 53.3856 mm): 走线 [/LCD_SCLK] (F.Cu), 长度: 6.0100 mm
+    @(108.4344 mm, 55.5632 mm): 走线 [/LCD_SI] (F.Cu), 长度: 3.0892 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1651 mm)
+    Local override; error
+    @(126.1000 mm, 105.8000 mm): B.Cu 上 U7 的焊盘 4 [<no net>]
+    @(126.1000 mm, 106.2000 mm): 走线 [/GND] (B.Cu), 长度: 0.9464 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1656 mm)
+    Local override; error
+    @(126.6000 mm, 93.9600 mm): B.Cu 上 U3 的焊盘 14 [/RUN_EN]
+    @(126.6000 mm, 93.4600 mm): 走线 [/GND] (B.Cu), 长度: 0.6539 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1632 mm)
+    Local override; error
+    @(122.8198 mm, 55.5632 mm): 走线 [/LCD_SI] (F.Cu), 长度: 14.3854 mm
+    @(111.3000 mm, 54.6500 mm): F.Cu 上 J2 的焊盘 MP [<no net>]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1929 mm)
+    Local override; error
+    @(107.4372 mm, 53.7275 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+    @(108.4344 mm, 55.5632 mm): 走线 [/LCD_SI] (F.Cu), 长度: 3.0892 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1516 mm)
+    Local override; error
+    @(125.4064 mm, 57.6353 mm): 过孔 [/LCD_SCLK] (F.Cu - B.Cu)
+    @(122.8198 mm, 55.8288 mm): 走线 [/LCD_SI] (POWER), 长度: 35.0455 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1862 mm)
+    Local override; error
+    @(107.4372 mm, 53.7275 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+    @(107.2500 mm, 52.7500 mm): F.Cu 上 J2 的焊盘 4 [/LCD_EXTCOMIN]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1896 mm)
+    Local override; error
+    @(143.0880 mm, 87.3604 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+    @(144.0150 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 15 [unconnected-(U1-GPIO3-Pad15)]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(147.8250 mm, 87.5017 mm): 走线 [/LCD_SCS] (B.Cu), 长度: 4.5957 mm
+    @(144.0150 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 15 [unconnected-(U1-GPIO3-Pad15)]
+[shorting_items]: 短路了两个不同网络的项目 (网络 /LCD_SCS 和 /GND)
+    Local override; error
+    @(109.7750 mm, 53.7275 mm): 走线 [/LCD_SCS] (POWER), 长度: 47.1117 mm
+    @(139.8800 mm, 83.9800 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1537 mm)
+    Local override; error
+    @(109.4030 mm, 54.2812 mm): 过孔 [/LCD_EXTMODE] (F.Cu - B.Cu)
+    @(107.4372 mm, 53.7275 mm): 走线 [/LCD_SCS] (POWER), 长度: 2.3378 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1781 mm)
+    Local override; error
+    @(107.7500 mm, 52.2728 mm): 走线 [/LCD_DISP] (F.Cu), 长度: 1.2147 mm
+    @(107.2500 mm, 52.2381 mm): 走线 [/LCD_EXTCOMIN] (F.Cu), 长度: 2.0281 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1627 mm)
+    Local override; error
+    @(152.9050 mm, 76.8999 mm): 走线 [/LCD_EXTCOMIN] (POWER), 长度: 8.3949 mm
+    @(152.3423 mm, 77.1387 mm): 过孔 [/AMP_EN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1667 mm)
+    Local override; error
+    @(147.6764 mm, 71.6713 mm): 走线 [/LCD_EXTCOMIN] (POWER), 长度: 7.3944 mm
+    @(152.3423 mm, 77.1387 mm): 过孔 [/AMP_EN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1562 mm)
+    Local override; error
+    @(107.7500 mm, 52.2728 mm): 走线 [/LCD_DISP] (F.Cu), 长度: 1.2147 mm
+    @(108.2500 mm, 52.7500 mm): F.Cu 上 J2 的焊盘 6 [/+5V_LCD]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1752 mm)
+    Local override; error
+    @(151.5256 mm, 85.2713 mm): 走线 [/LCD_DISP] (POWER), 长度: 2.2970 mm
+    @(152.1008 mm, 83.8388 mm): 过孔 [/AMP_EN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1831 mm)
+    Local override; error
+    @(109.4030 mm, 54.2812 mm): 过孔 [/LCD_EXTMODE] (F.Cu - B.Cu)
+    @(108.6699 mm, 54.8606 mm): 走线 [/+5V_LCD] (F.Cu), 长度: 2.0305 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1818 mm)
+    Local override; error
+    @(151.5256 mm, 82.9743 mm): 走线 [/LCD_DISP] (POWER), 长度: 40.4858 mm
+    @(144.2689 mm, 74.8948 mm): 过孔 [/A_SW] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1573 mm)
+    Local override; error
+    @(148.3207 mm, 92.7293 mm): 走线 [/SD_CS] (POWER), 长度: 10.3453 mm
+    @(155.9932 mm, 85.9621 mm): 走线 [/SD_DAT0] (POWER), 长度: 3.4767 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1573 mm)
+    Local override; error
+    @(155.9932 mm, 82.4854 mm): 走线 [/SD_DAT0] (POWER), 长度: 1.4784 mm
+    @(155.6359 mm, 85.4141 mm): 走线 [/SD_CS] (POWER), 长度: 4.3579 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1620 mm)
+    Local override; error
+    @(148.3207 mm, 94.2914 mm): 走线 [/SD_CS] (POWER), 长度: 1.5621 mm
+    @(148.8827 mm, 93.0726 mm): 过孔 [/SD_DAT0] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1600 mm)
+    Local override; error
+    @(148.1750 mm, 93.2225 mm): 走线 [/SD_CMD] (B.Cu), 长度: 5.5352 mm
+    @(149.3750 mm, 95.2144 mm): 过孔 [/SD_CLK] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(158.7483 mm, 90.6940 mm): 走线 [/SD_CMD] (B.Cu), 长度: 6.7140 mm
+    @(159.7500 mm, 85.2500 mm): B.Cu 上 U1 的焊盘 27 [/BOOT_N]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1522 mm)
+    Local override; error
+    @(59.3500 mm, 58.8500 mm): F.Cu 上 U6 的焊盘 4 [/GND]
+    @(59.9402 mm, 58.0978 mm): 走线 [/+3V3_MAIN] (F.Cu), 长度: 0.9924 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1647 mm)
+    Local override; error
+    @(59.3500 mm, 58.8500 mm): F.Cu 上 U6 的焊盘 4 [/GND]
+    @(58.9478 mm, 58.0978 mm): 走线 [/+3V3_MAIN] (F.Cu), 长度: 1.3404 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1556 mm)
+    Local override; error
+    @(158.5000 mm, 80.0000 mm): F.Cu 上 J6 的焊盘 2 [/GND]
+    @(157.7944 mm, 80.2944 mm): 走线 [/+3V3_MAIN] (F.Cu), 长度: 1.7222 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1556 mm)
+    Local override; error
+    @(158.5000 mm, 80.0000 mm): F.Cu 上 J6 的焊盘 2 [/GND]
+    @(157.5000 mm, 80.0000 mm): 走线 [/+3V3_MAIN] (F.Cu), 长度: 0.4163 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1592 mm)
+    Local override; error
+    @(59.3500 mm, 58.8500 mm): F.Cu 上 U6 的焊盘 4 [/GND]
+    @(60.0587 mm, 58.2163 mm): 过孔 [/+3V3_MAIN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1987 mm)
+    Local override; error
+    @(106.7984 mm, 99.6931 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.0803 mm
+    @(106.4566 mm, 98.9444 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1771 mm)
+    Local override; error
+    @(107.1837 mm, 98.0000 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.3078 mm
+    @(106.4566 mm, 98.9444 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1939 mm)
+    Local override; error
+    @(126.7648 mm, 89.0811 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.1365 mm
+    @(127.2250 mm, 90.0000 mm): B.Cu 上 C14 的焊盘 1 [/VAUX_3V3]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1687 mm)
+    Local override; error
+    @(146.8250 mm, 92.0000 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.2414 mm
+    @(148.1750 mm, 92.0000 mm): B.Cu 上 R91 的焊盘 1 [/SD_CMD]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1939 mm)
+    Local override; error
+    @(127.9013 mm, 89.0811 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.3548 mm
+    @(128.7750 mm, 90.0000 mm): B.Cu 上 C14 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1572 mm)
+    Local override; error
+    @(154.1750 mm, 92.0000 mm): B.Cu 上 R93 的焊盘 1 [/SD_CD]
+    @(153.2250 mm, 92.8822 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.7178 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1643 mm)
+    Local override; error
+    @(126.3627 mm, 89.4832 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.5687 mm
+    @(127.2250 mm, 90.0000 mm): B.Cu 上 C14 的焊盘 1 [/VAUX_3V3]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1791 mm)
+    Local override; error
+    @(129.2561 mm, 89.0811 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 2.7137 mm
+    @(128.7750 mm, 90.0000 mm): B.Cu 上 C14 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1681 mm)
+    Local override; error
+    @(141.2046 mm, 106.1069 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 3.7273 mm
+    @(144.1750 mm, 107.0000 mm): B.Cu 上 R77 的焊盘 1 [/CHG_N]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1531 mm)
+    Local override; error
+    @(152.3395 mm, 98.4305 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.2523 mm
+    @(152.0890 mm, 97.6867 mm): 过孔 [/SD_CMD] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1762 mm)
+    Local override; error
+    @(99.9025 mm, 59.3740 mm): 走线 [/PDM_DATA] (B.Cu), 长度: 33.7035 mm
+    @(103.0000 mm, 65.0000 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 7.2122 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1623 mm)
+    Local override; error
+    @(127.2250 mm, 90.0000 mm): B.Cu 上 C14 的焊盘 1 [/VAUX_3V3]
+    @(126.3627 mm, 92.1493 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 2.6661 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1528 mm)
+    Local override; error
+    @(151.1750 mm, 92.0000 mm): B.Cu 上 R92 的焊盘 1 [/SD_DAT0]
+    @(149.8250 mm, 91.1222 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 2.1222 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1528 mm)
+    Local override; error
+    @(148.1750 mm, 92.0000 mm): B.Cu 上 R91 的焊盘 1 [/SD_CMD]
+    @(147.7028 mm, 91.1222 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 2.1222 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1762 mm)
+    Local override; error
+    @(99.9025 mm, 59.3740 mm): 走线 [/PDM_DATA] (B.Cu), 长度: 33.7035 mm
+    @(97.9002 mm, 59.9002 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 34.6752 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1938 mm)
+    Local override; error
+    @(152.0890 mm, 97.6867 mm): 过孔 [/SD_CMD] (F.Cu - B.Cu)
+    @(149.9863 mm, 98.4305 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 2.3532 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1664 mm)
+    Local override; error
+    @(136.1750 mm, 106.1303 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 6.7948 mm
+    @(136.8914 mm, 105.6530 mm): 过孔 [/ITERM_SET] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1751 mm)
+    Local override; error
+    @(149.9863 mm, 98.4305 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 11.0423 mm
+    @(157.9765 mm, 91.4658 mm): 过孔 [/SD_CMD] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /GND)
+    Local override; error
+    @(127.9012 mm, 89.0811 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 14.9346 mm
+    @(128.0700 mm, 79.7400 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1612 mm)
+    Local override; error
+    @(127.9012 mm, 89.0811 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 0.2519 mm
+    @(129.0659 mm, 88.8912 mm): 走线 [/I2C_SCL] (POWER), 长度: 13.9644 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1854 mm)
+    Local override; error
+    @(118.4562 mm, 98.0000 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 4.1944 mm
+    @(119.1916 mm, 99.4961 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1612 mm)
+    Local override; error
+    @(119.2342 mm, 98.0000 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 0.7780 mm
+    @(129.0659 mm, 88.8912 mm): 走线 [/I2C_SCL] (POWER), 长度: 13.9644 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1612 mm)
+    Local override; error
+    @(129.0659 mm, 88.8912 mm): 走线 [/I2C_SCL] (POWER), 长度: 13.9644 mm
+    @(127.9012 mm, 89.3330 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 12.2570 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1556 mm)
+    Local override; error
+    @(133.6816 mm, 97.8399 mm): 过孔 [/TMR_SET] (F.Cu - B.Cu)
+    @(136.1750 mm, 99.3355 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 5.9104 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1518 mm)
+    Local override; error
+    @(157.0926 mm, 82.7100 mm): 过孔 [/SD_CLK] (F.Cu - B.Cu)
+    @(157.7944 mm, 90.6224 mm): 走线 [/+3V3_MAIN] (POWER), 长度: 8.6058 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1981 mm)
+    Local override; error
+    @(156.2000 mm, 83.8750 mm): F.Cu 上 J6 的焊盘 MP [<no net>]
+    @(157.0926 mm, 82.7100 mm): 过孔 [/SD_CLK] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1766 mm)
+    Local override; error
+    @(157.7944 mm, 82.0166 mm): 过孔 [/+3V3_MAIN] (F.Cu - B.Cu)
+    @(157.0386 mm, 81.4400 mm): 走线 [/SD_DAT0] (B.Cu), 长度: 2.7114 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1825 mm)
+    Local override; error
+    @(143.4592 mm, 85.4983 mm): 走线 [/SD_CD] (B.Cu), 长度: 0.2499 mm
+    @(142.2500 mm, 85.2500 mm): B.Cu 上 U1 的焊盘 14 [/USB_D+]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1830 mm)
+    Local override; error
+    @(142.5357 mm, 87.6326 mm): 走线 [/SD_CD] (B.Cu), 长度: 1.0472 mm
+    @(143.0880 mm, 87.3604 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1825 mm)
+    Local override; error
+    @(143.2825 mm, 85.6750 mm): 走线 [/SD_CD] (B.Cu), 长度: 0.1375 mm
+    @(142.2500 mm, 85.2500 mm): B.Cu 上 U1 的焊盘 14 [/USB_D+]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1523 mm)
+    Local override; error
+    @(143.0880 mm, 87.3604 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+    @(142.5357 mm, 86.5593 mm): 走线 [/SD_CD] (B.Cu), 长度: 1.0733 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1793 mm)
+    Local override; error
+    @(143.2825 mm, 85.8125 mm): 走线 [/SD_CD] (B.Cu), 长度: 1.0561 mm
+    @(142.2500 mm, 85.2500 mm): B.Cu 上 U1 的焊盘 14 [/USB_D+]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(144.0150 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 15 [unconnected-(U1-GPIO3-Pad15)]
+    @(146.5550 mm, 85.4983 mm): 走线 [/SD_CD] (B.Cu), 长度: 3.0958 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1625 mm)
+    Local override; error
+    @(152.0069 mm, 82.2375 mm): 走线 [/B_SW] (F.Cu), 长度: 82.2177 mm
+    @(129.7500 mm, 82.7500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1575 mm)
+    Local override; error
+    @(107.2177 mm, 105.8928 mm): 过孔 [/USB_D-_CONN] (F.Cu - B.Cu)
+    @(105.6000 mm, 106.5100 mm): 走线 [/VBUS] (F.Cu), 长度: 1.8826 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1640 mm)
+    Local override; error
+    @(107.2177 mm, 105.8928 mm): 过孔 [/USB_D-_CONN] (F.Cu - B.Cu)
+    @(106.9312 mm, 105.1788 mm): 走线 [/VBUS] (F.Cu), 长度: 3.4688 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1548 mm)
+    Local override; error
+    @(141.4936 mm, 98.9162 mm): 走线 [/VBUS] (B.Cu), 长度: 1.5894 mm
+    @(145.6283 mm, 100.5355 mm): 走线 [/VSYS] (B.Cu), 长度: 3.9189 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1526 mm)
+    Local override; error
+    @(135.6026 mm, 104.4776 mm): 走线 [/VBUS] (B.Cu), 长度: 1.6978 mm
+    @(136.2750 mm, 103.6000 mm): B.Cu 上 C1 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1911 mm)
+    Local override; error
+    @(143.8486 mm, 101.4389 mm): 走线 [/VBUS] (B.Cu), 长度: 0.0813 mm
+    @(143.2500 mm, 101.5375 mm): 走线 [/TMR_SET] (B.Cu), 长度: 1.4500 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1947 mm)
+    Local override; error
+    @(117.1375 mm, 101.9500 mm): B.Cu 上 U8 的焊盘 4 [/USB_D+]
+    @(116.5839 mm, 101.0000 mm): 走线 [/VBUS] (B.Cu), 长度: 0.8258 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1715 mm)
+    Local override; error
+    @(141.4936 mm, 98.9162 mm): 走线 [/VBUS] (POWER), 长度: 5.9301 mm
+    @(140.5857 mm, 98.8038 mm): 过孔 [/ITERM_SET] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1893 mm)
+    Local override; error
+    @(105.4846 mm, 109.2343 mm): 走线 [/CC1] (F.Cu), 长度: 2.1107 mm
+    @(103.6800 mm, 107.8950 mm): J1 的PTH 焊盘 SH [<no net>]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1548 mm)
+    Local override; error
+    @(145.6283 mm, 100.5355 mm): 走线 [/VSYS] (B.Cu), 长度: 3.9189 mm
+    @(143.0830 mm, 98.9162 mm): 走线 [/VBUS] (B.Cu), 长度: 1.0827 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1548 mm)
+    Local override; error
+    @(145.6283 mm, 100.5355 mm): 走线 [/VSYS] (B.Cu), 长度: 3.9189 mm
+    @(143.8486 mm, 99.6818 mm): 走线 [/VBUS] (B.Cu), 长度: 1.7571 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1746 mm)
+    Local override; error
+    @(103.3739 mm, 109.2343 mm): 走线 [/CC1] (F.Cu), 长度: 4.8363 mm
+    @(103.6800 mm, 107.8950 mm): J1 的PTH 焊盘 SH [<no net>]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1646 mm)
+    Local override; error
+    @(109.2500 mm, 107.2550 mm): F.Cu 上 J1 的焊盘 A8 [unconnected-(J1-SBU1-PadA8)]
+    @(109.0503 mm, 108.5849 mm): 走线 [/CC2] (F.Cu), 长度: 0.9895 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1645 mm)
+    Local override; error
+    @(157.8035 mm, 77.7708 mm): 过孔 [/I2S_LRCLK] (F.Cu - B.Cu)
+    @(159.5000 mm, 78.6690 mm): 走线 [/ENC_A] (F.Cu), 长度: 4.6641 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1831 mm)
+    Local override; error
+    @(150.6027 mm, 73.2587 mm): 走线 [/ENC_A] (B.Cu), 长度: 0.4404 mm
+    @(150.0196 mm, 73.0782 mm): 过孔 [/ENC_B] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1961 mm)
+    Local override; error
+    @(150.0196 mm, 73.0782 mm): 过孔 [/ENC_B] (F.Cu - B.Cu)
+    @(150.6027 mm, 72.8183 mm): 走线 [/ENC_A] (B.Cu), 长度: 0.4571 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1831 mm)
+    Local override; error
+    @(150.0196 mm, 73.0782 mm): 过孔 [/ENC_B] (F.Cu - B.Cu)
+    @(150.2795 mm, 72.4951 mm): 走线 [/ENC_A] (B.Cu), 长度: 6.9729 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1857 mm)
+    Local override; error
+    @(152.7150 mm, 75.3710 mm): 走线 [/ENC_A] (B.Cu), 长度: 2.9872 mm
+    @(149.5000 mm, 76.4600 mm): B.Cu 上 U1 的焊盘 41 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1741 mm)
+    Local override; error
+    @(161.1904 mm, 81.2284 mm): 过孔 [/ENC_B] (F.Cu - B.Cu)
+    @(161.5000 mm, 80.0000 mm): F.Cu 上 J6 的焊盘 5 [/A_SW]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1971 mm)
+    Local override; error
+    @(158.5450 mm, 69.3319 mm): 过孔 [/PGOOD_N] (F.Cu - B.Cu)
+    @(161.1904 mm, 71.1329 mm): 走线 [/ENC_B] (POWER), 长度: 3.3732 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1842 mm)
+    Local override; error
+    @(158.5450 mm, 69.3319 mm): 过孔 [/PGOOD_N] (F.Cu - B.Cu)
+    @(158.8052 mm, 68.7477 mm): 走线 [/ENC_B] (POWER), 长度: 4.4551 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1527 mm)
+    Local override; error
+    @(156.3045 mm, 74.4600 mm): 走线 [/A_SW] (F.Cu), 长度: 7.3475 mm
+    @(160.5000 mm, 80.0000 mm): F.Cu 上 J6 的焊盘 4 [/ENC_B]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(160.7517 mm, 71.2800 mm): 走线 [/LED_CTRL] (B.Cu), 长度: 5.2815 mm
+    @(159.7500 mm, 76.3600 mm): B.Cu 上 U1 的焊盘 34 [/AMP_EN]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1808 mm)
+    Local override; error
+    @(151.5511 mm, 80.1192 mm): 走线 [/MENU_SW] (F.Cu), 长度: 16.0891 mm
+    @(135.6500 mm, 80.6500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(160.7517 mm, 76.5615 mm): 走线 [/LED_CTRL] (B.Cu), 长度: 1.4989 mm
+    @(159.7500 mm, 76.3600 mm): B.Cu 上 U1 的焊盘 34 [/AMP_EN]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1592 mm)
+    Local override; error
+    @(135.2685 mm, 80.3127 mm): 走线 [/MENU_SW] (F.Cu), 长度: 57.4041 mm
+    @(135.6500 mm, 80.6500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1778 mm)
+    Local override; error
+    @(154.8908 mm, 83.4589 mm): 走线 [/MENU_SW] (F.Cu), 长度: 4.7230 mm
+    @(128.8738 mm, 79.7414 mm): 走线 [/I2S_LRCLK] (F.Cu), 长度: 26.9591 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1583 mm)
+    Local override; error
+    @(135.6500 mm, 80.6500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+    @(135.4620 mm, 80.1192 mm): 走线 [/MENU_SW] (F.Cu), 长度: 0.2737 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1696 mm)
+    Local override; error
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(125.8324 mm, 103.6635 mm): 过孔 [/USB_D+] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1696 mm)
+    Local override; error
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(125.8324 mm, 103.6635 mm): 过孔 [/USB_D+] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1696 mm)
+    Local override; error
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(125.8324 mm, 103.6635 mm): 过孔 [/USB_D+] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1539 mm)
+    Local override; error
+    @(117.1375 mm, 100.0500 mm): 走线 [/USB_D-] (B.Cu), 长度: 2.5599 mm
+    @(119.1916 mm, 99.4961 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(129.7678 mm, 88.6902 mm): 走线 [/USB_D-] (POWER), 长度: 0.7400 mm
+    @(131.7849 mm, 85.4357 mm): 走线 [/I2C_SCL] (POWER), 长度: 3.8452 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /USB_D- 和 /GND)
+    Local override; error
+    @(142.2500 mm, 83.9800 mm): 走线 [/USB_D-] (B.Cu), 长度: 3.1733 mm
+    @(139.8800 mm, 83.9800 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(134.0183 mm, 83.9473 mm): 走线 [/USB_D-] (POWER), 长度: 5.0257 mm
+    @(138.4014 mm, 84.4990 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(131.8067 mm, 85.9113 mm): 走线 [/USB_D-] (POWER), 长度: 0.2476 mm
+    @(131.7849 mm, 85.4357 mm): 走线 [/I2C_SCL] (POWER), 长度: 3.8452 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(131.7849 mm, 85.4357 mm): 走线 [/I2C_SCL] (POWER), 长度: 3.8452 mm
+    @(129.7678 mm, 87.9502 mm): 走线 [/USB_D-] (POWER), 长度: 2.8834 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1696 mm)
+    Local override; error
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(125.8324 mm, 103.6635 mm): 过孔 [/USB_D+] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1516 mm)
+    Local override; error
+    @(132.0326 mm, 85.4357 mm): 走线 [/I2C_SCL] (POWER), 长度: 0.2477 mm
+    @(132.0543 mm, 85.9113 mm): 走线 [/USB_D-] (POWER), 长度: 2.7775 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1542 mm)
+    Local override; error
+    @(129.0659 mm, 88.8912 mm): 走线 [/I2C_SCL] (POWER), 长度: 13.9644 mm
+    @(120.0635 mm, 99.6839 mm): 走线 [/USB_D-] (POWER), 长度: 1.2894 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1542 mm)
+    Local override; error
+    @(129.0659 mm, 88.1547 mm): 走线 [/I2C_SCL] (POWER), 长度: 0.7365 mm
+    @(120.0635 mm, 98.3945 mm): 走线 [/USB_D-] (POWER), 长度: 13.7240 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1965 mm)
+    Local override; error
+    @(73.3607 mm, 98.8775 mm): 过孔 [/+5V_MEDIA] (F.Cu - B.Cu)
+    @(72.7875 mm, 98.0000 mm): B.Cu 上 FB2 的焊盘 2 [/+5V_AUDIO]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1525 mm)
+    Local override; error
+    @(72.0900 mm, 98.8775 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 1.2707 mm
+    @(72.7875 mm, 98.0000 mm): B.Cu 上 FB2 的焊盘 2 [/+5V_AUDIO]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1625 mm)
+    Local override; error
+    @(141.4936 mm, 98.9162 mm): 过孔 [/VBUS] (F.Cu - B.Cu)
+    @(142.7500 mm, 100.9681 mm): 走线 [/ITERM_SET] (B.Cu), 长度: 3.0608 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1521 mm)
+    Local override; error
+    @(137.3004 mm, 104.4776 mm): 过孔 [/VBUS] (F.Cu - B.Cu)
+    @(136.7483 mm, 105.5099 mm): 走线 [/ITERM_SET] (POWER), 长度: 2.8687 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1778 mm)
+    Local override; error
+    @(126.1000 mm, 107.0000 mm): B.Cu 上 U7 的焊盘 1 [/I2C_SDA]
+    @(125.3364 mm, 106.8316 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1991 mm)
+    Local override; error
+    @(105.9491 mm, 101.5741 mm): 走线 [/I2C_SCL] (B.Cu), 长度: 4.9665 mm
+    @(106.8250 mm, 100.8000 mm): B.Cu 上 R71 的焊盘 2 [/+3V3_MAIN]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1539 mm)
+    Local override; error
+    @(112.9936 mm, 99.4961 mm): 走线 [/I2C_SCL] (B.Cu), 长度: 6.1980 mm
+    @(117.1375 mm, 100.0500 mm): B.Cu 上 U8 的焊盘 6 [/USB_D-]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1685 mm)
+    Local override; error
+    @(119.1916 mm, 99.6160 mm): 走线 [/I2C_SCL] (POWER), 长度: 8.7939 mm
+    @(120.0635 mm, 99.6839 mm): 过孔 [/USB_D-] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1737 mm)
+    Local override; error
+    @(101.8761 mm, 110.0737 mm): 走线 [/BOOT_N] (POWER), 长度: 40.2860 mm
+    @(122.5000 mm, 109.5000 mm): 过孔 [/GAUGE_VDD] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1875 mm)
+    Local override; error
+    @(142.1621 mm, 110.0737 mm): 走线 [/BOOT_N] (POWER), 长度: 24.3686 mm
+    @(144.2283 mm, 106.9622 mm): 走线 [/GAUGE_INT_N] (POWER), 长度: 0.4973 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1642 mm)
+    Local override; error
+    @(77.3238 mm, 78.0685 mm): 走线 [/I2S_BCLK] (B.Cu), 长度: 57.7399 mm
+    @(62.5625 mm, 92.3148 mm): 走线 [/I2S_DIN] (B.Cu), 长度: 21.7577 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1693 mm)
+    Local override; error
+    @(125.8773 mm, 77.4991 mm): 过孔 [/LCD_EXTMODE] (F.Cu - B.Cu)
+    @(77.9475 mm, 76.9298 mm): 走线 [/I2S_DIN] (B.Cu), 长度: 52.0286 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1694 mm)
+    Local override; error
+    @(125.8773 mm, 77.4991 mm): 过孔 [/LCD_EXTMODE] (F.Cu - B.Cu)
+    @(77.3238 mm, 78.0685 mm): 走线 [/I2S_BCLK] (B.Cu), 长度: 57.7399 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1965 mm)
+    Local override; error
+    @(63.2500 mm, 92.1423 mm): 走线 [/I2S_BCLK] (B.Cu), 长度: 19.9034 mm
+    @(63.7500 mm, 92.5625 mm): B.Cu 上 U5 的焊盘 15 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1689 mm)
+    Local override; error
+    @(143.4689 mm, 81.0841 mm): 过孔 [/CHG_N] (F.Cu - B.Cu)
+    @(142.2500 mm, 81.4400 mm): B.Cu 上 U1 的焊盘 11 [/I2C_SCL]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1802 mm)
+    Local override; error
+    @(142.2500 mm, 81.4400 mm): B.Cu 上 U1 的焊盘 11 [/I2C_SCL]
+    @(143.2517 mm, 80.1700 mm): 走线 [/CHG_N] (B.Cu), 长度: 0.6969 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1802 mm)
+    Local override; error
+    @(142.2500 mm, 81.4400 mm): B.Cu 上 U1 的焊盘 11 [/I2C_SCL]
+    @(143.2517 mm, 80.8669 mm): 走线 [/CHG_N] (B.Cu), 长度: 0.3072 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1516 mm)
+    Local override; error
+    @(145.0644 mm, 106.1261 mm): 走线 [/CHG_N] (POWER), 长度: 0.4281 mm
+    @(144.7256 mm, 106.9622 mm): 走线 [/GAUGE_INT_N] (POWER), 长度: 1.5214 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1516 mm)
+    Local override; error
+    @(144.7617 mm, 106.4288 mm): 走线 [/CHG_N] (POWER), 长度: 1.7434 mm
+    @(144.7256 mm, 106.9622 mm): 走线 [/GAUGE_INT_N] (POWER), 长度: 1.5214 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(143.1166 mm, 99.9541 mm): 过孔 [/TMR_SET] (F.Cu - B.Cu)
+    @(143.0183 mm, 100.8326 mm): 走线 [/CHG_N] (POWER), 长度: 0.9192 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1516 mm)
+    Local override; error
+    @(145.0644 mm, 104.5140 mm): 走线 [/CHG_N] (POWER), 长度: 1.6121 mm
+    @(144.7256 mm, 106.9622 mm): 走线 [/GAUGE_INT_N] (POWER), 长度: 1.5214 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1803 mm)
+    Local override; error
+    @(143.0880 mm, 87.3604 mm): 过孔 [/LCD_SCS] (F.Cu - B.Cu)
+    @(143.6683 mm, 100.1826 mm): 走线 [/CHG_N] (POWER), 长度: 18.8991 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1878 mm)
+    Local override; error
+    @(125.9242 mm, 107.5572 mm): 走线 [/I2C_SDA] (F.Cu), 长度: 3.0818 mm
+    @(125.3364 mm, 106.8316 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1903 mm)
+    Local override; error
+    @(106.8250 mm, 98.0000 mm): B.Cu 上 R70 的焊盘 2 [/+3V3_MAIN]
+    @(106.4566 mm, 98.9444 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1684 mm)
+    Local override; error
+    @(126.1000 mm, 105.0000 mm): B.Cu 上 U7 的焊盘 6 [/PACKP]
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1830 mm)
+    Local override; error
+    @(116.0479 mm, 108.5357 mm): 走线 [/I2C_SDA] (POWER), 长度: 8.8978 mm
+    @(116.3021 mm, 107.9527 mm): 过孔 [/GAUGE_BIN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1920 mm)
+    Local override; error
+    @(106.4566 mm, 98.9444 mm): 走线 [/I2C_SDA] (POWER), 长度: 13.5641 mm
+    @(116.3021 mm, 107.9527 mm): 过孔 [/GAUGE_BIN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1771 mm)
+    Local override; error
+    @(125.8804 mm, 104.4316 mm): 走线 [/I2C_SDA] (POWER), 长度: 7.3419 mm
+    @(125.8324 mm, 103.6635 mm): 过孔 [/USB_D+] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1532 mm)
+    Local override; error
+    @(129.1250 mm, 107.1875 mm): B.Cu 上 U7 的焊盘 13 [/GND]
+    @(129.3468 mm, 107.7032 mm): 走线 [/GAUGE_INT_N] (B.Cu), 长度: 0.6992 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1740 mm)
+    Local override; error
+    @(128.6476 mm, 107.7032 mm): 过孔 [/GAUGE_INT_N] (F.Cu - B.Cu)
+    @(129.1250 mm, 107.1875 mm): B.Cu 上 U7 的焊盘 13 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1859 mm)
+    Local override; error
+    @(129.1250 mm, 107.1875 mm): B.Cu 上 U7 的焊盘 13 [/GND]
+    @(129.9000 mm, 107.1500 mm): 走线 [/GAUGE_INT_N] (B.Cu), 长度: 0.7823 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1518 mm)
+    Local override; error
+    @(145.6248 mm, 105.4186 mm): 走线 [/GAUGE_INT_N] (POWER), 长度: 11.9217 mm
+    @(146.1766 mm, 104.5520 mm): 过孔 [/PGOOD_N] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /I2S_LRCLK 和 /GND)
+    Local override; error
+    @(76.6568 mm, 79.7414 mm): 走线 [/I2S_LRCLK] (B.Cu), 长度: 52.2170 mm
+    @(128.0700 mm, 79.7400 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /I2S_LRCLK 和 /GND)
+    Local override; error
+    @(159.7500 mm, 77.6300 mm): 走线 [/I2S_LRCLK] (B.Cu), 长度: 1.0017 mm
+    @(158.6000 mm, 77.7700 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /I2S_LRCLK 和 /GND)
+    Local override; error
+    @(158.6075 mm, 77.7708 mm): 走线 [/I2S_LRCLK] (B.Cu), 长度: 0.1991 mm
+    @(158.6000 mm, 77.7700 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1923 mm)
+    Local override; error
+    @(64.7500 mm, 92.5625 mm): B.Cu 上 U5 的焊盘 13 [unconnected-(U5-NC-Pad13)]
+    @(64.2500 mm, 92.1482 mm): 走线 [/I2S_LRCLK] (B.Cu), 长度: 17.5459 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /I2S_LRCLK 和 /GND)
+    Local override; error
+    @(157.8035 mm, 77.7708 mm): 走线 [/I2S_LRCLK] (B.Cu), 长度: 0.8040 mm
+    @(158.6000 mm, 77.7700 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1653 mm)
+    Local override; error
+    @(139.0767 mm, 83.9800 mm): 过孔 [/USB_D-] (F.Cu - B.Cu)
+    @(151.6767 mm, 83.4147 mm): 走线 [/AMP_EN] (F.Cu), 长度: 13.9324 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1897 mm)
+    Local override; error
+    @(132.0366 mm, 83.2491 mm): 过孔 [/+5V_LCD] (F.Cu - B.Cu)
+    @(137.3202 mm, 83.8388 mm): 走线 [/AMP_EN] (F.Cu), 长度: 62.6853 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1716 mm)
+    Local override; error
+    @(64.3650 mm, 94.3650 mm): U5 的PTH 焊盘 17 [/GND]
+    @(68.2756 mm, 91.1920 mm): 走线 [/AMP_EN] (POWER), 长度: 5.8990 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1641 mm)
+    Local override; error
+    @(158.4775 mm, 74.8192 mm): 走线 [/PDM_DATA] (B.Cu), 长度: 5.6455 mm
+    @(152.7150 mm, 75.3710 mm): 过孔 [/ENC_A] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1905 mm)
+    Local override; error
+    @(107.0000 mm, 65.0000 mm): B.Cu 上 TP9 的焊盘 1 [/+5V_MEDIA]
+    @(108.0900 mm, 67.5615 mm): 走线 [/PDM_DATA] (B.Cu), 长度: 11.5789 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1641 mm)
+    Local override; error
+    @(152.7150 mm, 75.3710 mm): 过孔 [/ENC_A] (F.Cu - B.Cu)
+    @(152.8320 mm, 74.8192 mm): 走线 [/PDM_DATA] (B.Cu), 长度: 2.6553 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1692 mm)
+    Local override; error
+    @(141.2777 mm, 73.6474 mm): 走线 [/UART_RX0] (F.Cu), 长度: 11.1786 mm
+    @(150.0196 mm, 73.0782 mm): 过孔 [/ENC_B] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1632 mm)
+    Local override; error
+    @(92.5219 mm, 72.3755 mm): 走线 [/UART_TX0] (B.Cu), 长度: 45.3795 mm
+    @(125.5670 mm, 71.8123 mm): 过孔 [/+3V3_MAIN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1531 mm)
+    Local override; error
+    @(76.0031 mm, 63.9969 mm): 走线 [/UART_TX0] (B.Cu), 长度: 8.1402 mm
+    @(79.0000 mm, 65.0000 mm): B.Cu 上 TP2 的焊盘 1 [/UART_RX0]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1766 mm)
+    Local override; error
+    @(158.5450 mm, 69.3319 mm): 过孔 [/PGOOD_N] (F.Cu - B.Cu)
+    @(159.7500 mm, 68.7400 mm): B.Cu 上 U1 的焊盘 40 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1561 mm)
+    Local override; error
+    @(143.2500 mm, 104.8256 mm): 走线 [/PGOOD_N] (B.Cu), 长度: 0.4265 mm
+    @(143.7500 mm, 104.4625 mm): B.Cu 上 U2 的焊盘 8 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1522 mm)
+    Local override; error
+    @(143.5516 mm, 105.1272 mm): 走线 [/PGOOD_N] (B.Cu), 长度: 2.6234 mm
+    @(143.7500 mm, 104.4625 mm): B.Cu 上 U2 的焊盘 8 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1684 mm)
+    Local override; error
+    @(158.5449 mm, 69.3319 mm): 走线 [/PGOOD_N] (POWER), 长度: 22.8518 mm
+    @(157.9765 mm, 91.4658 mm): 过孔 [/SD_CMD] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1527 mm)
+    Local override; error
+    @(136.7021 mm, 97.2619 mm): 走线 [/ISET_SET] (B.Cu), 长度: 0.5743 mm
+    @(136.3250 mm, 98.0000 mm): B.Cu 上 R6 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1628 mm)
+    Local override; error
+    @(135.5808 mm, 97.6147 mm): 走线 [/ISET_SET] (B.Cu), 长度: 0.4989 mm
+    @(136.3250 mm, 98.0000 mm): B.Cu 上 R6 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1631 mm)
+    Local override; error
+    @(135.9336 mm, 97.2619 mm): 走线 [/ISET_SET] (B.Cu), 长度: 0.7685 mm
+    @(136.3250 mm, 98.0000 mm): B.Cu 上 R6 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1963 mm)
+    Local override; error
+    @(134.6475 mm, 99.0460 mm): 过孔 [/ILIM_SET] (F.Cu - B.Cu)
+    @(134.7697 mm, 99.7671 mm): 走线 [/ISET_SET] (B.Cu), 长度: 1.1471 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1967 mm)
+    Local override; error
+    @(138.2250 mm, 98.0000 mm): B.Cu 上 C2 的焊盘 1 [/VSYS]
+    @(137.1082 mm, 98.0960 mm): 走线 [/ISET_SET] (B.Cu), 长度: 1.9380 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1535 mm)
+    Local override; error
+    @(142.2143 mm, 97.1215 mm): 走线 [/VSYS] (B.Cu), 长度: 3.1108 mm
+    @(139.7750 mm, 98.0000 mm): B.Cu 上 C2 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1618 mm)
+    Local override; error
+    @(144.9911 mm, 102.8047 mm): 走线 [/VSYS] (B.Cu), 长度: 0.9011 mm
+    @(144.4625 mm, 102.2500 mm): B.Cu 上 U2 的焊盘 12 [/ILIM_SET]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1528 mm)
+    Local override; error
+    @(131.6330 mm, 88.4805 mm): 走线 [/VSYS] (B.Cu), 长度: 10.5649 mm
+    @(132.8250 mm, 91.0000 mm): B.Cu 上 R10 的焊盘 2 [/FB_3V3]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1697 mm)
+    Local override; error
+    @(145.6283 mm, 102.1675 mm): 走线 [/VSYS] (B.Cu), 长度: 1.6320 mm
+    @(144.9086 mm, 101.6318 mm): 过孔 [/ILIM_SET] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1797 mm)
+    Local override; error
+    @(144.4625 mm, 102.8047 mm): 走线 [/VSYS] (B.Cu), 长度: 0.5286 mm
+    @(144.4625 mm, 102.2500 mm): B.Cu 上 U2 的焊盘 12 [/ILIM_SET]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1876 mm)
+    Local override; error
+    @(124.7750 mm, 95.0000 mm): B.Cu 上 C10 的焊盘 2 [/GND]
+    @(125.6474 mm, 95.9126 mm): 走线 [/VSYS] (B.Cu), 长度: 1.5098 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1635 mm)
+    Local override; error
+    @(114.2570 mm, 69.9231 mm): 走线 [/VSYS] (POWER), 长度: 4.8338 mm
+    @(114.9705 mm, 70.8872 mm): 过孔 [/PG_3V3_N] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1663 mm)
+    Local override; error
+    @(142.2500 mm, 104.4625 mm): B.Cu 上 U2 的焊盘 5 [/GND]
+    @(142.3501 mm, 105.2754 mm): 走线 [/VSYS] (B.Cu), 长度: 0.5655 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1854 mm)
+    Local override; error
+    @(141.7246 mm, 105.2754 mm): 走线 [/VSYS] (POWER), 长度: 5.2589 mm
+    @(142.4100 mm, 102.4100 mm): U2 的PTH 焊盘 17 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1567 mm)
+    Local override; error
+    @(127.3446 mm, 88.7038 mm): 走线 [/PG_3V3_N] (F.Cu), 长度: 3.3408 mm
+    @(127.9013 mm, 89.0811 mm): 过孔 [/+3V3_MAIN] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1901 mm)
+    Local override; error
+    @(130.9435 mm, 111.5188 mm): 走线 [/VBAT] (B.Cu), 长度: 4.3660 mm
+    @(120.0000 mm, 112.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 5.0623 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /GND 和 /VBAT)
+    Local override; error
+    @(113.6500 mm, 101.0000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+    @(96.2825 mm, 83.4837 mm): 走线 [/VBAT] (POWER), 长度: 29.9236 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1934 mm)
+    Local override; error
+    @(126.1000 mm, 105.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 2.1000 mm
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1742 mm)
+    Local override; error
+    @(93.7242 mm, 100.7710 mm): 过孔 [/ESP_EN] (F.Cu - B.Cu)
+    @(93.0000 mm, 65.9497 mm): 走线 [/PACKP] (POWER), 长度: 38.0503 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1830 mm)
+    Local override; error
+    @(124.9457 mm, 108.5357 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(116.3021 mm, 107.9527 mm): 走线 [/GAUGE_BIN] (POWER), 长度: 11.3152 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1914 mm)
+    Local override; error
+    @(127.6173 mm, 107.9527 mm): 走线 [/GAUGE_BIN] (POWER), 长度: 2.0001 mm
+    @(128.9750 mm, 106.0000 mm): U7 的PTH 焊盘 13 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1914 mm)
+    Local override; error
+    @(128.9750 mm, 106.0000 mm): U7 的PTH 焊盘 13 [/GND]
+    @(129.0316 mm, 106.5384 mm): 走线 [/GAUGE_BIN] (POWER), 长度: 1.4312 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1608 mm)
+    Local override; error
+    @(134.0031 mm, 80.1405 mm): 走线 [/BOOST_SW] (B.Cu), 长度: 0.1987 mm
+    @(133.2600 mm, 80.0000 mm): B.Cu 上 U4 的焊盘 2 [/RUN_EN]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1800 mm)
+    Local override; error
+    @(134.3644 mm, 81.1823 mm): 走线 [/BOOST_SW] (B.Cu), 长度: 0.5110 mm
+    @(134.7400 mm, 80.5000 mm): B.Cu 上 U4 的焊盘 4 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1519 mm)
+    Local override; error
+    @(134.0031 mm, 80.8210 mm): 走线 [/BOOST_SW] (B.Cu), 长度: 0.6805 mm
+    @(134.7400 mm, 80.5000 mm): B.Cu 上 U4 的焊盘 4 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1526 mm)
+    Local override; error
+    @(136.9729 mm, 83.0000 mm): 走线 [/BOOST_SW] (B.Cu), 长度: 2.5706 mm
+    @(134.6000 mm, 83.0000 mm): B.Cu 上 L2 的焊盘 1 [/VSYS]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1763 mm)
+    Local override; error
+    @(70.7750 mm, 95.6000 mm): B.Cu 上 C51 的焊盘 2 [/GND]
+    @(69.2250 mm, 94.6987 mm): 走线 [/+5V_AUDIO] (B.Cu), 长度: 2.0406 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1733 mm)
+    Local override; error
+    @(70.7750 mm, 95.6000 mm): B.Cu 上 C51 的焊盘 2 [/GND]
+    @(71.2656 mm, 94.6987 mm): 走线 [/+5V_AUDIO] (B.Cu), 长度: 2.1523 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(65.0483 mm, 96.9110 mm): 过孔 [/+5V_AUDIO] (F.Cu - B.Cu)
+    @(61.0000 mm, 101.9517 mm): 走线 [/SPK+] (B.Cu), 长度: 6.7175 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(65.0483 mm, 96.9110 mm): 过孔 [/+5V_AUDIO] (F.Cu - B.Cu)
+    @(65.7500 mm, 97.2017 mm): 走线 [/SPK+] (B.Cu), 长度: 2.1392 mm
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1566 mm)
+    Local override; error
+    @(133.6816 mm, 97.8399 mm): 过孔 [/TMR_SET] (F.Cu - B.Cu)
+    @(132.8250 mm, 98.0000 mm): B.Cu 上 R3 的焊盘 2 [/GND]
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1500 mm)
+    Local override; error
+    @(159.7500 mm, 77.6300 mm): B.Cu 上 U1 的焊盘 33 [/I2S_LRCLK]
+    @(158.6000 mm, 77.7700 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1517 mm)
+    Local override; error
+    @(141.4936 mm, 98.9162 mm): 过孔 [/VBUS] (F.Cu - B.Cu)
+    @(143.1166 mm, 99.7590 mm): 走线 [/TMR_SET] (F.Cu), 长度: 2.7140 mm
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0000 mm)
+    Local override; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.2427 mm)
+    Local override; error
+    @(125.8300 mm, 104.4600 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 ( 间距 0.2000 mm; 实际 0.1905 mm)
+    Local override; error
+    @(126.1000 mm, 105.0000 mm): B.Cu 上 U7 的焊盘 6 [/PACKP]
+    @(125.8300 mm, 104.4600 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.1052 mm)
+    Local override; error
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0326 mm)
+    Local override; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.2427 mm)
+    Local override; error
+    @(125.8300 mm, 104.4600 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.2302 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.1576 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.1052 mm)
+    Local override; error
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0426 mm)
+    Local override; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.2302 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.1676 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[clearance]: 间距违规 (填充区 间距 0.2500 mm; 实际 0.0326 mm)
+    Local override; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.1576 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(148.1000 mm, 75.7600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(148.1000 mm, 77.1600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(148.8000 mm, 75.0600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(148.8000 mm, 76.4600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(148.8000 mm, 77.8600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(149.5000 mm, 75.7600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(149.5000 mm, 77.1600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(150.2000 mm, 75.0600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(150.2000 mm, 76.4600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(150.2000 mm, 77.8600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(150.9000 mm, 75.7600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(150.9000 mm, 77.1600 mm): U1 的PTH 焊盘 41 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(142.4100 mm, 102.4100 mm): U2 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(142.4100 mm, 103.5900 mm): U2 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(143.5900 mm, 102.4100 mm): U2 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(143.5900 mm, 103.5900 mm): U2 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(127.0250 mm, 106.0000 mm): U7 的PTH 焊盘 13 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(128.0000 mm, 105.2750 mm): U7 的PTH 焊盘 13 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(128.0000 mm, 106.0000 mm): U7 的PTH 焊盘 13 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(128.0000 mm, 106.7250 mm): U7 的PTH 焊盘 13 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(128.9750 mm, 106.0000 mm): U7 的PTH 焊盘 13 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(63.6350 mm, 93.6350 mm): U5 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(63.6350 mm, 94.3650 mm): U5 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(64.3650 mm, 93.6350 mm): U5 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 电路板配置约束; error
+    @(64.3650 mm, 94.3650 mm): U5 的PTH 焊盘 17 [/GND]
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(139.5000 mm, 102.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(111.5000 mm, 106.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(111.5000 mm, 103.0000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(85.0000 mm, 69.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(139.2500 mm, 98.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 网络类 'Default'; error
+    @(135.6500 mm, 80.6500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(139.5000 mm, 68.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(129.7500 mm, 82.7500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(133.5000 mm, 101.0000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2000 mm)
+    Rule: 网络类 'Default'; error
+    @(138.0000 mm, 88.5000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(127.6000 mm, 92.3000 mm): 过孔 [/PG_3V3_N] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(113.6500 mm, 101.0000 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(125.8300 mm, 104.4600 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(133.5900 mm, 85.2500 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(139.8800 mm, 83.9800 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(125.4100 mm, 58.4400 mm): 过孔 [/LCD_SI] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(118.0300 mm, 59.8200 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(143.7700 mm, 78.9000 mm): 过孔 [/PDM_CLK] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(158.6000 mm, 77.7700 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[drill_out_of_range]: 孔径超出范围 (电路板配置约束 最小孔径 0.3000 mm; 实际 0.2500 mm)
+    Rule: 网络类 'Default'; error
+    @(128.0700 mm, 79.7400 mm): 过孔 [/GND] (F.Cu - B.Cu)
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(136.3250 mm, 100.8000 mm): 走线 [/GND] (B.Cu), 长度: 1.6002 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(126.6000 mm, 93.4600 mm): 走线 [/GND] (B.Cu), 长度: 0.6539 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(126.1000 mm, 106.2000 mm): 走线 [/GND] (B.Cu), 长度: 0.9464 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(132.0000 mm, 105.0000 mm): 走线 [/VBAT] (B.Cu), 长度: 5.0000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(132.0000 mm, 110.0000 mm): 走线 [/VBAT] (B.Cu), 长度: 1.8238 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(129.9000 mm, 105.0000 mm): 走线 [/VBAT] (B.Cu), 长度: 2.1000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(125.0000 mm, 111.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 0.5014 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(126.1000 mm, 105.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 2.1000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(131.5000 mm, 105.4000 mm): 走线 [/PACKP] (B.Cu), 长度: 3.1000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(131.5000 mm, 108.5000 mm): 走线 [/PACKP] (B.Cu), 长度: 6.9642 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(124.0000 mm, 110.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 1.8238 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(129.9000 mm, 105.4000 mm): 走线 [/PACKP] (B.Cu), 长度: 1.6000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(124.0000 mm, 105.0000 mm): 走线 [/PACKP] (B.Cu), 长度: 5.0000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(124.8000 mm, 106.2000 mm): 走线 [/GAUGE_VDD] (F.Cu), 长度: 4.0224 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(122.5000 mm, 109.5000 mm): 走线 [/GAUGE_VDD] (B.Cu), 长度: 1.6884 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(124.8000 mm, 105.4000 mm): 走线 [/GAUGE_VDD] (B.Cu), 长度: 0.8000 mm
+[track_width]: 走线宽度 (电路板配置约束 最小宽度 0.2000 mm; 实际 0.1500 mm)
+    Rule: 网络类 'Default'; error
+    @(126.1000 mm, 105.4000 mm): 走线 [/GAUGE_VDD] (B.Cu), 长度: 1.3000 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+[hole_to_hole]: 钻孔太靠近其他孔 (电路板配置约束 最小 0.2495 mm; 实际 0.0807 mm)
+    Rule: 电路板配置约束; warning
+    @(151.1700 mm, 85.2800 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+    @(151.5256 mm, 85.2713 mm): 过孔 [/LCD_DISP] (F.Cu - B.Cu)
+[hole_to_hole]: 钻孔太靠近其他孔 (电路板配置约束 最小 0.2495 mm; 实际 0.0000 mm)
+    Rule: 电路板配置约束; warning
+    @(119.2600 mm, 99.6800 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+    @(119.1916 mm, 99.4961 mm): 过孔 [/I2C_SCL] (F.Cu - B.Cu)
+[hole_to_hole]: 钻孔太靠近其他孔 (电路板配置约束 最小 0.2495 mm; 实际 0.0000 mm)
+    Rule: 电路板配置约束; warning
+    @(125.8300 mm, 104.4600 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+    @(125.8804 mm, 104.4316 mm): 过孔 [/I2C_SDA] (F.Cu - B.Cu)
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

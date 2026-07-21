@@ -1,0 +1,20 @@
+=== stdout ===
+
+Note: No compatibility mode selected!
+
+
+Circuit: * auto-generated testbench for decoupling analysis: +3v3_main rail
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1201
+z_min               =  6.39617e-03 at=  1.51356e+06
+f_at_zmin           =  1.51345e+06
+z_at_1m             =  6.55996e-03
+z_at_100k           =  2.55258e-02
+ngspice-46 done
+
+=== stderr ===
+

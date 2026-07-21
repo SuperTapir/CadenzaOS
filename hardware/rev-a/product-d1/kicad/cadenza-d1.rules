@@ -1,0 +1,71 @@
+
+(rules PCB cadenza-d1.dsn
+  (snap_angle 
+    fortyfive_degree
+  )
+  (rule
+    (width 200.0)
+    (clearance 200.0)
+    (clearance 100.0 (type smd_to_turn_gap))
+    (clearance 50.0 (type smd))
+    (clearance 200.0 (type "kicad_default"))
+  )
+  (padstack "Via[0-3]_600:300_um"
+    (shape
+      (circle F.Cu 600.0 0.0 0.0)
+    )
+    (shape
+      (circle GND 600.0 0.0 0.0)
+    )
+    (shape
+      (circle POWER 600.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 600.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-3]_600:300_um" "Via[0-3]_600:300_um" default
+  )
+  (via 
+    "Via[0-3]_600:300_um-kicad_default" "Via[0-3]_600:300_um" "kicad_default"
+  )
+  (via_rule
+    default "Via[0-3]_600:300_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-3]_600:300_um-kicad_default"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 200.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    /GND "/RUN_EN" "/LCD_SCLK" "/LCD_SI" "/LCD_SCS" "/LCD_EXTCOMIN" "/LCD_DISP" "/+5V_LCD"
+    "/LCD_EXTMODE" "unconnected-(J3-DAT2-Pad1)" "/SD_CS" "/SD_CMD" "/+3V3_MAIN" "/SD_CLK" "/SD_DAT0" "unconnected-(J3-DAT1-Pad8)"
+    "unconnected-(J3-CD-Pad9)" "/B_SW" /VBUS /CC1 "/USB_D+_CONN" "/USB_D-_CONN" "unconnected-(J1-SBU1-PadA8)" /CC2
+    "unconnected-(J1-SBU2-PadB8)" "/PDM_DATA_RAW" "/PDM_CLK" "/ENC_A" "/ENC_B" "/A_SW" "/LED_CTRL" "/MENU_SW"
+    "/USB_D+" "/USB_D-" "/+5V_MEDIA" "/ITERM_SET" "/I2C_SCL" "/BOOT_N" "/BAT_TS" "/ESP_EN"
+    "/I2S_DIN" "unconnected-(U1-GPIO16-Pad9)" "/CHG_N" "/I2C_SDA" "unconnected-(U1-GPIO3-Pad15)" "/I2S_BCLK" "unconnected-(U1-GPIO9-Pad17)" "unconnected-(U1-GPIO21-Pad23)"
+    "/SD_CD" "/I2S_LRCLK" "/AMP_EN" "/PDM_DATA" "/UART_RX0" "/UART_TX0" "unconnected-(U1-GPIO2-Pad38)" "unconnected-(U1-GPIO1-Pad39)"
+    "/VAUX_3V3" "/ISET_SET" "/L3V3_A" "/L3V3_B" /VSYS "/GAUGE_SRP" "/GAUGE_SRN" /VBAT
+    "/GAUGE_BIN" "/FB_3V3" "/FB_5V" "/BOOST_SW" "/+5V_AUDIO" "/VBAT_SENSE" /SPK+ "/SPK-"
+    "/PG_3V3_N" "/ILIM_SET" "/PGOOD_N" "/TMR_SET" "/GAUGE_VDD" "unconnected-(U7-NC-Pad3)" "unconnected-(U7-NC-Pad8)" "unconnected-(U7-NC-Pad10)"
+    "/GAUGE_INT_N" "unconnected-(U5-NC-Pad5)" "unconnected-(U5-NC-Pad6)" "unconnected-(U5-NC-Pad12)" "unconnected-(U5-NC-Pad13)"
+    (clearance_class "kicad_default")
+    (via_rule "kicad_default")
+    (rule
+      (width 200.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)

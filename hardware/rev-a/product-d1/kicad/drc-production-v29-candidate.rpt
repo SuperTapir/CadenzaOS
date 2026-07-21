@@ -1,0 +1,95 @@
+** Drc report for cadenza-d1-production-v29-candidate.kicad_pcb **
+** Created on 2026-07-21T08:42:17 **
+** Report includes: Errors, Warnings **
+
+** Found 20 DRC violations **
+[lib_footprint_mismatch]: 封装 'SW_SPDT_CK_JS102011SAQN' 与库 'Button_Switch_SMD' 中的副本不匹配
+    Local override; warning
+    @(54.0000 mm, 92.0000 mm): 封装 SW1
+[lib_footprint_mismatch]: 封装 'Sharp_LS027B7DH01_Mechanical' 与库 'Cadenza_D1' 中的副本不匹配
+    Local override; warning
+    @(108.0000 mm, 82.0000 mm): 封装 LCD1
+[lib_footprint_issues]: 在库 'Cadenza_D1' 中找不到封装 'H4'
+    Local override; warning
+    @(161.0000 mm, 109.0000 mm): 封装 H4
+[lib_footprint_mismatch]: 封装 'Hirose_FH34SRJ-10S-0.5SH' 与库 'Cadenza_D1' 中的副本不匹配
+    Local override; warning
+    @(108.0000 mm, 54.0000 mm): 封装 J2
+[lib_footprint_mismatch]: 封装 'microSD_HC_Hirose_DM3AT-SF-PEJM5' 与库 'Connector_Card' 中的副本不匹配
+    Local override; warning
+    @(151.0000 mm, 104.0000 mm): 封装 J3
+[lib_footprint_issues]: 在库 'Cadenza_D1' 中找不到封装 'H3'
+    Local override; warning
+    @(55.0000 mm, 109.0000 mm): 封装 H3
+[lib_footprint_mismatch]: 封装 'Infineon_IM73D122V01_PG-LLGA-5-3' 与库 'Cadenza_D1' 中的副本不匹配
+    Local override; warning
+    @(58.0000 mm, 58.0000 mm): 封装 U6
+[lib_footprint_issues]: 在库 'Cadenza_D1' 中找不到封装 'H2'
+    Local override; warning
+    @(120.0000 mm, 49.0000 mm): 封装 H2
+[lib_footprint_issues]: 在库 'Cadenza_D1' 中找不到封装 'H1'
+    Local override; warning
+    @(55.0000 mm, 55.0000 mm): 封装 H1
+[lib_footprint_mismatch]: 封装 'SOT-23-6' 与库 'Package_TO_SOT_SMD' 中的副本不匹配
+    Local override; warning
+    @(116.0000 mm, 101.0000 mm): 封装 U8
+[lib_footprint_mismatch]: 封装 'SW_Push_1P1T_NO_CK_KMR2' 与库 'Button_Switch_SMD' 中的副本不匹配
+    Local override; warning
+    @(94.0000 mm, 106.0000 mm): 封装 SW5
+[lib_footprint_mismatch]: 封装 'ESP32-S3-WROOM-1' 与库 'RF_Module' 中的副本不匹配
+    Local override; warning
+    @(151.0000 mm, 74.0000 mm): 封装 U1
+[lib_footprint_mismatch]: 封装 'SW_Push_1P1T_NO_CK_KMR2' 与库 'Button_Switch_SMD' 中的副本不匹配
+    Local override; warning
+    @(86.0000 mm, 106.0000 mm): 封装 SW4
+[lib_footprint_mismatch]: 封装 'JST_PH_B2B-PH-SM4-TB_1x02-1MP_P2.00mm_Vertical' 与库 'Connector_JST' 中的副本不匹配
+    Local override; warning
+    @(76.0000 mm, 106.0000 mm): 封装 J4
+[lib_footprint_mismatch]: 封装 'TI_DRL0006A_SOT-563' 与库 'Cadenza_D1' 中的副本不匹配
+    Local override; warning
+    @(134.0000 mm, 80.0000 mm): 封装 U4
+[lib_footprint_mismatch]: 封装 'JST_PH_B2B-PH-SM4-TB_1x02-1MP_P2.00mm_Vertical' 与库 'Connector_JST' 中的副本不匹配
+    Local override; warning
+    @(62.0000 mm, 106.0000 mm): 封装 J5
+[lib_footprint_mismatch]: 封装 'TI_RNM0015A_VQFN-HR-15_TI4222000B' 与库 'Cadenza_D1' 中的副本不匹配
+    Local override; warning
+    @(128.0000 mm, 94.0000 mm): 封装 U3
+[lib_footprint_mismatch]: 封装 'VQFN-16-1EP_3x3mm_P0.5mm_EP1.68x1.68mm_ThermalVias' 与库 'Package_DFN_QFN' 中的副本不匹配
+    Local override; warning
+    @(143.0000 mm, 103.0000 mm): 封装 U2
+[lib_footprint_mismatch]: 封装 'TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm_ThermalVias' 与库 'Package_DFN_QFN' 中的副本不匹配
+    Local override; warning
+    @(64.0000 mm, 94.0000 mm): 封装 U5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(132.0000 mm, 91.7200 mm): L1 的参考字段
+    @(132.6000 mm, 90.0000 mm): B.Cu 上 L2 的焊盘 1 [/VSYS]
+
+** Found 4 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(51.0000 mm, 56.0000 mm): 填充区[/GND]在 GND 上, 优先级 0
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(160.2481 mm, 50.0026 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(51.0000 mm, 56.0000 mm): 填充区[/GND]在 GND 上, 优先级 0
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

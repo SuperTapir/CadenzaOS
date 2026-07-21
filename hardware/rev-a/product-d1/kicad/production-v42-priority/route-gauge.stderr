@@ -1,0 +1,9 @@
+./src/common/stdpbase.cpp(59): assert ""traits"" failed in Get(): create wxApp before calling this
+Traceback (most recent call last):
+  File "/Users/tapir/Development/CadenzaOS/hardware/rev-a/product-d1/kicad/route_gauge_v42.py", line 39, in <module>
+    main()
+  File "/Users/tapir/Development/CadenzaOS/hardware/rev-a/product-d1/kicad/route_gauge_v42.py", line 32, in main
+    route(board, net, pad_xy(board, "U7", "10"), pad_xy(board, "R72", "1"), layer=pcbnew.B_Cu)
+  File "/Users/tapir/Development/CadenzaOS/hardware/rev-a/product-d1/kicad/finalize_v41_routing.py", line 138, in route
+    raise RuntimeError(f"no route for {net.GetNetname()}: {start} -> {end}")
+RuntimeError: no route for /GAUGE_BIN: (129.9, 106.2) -> (117.175, 108.0)

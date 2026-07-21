@@ -17,43 +17,54 @@ BOARD = Path(__file__).with_name("cadenza-d1.kicad_pcb")
 # Absolute positions in millimetres. B means the complete footprint is flipped
 # to the back. Electromechanical parts that touch the enclosure remain on F.
 PLACEMENT = {
-    "U1": (151.0, 69.0, 0, "B"),
+    "U1": (151.0, 74.0, 0, "B"),
     "U2": (143.0, 103.0, 0, "B"),
     "U3": (128.0, 94.0, 0, "B"),
-    "U4": (146.0, 88.0, 0, "B"),
+    "U4": (134.0, 80.0, 0, "B"),
     "U5": (64.0, 94.0, 0, "B"),
     "U6": (58.0, 58.0, 0, "F"),
     "U7": (121.0, 104.0, 0, "B"),
-    "U8": (101.0, 105.0, 0, "B"),
-    "J1": (108.0, 112.0, 0, "F"),
+    "U8": (116.0, 101.0, 0, "B"),
+    "J1": (108.0, 111.0, 0, "F"),
     "J2": (108.0, 54.0, 0, "F"),
     "J3": (151.0, 104.0, 0, "F"),
-    "J4": (82.0, 106.0, 0, "B"),
-    "J5": (58.0, 106.0, 0, "B"),
-    "J6": (160.0, 82.0, 90, "F"),
-    "SW1": (52.5, 92.0, 90, "F"),
+    "J4": (76.0, 106.0, 0, "B"),
+    "J5": (62.0, 106.0, 0, "B"),
+    "J6": (160.0, 82.0, 0, "F"),
+    "SW1": (54.0, 92.0, 0, "F"),
     "SW2": (60.0, 76.0, 0, "F"),
     "SW3": (60.0, 66.0, 0, "F"),
-    "SW4": (91.0, 104.0, 0, "B"),
-    "SW5": (96.5, 104.0, 0, "B"),
+    "SW4": (86.0, 106.0, 0, "B"),
+    "SW5": (94.0, 106.0, 0, "B"),
+    "TP1": (97.0, 109.0, 0, "B"),
+    "TP2": (99.54, 109.0, 0, "B"),
+    "TP3": (102.08, 109.0, 0, "B"),
+    "TP4": (104.62, 109.0, 0, "B"),
+    "TP5": (82.0, 109.0, 0, "B"),
+    "TP6": (84.54, 109.0, 0, "B"),
+    "TP7": (132.0, 109.0, 0, "B"),
+    "TP8": (134.54, 109.0, 0, "B"),
+    "TP9": (137.08, 109.0, 0, "B"),
     "L1": (132.0, 94.0, 0, "B"),
-    "L2": (150.0, 88.0, 0, "B"),
-    "FB1": (137.0, 91.0, 0, "B"),
-    "FB2": (133.0, 91.0, 0, "B"),
+    "L2": (134.0, 90.0, 0, "B"),
+    "FB1": (132.0, 84.0, 0, "B"),
+    "FB2": (129.0, 84.0, 0, "B"),
 }
 
 # Local support parts are grouped around the IC they serve. The large display
 # is above this region; all entries below are backside unless listed above.
 CLUSTERS = {
-    "charger": (["R3", "R4", "R5", "R6", "R7", "C1", "C2", "C3"], 135.0, 101.0),
-    "main3v3": (["R10", "R11", "C10", "C11", "C12", "C13", "C14"], 121.0, 91.0),
-    "media5v": (["R20", "R21", "C20", "C21", "C22"], 140.0, 85.0),
-    "usb": (["R1", "R2"], 104.0, 108.0),
+    "charger": (["R3", "R4", "R5", "R6", "R7", "R75", "R77", "C1", "C2", "C3"], 132.0, 98.0),
+    "main3v3": (["R10", "R11", "R30", "R76", "C10", "C11", "C12", "C13", "C14"], 116.0, 88.0),
+    "media5v": (["R20", "R21", "C20", "C21", "C22"], 125.0, 76.0),
+    "usb": (["R1", "R2"], 100.0, 100.0),
     "lcd": (["C30", "C31"], 114.0, 57.0),
     "mic": (["R40", "C40"], 64.0, 58.0),
-    "amp": (["R41", "C50", "C51"], 69.0, 98.0),
-    "gauge": (["R70", "R71", "R72", "R73", "C70"], 112.0, 101.0),
-    "reset": (["R80", "C80"], 91.0, 99.0),
+    "amp": (["R41", "C50", "C51"], 70.0, 90.0),
+    "gauge": (["R70", "R71", "R72", "R73", "R74", "C70", "C71"], 103.0, 98.0),
+    "mcu_power": (["C81", "C82"], 138.0, 69.0),
+    "sd": (["R90", "R91", "R92", "R93", "C90", "C91"], 145.0, 90.0),
+    "reset": (["R80", "C80"], 88.0, 98.0),
 }
 
 
@@ -126,22 +137,11 @@ def replace_position(block: str, x: float, y: float, angle: int, side: str) -> s
     return block
 
 
-def repair_embedded_footprint(ref: str, block: str) -> str:
-    if ref != "U3":
-        return block
-    for pad in ("1", "2", "3", "4", "8", "10"):
-        pattern = rf'(\(pad "{pad}" smd roundrect\s+\(at [^\n]+\)\s+)\(size 0\.6 0\.25\)'
-        block, count = re.subn(pattern, rf'\1(size 0.25 0.6)', block, count=1)
-        if count != 1:
-            raise ValueError(f"cannot repair U3 pad {pad}")
-    return block
-
-
 def assign_cluster_positions():
     for refs, x0, y0 in CLUSTERS.values():
         for i, ref in enumerate(refs):
             col, row = divmod(i, 3)
-            PLACEMENT[ref] = (x0 + col * 2.6, y0 + row * 2.2, 0, "B")
+            PLACEMENT[ref] = (x0 + col * 3.5, y0 + row * 2.8, 0, "B")
 
 
 def uid(seed: str) -> str:
@@ -209,12 +209,18 @@ def main():
     text = BOARD.read_text(encoding="utf-8")
     text = remove_owned_additions(text)
     assign_cluster_positions()
-    text = text.replace("\t\t(thickness 1.6)", "\t\t(thickness 1.2)", 1)
-    old_layers = '\t\t(0 "F.Cu" signal)\n\t\t(2 "B.Cu" signal)'
-    new_layers = '\t\t(0 "F.Cu" signal)\n\t\t(2 "In1.Cu" power "GND")\n\t\t(4 "In2.Cu" power "POWER")\n\t\t(31 "B.Cu" signal)'
-    if old_layers in text:
-        text = text.replace(old_layers, new_layers, 1)
-    elif new_layers not in text:
+    text = text.replace("\t\t(thickness 1.2)", "\t\t(thickness 1.6)", 1)
+    two_layers = '\t\t(0 "F.Cu" signal)\n\t\t(2 "B.Cu" signal)'
+    legacy_four_layers = '\t\t(0 "F.Cu" signal)\n\t\t(2 "In1.Cu" power "GND")\n\t\t(4 "In2.Cu" power "POWER")\n\t\t(31 "B.Cu" signal)'
+    canonical_four_layers = '\t\t(0 "F.Cu" signal)\n\t\t(4 "In1.Cu" power "GND")\n\t\t(6 "In2.Cu" signal "POWER")\n\t\t(2 "B.Cu" signal)'
+    canonical_power_plane = '\t\t(0 "F.Cu" signal)\n\t\t(4 "In1.Cu" power "GND")\n\t\t(6 "In2.Cu" power "POWER")\n\t\t(2 "B.Cu" signal)'
+    if two_layers in text:
+        text = text.replace(two_layers, canonical_four_layers, 1)
+    elif legacy_four_layers in text:
+        text = text.replace(legacy_four_layers, canonical_four_layers, 1)
+    elif canonical_power_plane in text:
+        text = text.replace(canonical_power_plane, canonical_four_layers, 1)
+    elif canonical_four_layers not in text:
         raise ValueError("expected two- or four-layer header not found")
 
     spans = footprint_spans(text)
@@ -223,7 +229,6 @@ def main():
         if ref in PLACEMENT:
             found.add(ref)
             block = replace_position(block, *PLACEMENT[ref])
-            block = repair_embedded_footprint(ref, block)
             text = text[:start] + block + text[end:]
     missing = sorted(set(PLACEMENT) - found)
     if missing:
@@ -234,9 +239,8 @@ def main():
         raise ValueError("GND net not found")
 
     additions = [edge_primitives(), lcd_envelope()]
-    for ref, x, y in (("H1", 55, 55), ("H2", 161, 55), ("H3", 55, 109), ("H4", 161, 109)):
+    for ref, x, y in (("H1", 55, 55), ("H2", 120, 49), ("H3", 55, 109), ("H4", 161, 109)):
         additions.append(npth(ref, x, y, 2.2))
-    additions.append(npth("MIC_PORT", 58, 58, 0.8))
     additions.append(zone("/GND", "In1.Cu", "zone-gnd"))
     text = text.rstrip()
     if not text.endswith(")"):

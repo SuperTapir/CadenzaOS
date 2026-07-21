@@ -1,0 +1,34 @@
+** Drc report for cadenza-d1-v46-controls-reroute-base.kicad_pcb **
+** Created on 2026-07-21T14:01:07 **
+** Report includes: Errors, Warnings **
+
+** Found 0 DRC violations **
+
+** Found 4 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(62.0500 mm, 75.2000 mm): F.Cu 上 SW2 的焊盘 1 [/B_SW]
+    @(57.9500 mm, 75.2000 mm): F.Cu 上 SW2 的焊盘 1 [/B_SW]
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(155.4450 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 24 [/B_SW]
+    @(62.0500 mm, 75.2000 mm): F.Cu 上 SW2 的焊盘 1 [/B_SW]
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(131.1750 mm, 103.6000 mm): B.Cu 上 R5 的焊盘 1 [/ITERM_SET]
+    @(142.7500 mm, 101.5375 mm): B.Cu 上 U2 的焊盘 15 [/ITERM_SET]
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(131.1750 mm, 100.8000 mm): B.Cu 上 R4 的焊盘 1 [/ISET_SET]
+    @(142.2500 mm, 101.5375 mm): B.Cu 上 U2 的焊盘 16 [/ISET_SET]
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

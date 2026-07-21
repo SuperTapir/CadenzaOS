@@ -25,7 +25,7 @@
 | 屏幕 FPC | FH34SRJ-10S-0.5SH(99) | 10P 0.5 mm 双面接触 | 条件冻结；必须先用屏幕实物验配插入面和接点方向 |
 | 主麦克风 | IM73D122V01 | PG-LLGA-5-3 底部声孔 | 性能首选；有货且可贴装时使用 |
 | 备选麦克风 | IM69D130 | PG-LLGA-5-1 底部声孔 | 供货备选；使用独立 PCB 变体，禁止共封装盲替 |
-| microSD | HRS DM3AT-SF-PEJM5 / C114218 | KiCad 标准原厂封装 | 电气冻结；无机械 CD，仍需样品确认壳体卡口 |
+| microSD | HRS DM3AT-SF-PEJM5 / C114218 | KiCad 标准原厂封装 | 电气冻结；使用 pin 9 卡检测，仍需样品确认壳体卡口 |
 | 电池 | 1S LiPo 2000-3000 mAh、带保护板 | JST-PH-2 | 未冻结；厚度、导线出口和极性必须实测 |
 | 扬声器 | 8 ohm、1-2 W、20-28 mm | 2P 线束 | 未冻结；以声腔样件测试决定直径和厚度 |
 | 右滚轮+A | 环形增量编码器、中心按键 | 6P 子板 | 未冻结；先完成手感样件，主板只冻结电气接口 |
@@ -41,6 +41,7 @@
 - `ITERM=1.5 kohm`，目标约 100 mA 终止电流。
 - `TMR=47 kohm`，使用数据手册推荐量级；`TS` 预留 10 k NTC 电池版本与固定分压版本二选一。
 - `CE` 默认下拉启用充电；系统关机时仍可充电。
+- `EN1` 固定接 `VSYS`、`EN2` 接地，使实体关机时仍保持 ILIM 模式；`CHG` 与 `PGOOD` 各用 100 kohm 上拉到 `+3V3_MAIN`。
 
 ### 3.2 TPS63070 3.3 V
 
@@ -49,6 +50,20 @@
 - `Rtop=470 kohm`、`Rbottom=150 kohm`，官方典型 3.3 V 组合。
 - `PS/SYNC` 默认高，允许轻载省电；预留 0 ohm 改为强制 PWM。
 - `EN` 由实体保持开关产生的 `RUN_EN` 控制。
+- `RUN_EN` 必须由 100 kohm 上拉到 `VSYS`，实体开关仅负责拉低；禁止上拉到由它自身启动的 `+3V3_MAIN`。
+
+### 3.4 BQ27441 电量计
+
+- 按 TI `SLUSBH1C` 第 4、15、16、18 页连接：SDA=1、SCL=2、VSS=3、VDD=5、BAT=6、SRN=7、SRP=8、BIN=10、GPOUT=12。
+- `R73` 为高边 10 mohms、1%、50 ppm、1 W、2512 采样电阻，串在 `PACKP -> VBAT` 主电流路径；SRP Kelvin 接 PACKP 端，SRN Kelvin 接 VBAT/系统端。
+- BAT 接 PACKP 并用 1 uF 对地；VDD 是内部 1.8 V LDO 输出，必须用至少 0.47 uF 对地，禁止给其他器件供电。
+- GPOUT 用 10 kohm 上拉到 `+3V3_MAIN` 并接 MCU GPIO21；BIN 用 10 kohm 下拉。
+
+### 3.5 SD 与 MCU 可靠性
+
+- SD_CS、SD_CMD、SD_DAT0、SD_CD 各用 10 kohm 上拉到 `+3V3_MAIN`；卡座附近放 10 uF + 100 nF。
+- ESP32-S3 模组 3.3 V 引脚附近放 10 uF + 100 nF。
+- GPIO45/46 均为 strapping pin，D1 不再承担 SD_CD 或 I2S_BCLK；I2S_BCLK 改 GPIO16，SD_CD 改 GPIO9。
 
 ### 3.3 TPS61023 5 V
 

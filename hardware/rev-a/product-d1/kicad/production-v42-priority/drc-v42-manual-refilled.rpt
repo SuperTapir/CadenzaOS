@@ -1,0 +1,316 @@
+** Drc report for cadenza-d1-v42-manual-candidate.kicad_pcb **
+** Created on 2026-07-21T12:27:51 **
+** Report includes: Errors, Warnings **
+
+** Found 59 DRC violations **
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1250 mm)
+    Local override; error
+    @(147.3000 mm, 86.5000 mm): 过孔 [/SD_CD] (F.Cu - B.Cu)
+    @(147.8250 mm, 86.5000 mm): 走线 [/LCD_SCS] (B.Cu), 长度: 1.0017 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+5V_MEDIA 和 /+5V_LCD)
+    Local override; error
+    @(134.0000 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 5.0886 mm
+    @(131.6739 mm, 82.8864 mm): 走线 [/+5V_LCD] (B.Cu), 长度: 0.5447 mm
+[tracks_crossing]: Tracks crossing
+    Local override; error
+    @(147.3000 mm, 86.5000 mm): 走线 [/SD_CD] (POWER), 长度: 6.6333 mm
+    @(155.1459 mm, 84.7640 mm): 走线 [/SD_CMD] (POWER), 长度: 8.9629 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /L3V3_A)
+    Local override; error
+    @(130.3937 mm, 96.5628 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.5255 mm
+    @(130.6000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 2.1000 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1159 mm)
+    Local override; error
+    @(129.3150 mm, 94.9600 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.5241 mm
+    @(127.5000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 3.1000 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /L3V3_A)
+    Local override; error
+    @(130.3937 mm, 96.5628 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.0770 mm
+    @(130.6000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 2.1000 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /L3V3_B)
+    Local override; error
+    @(129.3150 mm, 95.4841 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.8385 mm
+    @(128.5000 mm, 94.9600 mm): 走线 [/L3V3_B] (B.Cu), 长度: 2.0400 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /L3V3_A)
+    Local override; error
+    @(130.4707 mm, 96.5628 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 1.6760 mm
+    @(130.6000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 2.1000 mm
+[tracks_crossing]: Tracks crossing
+    Local override; error
+    @(128.2500 mm, 93.0400 mm): 走线 [/VAUX_3V3] (B.Cu), 长度: 0.8400 mm
+    @(131.2201 mm, 92.2234 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 3.9701 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+3V3_MAIN 和 /L3V3_B)
+    Local override; error
+    @(136.1149 mm, 97.0575 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 5.2265 mm
+    @(133.4000 mm, 97.0000 mm): 走线 [/L3V3_B] (B.Cu), 长度: 3.0000 mm
+[tracks_crossing]: Tracks crossing
+    Local override; error
+    @(128.7221 mm, 96.0770 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 7.5201 mm
+    @(128.5000 mm, 94.9600 mm): 走线 [/L3V3_B] (B.Cu), 长度: 2.0400 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.0749 mm)
+    Local override; error
+    @(127.7500 mm, 92.3000 mm): 过孔 [/PG_3V3_N] (F.Cu - B.Cu)
+    @(127.2500 mm, 92.2234 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.8166 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.0067 mm)
+    Local override; error
+    @(130.8884 mm, 97.0575 mm): 走线 [/+3V3_MAIN] (B.Cu), 长度: 0.6996 mm
+    @(130.6000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 2.1000 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /SD_CD 和 /LCD_SCS)
+    Local override; error
+    @(147.3000 mm, 86.5000 mm): 过孔 [/SD_CD] (F.Cu - B.Cu)
+    @(147.8250 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 18 [/LCD_SCS]
+[shorting_items]: 短路了两个不同网络的项目 (网络 /SD_CD 和 /LCD_SCS)
+    Local override; error
+    @(146.5550 mm, 86.5000 mm): 走线 [/SD_CD] (B.Cu), 长度: 0.7450 mm
+    @(147.8250 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 18 [/LCD_SCS]
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.0778 mm)
+    Local override; error
+    @(147.3000 mm, 86.5000 mm): 走线 [/SD_CD] (POWER), 长度: 6.6333 mm
+    @(150.4880 mm, 90.2020 mm): 过孔 [/SD_DAT0] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /FB_3V3 和 /USB_D-)
+    Local override; error
+    @(130.2000 mm, 93.4600 mm): 走线 [/FB_3V3] (F.Cu), 长度: 12.8123 mm
+    @(126.1171 mm, 97.7195 mm): 走线 [/USB_D-] (F.Cu), 长度: 17.1370 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /+5V_LCD 和 /+5V_MEDIA)
+    Local override; error
+    @(131.1292 mm, 82.8864 mm): 过孔 [/+5V_LCD] (F.Cu - B.Cu)
+    @(134.0000 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 5.0886 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.0999 mm)
+    Local override; error
+    @(134.7400 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 0.7400 mm
+    @(135.4754 mm, 80.0000 mm): 走线 [/BOOST_SW] (B.Cu), 长度: 0.7354 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /VBAT 和 /BAT_TS)
+    Local override; error
+    @(138.5000 mm, 102.2750 mm): 走线 [/VBAT] (B.Cu), 长度: 2.7250 mm
+    @(141.5375 mm, 102.2500 mm): 走线 [/BAT_TS] (B.Cu), 长度: 5.4125 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /AMP_EN 和 /+5V_AUDIO)
+    Local override; error
+    @(64.9341 mm, 96.1403 mm): 走线 [/AMP_EN] (B.Cu), 长度: 4.1087 mm
+    @(64.7500 mm, 95.4375 mm): 走线 [/+5V_AUDIO] (B.Cu), 长度: 0.4500 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.0523 mm)
+    Local override; error
+    @(136.7248 mm, 87.0498 mm): 过孔 [/PG_3V3_N] (F.Cu - B.Cu)
+    @(72.5775 mm, 86.5975 mm): 走线 [/AMP_EN] (B.Cu), 长度: 70.0162 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /PG_3V3_N 和 /VAUX_3V3)
+    Local override; error
+    @(127.7500 mm, 92.3000 mm): 过孔 [/PG_3V3_N] (F.Cu - B.Cu)
+    @(128.2500 mm, 93.0400 mm): 走线 [/VAUX_3V3] (B.Cu), 长度: 0.8400 mm
+[tracks_crossing]: Tracks crossing
+    Local override; error
+    @(126.0000 mm, 89.9500 mm): 走线 [/VAUX_3V3] (B.Cu), 长度: 4.2489 mm
+    @(124.5059 mm, 89.1072 mm): 走线 [/VSYS] (B.Cu), 长度: 1.2626 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1034 mm)
+    Local override; error
+    @(128.2500 mm, 92.2000 mm): 走线 [/VAUX_3V3] (B.Cu), 长度: 3.1820 mm
+    @(124.5059 mm, 89.1072 mm): 走线 [/VSYS] (B.Cu), 长度: 1.2626 mm
+[tracks_crossing]: Tracks crossing
+    Local override; error
+    @(128.5000 mm, 94.9600 mm): 走线 [/L3V3_B] (B.Cu), 长度: 2.0400 mm
+    @(127.5000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 3.1000 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1250 mm)
+    Local override; error
+    @(128.5000 mm, 94.9600 mm): 走线 [/L3V3_B] (B.Cu), 长度: 2.0400 mm
+    @(128.0000 mm, 94.7300 mm): B.Cu 上 U3 的焊盘 10 [/GND]
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1220 mm)
+    Local override; error
+    @(130.2000 mm, 93.4600 mm): 过孔 [/FB_3V3] (F.Cu - B.Cu)
+    @(130.6000 mm, 96.1000 mm): 走线 [/L3V3_A] (B.Cu), 长度: 2.1000 mm
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1250 mm)
+    Local override; error
+    @(128.0000 mm, 94.7300 mm): B.Cu 上 U3 的焊盘 10 [/GND]
+    @(127.5000 mm, 94.9600 mm): 走线 [/L3V3_A] (B.Cu), 长度: 1.1400 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /FB_3V3 和 /RUN_EN)
+    Local override; error
+    @(130.2000 mm, 93.4600 mm): 走线 [/FB_3V3] (F.Cu), 长度: 12.8123 mm
+    @(125.8273 mm, 93.3421 mm): 过孔 [/RUN_EN] (F.Cu - B.Cu)
+[shorting_items]: 短路了两个不同网络的项目 (网络 /FB_3V3 和 /L3V3_A)
+    Local override; error
+    @(129.4000 mm, 93.4600 mm): 走线 [/FB_3V3] (B.Cu), 长度: 0.8000 mm
+    @(130.6000 mm, 94.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+[shorting_items]: 短路了两个不同网络的项目 (网络 /FB_3V3 和 /L3V3_A)
+    Local override; error
+    @(130.2000 mm, 93.4600 mm): 过孔 [/FB_3V3] (F.Cu - B.Cu)
+    @(130.6000 mm, 94.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+[clearance]: 间距违规 ( 间距 0.1500 mm; 实际 0.1249 mm)
+    Local override; error
+    @(65.4375 mm, 94.7500 mm): 走线 [/SPK+] (B.Cu), 长度: 0.7625 mm
+    @(66.3554 mm, 93.7639 mm): 走线 [/SPK-] (B.Cu), 长度: 0.6874 mm
+[shorting_items]: 短路了两个不同网络的项目 (网络 /SPK+ 和 /SPK-)
+    Local override; error
+    @(66.2000 mm, 94.7500 mm): 过孔 [/SPK+] (F.Cu - B.Cu)
+    @(66.3554 mm, 100.7827 mm): 走线 [/SPK-] (POWER), 长度: 7.0188 mm
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(130.6000 mm, 94.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+    @(130.2000 mm, 93.4600 mm): 过孔 [/FB_3V3] (F.Cu - B.Cu)
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.0000 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(147.8250 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 18 [/LCD_SCS]
+    @(147.3000 mm, 86.5000 mm): 过孔 [/SD_CD] (F.Cu - B.Cu)
+[starved_thermal]: 缓释热焊盘 (花焊盘) 与填充区的连接不完整 (层 GND; 填充区 最小引线数量 2; 实际 1)
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+    @(128.0000 mm, 106.7250 mm): U7 的PTH 焊盘 13 [/GND]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(134.0000 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 5.0886 mm
+    @(133.2600 mm, 79.5000 mm): B.Cu 上 U4 的焊盘 1 [/FB_5V]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(134.0000 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 5.0886 mm
+    @(133.2600 mm, 80.0000 mm): B.Cu 上 U4 的焊盘 2 [/RUN_EN]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(134.0000 mm, 79.5000 mm): 走线 [/+5V_MEDIA] (B.Cu), 长度: 5.0886 mm
+    @(133.2600 mm, 80.5000 mm): B.Cu 上 U4 的焊盘 3 [/VSYS]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(147.3000 mm, 86.5000 mm): 过孔 [/SD_CD] (F.Cu - B.Cu)
+    @(147.8250 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 18 [/LCD_SCS]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(126.0000 mm, 89.9500 mm): 走线 [/VAUX_3V3] (B.Cu), 长度: 4.2489 mm
+    @(123.7750 mm, 88.0000 mm): B.Cu 上 C14 的焊盘 2 [/GND]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(146.5550 mm, 86.5000 mm): 走线 [/SD_CD] (B.Cu), 长度: 0.7450 mm
+    @(147.8250 mm, 86.5000 mm): B.Cu 上 U1 的焊盘 18 [/LCD_SCS]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(130.2000 mm, 93.4600 mm): 过孔 [/FB_3V3] (F.Cu - B.Cu)
+    @(130.6000 mm, 94.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+[solder_mask_bridge]: 底层阻焊开窗区域与不同网络的项目相连
+    Rule: <电路板配置> 中的 "阻焊层最小宽度"; error
+    @(129.4000 mm, 93.4600 mm): 走线 [/FB_3V3] (B.Cu), 长度: 0.8000 mm
+    @(130.6000 mm, 94.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(113.9535 mm, 102.8590 mm): 走线 [/USB_D+_CONN] (B.Cu), 长度: 1.2855 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(144.7320 mm, 104.0195 mm): 走线 [/CHG_N] (B.Cu), 长度: 0.3811 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(141.5065 mm, 100.7940 mm): 走线 [/ISET_SET] (B.Cu), 长度: 1.0515 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(122.5190 mm, 111.7500 mm): 走线 [/PACKP] (B.Cu), 长度: 2.2685 mm
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(138.8594 mm, 69.5100 mm): C81 的 线段, 位于 B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(154.7627 mm, 92.5225 mm): R93 的 线段, 位于 B.Silkscreen
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(127.9993 mm, 108.5174 mm): U7 的参考字段
+    @(128.0000 mm, 108.8700 mm): R73 的参考字段
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(139.7750 mm, 69.0000 mm): B.Cu 上 C81 的焊盘 2 [/GND]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(138.2250 mm, 69.0000 mm): B.Cu 上 C81 的焊盘 1 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+    @(154.1750 mm, 92.0000 mm): B.Cu 上 R93 的焊盘 1 [/SD_CD]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(157.0000 mm, 92.5700 mm): C91 的参考字段
+    @(155.8250 mm, 92.0000 mm): B.Cu 上 R93 的焊盘 2 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+    @(152.8250 mm, 92.0000 mm): B.Cu 上 R92 的焊盘 2 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(145.0000 mm, 105.5700 mm): R77 的参考字段
+    @(146.1750 mm, 105.5000 mm): B.Cu 上 R75 的焊盘 1 [/PGOOD_N]
+[copper_sliver]: 铜箔毛刺 (F.Cu)
+    Local override; warning
+
+** Found 17 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(126.1000 mm, 106.2000 mm): B.Cu 上 U7 的焊盘 3 [/GND]
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(126.1000 mm, 106.2000 mm): B.Cu 上 U7 的焊盘 3 [/GND]
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(128.0000 mm, 94.7300 mm): B.Cu 上 U3 的焊盘 10 [/GND]
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 F.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

@@ -48,23 +48,26 @@ def write(name: str, body: list[str]):
 
 
 def tps63070():
-    name = "TI_RNM0015A_VQFN-HR-15_2.5x3mm"
+    name = "TI_RNM0015A_VQFN-HR-15_TI4222000B"
     b = header(name, "TPS63070 RNM0015A; TI official land pattern 4222000/B")
     b += [line(-1.4, -1.65, 1.4, -1.65), line(1.4, -1.65, 1.4, 1.65),
           line(1.4, 1.65, -1.4, 1.65), line(-1.4, 1.65, -1.4, -1.65),
           line(-1.55, -1.8, -1.15, -1.8)]
-    # RNM is an asymmetric HotRod package. Coordinates follow the TI land view.
+    # RNM is an asymmetric HotRod package. Coordinates follow TI 4222000/B.
+    # Pads 7/8 (VOUT) and 12/13 (VIN) intentionally touch because each pair is
+    # one continuous recommended land and the two pins share the same net.
     pads = [
-        (1, -1.1, -1.25, .25, .6), (2, -.6, -1.25, .25, .6),
-        (3, -.1, -1.25, .25, .6), (4, .4, -1.25, .25, .6),
-        (5, 1.1, -.75, .25, .6), (6, 1.1, 0, .25, .6),
-        (7, 1.1, .75, .25, .6), (8, .65, 1.25, .25, .6),
-        (9, 0, 1.0, .6, 1.15), (10, -.65, 1.25, .25, .6),
-        (11, -1.0, .35, .775, .6), (12, -.525, -.15, .25, .6),
-        (13, 0, -.15, .25, .6), (14, .525, -.15, .25, .6),
-        (15, -1.0, -.55, .775, .6),
+        (1, -.75, .96, .25, .6), (2, -.25, .96, .25, .6),
+        (3, .25, .96, .25, .6), (4, .75, .96, .25, .6),
+        (5, 1.40, .54, .6, .25), (6, 1.40, .04, .6, .25),
+        (7, 1.40, -.46, .6, .25), (8, 1.40, -.96, .6, .25),
+        (9, .50, -.96, .25, 1.35), (10, 0, -.73, .25, 1.80),
+        (11, -.50, -.96, .25, 1.35),
+        (12, -1.40, -.96, .6, .25), (13, -1.40, -.46, .6, .25),
+        (14, -1.40, .04, .6, .25), (15, -1.40, .54, .6, .25),
     ]
     b += [smd_pad(*p) for p in pads]
+    b += [smd_pad(8, 1.23, -.71, .25, .75), smd_pad(13, -1.23, -.71, .25, .75)]
     write(name, b)
 
 
@@ -139,7 +142,6 @@ def fpc_fh34_10():
 def main():
     tps63070()
     tps61023()
-    bq27441()
     microphone("Infineon_IM73D122V01_PG-LLGA-5-3", "PG-LLGA-5-3")
     microphone("Infineon_IM69D130_PG-LLGA-5-1", "PG-LLGA-5-1")
     sharp_lcd()

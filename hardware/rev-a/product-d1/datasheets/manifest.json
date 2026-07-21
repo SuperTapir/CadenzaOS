@@ -1,0 +1,141 @@
+{
+  "schematic": "/tmp/cadenza-d1-critical-mpns.txt",
+  "last_sync": "2026-07-21T01:19:47.897335+00:00",
+  "parts": {
+    "ESP32-S3-WROOM-1-N16R8": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'ESP32-S3-WROOM-1-N16R8'",
+      "last_attempt": "2026-07-21T01:19:44.589754+00:00"
+    },
+    "BQ24074RGTR": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'BQ24074RGTR'",
+      "last_attempt": "2026-07-21T01:19:44.590216+00:00"
+    },
+    "TPS63070RNMR": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'TPS63070RNMR'",
+      "last_attempt": "2026-07-21T01:19:44.590281+00:00"
+    },
+    "IM73D122V01": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'IM73D122V01'",
+      "last_attempt": "2026-07-21T01:19:45.425079+00:00"
+    },
+    "MAX98357AETE+T": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'MAX98357AETE+T'",
+      "last_attempt": "2026-07-21T01:19:45.425112+00:00"
+    },
+    "TPS61023DRLR": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'TPS61023DRLR'",
+      "last_attempt": "2026-07-21T01:19:45.424273+00:00"
+    },
+    "BQ27441DRZR-G1A": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'BQ27441DRZR-G1A'",
+      "last_attempt": "2026-07-21T01:19:46.043873+00:00"
+    },
+    "HC-TYPE-C-16P-01A-G": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'HC-TYPE-C-16P-01A-G'",
+      "last_attempt": "2026-07-21T01:19:46.045254+00:00"
+    },
+    "USBLC6-2SC6": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'USBLC6-2SC6'",
+      "last_attempt": "2026-07-21T01:19:46.044750+00:00"
+    },
+    "DM3AT-SF-PEJM5": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'DM3AT-SF-PEJM5'",
+      "last_attempt": "2026-07-21T01:19:46.664117+00:00"
+    },
+    "JS102011SAQN": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'JS102011SAQN'",
+      "last_attempt": "2026-07-21T01:19:46.664877+00:00"
+    },
+    "FH34SRJ-10S-0.5SH(99)": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'FH34SRJ-10S-0.5SH(99)'",
+      "last_attempt": "2026-07-21T01:19:46.663405+00:00"
+    },
+    "KMR2": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'KMR2'",
+      "last_attempt": "2026-07-21T01:19:47.275902+00:00"
+    },
+    "B2B-PH-SM4-TB": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'B2B-PH-SM4-TB'",
+      "last_attempt": "2026-07-21T01:19:47.284710+00:00"
+    },
+    "SM06B-SRSS-TB": {
+      "manufacturer": "",
+      "description": "",
+      "value": "",
+      "references": [],
+      "status": "not_found",
+      "error": "No LCSC results for 'SM06B-SRSS-TB'",
+      "last_attempt": "2026-07-21T01:19:47.279686+00:00"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+=== stdout ===
+
+Note: No compatibility mode selected!
+
+
+Circuit: * auto-generated testbench for decoupling analysis: +5v_lcd rail
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1201
+z_min               =  8.15204e-02 at=  8.03526e+06
+ meas ac f_at_zmin when z_mag=8.152039e-02 failed!
+
+z_at_1m             =  1.66497e-01
+z_at_100k           =  1.44923e+00
+ngspice-46 done
+
+=== stderr ===
+
+Error: measure  f_at_zmin  when(WHEN) : out of interval
+Error: &f_at_zmin: no such variable.
+

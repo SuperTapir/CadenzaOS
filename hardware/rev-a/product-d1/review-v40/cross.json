@@ -1,0 +1,255 @@
+{
+  "analyzer_type": "cross_analysis",
+  "schema_version": "1.4.0",
+  "inputs": {
+    "source_files": [
+      "hardware/rev-a/product-d1/review-v40/schematic.json",
+      "hardware/rev-a/product-d1/review-v40/pcb.json"
+    ],
+    "source_hashes": {
+      "hardware/rev-a/product-d1/review-v40/schematic.json": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+      "hardware/rev-a/product-d1/review-v40/pcb.json": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f"
+    },
+    "run_id": "20260721T011705Z-05d91e",
+    "config_hash": null,
+    "upstream_artifacts": {
+      "schematic": {
+        "path": "hardware/rev-a/product-d1/review-v40/schematic.json",
+        "sha256": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      },
+      "pcb": {
+        "path": "hardware/rev-a/product-d1/review-v40/pcb.json",
+        "sha256": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      }
+    }
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "elapsed_s": 0.012,
+  "summary": {
+    "total_findings": 3,
+    "by_severity": {
+      "error": 0,
+      "warning": 2,
+      "info": 1
+    }
+  },
+  "findings": [
+    {
+      "detector": "check_cross_validation",
+      "rule_id": "XV-001",
+      "category": "design_sync",
+      "summary": "1 component(s) in PCB but not schematic",
+      "description": "Extra in PCB: LCD1.",
+      "components": [
+        "LCD1"
+      ],
+      "nets": [],
+      "pins": [],
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "recommendation": "Verify these are intentional (mounting holes, test points, fiducials).",
+      "report_context": {
+        "section": "Design Sync",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "finding_id": "cross_analysis:XV-001:lcd1",
+      "stages": [
+        "pre_fab"
+      ],
+      "in_active_stage": true
+    },
+    {
+      "detector": "check_return_path_enhanced",
+      "rule_id": "RP-002",
+      "category": "return_path",
+      "summary": "Net /SD_CLK: 71% reference plane coverage",
+      "description": "High-speed net /SD_CLK has only 71% reference plane coverage.",
+      "components": [],
+      "nets": [
+        "/SD_CLK"
+      ],
+      "pins": [],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Re-route signal to avoid reference plane gaps.",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "Increased loop area and EMI",
+        "standard_ref": ""
+      },
+      "finding_id": "cross_analysis:RP-002:/sd_clk",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false
+    },
+    {
+      "detector": "check_return_path_enhanced",
+      "rule_id": "RP-002",
+      "category": "return_path",
+      "summary": "Net /I2S_LRCLK: 87% reference plane coverage",
+      "description": "High-speed net /I2S_LRCLK has only 87% reference plane coverage.",
+      "components": [],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "pins": [],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Re-route signal to avoid reference plane gaps.",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "Increased loop area and EMI",
+        "standard_ref": ""
+      },
+      "finding_id": "cross_analysis:RP-002:/i2s_lrclk",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false
+    }
+  ],
+  "assessments": [],
+  "trust_summary": {
+    "total_findings": 3,
+    "trust_level": "low",
+    "by_confidence": {
+      "deterministic": 1,
+      "heuristic": 2,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 3,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "stage_filter": {
+    "active_stage": "pre_fab",
+    "included_count": 1,
+    "excluded_count": 2
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 3,
+      "by_severity": {
+        "error": 0,
+        "warning": 2,
+        "info": 1
+      },
+      "by_category": {
+        "design_sync": 1,
+        "return_path": 2
+      },
+      "top_issues": [
+        {
+          "detector": "check_return_path_enhanced",
+          "rule_id": "RP-002",
+          "category": "return_path",
+          "summary": "Net /SD_CLK: 71% reference plane coverage",
+          "description": "High-speed net /SD_CLK has only 71% reference plane coverage.",
+          "components": [],
+          "nets": [
+            "/SD_CLK"
+          ],
+          "pins": [],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Re-route signal to avoid reference plane gaps.",
+          "report_context": {
+            "section": "Return Path",
+            "impact": "Increased loop area and EMI",
+            "standard_ref": ""
+          },
+          "finding_id": "cross_analysis:RP-002:/sd_clk",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false
+        },
+        {
+          "detector": "check_return_path_enhanced",
+          "rule_id": "RP-002",
+          "category": "return_path",
+          "summary": "Net /I2S_LRCLK: 87% reference plane coverage",
+          "description": "High-speed net /I2S_LRCLK has only 87% reference plane coverage.",
+          "components": [],
+          "nets": [
+            "/I2S_LRCLK"
+          ],
+          "pins": [],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Re-route signal to avoid reference plane gaps.",
+          "report_context": {
+            "section": "Return Path",
+            "impact": "Increased loop area and EMI",
+            "standard_ref": ""
+          },
+          "finding_id": "cross_analysis:RP-002:/i2s_lrclk",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 2,
+      "by_category": {
+        "return_path": 2
+      },
+      "top_issues": [
+        {
+          "rule_id": "RP-002",
+          "severity": "warning",
+          "summary": "Net /SD_CLK: 71% reference plane coverage",
+          "recommendation": "Re-route signal to avoid reference plane gaps.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-002",
+          "severity": "warning",
+          "summary": "Net /I2S_LRCLK: 87% reference plane coverage",
+          "recommendation": "Re-route signal to avoid reference plane gaps.",
+          "category": "return_path"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "low",
+      "blocker_count": 0,
+      "warning_count": 2,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "needs_review",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 warnings across 1 category."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260721T011705Z-05d91e"
+  }
+}

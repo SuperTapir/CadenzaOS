@@ -3,7 +3,7 @@
   "revision": "D1",
   "board": {
     "layers": 4,
-    "thickness_mm": 1.2,
+    "thickness_mm": 1.6,
     "copper_oz": [1, 0.5, 0.5, 1],
     "outline_mm": {"width": 116.0, "height": 64.0, "corner_radius": 6.0},
     "stackup": ["F.Cu signals/components", "In1.Cu solid GND", "In2.Cu power", "B.Cu signals/components"]
@@ -12,7 +12,8 @@
     "input": "USB_VBUS_5V or BAT_1S",
     "rails": {
       "VBUS": {"nominal_v": 5.0, "source": "J1"},
-      "VBAT": {"range_v": [3.0, 4.2], "source": "J4"},
+      "PACKP": {"range_v": [3.0, 4.2], "source": "J4"},
+      "VBAT": {"range_v": [3.0, 4.2], "source": "PACKP via R73 10mohm"},
       "VSYS": {"range_v": [3.0, 4.4], "source": "U2.OUT"},
       "+3V3_MAIN": {"nominal_v": 3.3, "source": "U3", "enable": "RUN_EN"},
       "+5V_MEDIA": {"nominal_v": 5.0, "source": "U4", "enable": "RUN_EN"},
@@ -32,9 +33,10 @@
         "J1.CC1 -> R1 5.1k -> GND",
         "J1.CC2 -> R2 5.1k -> GND",
         "VBUS -> U2.IN",
-        "U2.BAT -> VBAT",
+        "J4.PACKP -> R73 10mohm -> VBAT -> U2.BAT",
         "U2.OUT -> VSYS",
-        "U2.CHG -> CHG_N -> ESP32.GPIO17",
+        "U2.CHG -> CHG_N -> ESP32.GPIO17 with 100k pull-up",
+        "U2.PGOOD -> PGOOD_N -> ESP32.GPIO1 with 100k pull-up",
         "U2.CE -> GND",
         "U2.EN1/EN2 -> input-current straps",
         "U2.ILIM -> R3 1.5k -> GND",
@@ -51,7 +53,7 @@
         "U3.VOUT -> +3V3_MAIN",
         "U3.FB -> R10 470k -> +3V3_MAIN",
         "U3.FB -> R11 150k -> GND",
-        "U3.EN -> RUN_EN",
+        "VSYS -> R30 100k -> RUN_EN -> U3.EN and U4.EN",
         "U3.PS_SYNC -> +3V3_MAIN",
         "U3.VSEL -> GND",
         "U3.FB2 -> GND"
@@ -104,7 +106,7 @@
       "components": ["U5", "J5", "C50", "C51", "R50", "R51"],
       "connections": [
         "U5.VDD -> +5V_AUDIO",
-        "U5.BCLK -> ESP32.GPIO46",
+        "U5.BCLK -> ESP32.GPIO16",
         "U5.LRCLK -> ESP32.GPIO40",
         "U5.DIN -> ESP32.GPIO7",
         "U5.SD_MODE -> ESP32.GPIO41 with 100k default-enable bias",
@@ -117,8 +119,9 @@
       "name": "storage_controls",
       "components": ["J3", "J6", "SW1", "SW2", "SW3", "R60", "R61", "R62", "R63", "R64"],
       "connections": [
-        "J3.CLK/CMD/DAT0/CS -> ESP32.GPIO36/35/37/38; GPIO45 reserved",
-        "J6.1 +3V3_MAIN; J6.2 GND; J6.3 ENC_A GPIO4; J6.4 ENC_B GPIO5; J6.5 A_SW GPIO6; J6.6 LED_CTRL",
+        "J3.CLK/CMD/DAT0/CS -> ESP32.GPIO36/35/37/38; J3.CD -> ESP32.GPIO9",
+        "SD_CS/SD_CMD/SD_DAT0/SD_CD each use 10k pull-up; J3 has local 10uF + 100nF",
+        "J6.1 +3V3_MAIN; J6.2 GND; J6.3 ENC_A GPIO4; J6.4 ENC_B GPIO5; J6.5 A_SW GPIO6; J6.6 LED_CTRL GPIO2",
         "SW2 B -> ESP32.GPIO47 -> GND",
         "SW3 MENU -> ESP32.GPIO48 -> GND",
         "SW1 RUN -> RUN_EN; OFF -> GND",
@@ -127,12 +130,15 @@
     },
     {
       "name": "fuel_gauge",
-      "components": ["U7", "R70", "R71", "R72", "C70"],
+      "components": ["U7", "R70", "R71", "R72", "R73", "R74", "C70", "C71"],
       "connections": [
-        "U7.BAT -> VBAT Kelvin sense",
+        "U7.BAT and U7.SRP -> PACKP Kelvin sense; U7.SRN -> VBAT Kelvin sense",
+        "R73 10mohm 1% 1W 50ppm in PACKP-to-VBAT high-side current path",
         "U7.SDA/SCL -> ESP32.GPIO8/GPIO18",
         "SDA/SCL each 4.7k pull-up to +3V3_MAIN",
-        "U7.BIN -> 10k -> GND for embedded battery"
+        "U7.VDD -> C71 1uF -> GND; U7.BAT -> C70 1uF -> GND",
+        "U7.BIN -> 10k -> GND for embedded battery",
+        "U7.GPOUT -> GPIO21 with 10k pull-up to +3V3_MAIN"
       ]
     }
   ],

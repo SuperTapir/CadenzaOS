@@ -1,0 +1,1254 @@
+{
+  "analyzer_type": "spice",
+  "schema_version": "1.4.0",
+  "summary": {
+    "total": 15,
+    "total_findings": 0,
+    "pass": 15,
+    "warn": 0,
+    "fail": 0,
+    "skip": 0,
+    "by_severity": {
+      "error": 0,
+      "warning": 0,
+      "info": 15
+    }
+  },
+  "findings": [],
+  "simulation_results": [
+    {
+      "subcircuit_type": "rc_filter",
+      "components": [
+        "R80",
+        "C80"
+      ],
+      "filter_type": "low-pass",
+      "expected": {
+        "cutoff_hz": 15.92,
+        "type": "low-pass"
+      },
+      "simulated": {
+        "cutoff_hz": 15.8777,
+        "phase_at_fc_deg": -0.784197
+      },
+      "delta": {
+        "fc_error_pct": 0.27
+      },
+      "status": "pass",
+      "elapsed_s": 0.033,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R80",
+            "type": "resistor",
+            "nominal": 10000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "C80",
+            "type": "capacitor",
+            "nominal": 1e-06,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "cutoff_hz": {
+            "nominal": 15.8777,
+            "mean": 15.810431,
+            "std": 0.522338,
+            "min": 14.5966,
+            "max": 16.9941,
+            "p3sigma_lo": 14.243418,
+            "p3sigma_hi": 17.377444,
+            "spread_pct": 15.1
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C80",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 82.8,
+            "metric": "cutoff_hz"
+          },
+          {
+            "ref": "R80",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 17.2,
+            "metric": "cutoff_hz"
+          }
+        ]
+      },
+      "reference": "R80/C80"
+    },
+    {
+      "subcircuit_type": "voltage_divider",
+      "components": [
+        "R10",
+        "R11"
+      ],
+      "expected": {
+        "ratio": 0.241935,
+        "vout_V": 0.7983855
+      },
+      "simulated": {
+        "vout_V": 0.798387
+      },
+      "delta": {
+        "vout_error_pct": 0.0
+      },
+      "status": "pass",
+      "elapsed_s": 0.015,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R10",
+            "type": "resistor",
+            "nominal": 470000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "R11",
+            "type": "resistor",
+            "nominal": 150000.0,
+            "tolerance_pct": 5.0
+          }
+        ],
+        "statistics": {
+          "vout_V": {
+            "nominal": 0.798387,
+            "mean": 0.79756,
+            "std": 0.016181,
+            "min": 0.75901,
+            "max": 0.840592,
+            "p3sigma_lo": 0.749017,
+            "p3sigma_hi": 0.846103,
+            "spread_pct": 10.2
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "R10",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 51.8,
+            "metric": "vout_V"
+          },
+          {
+            "ref": "R11",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 48.2,
+            "metric": "vout_V"
+          }
+        ]
+      },
+      "reference": "R10/R11"
+    },
+    {
+      "subcircuit_type": "voltage_divider",
+      "components": [
+        "R10",
+        "R11"
+      ],
+      "expected": {
+        "ratio": 0.241935,
+        "vout_V": 0.7983855
+      },
+      "simulated": {
+        "vout_V": 0.798387
+      },
+      "delta": {
+        "vout_error_pct": 0.0
+      },
+      "status": "pass",
+      "elapsed_s": 0.015,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R10",
+            "type": "resistor",
+            "nominal": 470000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "R11",
+            "type": "resistor",
+            "nominal": 150000.0,
+            "tolerance_pct": 5.0
+          }
+        ],
+        "statistics": {
+          "vout_V": {
+            "nominal": 0.798387,
+            "mean": 0.798811,
+            "std": 0.014016,
+            "min": 0.763781,
+            "max": 0.828665,
+            "p3sigma_lo": 0.756763,
+            "p3sigma_hi": 0.84086,
+            "spread_pct": 8.1
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "R11",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 58.6,
+            "metric": "vout_V"
+          },
+          {
+            "ref": "R10",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 41.4,
+            "metric": "vout_V"
+          }
+        ]
+      },
+      "reference": "R10/R11"
+    },
+    {
+      "subcircuit_type": "voltage_divider",
+      "components": [
+        "R20",
+        "R21"
+      ],
+      "expected": {
+        "ratio": 0.120192,
+        "vout_V": 0.6009599999999999
+      },
+      "simulated": {
+        "vout_V": 0.600962
+      },
+      "delta": {
+        "vout_error_pct": 0.0
+      },
+      "status": "pass",
+      "elapsed_s": 0.016,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R20",
+            "type": "resistor",
+            "nominal": 732000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "R21",
+            "type": "resistor",
+            "nominal": 100000.0,
+            "tolerance_pct": 5.0
+          }
+        ],
+        "statistics": {
+          "vout_V": {
+            "nominal": 0.600962,
+            "mean": 0.600751,
+            "std": 0.012243,
+            "min": 0.559488,
+            "max": 0.632911,
+            "p3sigma_lo": 0.564023,
+            "p3sigma_hi": 0.637479,
+            "spread_pct": 12.2
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "R20",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 54.4,
+            "metric": "vout_V"
+          },
+          {
+            "ref": "R21",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 45.6,
+            "metric": "vout_V"
+          }
+        ]
+      },
+      "reference": "R20/R21"
+    },
+    {
+      "subcircuit_type": "voltage_divider",
+      "components": [
+        "R20",
+        "R21"
+      ],
+      "expected": {
+        "ratio": 0.120192,
+        "vout_V": 0.6009599999999999
+      },
+      "simulated": {
+        "vout_V": 0.600962
+      },
+      "delta": {
+        "vout_error_pct": 0.0
+      },
+      "status": "pass",
+      "elapsed_s": 0.015,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R20",
+            "type": "resistor",
+            "nominal": 732000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "R21",
+            "type": "resistor",
+            "nominal": 100000.0,
+            "tolerance_pct": 5.0
+          }
+        ],
+        "statistics": {
+          "vout_V": {
+            "nominal": 0.600962,
+            "mean": 0.600119,
+            "std": 0.012651,
+            "min": 0.561379,
+            "max": 0.629056,
+            "p3sigma_lo": 0.562167,
+            "p3sigma_hi": 0.638072,
+            "spread_pct": 11.3
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "R20",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 55.6,
+            "metric": "vout_V"
+          },
+          {
+            "ref": "R21",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 44.4,
+            "metric": "vout_V"
+          }
+        ]
+      },
+      "reference": "R20/R21"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C1"
+      ],
+      "rail": "VBUS",
+      "cap_count": 1,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0316,
+        "z_at_1MHz_ohms": 0.0336,
+        "z_at_100kHz_ohms": 0.1618
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.034\u03a9 at 1MHz",
+      "elapsed_s": 0.018,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C1",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0316,
+            "mean": 0.0316,
+            "std": 0.0,
+            "min": 0.0316,
+            "max": 0.0316,
+            "p3sigma_lo": 0.0316,
+            "p3sigma_hi": 0.0316,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C1",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C1"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C2",
+        "C10",
+        "C11",
+        "C20"
+      ],
+      "rail": "VSYS",
+      "cap_count": 4,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0079,
+        "z_at_1MHz_ohms": 0.0084,
+        "z_at_100kHz_ohms": 0.0405
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.008\u03a9 at 1MHz",
+      "elapsed_s": 0.017,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C2",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C10",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C11",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C20",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0079,
+            "mean": 0.0079,
+            "std": 0.0,
+            "min": 0.0079,
+            "max": 0.0079,
+            "p3sigma_lo": 0.0079,
+            "p3sigma_hi": 0.0079,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C2",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C10",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C11",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C20",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C2/C10/C11/C20"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C12",
+        "C13",
+        "C40",
+        "C81",
+        "C82"
+      ],
+      "rail": "+3V3_MAIN",
+      "cap_count": 7,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0064,
+        "f_at_zmin_hz": 1513450.0,
+        "z_at_1MHz_ohms": 0.0066,
+        "z_at_100kHz_ohms": 0.0255
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.007\u03a9 at 1MHz",
+      "elapsed_s": 0.018,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C12",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C13",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C40",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C81",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C82",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C90",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C91",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0064,
+            "mean": 0.0064,
+            "std": 0.0,
+            "min": 0.0064,
+            "max": 0.0064,
+            "p3sigma_lo": 0.0064,
+            "p3sigma_hi": 0.0064,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C12",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C13",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C40",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C81",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C82",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C90",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C91",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C12/C13/C40/C81/C82"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C21",
+        "C22"
+      ],
+      "rail": "+5V_MEDIA",
+      "cap_count": 2,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0106,
+        "f_at_zmin_hz": 1288190.0,
+        "z_at_1MHz_ohms": 0.0107,
+        "z_at_100kHz_ohms": 0.0375
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.011\u03a9 at 1MHz",
+      "elapsed_s": 0.017,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C21",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C22",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0106,
+            "mean": 0.010675,
+            "std": 4.4e-05,
+            "min": 0.0106,
+            "max": 0.0107,
+            "p3sigma_lo": 0.010544,
+            "p3sigma_hi": 0.010806,
+            "spread_pct": 0.9
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C22",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 66.7,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C21",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 33.3,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C21/C22"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C3"
+      ],
+      "rail": "VBAT",
+      "cap_count": 1,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0316,
+        "z_at_1MHz_ohms": 0.0336,
+        "z_at_100kHz_ohms": 0.1618
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.034\u03a9 at 1MHz",
+      "elapsed_s": 0.016,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C3",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0316,
+            "mean": 0.0316,
+            "std": 0.0,
+            "min": 0.0316,
+            "max": 0.0316,
+            "p3sigma_lo": 0.0316,
+            "p3sigma_hi": 0.0316,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C3",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C3"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C30",
+        "C31"
+      ],
+      "rail": "+5V_LCD",
+      "cap_count": 2,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0815,
+        "z_at_1MHz_ohms": 0.1665,
+        "z_at_100kHz_ohms": 1.4492
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.166\u03a9 at 1MHz",
+      "elapsed_s": 0.017,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C30",
+            "type": "capacitor",
+            "nominal": 1e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C31",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0815,
+            "mean": 0.081511,
+            "std": 0.000307,
+            "min": 0.0808,
+            "max": 0.0825,
+            "p3sigma_lo": 0.080589,
+            "p3sigma_hi": 0.082433,
+            "spread_pct": 2.1
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C31",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 89.5,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C30",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 10.5,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C30/C31"
+    },
+    {
+      "subcircuit_type": "decoupling",
+      "components": [
+        "C50",
+        "C51"
+      ],
+      "rail": "+5V_AUDIO",
+      "cap_count": 2,
+      "expected": {},
+      "simulated": {
+        "z_min_ohms": 0.0312,
+        "f_at_zmin_hz": 1949810.0,
+        "z_at_1MHz_ohms": 0.0333,
+        "z_at_100kHz_ohms": 0.1602
+      },
+      "delta": {},
+      "model_note": "generic ESR + parasitic L from self-resonant frequency",
+      "status": "pass",
+      "note": "Z=0.033\u03a9 at 1MHz",
+      "elapsed_s": 0.017,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C50",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C51",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "z_min_ohms": {
+            "nominal": 0.0312,
+            "mean": 0.031195,
+            "std": 3.3e-05,
+            "min": 0.0311,
+            "max": 0.0313,
+            "p3sigma_lo": 0.031096,
+            "p3sigma_hi": 0.031294,
+            "spread_pct": 0.6
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C51",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 94.9,
+            "metric": "z_min_ohms"
+          },
+          {
+            "ref": "C50",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 5.1,
+            "metric": "z_min_ohms"
+          }
+        ]
+      },
+      "reference": "C50/C51"
+    },
+    {
+      "subcircuit_type": "regulator_feedback",
+      "components": [
+        "R20",
+        "R21"
+      ],
+      "regulator": "U4",
+      "expected": {
+        "ratio": 0.120192,
+        "vref_V": 0.595,
+        "vfb_V": 0.6009599999999999,
+        "vin_V": 5.0
+      },
+      "simulated": {
+        "vfb_V": 0.601
+      },
+      "delta": {
+        "vfb_error_pct": 0.0
+      },
+      "status": "pass",
+      "elapsed_s": 0.015,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "R20",
+            "type": "resistor",
+            "nominal": 732000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "R21",
+            "type": "resistor",
+            "nominal": 100000.0,
+            "tolerance_pct": 5.0
+          },
+          {
+            "ref": "C21",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C22",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C2",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C10",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C11",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C20",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "vfb_V": {
+            "nominal": 0.601,
+            "mean": 0.600478,
+            "std": 0.01288,
+            "min": 0.5614,
+            "max": 0.6423,
+            "p3sigma_lo": 0.561837,
+            "p3sigma_hi": 0.639119,
+            "spread_pct": 13.5
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "R20",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 48.9,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "R21",
+            "tolerance_pct": 5.0,
+            "contribution_pct": 41.6,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C20",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 2.8,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C2",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 2.4,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C11",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 2.3,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C21",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 1.5,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C22",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.5,
+            "metric": "vfb_V"
+          },
+          {
+            "ref": "C10",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "vfb_V"
+          }
+        ]
+      },
+      "reference": "R20/R21"
+    },
+    {
+      "subcircuit_type": "inrush",
+      "components": [
+        "C12",
+        "C13",
+        "C40",
+        "C81",
+        "C82"
+      ],
+      "regulator": "U3",
+      "expected": {
+        "v_target_V": 3.3,
+        "estimated_inrush_A": 0.212
+      },
+      "simulated": {
+        "v_settled_V": 3.3
+      },
+      "delta": {
+        "v_settle_error_pct": 0.0
+      },
+      "status": "pass",
+      "note": "Transient simulated",
+      "elapsed_s": 0.017,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C12",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C13",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C40",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C81",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C82",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C90",
+            "type": "capacitor",
+            "nominal": 9.999999999999999e-06,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C91",
+            "type": "capacitor",
+            "nominal": 1.0000000000000001e-07,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "v_settled_V": {
+            "nominal": 3.3,
+            "mean": 3.3,
+            "std": 0.0,
+            "min": 3.3,
+            "max": 3.3,
+            "p3sigma_lo": 3.3,
+            "p3sigma_hi": 3.3,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C12",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C13",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C40",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C81",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C82",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C90",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C91",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          }
+        ]
+      },
+      "reference": "C12/C13/C40/C81/C82"
+    },
+    {
+      "subcircuit_type": "inrush",
+      "components": [
+        "C21",
+        "C22"
+      ],
+      "regulator": "U4",
+      "expected": {
+        "v_target_V": 4.95,
+        "estimated_inrush_A": 0.218
+      },
+      "simulated": {
+        "v_settled_V": 4.95
+      },
+      "delta": {
+        "v_settle_error_pct": 0.0
+      },
+      "status": "pass",
+      "note": "Transient simulated",
+      "elapsed_s": 0.018,
+      "tolerance_analysis": {
+        "n_samples": 100,
+        "n_converged": 100,
+        "distribution": "gaussian",
+        "seed": 42,
+        "components": [
+          {
+            "ref": "C21",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          },
+          {
+            "ref": "C22",
+            "type": "capacitor",
+            "nominal": 2.2e-05,
+            "tolerance_pct": 10.0
+          }
+        ],
+        "statistics": {
+          "v_settled_V": {
+            "nominal": 4.95,
+            "mean": 4.95,
+            "std": 0.0,
+            "min": 4.95,
+            "max": 4.95,
+            "p3sigma_lo": 4.95,
+            "p3sigma_hi": 4.95,
+            "spread_pct": 0.0
+          }
+        },
+        "sensitivity": [
+          {
+            "ref": "C21",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          },
+          {
+            "ref": "C22",
+            "tolerance_pct": 10.0,
+            "contribution_pct": 0.0,
+            "metric": "v_settled_V"
+          }
+        ]
+      },
+      "reference": "C21/C22"
+    }
+  ],
+  "trust_summary": {
+    "total_findings": 0,
+    "trust_level": "high",
+    "by_confidence": {
+      "deterministic": 0,
+      "heuristic": 0,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 0,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": null
+  },
+  "monte_carlo_summary": {
+    "subcircuits_analyzed": 15,
+    "total_simulations": 1500,
+    "concerns": []
+  },
+  "total_elapsed_s": 25.303,
+  "simulator": "/opt/homebrew/bin/ngspice",
+  "ngspice": "/opt/homebrew/bin/ngspice"
+}

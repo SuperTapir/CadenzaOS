@@ -1,0 +1,107 @@
+{
+  "statistics": {
+    "gerber_files": 11,
+    "drill_files": 2,
+    "total_holes": 173,
+    "total_flashes": 2029,
+    "total_draws": 24395
+  },
+  "summary": {
+    "total_findings": 3,
+    "by_severity": {
+      "error": 0,
+      "warning": 3,
+      "info": 0
+    }
+  },
+  "findings": [
+    {
+      "detector": "analyze_gerbers",
+      "rule_id": "GR-002",
+      "category": "gerber_alignment",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Alignment: Width varies by 11.1mm across copper/edge layers",
+      "description": "Layer alignment issue: Width varies by 11.1mm across copper/edge layers",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Re-export gerbers to ensure consistent layer alignment.",
+      "report_context": {
+        "section": "Gerber Alignment",
+        "impact": "Layer misregistration",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ],
+      "finding_id": "gerber:GR-002:44ad1a402424"
+    },
+    {
+      "detector": "analyze_gerbers",
+      "rule_id": "GR-002",
+      "category": "gerber_alignment",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Alignment: Height varies by 6.2mm across copper/edge layers",
+      "description": "Layer alignment issue: Height varies by 6.2mm across copper/edge layers",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Re-export gerbers to ensure consistent layer alignment.",
+      "report_context": {
+        "section": "Gerber Alignment",
+        "impact": "Layer misregistration",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ],
+      "finding_id": "gerber:GR-002:07fb0cc01a0a"
+    },
+    {
+      "detector": "analyze_gerbers",
+      "rule_id": "GR-004",
+      "category": "gerber_completeness",
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "F paste layer: 66 flashes vs 233 copper (28%)",
+      "description": "F-side paste layer has significantly fewer flashes (66) than copper layer (233). This may indicate missing solder paste apertures.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Check solder paste aperture generation — missing apertures cause assembly defects.",
+      "report_context": {
+        "section": "Gerber Completeness",
+        "impact": "Assembly solder joint quality",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ],
+      "finding_id": "gerber:GR-004:08ecf86e15e7"
+    }
+  ],
+  "trust_summary": {
+    "total_findings": 3,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 2,
+      "heuristic": 1,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 3,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  }
+}

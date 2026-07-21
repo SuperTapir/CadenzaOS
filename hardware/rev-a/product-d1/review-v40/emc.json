@@ -1,0 +1,3110 @@
+{
+  "analyzer_type": "emc",
+  "schema_version": "1.4.0",
+  "inputs": {
+    "source_files": [
+      "hardware/rev-a/product-d1/review-v40/schematic.json",
+      "hardware/rev-a/product-d1/review-v40/pcb.json"
+    ],
+    "source_hashes": {
+      "hardware/rev-a/product-d1/review-v40/schematic.json": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+      "hardware/rev-a/product-d1/review-v40/pcb.json": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f"
+    },
+    "run_id": "20260721T011705Z-05d91e",
+    "config_hash": null,
+    "upstream_artifacts": {
+      "schematic": {
+        "path": "hardware/rev-a/product-d1/review-v40/schematic.json",
+        "sha256": "c67a428cd68dab0be33dad3bc904a8c79f23aa06e2e0c1a4e6bdde0c952facf2",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      },
+      "pcb": {
+        "path": "hardware/rev-a/product-d1/review-v40/pcb.json",
+        "sha256": "53aa164c4ceb246722a83644f2aca36b0d14b64e362ce10299bfa38b1ce1d29f",
+        "schema_version": "1.4.0",
+        "run_id": "20260721T011705Z-05d91e"
+      }
+    }
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "summary": {
+    "total_findings": 56,
+    "categories_checked": 9,
+    "active": 69,
+    "suppressed": 0,
+    "by_severity": {
+      "error": 12,
+      "warning": 44,
+      "info": 0
+    },
+    "emc_risk_score": 0
+  },
+  "target_standard": "fcc-class-b",
+  "findings": [
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has significant reference plane gap",
+      "description": "Net /SD_DAT0 has 61% reference plane coverage over 21.0mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/SD_DAT0"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has significant reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/SD_DAT0",
+      "coverage_pct": 61.1,
+      "trace_mm": 21.0,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/sd_dat0"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has significant reference plane gap",
+      "description": "Net /SD_CLK has 71% reference plane coverage over 21.6mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/SD_CLK"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has significant reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/SD_CLK",
+      "coverage_pct": 70.6,
+      "trace_mm": 21.6,
+      "is_high_speed_or_clock": true,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/sd_clk"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /AMP_EN has 84% reference plane coverage over 112.5mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/AMP_EN"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/AMP_EN",
+      "coverage_pct": 84.0,
+      "trace_mm": 112.5,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/amp_en"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /CC2 has 85% reference plane coverage over 13.0mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/CC2"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/CC2",
+      "coverage_pct": 84.6,
+      "trace_mm": 13.0,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/cc2"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /I2S_LRCLK has 87% reference plane coverage over 108.1mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/I2S_LRCLK",
+      "coverage_pct": 86.8,
+      "trace_mm": 108.1,
+      "is_high_speed_or_clock": true,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/i2s_lrclk"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /B_SW has 90% reference plane coverage over 102.8mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/B_SW"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/B_SW",
+      "coverage_pct": 89.7,
+      "trace_mm": 102.8,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/b_sw"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /LCD_EXTCOMIN has 91% reference plane coverage over 80.9mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_EXTCOMIN"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/LCD_EXTCOMIN",
+      "coverage_pct": 91.4,
+      "trace_mm": 80.9,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/lcd_extcomin"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /I2S_BCLK has 93% reference plane coverage over 88.6mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_BCLK"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/I2S_BCLK",
+      "coverage_pct": 93.2,
+      "trace_mm": 88.6,
+      "is_high_speed_or_clock": true,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/i2s_bclk"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /LCD_SCLK has 93% reference plane coverage over 77.8mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_SCLK"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/LCD_SCLK",
+      "coverage_pct": 93.4,
+      "trace_mm": 77.8,
+      "is_high_speed_or_clock": true,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/lcd_sclk"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /I2S_DIN has 94% reference plane coverage over 95.2mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_DIN"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/I2S_DIN",
+      "coverage_pct": 93.5,
+      "trace_mm": 95.2,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/i2s_din"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /RUN_EN has 94% reference plane coverage over 105.8mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/RUN_EN"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/RUN_EN",
+      "coverage_pct": 93.8,
+      "trace_mm": 105.8,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/run_en"
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-001",
+      "confidence": "heuristic",
+      "title": "Signal has partial reference plane gap",
+      "description": "Net /ENC_B has 95% reference plane coverage over 23.8mm of routing. Return current must detour around the gap, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/ENC_B"
+      ],
+      "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+      "detector": "emc_ground_plane",
+      "summary": "Signal has partial reference plane gap",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "signal_net": "/ENC_B",
+      "coverage_pct": 94.7,
+      "trace_mm": 23.8,
+      "is_high_speed_or_clock": false,
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:GP-001:/enc_b"
+    },
+    {
+      "category": "decoupling",
+      "severity": "warning",
+      "rule_id": "DC-001",
+      "confidence": "deterministic",
+      "title": "Decoupling cap moderately far from U3",
+      "description": "Nearest decoupling cap to U3 (TPS63070RNMR) is 6.1mm away. Recommended: <3mm for best high-frequency performance.",
+      "components": [
+        "U3",
+        "C14",
+        "C13"
+      ],
+      "nets": [],
+      "recommendation": "Move decoupling cap closer to U3 power pins if layout permits.",
+      "detector": "emc_decoupling",
+      "summary": "Decoupling cap moderately far from U3",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:DC-001:u3"
+    },
+    {
+      "category": "decoupling",
+      "severity": "error",
+      "rule_id": "DC-001",
+      "confidence": "deterministic",
+      "title": "Decoupling cap too far from U7",
+      "description": "Nearest decoupling cap to U7 (BQ27441DRZR-G1A) is 9.2mm away. Each mm of trace adds 0.3-0.8 nH of loop inductance, reducing decoupling effectiveness at high frequencies.",
+      "components": [
+        "U7",
+        "C13",
+        "C70"
+      ],
+      "nets": [],
+      "recommendation": "Move decoupling cap within 2-3mm of U7 power pins.",
+      "detector": "emc_decoupling",
+      "summary": "Decoupling cap too far from U7",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:DC-001:u7"
+    },
+    {
+      "category": "decoupling",
+      "severity": "error",
+      "rule_id": "DC-002",
+      "confidence": "heuristic",
+      "title": "No decoupling cap found near U1",
+      "description": "U1 (ESP32-S3-WROOM-1-N16R8) has no capacitor within 10mm. Every IC with power pins needs at least one decoupling capacitor.",
+      "components": [
+        "U1"
+      ],
+      "nets": [],
+      "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+      "detector": "emc_decoupling",
+      "summary": "No decoupling cap found near U1",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "capacitor",
+            "value": "100n"
+          }
+        ],
+        "basis": "Standard 100nF decoupling per IC"
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:DC-002:u1"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-001",
+      "confidence": "deterministic",
+      "title": "Clock /I2S_BCLK on outer layer",
+      "description": "Clock net /I2S_BCLK is 100% routed on outer layers (microstrip). Inner stripline layers provide better shielding from radiation.",
+      "components": [],
+      "nets": [
+        "/I2S_BCLK"
+      ],
+      "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /I2S_BCLK on outer layer",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-001:/i2s_bclk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-001",
+      "confidence": "deterministic",
+      "title": "Clock /SD_CLK on outer layer",
+      "description": "Clock net /SD_CLK is 100% routed on outer layers (microstrip). Inner stripline layers provide better shielding from radiation.",
+      "components": [],
+      "nets": [
+        "/SD_CLK"
+      ],
+      "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /SD_CLK on outer layer",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-001:/sd_clk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-001",
+      "confidence": "deterministic",
+      "title": "Clock /PDM_CLK on outer layer",
+      "description": "Clock net /PDM_CLK is 100% routed on outer layers (microstrip). Inner stripline layers provide better shielding from radiation.",
+      "components": [],
+      "nets": [
+        "/PDM_CLK"
+      ],
+      "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /PDM_CLK on outer layer",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-001:/pdm_clk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-002",
+      "confidence": "heuristic",
+      "title": "Long clock trace: /PDM_CLK",
+      "description": "Clock net /PDM_CLK is 119mm long. Long clock traces act as antennas and radiate harmonics more effectively.",
+      "components": [],
+      "nets": [
+        "/PDM_CLK"
+      ],
+      "recommendation": "Minimize clock trace length. Place clock source close to destination.",
+      "detector": "emc_clock_routing",
+      "summary": "Long clock trace: /PDM_CLK",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-002:/pdm_clk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-001",
+      "confidence": "deterministic",
+      "title": "Clock /LCD_SCLK on outer layer",
+      "description": "Clock net /LCD_SCLK is 100% routed on outer layers (microstrip). Inner stripline layers provide better shielding from radiation.",
+      "components": [],
+      "nets": [
+        "/LCD_SCLK"
+      ],
+      "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /LCD_SCLK on outer layer",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-001:/lcd_sclk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-001",
+      "confidence": "deterministic",
+      "title": "Clock /I2S_LRCLK on outer layer",
+      "description": "Clock net /I2S_LRCLK is 100% routed on outer layers (microstrip). Inner stripline layers provide better shielding from radiation.",
+      "components": [],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /I2S_LRCLK on outer layer",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-001:/i2s_lrclk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-002",
+      "confidence": "heuristic",
+      "title": "Long clock trace: /I2S_LRCLK",
+      "description": "Clock net /I2S_LRCLK is 108mm long. Long clock traces act as antennas and radiate harmonics more effectively.",
+      "components": [],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "recommendation": "Minimize clock trace length. Place clock source close to destination.",
+      "detector": "emc_clock_routing",
+      "summary": "Long clock trace: /I2S_LRCLK",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-002:/i2s_lrclk"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /LCD_SCLK routed near connector J2",
+      "description": "Clock net /LCD_SCLK passes within 1.1mm of connector J2. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J2"
+      ],
+      "nets": [
+        "/LCD_SCLK"
+      ],
+      "recommendation": "Route /LCD_SCLK away from J2, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /LCD_SCLK routed near connector J2",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j2"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /LCD_SCLK routed near connector J6",
+      "description": "Clock net /LCD_SCLK passes within 9.7mm of connector J6. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J6"
+      ],
+      "nets": [
+        "/LCD_SCLK"
+      ],
+      "recommendation": "Route /LCD_SCLK away from J6, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /LCD_SCLK routed near connector J6",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j6"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /SD_CLK routed near connector J3",
+      "description": "Clock net /SD_CLK passes within 8.3mm of connector J3. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J3"
+      ],
+      "nets": [
+        "/SD_CLK"
+      ],
+      "recommendation": "Route /SD_CLK away from J3, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /SD_CLK routed near connector J3",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j3"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /SD_CLK routed near connector J6",
+      "description": "Clock net /SD_CLK passes within 0.8mm of connector J6. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J6"
+      ],
+      "nets": [
+        "/SD_CLK"
+      ],
+      "recommendation": "Route /SD_CLK away from J6, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /SD_CLK routed near connector J6",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j6#1"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /PDM_CLK routed near connector J6",
+      "description": "Clock net /PDM_CLK passes within 8.5mm of connector J6. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J6"
+      ],
+      "nets": [
+        "/PDM_CLK"
+      ],
+      "recommendation": "Route /PDM_CLK away from J6, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /PDM_CLK routed near connector J6",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j6#2"
+    },
+    {
+      "category": "clock_routing",
+      "severity": "warning",
+      "rule_id": "CK-003",
+      "confidence": "deterministic",
+      "title": "Clock /I2S_LRCLK routed near connector J6",
+      "description": "Clock net /I2S_LRCLK passes within 4.5mm of connector J6. Clock harmonics can couple to attached cables via proximity, increasing radiated emissions.",
+      "components": [
+        "J6"
+      ],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "recommendation": "Route /I2S_LRCLK away from J6, or add ground guard traces between the clock and connector.",
+      "detector": "emc_clock_routing",
+      "summary": "Clock /I2S_LRCLK routed near connector J6",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Clock Routing",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:CK-003:j6#3"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /LCD_DISP",
+      "description": "Net /LCD_DISP has 7 layer transition(s) across B.Cu, F.Cu. 7 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_DISP"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /LCD_DISP",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/lcd_disp"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /LCD_SCS",
+      "description": "Net /LCD_SCS has 5 layer transition(s) across B.Cu, F.Cu. 5 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_SCS"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /LCD_SCS",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/lcd_scs"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /GAUGE_SRN",
+      "description": "Net /GAUGE_SRN has 4 layer transition(s) across B.Cu, F.Cu. 4 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/GAUGE_SRN"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /GAUGE_SRN",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/gauge_srn"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /I2C_SCL",
+      "description": "Net /I2C_SCL has 4 layer transition(s) across B.Cu, F.Cu. 4 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2C_SCL"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /I2C_SCL",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/i2c_scl"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /I2C_SDA",
+      "description": "Net /I2C_SDA has 4 layer transition(s) across B.Cu, F.Cu. 4 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2C_SDA"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /I2C_SDA",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/i2c_sda"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /PDM_DATA",
+      "description": "Net /PDM_DATA has 4 layer transition(s) across B.Cu, F.Cu. 4 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/PDM_DATA"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /PDM_DATA",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/pdm_data"
+    },
+    {
+      "category": "return_path",
+      "severity": "error",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /LCD_SCLK",
+      "description": "Net /LCD_SCLK has 3 layer transition(s) across B.Cu, F.Cu. 3 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_SCLK"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /LCD_SCLK",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/lcd_sclk"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /LCD_SI",
+      "description": "Net /LCD_SI has 3 layer transition(s) across B.Cu, F.Cu. 3 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/LCD_SI"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /LCD_SI",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/lcd_si"
+    },
+    {
+      "category": "return_path",
+      "severity": "error",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /PDM_CLK",
+      "description": "Net /PDM_CLK has 3 layer transition(s) across B.Cu, F.Cu. 3 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/PDM_CLK"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /PDM_CLK",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/pdm_clk"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /AMP_EN",
+      "description": "Net /AMP_EN has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/AMP_EN"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /AMP_EN",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/amp_en"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /CHG_N",
+      "description": "Net /CHG_N has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/CHG_N"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /CHG_N",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/chg_n"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /GAUGE_BIN",
+      "description": "Net /GAUGE_BIN has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/GAUGE_BIN"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /GAUGE_BIN",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/gauge_bin"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /GAUGE_SRP",
+      "description": "Net /GAUGE_SRP has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/GAUGE_SRP"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /GAUGE_SRP",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/gauge_srp"
+    },
+    {
+      "category": "return_path",
+      "severity": "error",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /I2S_BCLK",
+      "description": "Net /I2S_BCLK has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_BCLK"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /I2S_BCLK",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/i2s_bclk"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /I2S_DIN",
+      "description": "Net /I2S_DIN has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_DIN"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /I2S_DIN",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/i2s_din"
+    },
+    {
+      "category": "return_path",
+      "severity": "error",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /I2S_LRCLK",
+      "description": "Net /I2S_LRCLK has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/I2S_LRCLK"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /I2S_LRCLK",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/i2s_lrclk"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /ILIM_SET",
+      "description": "Net /ILIM_SET has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/ILIM_SET"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /ILIM_SET",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/ilim_set"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /ITERM_SET",
+      "description": "Net /ITERM_SET has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/ITERM_SET"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /ITERM_SET",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/iterm_set"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /RUN_EN",
+      "description": "Net /RUN_EN has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/RUN_EN"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /RUN_EN",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/run_en"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /A_SW",
+      "description": "Net /A_SW has 1 layer transition(s) across B.Cu, F.Cu. 1 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/A_SW"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /A_SW",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/a_sw"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "Missing stitching via at layer transition: /B_SW",
+      "description": "Net /B_SW has 1 layer transition(s) across B.Cu, F.Cu. 1 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+      "components": [],
+      "nets": [
+        "/B_SW"
+      ],
+      "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+      "detector": "emc_return_path",
+      "summary": "Missing stitching via at layer transition: /B_SW",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:/b_sw"
+    },
+    {
+      "category": "return_path",
+      "severity": "warning",
+      "rule_id": "RP-001",
+      "confidence": "deterministic",
+      "title": "21+ nets missing stitching vias (truncated)",
+      "description": "More than 20 nets have layer transitions without nearby ground stitching vias. Review via placement board-wide.",
+      "components": [],
+      "nets": [],
+      "recommendation": "Add ground stitching vias at all signal layer transitions.",
+      "detector": "emc_return_path",
+      "summary": "21+ nets missing stitching vias (truncated)",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Return Path",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:RP-001:8e25f4ed4075"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "error",
+      "rule_id": "SW-001",
+      "confidence": "heuristic",
+      "title": "U3 harmonics in 30-88 MHz band",
+      "description": "U3 (TPS63070RNMR) switching at 2.4 MHz has 24 harmonics in the 30-88 MHz band (harmonics 13-36). Envelope rolloff at 32 MHz (-40 dB/decade above).",
+      "components": [
+        "U3"
+      ],
+      "nets": [],
+      "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+      "detector": "emc_switching_emc",
+      "summary": "U3 harmonics in 30-88 MHz band",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-001:u3"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "warning",
+      "rule_id": "SW-001",
+      "confidence": "heuristic",
+      "title": "U3 harmonics in 88-216 MHz band",
+      "description": "U3 (TPS63070RNMR) switching at 2.4 MHz has 54 harmonics in the 88-216 MHz band (harmonics 37-90). Envelope rolloff at 32 MHz (-40 dB/decade above).",
+      "components": [
+        "U3"
+      ],
+      "nets": [],
+      "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+      "detector": "emc_switching_emc",
+      "summary": "U3 harmonics in 88-216 MHz band",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-001:u3#1"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "warning",
+      "rule_id": "SW-001",
+      "confidence": "heuristic",
+      "title": "U3 harmonics in 216-960 MHz band",
+      "description": "U3 (TPS63070RNMR) switching at 2.4 MHz has 311 harmonics in the 216-960 MHz band (harmonics 90-400). Envelope rolloff at 32 MHz (-40 dB/decade above).",
+      "components": [
+        "U3"
+      ],
+      "nets": [],
+      "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+      "detector": "emc_switching_emc",
+      "summary": "U3 harmonics in 216-960 MHz band",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-001:u3#2"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "warning",
+      "rule_id": "SW-001",
+      "confidence": "heuristic",
+      "title": "U4 harmonics in 30-88 MHz band",
+      "description": "U4 (TPS61023DRLR) switching at 1.0 MHz has 59 harmonics in the 30-88 MHz band (harmonics 30-88). Envelope rolloff at 32 MHz (-40 dB/decade above).",
+      "components": [
+        "U4"
+      ],
+      "nets": [],
+      "recommendation": "Minimize switching loop area for U4. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+      "detector": "emc_switching_emc",
+      "summary": "U4 harmonics in 30-88 MHz band",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-001:u4"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "warning",
+      "rule_id": "SW-001",
+      "confidence": "heuristic",
+      "title": "U4 harmonics in 88-216 MHz band",
+      "description": "U4 (TPS61023DRLR) switching at 1.0 MHz has 129 harmonics in the 88-216 MHz band (harmonics 88-216). Envelope rolloff at 32 MHz (-40 dB/decade above).",
+      "components": [
+        "U4"
+      ],
+      "nets": [],
+      "recommendation": "Minimize switching loop area for U4. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+      "detector": "emc_switching_emc",
+      "summary": "U4 harmonics in 88-216 MHz band",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-001:u4#1"
+    },
+    {
+      "category": "switching_emc",
+      "severity": "warning",
+      "rule_id": "SW-003",
+      "confidence": "heuristic",
+      "title": "Large hot loop for U4",
+      "description": "U4 (TPS61023DRLR) hot loop area \u2248 25mm\u00b2 (triangle: C2 \u2192 U4 \u2192 L2). Recommended: <25mm\u00b2 for low EMI.",
+      "components": [
+        "U4",
+        "L2",
+        "C2"
+      ],
+      "nets": [
+        "BOOST_SW"
+      ],
+      "recommendation": "Place C2, U4, and L2 in a tight triangle. Minimize trace length between them. Input cap should be adjacent to the IC with the inductor on the opposite side.",
+      "detector": "emc_switching_emc",
+      "summary": "Large hot loop for U4",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Switching Emc",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "in_active_stage": false,
+      "finding_id": "emc:SW-003:u4"
+    }
+  ],
+  "assessments": [],
+  "per_net_scores": [
+    {
+      "net": "/LCD_SCLK",
+      "score": 73.0,
+      "finding_count": 5,
+      "rules": [
+        "CK-001",
+        "CK-003",
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/I2S_LRCLK",
+      "score": 74.5,
+      "finding_count": 5,
+      "rules": [
+        "CK-001",
+        "CK-002",
+        "CK-003",
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/I2S_BCLK",
+      "score": 79.0,
+      "finding_count": 3,
+      "rules": [
+        "CK-001",
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/PDM_CLK",
+      "score": 80.5,
+      "finding_count": 4,
+      "rules": [
+        "CK-001",
+        "CK-002",
+        "CK-003",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/SD_CLK",
+      "score": 85.0,
+      "finding_count": 4,
+      "rules": [
+        "CK-001",
+        "CK-003",
+        "GP-001"
+      ]
+    },
+    {
+      "net": "/SD_DAT0",
+      "score": 94.0,
+      "finding_count": 1,
+      "rules": [
+        "GP-001"
+      ]
+    },
+    {
+      "net": "/AMP_EN",
+      "score": 95.5,
+      "finding_count": 2,
+      "rules": [
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/B_SW",
+      "score": 95.5,
+      "finding_count": 2,
+      "rules": [
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/I2S_DIN",
+      "score": 95.5,
+      "finding_count": 2,
+      "rules": [
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/RUN_EN",
+      "score": 95.5,
+      "finding_count": 2,
+      "rules": [
+        "GP-001",
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/LCD_DISP",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/LCD_SCS",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/GAUGE_SRN",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/I2C_SCL",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/I2C_SDA",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/PDM_DATA",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/LCD_SI",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/CHG_N",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/GAUGE_BIN",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/GAUGE_SRP",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/ILIM_SET",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/ITERM_SET",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/A_SW",
+      "score": 97.0,
+      "finding_count": 1,
+      "rules": [
+        "RP-001"
+      ]
+    },
+    {
+      "net": "/CC2",
+      "score": 98.5,
+      "finding_count": 1,
+      "rules": [
+        "GP-001"
+      ]
+    },
+    {
+      "net": "/LCD_EXTCOMIN",
+      "score": 98.5,
+      "finding_count": 1,
+      "rules": [
+        "GP-001"
+      ]
+    },
+    {
+      "net": "/ENC_B",
+      "score": 98.5,
+      "finding_count": 1,
+      "rules": [
+        "GP-001"
+      ]
+    },
+    {
+      "net": "BOOST_SW",
+      "score": 98.5,
+      "finding_count": 1,
+      "rules": [
+        "SW-003"
+      ]
+    }
+  ],
+  "test_plan": {
+    "frequency_bands": [
+      {
+        "band": "30-88 MHz",
+        "freq_min_hz": 30000000.0,
+        "freq_max_hz": 88000000.0,
+        "risk_level": "medium",
+        "source_count": 2,
+        "sources": [
+          "U3 (TPS63070RNMR) harmonics 13-36",
+          "U4 (TPS61023DRLR) harmonics 30-88"
+        ]
+      },
+      {
+        "band": "88-216 MHz",
+        "freq_min_hz": 88000000.0,
+        "freq_max_hz": 216000000.0,
+        "risk_level": "medium",
+        "source_count": 2,
+        "sources": [
+          "U3 (TPS63070RNMR) harmonics 37-90",
+          "U4 (TPS61023DRLR) harmonics 88-216"
+        ]
+      },
+      {
+        "band": "216-960 MHz",
+        "freq_min_hz": 216000000.0,
+        "freq_max_hz": 960000000.0,
+        "risk_level": "medium",
+        "source_count": 2,
+        "sources": [
+          "U3 (TPS63070RNMR) harmonics 90-400",
+          "U4 (TPS61023DRLR) harmonics 216-960"
+        ]
+      },
+      {
+        "band": "960-40000 MHz",
+        "freq_min_hz": 960000000.0,
+        "freq_max_hz": 40000000000.0,
+        "risk_level": "medium",
+        "source_count": 2,
+        "sources": [
+          "U3 (TPS63070RNMR) harmonics 400-16666",
+          "U4 (TPS61023DRLR) harmonics 960-40000"
+        ]
+      }
+    ],
+    "interface_risks": [
+      {
+        "connector": "J2",
+        "value": "LS027B7DH01 FPC",
+        "protocol": "unknown",
+        "risk_score": 5,
+        "reasons": [
+          "No EMC filtering detected"
+        ]
+      },
+      {
+        "connector": "J3",
+        "value": "microSD push-push",
+        "protocol": "unknown",
+        "risk_score": 5,
+        "reasons": [
+          "No EMC filtering detected"
+        ]
+      },
+      {
+        "connector": "J6",
+        "value": "Encoder daughterboard",
+        "protocol": "unknown",
+        "risk_score": 5,
+        "reasons": [
+          "No EMC filtering detected"
+        ]
+      },
+      {
+        "connector": "J4",
+        "value": "LiPo 1S",
+        "protocol": "unknown",
+        "risk_score": 5,
+        "reasons": [
+          "No EMC filtering detected"
+        ]
+      },
+      {
+        "connector": "J5",
+        "value": "Speaker 8R 1-2W",
+        "protocol": "unknown",
+        "risk_score": 5,
+        "reasons": [
+          "No EMC filtering detected"
+        ]
+      },
+      {
+        "connector": "J1",
+        "value": "USB-C USB2 Sink",
+        "protocol": "unknown",
+        "risk_score": 3,
+        "reasons": [
+          "General I/O"
+        ]
+      }
+    ],
+    "probe_points": [
+      {
+        "x": 108.0,
+        "y": 82.0,
+        "type": "inductor",
+        "ref": "LCD1",
+        "reason": "Switching inductor \u2014 highest dI/dt source"
+      },
+      {
+        "x": 132.0,
+        "y": 94.0,
+        "type": "inductor",
+        "ref": "L1",
+        "reason": "Switching inductor \u2014 highest dI/dt source"
+      },
+      {
+        "x": 134.0,
+        "y": 90.0,
+        "type": "inductor",
+        "ref": "L2",
+        "reason": "Switching inductor \u2014 highest dI/dt source"
+      },
+      {
+        "x": 108.0,
+        "y": 54.0,
+        "type": "unfiltered_connector",
+        "ref": "J2",
+        "reason": "Unfiltered I/O \u2014 cable radiation risk"
+      },
+      {
+        "x": 151.0,
+        "y": 104.0,
+        "type": "unfiltered_connector",
+        "ref": "J3",
+        "reason": "Unfiltered I/O \u2014 cable radiation risk"
+      },
+      {
+        "x": 160.0,
+        "y": 82.0,
+        "type": "unfiltered_connector",
+        "ref": "J6",
+        "reason": "Unfiltered I/O \u2014 cable radiation risk"
+      },
+      {
+        "x": 76.0,
+        "y": 106.0,
+        "type": "unfiltered_connector",
+        "ref": "J4",
+        "reason": "Unfiltered I/O \u2014 cable radiation risk"
+      },
+      {
+        "x": 62.0,
+        "y": 106.0,
+        "type": "unfiltered_connector",
+        "ref": "J5",
+        "reason": "Unfiltered I/O \u2014 cable radiation risk"
+      }
+    ]
+  },
+  "regulatory_coverage": {
+    "market": "eu",
+    "applicable_standards": [
+      "EN 55032 Class B (CISPR 32)",
+      "EN 55032 Class B (CISPR 32)",
+      "IEC 61000-4-2",
+      "IEC 61000-4-4",
+      "IEC 61000-4-5"
+    ],
+    "coverage_matrix": [
+      {
+        "standard": "EN 55032 Class B (CISPR 32)",
+        "test_type": "radiated",
+        "coverage": "minimal",
+        "checked_rules": [
+          "GP-001",
+          "DC-001",
+          "DC-002",
+          "SW-001",
+          "CK-001",
+          "CK-002",
+          "IO-001",
+          "EE-001",
+          "EE-002"
+        ],
+        "total_applicable_rules": 23,
+        "note": "Design rule checks identify common radiation sources. Cannot predict absolute emission levels."
+      },
+      {
+        "standard": "EN 55032 Class B (CISPR 32)",
+        "test_type": "conducted",
+        "coverage": "partial",
+        "checked_rules": [
+          "SW-001",
+          "DC-001",
+          "DC-002",
+          "EE-002"
+        ],
+        "total_applicable_rules": 4,
+        "note": "Switching harmonic analysis and decoupling checks. EMI filter verification not yet implemented."
+      },
+      {
+        "standard": "IEC 61000-4-2",
+        "test_type": "esd",
+        "coverage": "partial",
+        "checked_rules": [
+          "IO-001"
+        ],
+        "total_applicable_rules": 1,
+        "note": "Checks for ESD/TVS presence near connectors. Does not verify protection path routing or clamping voltage."
+      },
+      {
+        "standard": "IEC 61000-4-4",
+        "test_type": "eft",
+        "coverage": "lab_only",
+        "checked_rules": [],
+        "total_applicable_rules": 0,
+        "note": "EFT/burst immunity requires lab testing. Input filtering checks (DC-001, IO-001) provide indirect coverage."
+      },
+      {
+        "standard": "IEC 61000-4-5",
+        "test_type": "surge",
+        "coverage": "lab_only",
+        "checked_rules": [],
+        "total_applicable_rules": 0,
+        "note": "Surge immunity requires lab testing. TVS/MOV placement checks provide indirect coverage."
+      }
+    ]
+  },
+  "category_summary": {
+    "ground_plane": {
+      "count": 12,
+      "max_severity": "error",
+      "severities": {
+        "error": 5,
+        "warning": 7,
+        "info": 0
+      },
+      "suppressed_count": 0
+    },
+    "decoupling": {
+      "count": 3,
+      "max_severity": "error",
+      "severities": {
+        "error": 2,
+        "warning": 1,
+        "info": 0
+      },
+      "suppressed_count": 0
+    },
+    "io_filtering": {
+      "count": 6,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 6
+      },
+      "suppressed_count": 0
+    },
+    "clock_routing": {
+      "count": 13,
+      "max_severity": "warning",
+      "severities": {
+        "error": 0,
+        "warning": 13,
+        "info": 0
+      },
+      "suppressed_count": 0
+    },
+    "emission_estimate": {
+      "count": 3,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 3
+      },
+      "suppressed_count": 0
+    },
+    "return_path": {
+      "count": 22,
+      "max_severity": "error",
+      "severities": {
+        "error": 4,
+        "warning": 18,
+        "info": 0
+      },
+      "suppressed_count": 0
+    },
+    "esd_path": {
+      "count": 1,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 1
+      },
+      "suppressed_count": 0
+    },
+    "switching_emc": {
+      "count": 7,
+      "max_severity": "error",
+      "severities": {
+        "error": 1,
+        "warning": 5,
+        "info": 1
+      },
+      "suppressed_count": 0
+    },
+    "thermal_emc": {
+      "count": 2,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 2
+      },
+      "suppressed_count": 0
+    }
+  },
+  "board_info": {
+    "board_width_mm": 116.0,
+    "board_height_mm": 64.0,
+    "layer_count": 4,
+    "footprint_count": 64,
+    "via_count": 119,
+    "has_stackup": false,
+    "total_components": 59,
+    "total_nets": 85,
+    "switching_frequencies_hz": [
+      1000000.0,
+      2400000.0
+    ]
+  },
+  "elapsed_s": 0.013,
+  "stage_filter": {
+    "active_stage": "pre_fab",
+    "included_count": 0,
+    "excluded_count": 56
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 56,
+      "by_severity": {
+        "error": 12,
+        "warning": 44,
+        "info": 0
+      },
+      "by_category": {
+        "ground_plane": 12,
+        "decoupling": 3,
+        "clock_routing": 13,
+        "return_path": 22,
+        "switching_emc": 6
+      },
+      "top_issues": [
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-001",
+          "confidence": "heuristic",
+          "title": "Signal has significant reference plane gap",
+          "description": "Net /SD_DAT0 has 61% reference plane coverage over 21.0mm of routing. Return current must detour around the gap, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/SD_DAT0"
+          ],
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "detector": "emc_ground_plane",
+          "summary": "Signal has significant reference plane gap",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "signal_net": "/SD_DAT0",
+          "coverage_pct": 61.1,
+          "trace_mm": 21.0,
+          "is_high_speed_or_clock": false,
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:GP-001:/sd_dat0"
+        },
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-001",
+          "confidence": "heuristic",
+          "title": "Signal has significant reference plane gap",
+          "description": "Net /SD_CLK has 71% reference plane coverage over 21.6mm of routing. Return current must detour around the gap, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/SD_CLK"
+          ],
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "detector": "emc_ground_plane",
+          "summary": "Signal has significant reference plane gap",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "signal_net": "/SD_CLK",
+          "coverage_pct": 70.6,
+          "trace_mm": 21.6,
+          "is_high_speed_or_clock": true,
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:GP-001:/sd_clk"
+        },
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-001",
+          "confidence": "heuristic",
+          "title": "Signal has partial reference plane gap",
+          "description": "Net /I2S_LRCLK has 87% reference plane coverage over 108.1mm of routing. Return current must detour around the gap, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/I2S_LRCLK"
+          ],
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "detector": "emc_ground_plane",
+          "summary": "Signal has partial reference plane gap",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "signal_net": "/I2S_LRCLK",
+          "coverage_pct": 86.8,
+          "trace_mm": 108.1,
+          "is_high_speed_or_clock": true,
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:GP-001:/i2s_lrclk"
+        },
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-001",
+          "confidence": "heuristic",
+          "title": "Signal has partial reference plane gap",
+          "description": "Net /I2S_BCLK has 93% reference plane coverage over 88.6mm of routing. Return current must detour around the gap, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/I2S_BCLK"
+          ],
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "detector": "emc_ground_plane",
+          "summary": "Signal has partial reference plane gap",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "signal_net": "/I2S_BCLK",
+          "coverage_pct": 93.2,
+          "trace_mm": 88.6,
+          "is_high_speed_or_clock": true,
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:GP-001:/i2s_bclk"
+        },
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-001",
+          "confidence": "heuristic",
+          "title": "Signal has partial reference plane gap",
+          "description": "Net /LCD_SCLK has 93% reference plane coverage over 77.8mm of routing. Return current must detour around the gap, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/LCD_SCLK"
+          ],
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "detector": "emc_ground_plane",
+          "summary": "Signal has partial reference plane gap",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "signal_net": "/LCD_SCLK",
+          "coverage_pct": 93.4,
+          "trace_mm": 77.8,
+          "is_high_speed_or_clock": true,
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:GP-001:/lcd_sclk"
+        },
+        {
+          "category": "decoupling",
+          "severity": "error",
+          "rule_id": "DC-001",
+          "confidence": "deterministic",
+          "title": "Decoupling cap too far from U7",
+          "description": "Nearest decoupling cap to U7 (BQ27441DRZR-G1A) is 9.2mm away. Each mm of trace adds 0.3-0.8 nH of loop inductance, reducing decoupling effectiveness at high frequencies.",
+          "components": [
+            "U7",
+            "C13",
+            "C70"
+          ],
+          "nets": [],
+          "recommendation": "Move decoupling cap within 2-3mm of U7 power pins.",
+          "detector": "emc_decoupling",
+          "summary": "Decoupling cap too far from U7",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Decoupling",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:DC-001:u7"
+        },
+        {
+          "category": "decoupling",
+          "severity": "error",
+          "rule_id": "DC-002",
+          "confidence": "heuristic",
+          "title": "No decoupling cap found near U1",
+          "description": "U1 (ESP32-S3-WROOM-1-N16R8) has no capacitor within 10mm. Every IC with power pins needs at least one decoupling capacitor.",
+          "components": [
+            "U1"
+          ],
+          "nets": [],
+          "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+          "detector": "emc_decoupling",
+          "summary": "No decoupling cap found near U1",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Decoupling",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "capacitor",
+                "value": "100n"
+              }
+            ],
+            "basis": "Standard 100nF decoupling per IC"
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:DC-002:u1"
+        },
+        {
+          "category": "return_path",
+          "severity": "error",
+          "rule_id": "RP-001",
+          "confidence": "deterministic",
+          "title": "Missing stitching via at layer transition: /LCD_SCLK",
+          "description": "Net /LCD_SCLK has 3 layer transition(s) across B.Cu, F.Cu. 3 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/LCD_SCLK"
+          ],
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "detector": "emc_return_path",
+          "summary": "Missing stitching via at layer transition: /LCD_SCLK",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Return Path",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:RP-001:/lcd_sclk"
+        },
+        {
+          "category": "return_path",
+          "severity": "error",
+          "rule_id": "RP-001",
+          "confidence": "deterministic",
+          "title": "Missing stitching via at layer transition: /PDM_CLK",
+          "description": "Net /PDM_CLK has 3 layer transition(s) across B.Cu, F.Cu. 3 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/PDM_CLK"
+          ],
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "detector": "emc_return_path",
+          "summary": "Missing stitching via at layer transition: /PDM_CLK",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Return Path",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:RP-001:/pdm_clk"
+        },
+        {
+          "category": "return_path",
+          "severity": "error",
+          "rule_id": "RP-001",
+          "confidence": "deterministic",
+          "title": "Missing stitching via at layer transition: /I2S_BCLK",
+          "description": "Net /I2S_BCLK has 2 layer transition(s) across B.Cu, F.Cu. 2 transition(s) have no ground stitching via within 1.0mm. The return current must find an alternate path, creating a loop antenna.",
+          "components": [],
+          "nets": [
+            "/I2S_BCLK"
+          ],
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "detector": "emc_return_path",
+          "summary": "Missing stitching via at layer transition: /I2S_BCLK",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Return Path",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "in_active_stage": false,
+          "finding_id": "emc:RP-001:/i2s_bclk"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 56,
+      "by_category": {
+        "ground_plane": 12,
+        "decoupling": 3,
+        "clock_routing": 13,
+        "return_path": 22,
+        "switching_emc": 6
+      },
+      "top_issues": [
+        {
+          "rule_id": "GP-001",
+          "severity": "error",
+          "summary": "Signal has significant reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "error",
+          "summary": "Signal has significant reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "error",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "error",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "error",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "DC-001",
+          "severity": "error",
+          "summary": "Decoupling cap too far from U7",
+          "recommendation": "Move decoupling cap within 2-3mm of U7 power pins.",
+          "category": "decoupling"
+        },
+        {
+          "rule_id": "DC-002",
+          "severity": "error",
+          "summary": "No decoupling cap found near U1",
+          "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+          "category": "decoupling"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "error",
+          "summary": "Missing stitching via at layer transition: /LCD_SCLK",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "error",
+          "summary": "Missing stitching via at layer transition: /PDM_CLK",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "error",
+          "summary": "Missing stitching via at layer transition: /I2S_BCLK",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "error",
+          "summary": "Missing stitching via at layer transition: /I2S_LRCLK",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "SW-001",
+          "severity": "error",
+          "summary": "U3 harmonics in 30-88 MHz band",
+          "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+          "category": "switching_emc"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "GP-001",
+          "severity": "warning",
+          "summary": "Signal has partial reference plane gap",
+          "recommendation": "Route this signal to avoid ground plane gaps, or fill the void. If a split is intentional, add a bridge capacitor across the gap.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "DC-001",
+          "severity": "warning",
+          "summary": "Decoupling cap moderately far from U3",
+          "recommendation": "Move decoupling cap closer to U3 power pins if layout permits.",
+          "category": "decoupling"
+        },
+        {
+          "rule_id": "CK-001",
+          "severity": "warning",
+          "summary": "Clock /I2S_BCLK on outer layer",
+          "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-001",
+          "severity": "warning",
+          "summary": "Clock /SD_CLK on outer layer",
+          "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-001",
+          "severity": "warning",
+          "summary": "Clock /PDM_CLK on outer layer",
+          "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-002",
+          "severity": "warning",
+          "summary": "Long clock trace: /PDM_CLK",
+          "recommendation": "Minimize clock trace length. Place clock source close to destination.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-001",
+          "severity": "warning",
+          "summary": "Clock /LCD_SCLK on outer layer",
+          "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-001",
+          "severity": "warning",
+          "summary": "Clock /I2S_LRCLK on outer layer",
+          "recommendation": "Route clock signals on inner layers (stripline) when possible.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-002",
+          "severity": "warning",
+          "summary": "Long clock trace: /I2S_LRCLK",
+          "recommendation": "Minimize clock trace length. Place clock source close to destination.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /LCD_SCLK routed near connector J2",
+          "recommendation": "Route /LCD_SCLK away from J2, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /LCD_SCLK routed near connector J6",
+          "recommendation": "Route /LCD_SCLK away from J6, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /SD_CLK routed near connector J3",
+          "recommendation": "Route /SD_CLK away from J3, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /SD_CLK routed near connector J6",
+          "recommendation": "Route /SD_CLK away from J6, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /PDM_CLK routed near connector J6",
+          "recommendation": "Route /PDM_CLK away from J6, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "CK-003",
+          "severity": "warning",
+          "summary": "Clock /I2S_LRCLK routed near connector J6",
+          "recommendation": "Route /I2S_LRCLK away from J6, or add ground guard traces between the clock and connector.",
+          "category": "clock_routing"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /LCD_DISP",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /LCD_SCS",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /GAUGE_SRN",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /I2C_SCL",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /I2C_SDA",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /PDM_DATA",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /LCD_SI",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /AMP_EN",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /CHG_N",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /GAUGE_BIN",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /GAUGE_SRP",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /I2S_DIN",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /ILIM_SET",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /ITERM_SET",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /RUN_EN",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /A_SW",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "Missing stitching via at layer transition: /B_SW",
+          "recommendation": "Add a ground stitching via within 1.0mm of each signal via. Place the ground via adjacent to the signal via on the same pad cluster.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "RP-001",
+          "severity": "warning",
+          "summary": "21+ nets missing stitching vias (truncated)",
+          "recommendation": "Add ground stitching vias at all signal layer transitions.",
+          "category": "return_path"
+        },
+        {
+          "rule_id": "SW-001",
+          "severity": "warning",
+          "summary": "U3 harmonics in 88-216 MHz band",
+          "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+          "category": "switching_emc"
+        },
+        {
+          "rule_id": "SW-001",
+          "severity": "warning",
+          "summary": "U3 harmonics in 216-960 MHz band",
+          "recommendation": "Minimize switching loop area for U3. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+          "category": "switching_emc"
+        },
+        {
+          "rule_id": "SW-001",
+          "severity": "warning",
+          "summary": "U4 harmonics in 30-88 MHz band",
+          "recommendation": "Minimize switching loop area for U4. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+          "category": "switching_emc"
+        },
+        {
+          "rule_id": "SW-001",
+          "severity": "warning",
+          "summary": "U4 harmonics in 88-216 MHz band",
+          "recommendation": "Minimize switching loop area for U4. Place input cap as close as possible. Consider spread-spectrum modulation if available.",
+          "category": "switching_emc"
+        },
+        {
+          "rule_id": "SW-003",
+          "severity": "warning",
+          "summary": "Large hot loop for U4",
+          "recommendation": "Place C2, U4, and L2 in a tight triangle. Minimize trace length between them. Input cap should be adjacent to the IC with the inductor on the opposite side.",
+          "category": "switching_emc"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "high",
+      "blocker_count": 12,
+      "warning_count": 44,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "needs_work",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "12 errors, 44 warnings across 5 categories. Layout stage has blockers."
+    }
+  },
+  "trust_summary": {
+    "total_findings": 56,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 35,
+      "heuristic": 21,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 35,
+      "heuristic_rule": 21,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260721T011705Z-05d91e"
+  }
+}

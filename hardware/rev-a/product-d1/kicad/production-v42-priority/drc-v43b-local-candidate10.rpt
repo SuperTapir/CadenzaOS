@@ -1,0 +1,194 @@
+** Drc report for cadenza-d1-v43b-local-candidate.kicad_pcb **
+** Created on 2026-07-21T12:55:29 **
+** Report includes: Errors, Warnings **
+
+** Found 31 DRC violations **
+[hole_clearance]: 孔间距违规 (<电路板配置> 中的 "孔" 约束 间距 0.2500 mm; 实际 0.1847 mm)
+    Rule: <电路板配置> 中的 "孔" 约束; error
+    @(104.8000 mm, 107.2550 mm): F.Cu 上 J1 的焊盘 B12 [/GND]
+    @(105.1100 mm, 108.3950 mm): J1 的 NPTH 焊盘
+[starved_thermal]: 缓释热焊盘 (花焊盘) 与填充区的连接不完整 (层 GND; 填充区 最小引线数量 2; 实际 1)
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 GND 上, 优先级 0
+    @(128.0000 mm, 106.7250 mm): U7 的PTH 焊盘 13 [/GND]
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(113.9530 mm, 102.8590 mm): 走线 [/USB_D+_CONN] (B.Cu), 长度: 0.0005 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(144.7320 mm, 104.0195 mm): 走线 [/CHG_N] (B.Cu), 长度: 0.3811 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(141.5065 mm, 100.7940 mm): 走线 [/ISET_SET] (B.Cu), 长度: 1.0515 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(122.5190 mm, 111.7500 mm): 走线 [/PACKP] (B.Cu), 长度: 2.2685 mm
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(128.0000 mm, 97.0000 mm): U3 的参考字段
+    @(127.3979 mm, 96.6400 mm): L1 的 线段, 位于 B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(123.8594 mm, 95.5100 mm): C10 的 线段, 位于 B.Silkscreen
+    @(124.0000 mm, 95.5700 mm): C11 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(139.0000 mm, 85.5700 mm): C22 的参考字段
+    @(140.5000 mm, 85.4000 mm): U1 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(127.9993 mm, 108.5174 mm): U7 的参考字段
+    @(128.0000 mm, 108.8700 mm): R73 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(138.8594 mm, 69.5100 mm): C81 的 线段, 位于 B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(128.7627 mm, 81.5225 mm): R20 的 线段, 位于 B.Silkscreen
+    @(129.0000 mm, 81.0700 mm): R21 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(129.0000 mm, 81.0700 mm): R21 的参考字段
+    @(128.7627 mm, 80.4775 mm): R20 的 线段, 位于 B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(131.7627 mm, 90.4775 mm): R10 的 线段, 位于 B.Silkscreen
+    @(132.0000 mm, 91.0700 mm): R11 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(131.7627 mm, 91.5225 mm): R10 的 线段, 位于 B.Silkscreen
+    @(132.0000 mm, 91.0700 mm): R11 的参考字段
+[silk_overlap]: Silkscreen clearance
+    Rule: <电路板配置> 中的 "丝印" 约束; warning
+    @(154.7627 mm, 92.5225 mm): R93 的 线段, 位于 B.Silkscreen
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(128.0000 mm, 97.0000 mm): U3 的参考字段
+    @(129.4000 mm, 98.0000 mm): B.Cu 上 L1 的焊盘 2 [/L3V3_B]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(128.0000 mm, 97.0000 mm): U3 的参考字段
+    @(126.6000 mm, 98.0000 mm): B.Cu 上 L1 的焊盘 1 [/L3V3_A]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+    @(154.1750 mm, 92.0000 mm): B.Cu 上 R93 的焊盘 1 [/SD_CD]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.0000 mm, 92.5700 mm): C90 的参考字段
+    @(152.8250 mm, 92.0000 mm): B.Cu 上 R92 的焊盘 2 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(124.0000 mm, 95.5700 mm): C11 的参考字段
+    @(124.7750 mm, 95.0000 mm): B.Cu 上 C10 的焊盘 2 [/GND]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(124.0000 mm, 95.5700 mm): C11 的参考字段
+    @(123.2250 mm, 95.0000 mm): B.Cu 上 C10 的焊盘 1 [/VSYS]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(139.7750 mm, 69.0000 mm): B.Cu 上 C81 的焊盘 2 [/GND]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(139.0000 mm, 69.5700 mm): C82 的参考字段
+    @(138.2250 mm, 69.0000 mm): B.Cu 上 C81 的焊盘 1 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(129.0000 mm, 81.0700 mm): R21 的参考字段
+    @(129.8250 mm, 81.0000 mm): B.Cu 上 R20 的焊盘 2 [/FB_5V]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(129.0000 mm, 81.0700 mm): R21 的参考字段
+    @(128.1750 mm, 81.0000 mm): B.Cu 上 R20 的焊盘 1 [/+5V_MEDIA]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(132.0000 mm, 91.0700 mm): R11 的参考字段
+    @(132.8250 mm, 91.0000 mm): B.Cu 上 R10 的焊盘 2 [/FB_3V3]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(132.0000 mm, 91.0700 mm): R11 的参考字段
+    @(131.1750 mm, 91.0000 mm): B.Cu 上 R10 的焊盘 1 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(157.0000 mm, 92.5700 mm): C91 的参考字段
+    @(155.8250 mm, 92.0000 mm): B.Cu 上 R93 的焊盘 2 [/+3V3_MAIN]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(145.0000 mm, 105.5700 mm): R77 的参考字段
+    @(146.1750 mm, 105.5000 mm): B.Cu 上 R75 的焊盘 1 [/PGOOD_N]
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(72.0000 mm, 96.5700 mm): FB2 的参考字段
+    @(70.7750 mm, 95.6000 mm): B.Cu 上 C51 的焊盘 2 [/GND]
+
+** Found 14 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(126.1000 mm, 106.2000 mm): B.Cu 上 U7 的焊盘 3 [/GND]
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(134.7400 mm, 80.5000 mm): B.Cu 上 U4 的焊盘 4 [/GND]
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+    @(141.7500 mm, 67.2500 mm): 填充区[/GND]在 B.Cu 上, 优先级 0
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

@@ -1,0 +1,24 @@
+(version 1)
+
+(rule "Minimum production geometry"
+  (constraint clearance (min 0.15mm))
+  (constraint track_width (min 0.15mm))
+  (constraint annular_width (min 0.13mm))
+  (constraint hole_size (min 0.20mm)))
+
+(rule "USB differential pair"
+  (condition "A.NetName == 'USB_D+' || A.NetName == 'USB_D-' || A.NetName == 'USB_D+_CONN' || A.NetName == 'USB_D-_CONN'")
+  (constraint track_width (min 0.18mm) (opt 0.20mm) (max 0.22mm))
+  (constraint diff_pair_gap (min 0.15mm) (opt 0.18mm) (max 0.22mm)))
+
+(rule "Battery and system power"
+  (condition "A.NetName == 'VBAT' || A.NetName == 'VSYS' || A.NetName == 'VBUS' || A.NetName == '+5V_MEDIA' || A.NetName == '+5V_AUDIO'")
+  (constraint track_width (min 0.50mm) (opt 0.80mm)))
+
+(rule "Switching nodes compact"
+  (condition "A.NetName == 'BOOST_SW' || A.NetName == 'L3V3_A' || A.NetName == 'L3V3_B'")
+  (constraint track_width (min 0.60mm) (opt 0.90mm)))
+
+(rule "Speaker BTL"
+  (condition "A.NetName == 'SPK+' || A.NetName == 'SPK-'")
+  (constraint track_width (min 0.40mm) (opt 0.60mm)))

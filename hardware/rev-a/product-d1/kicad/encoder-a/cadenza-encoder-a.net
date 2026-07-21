@@ -1,0 +1,62 @@
+(export
+	(version "E")
+	(design
+		(source "/Users/tapir/Development/CadenzaOS/hardware/rev-a/product-d1/kicad/encoder-a/cadenza-encoder-a.sch")
+		(date "2026-07-20T23:48:34")
+		(tool "Eeschema 10.0.4")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title "Cadenza D1 Encoder + A Daughterboard")
+				(company)
+				(rev)
+				(date)
+				(source "cadenza-encoder-a.sch")
+				(comment
+					(number "1")
+					(value "Six-wire replaceable control module")
+				)
+				(comment
+					(number "2")
+					(value "EC12D1524403 + RC debounce")
+				)
+				(comment
+					(number "3")
+					(value "D1 WIP")
+				)
+				(comment
+					(number "4")
+					(value "CadenzaOS")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components)
+	(groups)
+	(variants)
+	(libparts)
+	(libraries)
+	(nets)
+)
