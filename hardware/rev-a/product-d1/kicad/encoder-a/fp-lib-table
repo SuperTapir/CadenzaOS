@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name "Cadenza_Encoder")(type "KiCad")(uri "${KIPRJMOD}/encoders.pretty")(options "")(descr ""))
-)

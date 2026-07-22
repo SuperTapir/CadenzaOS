@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "PCB DRC regression against imported reference; not a production-readiness waiver",
+  "edit_window_mm": {
+    "x_min": 145.0,
+    "x_max": 183.0,
+    "y_min": 103.0,
+    "y_max": 134.0
+  },
+  "baseline": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/evidence/baseline-pcb.drc.json",
+    "violations": 192,
+    "unconnected": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 58,
+      "copper_edge_clearance": 17,
+      "courtyards_overlap": 2,
+      "hole_clearance": 5,
+      "lib_footprint_mismatch": 7,
+      "padstack": 4,
+      "shorting_items": 6,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 25,
+      "silk_overlap": 23,
+      "solder_mask_bridge": 26,
+      "starved_thermal": 2,
+      "text_thickness": 5
+    }
+  },
+  "candidate": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/evidence/candidate-pcb.drc.json",
+    "violations": 95,
+    "unconnected": 0,
+    "by_type": {
+      "clearance": 12,
+      "copper_edge_clearance": 15,
+      "courtyards_overlap": 1,
+      "lib_footprint_mismatch": 7,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 25,
+      "silk_overlap": 17,
+      "starved_thermal": 5,
+      "text_thickness": 5
+    }
+  },
+  "checks": {
+    "candidate_zero_unconnected": true,
+    "candidate_total_not_above_reference": true,
+    "no_new_violation_in_l1_edit_window": true,
+    "no_violation_names_new_screen_components": true,
+    "no_critical_type_count_regression": true
+  },
+  "critical_regressions": {},
+  "new_violation_count": 26,
+  "new_outside_edit_window": [
+    [
+      "clearance",
+      [
+        [
+          "走线 [GPIO40] (Top Layer), 长度: 28.5240 mm",
+          112.663,
+          128.438
+        ],
+        [
+          "过孔 [GPIO20] (Top Layer - Bottom Layer)",
+          139.45,
+          127.854
+        ]
+      ]
+    ],
+    [
+      "clearance",
+      [
+        [
+          "走线 [GPIO38] (Bottom Layer), 长度: 86.4655 mm",
+          116.85,
+          127.25
+        ],
+        [
+          "过孔 [GPIO20] (Top Layer - Bottom Layer)",
+          139.45,
+          127.854
+        ]
+      ]
+    ],
+    [
+      "clearance",
+      [
+        [
+          "走线 [GPIO38] (Bottom Layer), 长度: 54.9750 mm",
+          159.025,
+          99.675
+        ],
+        [
+          "过孔 [GPIO17] (Top Layer - Bottom Layer)",
+          109.5,
+          99.05
+        ]
+      ]
+    ],
+    [
+      "copper_edge_clearance",
+      [
+        [
+          "Top Layer 上 U7 的焊盘 3 [GND]",
+          103.817,
+          90.545
+        ],
+        [
+          "U7 的 多边形, 位于 Multi-Layer",
+          103.111,
+          91.036
+        ]
+      ]
+    ],
+    [
+      "copper_edge_clearance",
+      [
+        [
+          "Top Layer 上 U7 的焊盘 3 [GND]",
+          102.859,
+          90.492
+        ],
+        [
+          "U7 的 多边形, 位于 Multi-Layer",
+          103.111,
+          91.036
+        ]
+      ]
+    ],
+    [
+      "copper_edge_clearance",
+      [
+        [
+          "Top Layer 上 U7 的焊盘 3 [GND]",
+          102.806,
+          91.449
+        ],
+        [
+          "U7 的 多边形, 位于 Multi-Layer",
+          103.111,
+          91.036
+        ]
+      ]
+    ],
+    [
+      "starved_thermal",
+      [
+        [
+          "Bottom Layer 上 LED2 的焊盘 2 [GND]",
+          204.67,
+          127.254
+        ],
+        [
+          "填充区[GND]在 Bottom Layer 上, 优先级 500",
+          87.525,
+          79.125
+        ]
+      ]
+    ],
+    [
+      "starved_thermal",
+      [
+        [
+          "Top Layer 上 U5 的焊盘 2 [GND]",
+          112.663,
+          127.939
+        ],
+        [
+          "填充区[GND]在 Top Layer 上, 优先级 500",
+          86.625,
+          78.9
+        ]
+      ]
+    ],
+    [
+      "starved_thermal",
+      [
+        [
+          "Top Layer 上 U5 的焊盘 3 [GND]",
+          112.663,
+          127.439
+        ],
+        [
+          "填充区[GND]在 Top Layer 上, 优先级 500",
+          86.625,
+          78.9
+        ]
+      ]
+    ],
+    [
+      "starved_thermal",
+      [
+        [
+          "Top Layer 上 U5 的焊盘 15 [GND]",
+          111.411,
+          129.19
+        ],
+        [
+          "填充区[GND]在 Top Layer 上, 优先级 500",
+          86.625,
+          78.9
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW3 的 NPTH 焊盘",
+          93.125,
+          134.725
+        ],
+        [
+          "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          134.637
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW3 的 NPTH 焊盘",
+          93.125,
+          134.725
+        ],
+        [
+          "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          134.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW3 的 NPTH 焊盘",
+          93.125,
+          134.725
+        ],
+        [
+          "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          134.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW3 的 NPTH 焊盘",
+          93.125,
+          134.725
+        ],
+        [
+          "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          134.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW1 的 NPTH 焊盘",
+          93.125,
+          84.725
+        ],
+        [
+          "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          84.638
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW1 的 NPTH 焊盘",
+          93.125,
+          84.725
+        ],
+        [
+          "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW1 的 NPTH 焊盘",
+          93.125,
+          84.725
+        ],
+        [
+          "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW1 的 NPTH 焊盘",
+          93.125,
+          84.725
+        ],
+        [
+          "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+          93.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW2 的 NPTH 焊盘",
+          213.125,
+          84.725
+        ],
+        [
+          "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          84.638
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW2 的 NPTH 焊盘",
+          213.125,
+          84.725
+        ],
+        [
+          "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW2 的 NPTH 焊盘",
+          213.125,
+          84.725
+        ],
+        [
+          "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW2 的 NPTH 焊盘",
+          213.125,
+          84.725
+        ],
+        [
+          "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          84.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW4 的 NPTH 焊盘",
+          213.125,
+          134.725
+        ],
+        [
+          "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          134.637
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW4 的 NPTH 焊盘",
+          213.125,
+          134.725
+        ],
+        [
+          "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          134.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW4 的 NPTH 焊盘",
+          213.125,
+          134.725
+        ],
+        [
+          "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          134.725
+        ]
+      ]
+    ],
+    [
+      "silk_over_copper",
+      [
+        [
+          "SCREW4 的 NPTH 焊盘",
+          213.125,
+          134.725
+        ],
+        [
+          "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+          213.125,
+          134.725
+        ]
+      ]
+    ]
+  ],
+  "new_in_edit_window": [],
+  "new_screen_component_hits": [],
+  "interpretation": "PASS means the Sharp display delta has zero ratsnest items and no new local DRC finding. Remaining candidate findings are inherited/import or full-zone-refill debt and remain visible in the raw report."
+}

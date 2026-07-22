@@ -1,0 +1,31 @@
+{
+  "intent": "右侧偏下，拇指/食指可触达；与右侧编码器候选错开",
+  "axis": "+X",
+  "centre_xy_mm": [
+    129.0,
+    18.0
+  ],
+  "body_centre_xy_mm": [
+    124.1,
+    18.0
+  ],
+  "rest_axis_range_mm": [
+    127.4,
+    132.6
+  ],
+  "guard_outer_axis_mm": 133.4,
+  "metrics": {
+    "screen_panel_xy_clearance_mm": 24.4,
+    "fpc_relief_xy_clearance_mm": 58.9,
+    "guard_protrudes_beyond_cap_mm": 0.8
+  },
+  "hard_collision_common_volume_mm3": {
+    "screen_vs_switch_keepout_mm3": 0.0,
+    "fpc_relief_vs_switch_keepout_mm3": 0.0,
+    "mount_keepouts_vs_switch_keepout_mm3": 0.0,
+    "l2_controls_vs_switch_keepout_mm3": 0.0,
+    "enclosure_interface_vs_rest_cap_mm3": 0.0,
+    "enclosure_interface_vs_pressed_cap_mm3": 0.0,
+    "guard_vs_rest_cap_mm3": 0.0
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "fixture": "j-disp-footprint-selected",
+  "mutation": {"kind": "set_footprint", "reference": "J_DISP1", "value": "Display_FPC:FH12A-10S-0.5SH(55)_top"},
+  "expected_status": "FAIL"
+}

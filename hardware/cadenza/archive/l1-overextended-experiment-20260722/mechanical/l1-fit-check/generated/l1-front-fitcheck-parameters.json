@@ -1,0 +1,55 @@
+{
+  "status": "fit-check only; not production frozen",
+  "reference_top": "/Users/tapir/Development/CadenzaOS/hardware/reference/oshwhub-project_jofcnupz/顶盖V7.step",
+  "reference_preserved": true,
+  "original_window_xy": [
+    27.63,
+    3.07,
+    102.37,
+    56.93
+  ],
+  "sharp_panel_xy": [
+    33.6,
+    8.59,
+    96.4,
+    51.41
+  ],
+  "sharp_view_xy": [
+    35.6,
+    12.36,
+    94.4,
+    47.64
+  ],
+  "new_window_xy": [
+    35.0,
+    11.76,
+    95.0,
+    48.24
+  ],
+  "view_clearance_each_edge": 0.6,
+  "gasket_proxy_thickness": 0.4,
+  "screen_front_z": -3.4002643070850946,
+  "screen_back_z": -5.040264307085095,
+  "retainer_thickness": 1.0,
+  "fpc_relief_xy": [
+    60.18,
+    50.8,
+    69.82,
+    58.0
+  ],
+  "hard_collision_common_volume_mm3": {
+    "front_vs_gasket": 0.0,
+    "front_vs_screen": 0.0,
+    "gasket_vs_screen": 0.0,
+    "screen_vs_retainer": 0.0,
+    "front_vs_retainer": 0.0,
+    "gasket_vs_retainer": 0.0
+  },
+  "pending": [
+    "physical FPC side/contact/Pin-1 confirmation",
+    "final connector STEP and folded FPC route",
+    "retainer fastening method",
+    "printed dimensional compensation",
+    "real screen stress and closure test"
+  ]
+}

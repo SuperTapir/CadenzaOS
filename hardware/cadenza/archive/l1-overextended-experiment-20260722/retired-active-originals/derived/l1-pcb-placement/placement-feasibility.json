@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "status": "PASS_PLACEMENT_CANDIDATE",
+  "selection_frozen": false,
+  "production_ready": false,
+  "pcb_created": false,
+  "sources": {
+    "reference_board": "hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+    "reference_board_sha256": "70a46bd100ed8184edcd2e90d3dbd21fff676999e0f3fa71cad1121c8c7b4101",
+    "fpc_variants": "hardware/cadenza/mechanical/l1-fit-check/variants/generated/fpc-direction-variants.json",
+    "fpc_variants_sha256": "92ed45edea9c153467bbcd20c43707313d1ca5cf025bdd441d7b950966c7ccc3",
+    "power_fit": "hardware/cadenza/mechanical/power-lock-s1-fit/generated/power-lock-s1-fit.json",
+    "power_fit_sha256": "781a151c2ef9d5bb52d06459a3c0f4b5ec23cf31f6087359d212c37c22adb42c"
+  },
+  "coordinate_system": {
+    "origin": "inherited PCB lower-left rectangular extent",
+    "x": "right",
+    "y": "toward inherited PCB upper edge",
+    "board_extent_xy_mm": [
+      0.0,
+      0.0,
+      130.254,
+      60.254
+    ]
+  },
+  "preserved": {
+    "board_outline": true,
+    "four_mounting_holes": true,
+    "esp32_module_position": [
+      65.127,
+      43.732
+    ],
+    "esp32_antenna_planar_keepout_xy_mm": [
+      56.127,
+      54.087,
+      74.127,
+      60.127
+    ],
+    "reference_footprints_fixed_except": [
+      "USB1",
+      "R1",
+      "R2"
+    ]
+  },
+  "candidate": {
+    "screen_rotation_in_plane_deg": 180,
+    "fpc_exit": "-Y / lower edge",
+    "fpc_connector": "FH34SRJ dual-contact provisional; Pin-1 rotation still requires physical continuity",
+    "fpc_bend_keepout_xy_mm": [
+      60.68,
+      2.59,
+      69.32,
+      7.79
+    ],
+    "usb1_move": {
+      "topology": "unchanged",
+      "delta_xy_mm": [
+        16.2,
+        0.0
+      ],
+      "original_bbox_xy_mm": [
+        58.797,
+        0.93,
+        71.427,
+        6.561
+      ],
+      "candidate_bbox_xy_mm": [
+        74.997,
+        0.93,
+        87.627,
+        6.561
+      ],
+      "new_position_xy_mm": [
+        81.327,
+        3.731
+      ]
+    },
+    "usb_cc_resistor_moves": {
+      "references": [
+        "R1",
+        "R2"
+      ],
+      "target_x_mm": 91.0,
+      "r1_bbox_xy_mm": [
+        89.025,
+        3.966,
+        92.975,
+        5.952
+      ],
+      "r2_bbox_xy_mm": [
+        89.025,
+        1.688,
+        92.975,
+        3.674
+      ],
+      "topology": "unchanged 5.1 kOhm CC1/CC2 pulldowns"
+    },
+    "power_lock_preference": "right-edge-B; top-edge-A excluded by retained KEY2 planar collision",
+    "power_lock_A_envelope_xy_mm": [
+      102.7,
+      57.7,
+      107.3,
+      61.2
+    ],
+    "power_lock_B_envelope_xy_mm": [
+      127.7,
+      15.7,
+      131.2,
+      20.3
+    ],
+    "j_disp1_pin1_variants": [
+      "rotation_0_candidate",
+      "rotation_180_candidate"
+    ]
+  },
+  "findings": {
+    "fpc_plus_y_vs_esp32_antenna": {
+      "overlaps": true,
+      "width_mm": 8.64,
+      "height_mm": 3.323,
+      "area_mm2": 28.711
+    },
+    "fpc_minus_y_vs_original_usb": {
+      "overlaps": true,
+      "width_mm": 8.64,
+      "height_mm": 3.971,
+      "area_mm2": 34.309
+    },
+    "fpc_minus_y_vs_shifted_usb": {
+      "overlaps": false,
+      "width_mm": 0.0,
+      "height_mm": 3.971,
+      "area_mm2": 0.0
+    },
+    "shifted_usb_vs_u3": {
+      "overlaps": false,
+      "width_mm": 1.335,
+      "height_mm": 0.0,
+      "area_mm2": 0.0
+    },
+    "shifted_usb_planar_collisions": [],
+    "shifted_r1_planar_collisions": [],
+    "shifted_r2_planar_collisions": [],
+    "power_top_edge_A_planar_collisions": [
+      {
+        "reference": "KEY2",
+        "layer": "Bottom Layer",
+        "overlaps": true,
+        "width_mm": 3.848,
+        "height_mm": 1.757,
+        "area_mm2": 6.761
+      }
+    ],
+    "power_right_edge_B_planar_collisions": [],
+    "clearances_mm": {
+      "fpc_minus_y_to_shifted_usb_x": 5.677,
+      "led1_to_shifted_usb_x": 1.068,
+      "shifted_usb_to_cc_resistors_x": 1.398,
+      "shifted_cc_resistors_to_u3_y": 3.374
+    }
+  },
+  "checks": {
+    "reference_board_exactly_77_footprints": true,
+    "deleted_reference_set_exactly_9": true,
+    "plus_y_fpc_conflicts_with_antenna": true,
+    "minus_y_fpc_conflicts_with_original_usb": true,
+    "minus_y_fpc_clears_shifted_usb": true,
+    "shifted_usb_clears_u3": true,
+    "shifted_usb_has_no_other_planar_footprint_collision": true,
+    "shifted_usb_has_at_least_1mm_led1_clearance": true,
+    "shifted_usb_has_at_least_5mm_fpc_planar_gap": true,
+    "shifted_r1_has_no_other_planar_footprint_collision": true,
+    "shifted_r2_has_no_other_planar_footprint_collision": true,
+    "cc_resistors_have_at_least_1mm_usb_gap": true,
+    "cc_resistors_have_at_least_3mm_u3_gap": true,
+    "power_A_conflict_is_exactly_retained_KEY2": true,
+    "power_B_has_no_retained_planar_footprint_collision": true
+  },
+  "limits": [
+    "Planar rectangles do not prove Z clearance or assembly access.",
+    "USB1 relocation requires rerouting D+/D-, VBUS, CC1/CC2 and shield/ground while preserving the reference topology.",
+    "FH34SRJ dual-contact removes contact-face dependence but not Pin 1 direction dependence.",
+    "The FPC connector layer, latch opening space, exact 3D model and folded cable path remain unfrozen.",
+    "Power/Lock A and B extend intentionally beyond the nominal PCB extent; enclosure wall/cap/guide fit still requires a print."
+  ]
+}

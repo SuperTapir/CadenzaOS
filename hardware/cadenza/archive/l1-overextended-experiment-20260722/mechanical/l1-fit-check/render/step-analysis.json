@@ -1,0 +1,56 @@
+[
+  {
+    "source": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/mechanical/l1-fit-check/generated/l1-front-fitcheck.step",
+    "read_ok": true,
+    "transferred_roots": 1,
+    "solids": 1,
+    "shells": 1,
+    "faces": 51,
+    "bbox_mm": {
+      "xmin": -1.000315107187387,
+      "ymin": -1.0003151071873868,
+      "zmin": -3.0005794142723863,
+      "xmax": 131.0003170443374,
+      "ymax": 62.78745414742384,
+      "zmax": 0.0006810144764804985,
+      "width": 132.0006321515248,
+      "height": 63.78776925461123,
+      "depth": 3.001260428748867
+    },
+    "volume_mm3": 16239.038189256516,
+    "centroid_mm": [
+      64.29387929034735,
+      29.06091105890161,
+      -1.494642234001056
+    ],
+    "mesh_vertices": 4702,
+    "mesh_triangles": 7036
+  },
+  {
+    "source": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/mechanical/l1-fit-check/generated/l1-front-screen-assembly.step",
+    "read_ok": true,
+    "transferred_roots": 1,
+    "solids": 5,
+    "shells": 5,
+    "faces": 87,
+    "bbox_mm": {
+      "xmin": -1.000315107187387,
+      "ymin": -1.0003151071873868,
+      "zmin": -6.040579414272385,
+      "xmax": 131.0003170443374,
+      "ymax": 62.78745414742384,
+      "zmax": 0.0006810144764804985,
+      "width": 132.0006321515248,
+      "height": 63.78776925461123,
+      "depth": 6.041260428748866
+    },
+    "volume_mm3": 21566.437152962295,
+    "centroid_mm": [
+      64.46830693372176,
+      29.29713405863288,
+      -2.201889490804244
+    ],
+    "mesh_vertices": 4870,
+    "mesh_triangles": 7140
+  }
+]

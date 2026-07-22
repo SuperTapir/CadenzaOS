@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "gate": "cadenza_l1_screen_only_schematic_boundary",
+  "status": "PASS_CANDIDATE",
+  "production_ready": false,
+  "fpc_selection_frozen": true,
+  "pcb_connector_rotation_frozen": false,
+  "evidence_scope": "screen_only_schematic_and_kicad_xml_netlist",
+  "baseline": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_sch",
+    "sha256_before": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+    "sha256_after": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+    "unchanged": true
+  },
+  "candidate": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/candidate/Cadenza-L1-Screen-Only.kicad_sch",
+    "sha256": "b82419ddcb001b81a70de7e57c3ee247d53a361462e53a4bb0c9dbf4e58a04a2",
+    "netlist": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/evidence/candidate.netlist.xml",
+    "component_count": 74
+  },
+  "summary": {
+    "total": 20,
+    "passed": 20,
+    "failed": 0
+  },
+  "failed_checks": [],
+  "checks": [
+    {
+      "id": "baseline_hash_matches_frozen_copy",
+      "status": "PASS",
+      "expected": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+      "actual": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c"
+    },
+    {
+      "id": "designator_delta_exact",
+      "status": "PASS",
+      "expected": {
+        "deleted": [
+          "FPC1",
+          "Q2",
+          "R13",
+          "R14",
+          "U6"
+        ],
+        "added": [
+          "C_DISP1",
+          "J_DISP1"
+        ]
+      },
+      "actual": {
+        "deleted": [
+          "FPC1",
+          "Q2",
+          "R13",
+          "R14",
+          "U6"
+        ],
+        "added": [
+          "C_DISP1",
+          "J_DISP1"
+        ]
+      }
+    },
+    {
+      "id": "candidate_real_component_count",
+      "status": "PASS",
+      "expected": 74,
+      "actual": 74
+    },
+    {
+      "id": "retained_component_metadata_unchanged",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "retained_placed_symbol_blocks_unchanged",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "C20_C21_value_footprint_and_properties_preserved",
+      "status": "PASS",
+      "expected": {
+        "C20": {
+          "value": "10uF",
+          "footprint": "Cadenza-re-easyedapro:C0805",
+          "datasheet": "",
+          "description": "容值:10uF;精度:±10%;额定电压:25V;温度系数:X5R;",
+          "fields": {
+            "Manufacturer Part": "CGA0805X5R106K250MT",
+            "Manufacturer": "HRE(芯声)",
+            "Supplier Part": "C6119887",
+            "Supplier": "LCSC",
+            "LCSC Part Name": "10uF ±10% 25V",
+            "3D Model": "1ba041120af144c991958decab20d241",
+            "3D Model Title": "C0805_L2.0-W1.3-H1.3",
+            "3D Model Transform": "78.74,51.181,0,0,0,0,0,0.0005,0",
+            "JLCPCB Part Class": "扩展库",
+            "Supplier Footprint": "0805",
+            "Temperature Coefficient": "X5R",
+            "Tolerance": "±10%",
+            "Voltage Rating": "25V",
+            "Footprint": "Cadenza-re-easyedapro:C0805",
+            "Datasheet": "",
+            "Description": "容值:10uF;精度:±10%;额定电压:25V;温度系数:X5R;"
+          },
+          "libsource": {
+            "lib": "Cadenza-re-easyedapro",
+            "part": "CGA0805X5R106K250MT",
+            "description": ""
+          }
+        },
+        "C21": {
+          "value": "100nF",
+          "footprint": "Cadenza-re-easyedapro:C0805",
+          "datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20220818/0EB3B7FB2F5648AC16609637FBA7DABE.pdf",
+          "description": "容值:100nF;精度:±10%;额定电压:50V;温度系数:X7R;",
+          "fields": {
+            "Manufacturer Part": "FCC0805B104K500DT",
+            "Manufacturer": "FOJAN(富捷)",
+            "Supplier Part": "C5137467",
+            "Supplier": "LCSC",
+            "LCSC Part Name": "100nF ±10% 50V",
+            "3D Model": "1ba041120af144c991958decab20d241",
+            "3D Model Title": "C0805_L2.0-W1.3-H1.3",
+            "3D Model Transform": "78.74,51.181,0,0,0,0,0,0.0005,0",
+            "Check": "false",
+            "JLCPCB Part Class": "扩展库",
+            "Supplier Footprint": "0805",
+            "Temperature Coefficient": "X7R",
+            "Tolerance": "±10%",
+            "Voltage Rating": "50V",
+            "Footprint": "Cadenza-re-easyedapro:C0805",
+            "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20220818/0EB3B7FB2F5648AC16609637FBA7DABE.pdf",
+            "Description": "容值:100nF;精度:±10%;额定电压:50V;温度系数:X7R;"
+          },
+          "libsource": {
+            "lib": "Cadenza-re-easyedapro",
+            "part": "FCC0805B104K500DT",
+            "description": ""
+          }
+        }
+      },
+      "actual": {
+        "C20": {
+          "value": "10uF",
+          "footprint": "Cadenza-re-easyedapro:C0805",
+          "datasheet": "",
+          "description": "容值:10uF;精度:±10%;额定电压:25V;温度系数:X5R;",
+          "fields": {
+            "Manufacturer Part": "CGA0805X5R106K250MT",
+            "Manufacturer": "HRE(芯声)",
+            "Supplier Part": "C6119887",
+            "Supplier": "LCSC",
+            "LCSC Part Name": "10uF ±10% 25V",
+            "3D Model": "1ba041120af144c991958decab20d241",
+            "3D Model Title": "C0805_L2.0-W1.3-H1.3",
+            "3D Model Transform": "78.74,51.181,0,0,0,0,0,0.0005,0",
+            "JLCPCB Part Class": "扩展库",
+            "Supplier Footprint": "0805",
+            "Temperature Coefficient": "X5R",
+            "Tolerance": "±10%",
+            "Voltage Rating": "25V",
+            "Footprint": "Cadenza-re-easyedapro:C0805",
+            "Datasheet": "",
+            "Description": "容值:10uF;精度:±10%;额定电压:25V;温度系数:X5R;"
+          },
+          "libsource": {
+            "lib": "Cadenza-re-easyedapro",
+            "part": "CGA0805X5R106K250MT",
+            "description": ""
+          }
+        },
+        "C21": {
+          "value": "100nF",
+          "footprint": "Cadenza-re-easyedapro:C0805",
+          "datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20220818/0EB3B7FB2F5648AC16609637FBA7DABE.pdf",
+          "description": "容值:100nF;精度:±10%;额定电压:50V;温度系数:X7R;",
+          "fields": {
+            "Manufacturer Part": "FCC0805B104K500DT",
+            "Manufacturer": "FOJAN(富捷)",
+            "Supplier Part": "C5137467",
+            "Supplier": "LCSC",
+            "LCSC Part Name": "100nF ±10% 50V",
+            "3D Model": "1ba041120af144c991958decab20d241",
+            "3D Model Title": "C0805_L2.0-W1.3-H1.3",
+            "3D Model Transform": "78.74,51.181,0,0,0,0,0,0.0005,0",
+            "Check": "false",
+            "JLCPCB Part Class": "扩展库",
+            "Supplier Footprint": "0805",
+            "Temperature Coefficient": "X7R",
+            "Tolerance": "±10%",
+            "Voltage Rating": "50V",
+            "Footprint": "Cadenza-re-easyedapro:C0805",
+            "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20220818/0EB3B7FB2F5648AC16609637FBA7DABE.pdf",
+            "Description": "容值:100nF;精度:±10%;额定电压:50V;温度系数:X7R;"
+          },
+          "libsource": {
+            "lib": "Cadenza-re-easyedapro",
+            "part": "FCC0805B104K500DT",
+            "description": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "sharp_pin_map_exact",
+      "status": "PASS",
+      "expected": {
+        "1": "GPIO39",
+        "2": "GPIO48",
+        "3": "GPIO47",
+        "4": "GPIO14",
+        "5": "GPIO12",
+        "6": "+5V",
+        "7": "+5V",
+        "8": "+5V",
+        "9": "GND",
+        "10": "GND"
+      },
+      "actual": {
+        "6": "+5V",
+        "7": "+5V",
+        "8": "+5V",
+        "10": "GND",
+        "9": "GND",
+        "5": "GPIO12",
+        "4": "GPIO14",
+        "1": "GPIO39",
+        "3": "GPIO47",
+        "2": "GPIO48"
+      }
+    },
+    {
+      "id": "J_DISP1_selected_footprint_exact",
+      "status": "PASS",
+      "expected": "Cadenza_Display_FPC_Variants:Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact",
+      "actual": "Cadenza_Display_FPC_Variants:Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact"
+    },
+    {
+      "id": "J_DISP1_value_exact",
+      "status": "PASS",
+      "expected": "FH34SRJ-10S-0.5SH(50)",
+      "actual": "FH34SRJ-10S-0.5SH(50)"
+    },
+    {
+      "id": "C_DISP1_footprint_reuses_reference_0805",
+      "status": "PASS",
+      "expected": "Cadenza-re-easyedapro:C0805",
+      "actual": "Cadenza-re-easyedapro:C0805"
+    },
+    {
+      "id": "C_DISP1_value",
+      "status": "PASS",
+      "expected": "100nF",
+      "actual": "100nF"
+    },
+    {
+      "id": "C_DISP1_pin_map",
+      "status": "PASS",
+      "expected": {
+        "1": "GPIO12",
+        "2": "GND"
+      },
+      "actual": {
+        "2": "GND",
+        "1": "GPIO12"
+      }
+    },
+    {
+      "id": "C20_power_pin_only_changed_to_5V",
+      "status": "PASS",
+      "expected": {
+        "1": "GND",
+        "2": "+5V"
+      },
+      "actual": {
+        "2": "+5V",
+        "1": "GND"
+      }
+    },
+    {
+      "id": "C21_power_pin_only_changed_to_5V",
+      "status": "PASS",
+      "expected": {
+        "1": "+5V",
+        "2": "GND"
+      },
+      "actual": {
+        "1": "+5V",
+        "2": "GND"
+      }
+    },
+    {
+      "id": "U4_pin15_explicitly_unused",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "id": "all_other_retained_endpoints_unchanged",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "old_display_nets_removed",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "no_testpoint_or_power_lock_additions",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "USB_power_and_buttons_unchanged",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "id": "baseline_not_modified_during_generation",
+      "status": "PASS",
+      "expected": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+      "actual": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c"
+    }
+  ],
+  "limits": [
+    "J_DISP1 part and footprint are selected, but PCB rotation and the final Pin-1 physical orientation are not frozen.",
+    "No PCB was generated or modified; routing, placement, DRC, fabrication outputs, and hardware bring-up remain outside this evidence."
+  ]
+}

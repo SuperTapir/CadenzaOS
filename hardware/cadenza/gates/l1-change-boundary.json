@@ -1,0 +1,3775 @@
+{
+  "schema_version": 1,
+  "source": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+  "policy": {
+    "allowed_existing_refs": [
+      "C20",
+      "C21",
+      "FPC1",
+      "Q2",
+      "R13",
+      "R14",
+      "U6"
+    ],
+    "allowed_display_nets": [
+      "+5V",
+      "GND",
+      "GPIO12",
+      "GPIO14",
+      "GPIO39",
+      "GPIO47",
+      "GPIO48"
+    ],
+    "legacy_removable_nets": [
+      "$1N34531",
+      "$1N34538",
+      "3V3LCD",
+      "GPIO3"
+    ],
+    "mounting_refs": [
+      "SCREW1",
+      "SCREW2",
+      "SCREW3",
+      "SCREW4"
+    ],
+    "meaning": "Only the old display subsystem may be deleted or repurposed during L1; all other reference footprints stay locked."
+  },
+  "board_edge_bbox_mm": {
+    "x": 87.998,
+    "y": 79.598,
+    "width": 130.254,
+    "height": 60.254
+  },
+  "footprints": {
+    "C26": {
+      "reference": "C26",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 106.37,
+      "y_mm": 96.7065,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 107.37,
+          "y_mm": 96.7065
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 105.37,
+          "y_mm": 96.7065
+        }
+      ]
+    },
+    "U4": {
+      "reference": "U4",
+      "footprint": "Cadenza-re-easyedapro:WIRELM-SMD_ESP32-S3-WROOM-1",
+      "x_mm": 153.125,
+      "y_mm": 96.12,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 144.375,
+          "y_mm": 87.225
+        },
+        {
+          "number": "10",
+          "net": "GPIO17",
+          "x_mm": 144.375,
+          "y_mm": 98.655
+        },
+        {
+          "number": "11",
+          "net": "GPIO18",
+          "x_mm": 144.375,
+          "y_mm": 99.925
+        },
+        {
+          "number": "12",
+          "net": "GPIO8",
+          "x_mm": 144.375,
+          "y_mm": 101.195
+        },
+        {
+          "number": "13",
+          "net": "GPIO19",
+          "x_mm": 144.375,
+          "y_mm": 102.465
+        },
+        {
+          "number": "14",
+          "net": "GPIO20",
+          "x_mm": 144.375,
+          "y_mm": 103.735
+        },
+        {
+          "number": "15",
+          "net": "GPIO3",
+          "x_mm": 146.14,
+          "y_mm": 105.015
+        },
+        {
+          "number": "16",
+          "net": "",
+          "x_mm": 147.41,
+          "y_mm": 105.015
+        },
+        {
+          "number": "17",
+          "net": "GPIO9",
+          "x_mm": 148.68,
+          "y_mm": 105.015
+        },
+        {
+          "number": "18",
+          "net": "GPIO10",
+          "x_mm": 149.95,
+          "y_mm": 105.015
+        },
+        {
+          "number": "19",
+          "net": "GPIO11",
+          "x_mm": 151.22,
+          "y_mm": 105.015
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 144.375,
+          "y_mm": 88.495
+        },
+        {
+          "number": "20",
+          "net": "GPIO12",
+          "x_mm": 152.49,
+          "y_mm": 105.015
+        },
+        {
+          "number": "21",
+          "net": "GPIO13",
+          "x_mm": 153.76,
+          "y_mm": 105.015
+        },
+        {
+          "number": "22",
+          "net": "GPIO14",
+          "x_mm": 155.03,
+          "y_mm": 105.015
+        },
+        {
+          "number": "23",
+          "net": "GPIO21",
+          "x_mm": 156.3,
+          "y_mm": 105.015
+        },
+        {
+          "number": "24",
+          "net": "GPIO47",
+          "x_mm": 157.57,
+          "y_mm": 105.015
+        },
+        {
+          "number": "25",
+          "net": "GPIO48",
+          "x_mm": 158.84,
+          "y_mm": 105.015
+        },
+        {
+          "number": "26",
+          "net": "",
+          "x_mm": 160.11,
+          "y_mm": 104.985
+        },
+        {
+          "number": "27",
+          "net": "GPIO0",
+          "x_mm": 161.875,
+          "y_mm": 103.735
+        },
+        {
+          "number": "28",
+          "net": "",
+          "x_mm": 161.875,
+          "y_mm": 102.465
+        },
+        {
+          "number": "29",
+          "net": "",
+          "x_mm": 161.875,
+          "y_mm": 101.195
+        },
+        {
+          "number": "3",
+          "net": "CHIP_PU",
+          "x_mm": 144.375,
+          "y_mm": 89.765
+        },
+        {
+          "number": "30",
+          "net": "",
+          "x_mm": 161.875,
+          "y_mm": 99.925
+        },
+        {
+          "number": "31",
+          "net": "GPIO38",
+          "x_mm": 161.875,
+          "y_mm": 98.655
+        },
+        {
+          "number": "32",
+          "net": "GPIO39",
+          "x_mm": 161.875,
+          "y_mm": 97.385
+        },
+        {
+          "number": "33",
+          "net": "GPIO40",
+          "x_mm": 161.875,
+          "y_mm": 96.115
+        },
+        {
+          "number": "34",
+          "net": "GPIO41",
+          "x_mm": 161.875,
+          "y_mm": 94.845
+        },
+        {
+          "number": "35",
+          "net": "GPIO42",
+          "x_mm": 161.875,
+          "y_mm": 93.575
+        },
+        {
+          "number": "36",
+          "net": "U0RXD",
+          "x_mm": 161.875,
+          "y_mm": 92.305
+        },
+        {
+          "number": "37",
+          "net": "U0TXD",
+          "x_mm": 161.875,
+          "y_mm": 91.035
+        },
+        {
+          "number": "38",
+          "net": "GPIO2",
+          "x_mm": 161.875,
+          "y_mm": 89.765
+        },
+        {
+          "number": "39",
+          "net": "GPIO1",
+          "x_mm": 161.875,
+          "y_mm": 88.495
+        },
+        {
+          "number": "4",
+          "net": "GPIO4",
+          "x_mm": 144.375,
+          "y_mm": 91.035
+        },
+        {
+          "number": "40",
+          "net": "GND",
+          "x_mm": 161.875,
+          "y_mm": 87.225
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 150.225,
+          "y_mm": 93.545
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 150.225,
+          "y_mm": 94.945
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 150.225,
+          "y_mm": 96.345
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 151.625,
+          "y_mm": 93.545
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 151.625,
+          "y_mm": 94.945
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 151.625,
+          "y_mm": 96.345
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 153.025,
+          "y_mm": 93.545
+        },
+        {
+          "number": "41",
+          "net": "",
+          "x_mm": 153.025,
+          "y_mm": 94.945
+        },
+        {
+          "number": "41",
+          "net": "GND",
+          "x_mm": 153.025,
+          "y_mm": 96.345
+        },
+        {
+          "number": "5",
+          "net": "GPIO5",
+          "x_mm": 144.375,
+          "y_mm": 92.305
+        },
+        {
+          "number": "6",
+          "net": "GPIO6",
+          "x_mm": 144.375,
+          "y_mm": 93.575
+        },
+        {
+          "number": "7",
+          "net": "GPIO7",
+          "x_mm": 144.375,
+          "y_mm": 94.845
+        },
+        {
+          "number": "8",
+          "net": "GPIO15",
+          "x_mm": 144.375,
+          "y_mm": 96.115
+        },
+        {
+          "number": "9",
+          "net": "GPIO16",
+          "x_mm": 144.375,
+          "y_mm": 97.385
+        }
+      ]
+    },
+    "SCREW3": {
+      "reference": "SCREW3",
+      "footprint": "Cadenza-re-easyedapro:M2螺丝",
+      "x_mm": 93.125,
+      "y_mm": 134.725,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 93.125,
+          "y_mm": 134.725
+        }
+      ]
+    },
+    "C14": {
+      "reference": "C14",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 138.581,
+      "y_mm": 87.5045,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 138.581,
+          "y_mm": 86.5045
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 138.581,
+          "y_mm": 88.5045
+        }
+      ]
+    },
+    "C2": {
+      "reference": "C2",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 193.2,
+      "y_mm": 108.575,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 194.2,
+          "y_mm": 108.575
+        },
+        {
+          "number": "2",
+          "net": "VBUS",
+          "x_mm": 192.2,
+          "y_mm": 108.575
+        }
+      ]
+    },
+    "C25": {
+      "reference": "C25",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 106.37,
+      "y_mm": 94.608,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3M",
+          "x_mm": 105.37,
+          "y_mm": 94.608
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 107.37,
+          "y_mm": 94.608
+        }
+      ]
+    },
+    "R3": {
+      "reference": "R3",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 137.098,
+      "y_mm": 92.0365,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO4",
+          "x_mm": 137.098,
+          "y_mm": 91.0365
+        },
+        {
+          "number": "2",
+          "net": "BAT+",
+          "x_mm": 137.098,
+          "y_mm": 93.0365
+        }
+      ]
+    },
+    "C16": {
+      "reference": "C16",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 126.925,
+      "y_mm": 82.925,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO0",
+          "x_mm": 127.925,
+          "y_mm": 82.925
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 125.925,
+          "y_mm": 82.925
+        }
+      ]
+    },
+    "R5": {
+      "reference": "R5",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 199.975,
+      "y_mm": 93.025,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34586",
+          "x_mm": 199.975,
+          "y_mm": 94.025
+        },
+        {
+          "number": "2",
+          "net": "BAT+",
+          "x_mm": 199.975,
+          "y_mm": 92.025
+        }
+      ]
+    },
+    "U7": {
+      "reference": "U7",
+      "footprint": "Cadenza-re-easyedapro:MIC-SMD_6P-L3.5-W2.7-P0.90-BL",
+      "x_mm": 104.093,
+      "y_mm": 90.997,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO1",
+          "x_mm": 105.3795,
+          "y_mm": 90.097
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 104.5575,
+          "y_mm": 90.097
+        },
+        {
+          "number": "3",
+          "net": "",
+          "x_mm": 102.8065,
+          "y_mm": 91.449
+        },
+        {
+          "number": "3",
+          "net": "",
+          "x_mm": 102.8595,
+          "y_mm": 90.492
+        },
+        {
+          "number": "3",
+          "net": "GND",
+          "x_mm": 103.764,
+          "y_mm": 91.502
+        },
+        {
+          "number": "3",
+          "net": "",
+          "x_mm": 103.817,
+          "y_mm": 90.545
+        },
+        {
+          "number": "4",
+          "net": "GPIO2",
+          "x_mm": 104.5575,
+          "y_mm": 91.897
+        },
+        {
+          "number": "5",
+          "net": "3V3M",
+          "x_mm": 105.3795,
+          "y_mm": 91.897
+        },
+        {
+          "number": "6",
+          "net": "GPIO21",
+          "x_mm": 105.3795,
+          "y_mm": 90.997
+        }
+      ]
+    },
+    "R13": {
+      "reference": "R13",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 168.487,
+      "y_mm": 113.048,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO39",
+          "x_mm": 167.487,
+          "y_mm": 113.048
+        },
+        {
+          "number": "2",
+          "net": "$1N34531",
+          "x_mm": 169.487,
+          "y_mm": 113.048
+        }
+      ]
+    },
+    "SW1": {
+      "reference": "SW1",
+      "footprint": "Cadenza-re-easyedapro:SW-TH_SK12D07VG4-BF",
+      "x_mm": 182.022,
+      "y_mm": 83.925,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 184.022,
+          "y_mm": 83.925
+        },
+        {
+          "number": "2",
+          "net": "VOUT",
+          "x_mm": 182.022,
+          "y_mm": 83.925
+        },
+        {
+          "number": "3",
+          "net": "+5V",
+          "x_mm": 180.022,
+          "y_mm": 83.925
+        },
+        {
+          "number": "4",
+          "net": "",
+          "x_mm": 177.872,
+          "y_mm": 83.925
+        },
+        {
+          "number": "5",
+          "net": "",
+          "x_mm": 186.172,
+          "y_mm": 83.925
+        }
+      ]
+    },
+    "C5": {
+      "reference": "C5",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 197.825,
+      "y_mm": 95.05,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 197.825,
+          "y_mm": 96.05
+        },
+        {
+          "number": "2",
+          "net": "$1N34586",
+          "x_mm": 197.825,
+          "y_mm": 94.05
+        }
+      ]
+    },
+    "LED1": {
+      "reference": "LED1",
+      "footprint": "Cadenza-re-easyedapro:LED0805-RD_ORANGE",
+      "x_mm": 160.85,
+      "y_mm": 135.821,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 160.85,
+          "y_mm": 136.921
+        },
+        {
+          "number": "2",
+          "net": "$1N34595",
+          "x_mm": 160.85,
+          "y_mm": 134.721
+        }
+      ]
+    },
+    "SCREW2": {
+      "reference": "SCREW2",
+      "footprint": "Cadenza-re-easyedapro:M2螺丝",
+      "x_mm": 213.125,
+      "y_mm": 84.725,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 213.125,
+          "y_mm": 84.725
+        }
+      ]
+    },
+    "C10": {
+      "reference": "C10",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 181.0055,
+      "y_mm": 95.167,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 182.0055,
+          "y_mm": 95.167
+        },
+        {
+          "number": "2",
+          "net": "+5V",
+          "x_mm": 180.0055,
+          "y_mm": 95.167
+        }
+      ]
+    },
+    "C15": {
+      "reference": "C15",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 131.55,
+      "y_mm": 90.7745,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 131.55,
+          "y_mm": 91.7745
+        },
+        {
+          "number": "2",
+          "net": "CHIP_PU",
+          "x_mm": 131.55,
+          "y_mm": 89.7745
+        }
+      ]
+    },
+    "R12": {
+      "reference": "R12",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 114.285,
+      "y_mm": 125.9305,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34731",
+          "x_mm": 114.285,
+          "y_mm": 126.9305
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 114.285,
+          "y_mm": 124.9305
+        }
+      ]
+    },
+    "H1": {
+      "reference": "H1",
+      "footprint": "Cadenza-re-easyedapro:CONN-SMD_2P-P2.00_XUNPU_WAFER-PH2.0-2PWB",
+      "x_mm": 212.116,
+      "y_mm": 93.026,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "BAT+",
+          "x_mm": 214.966,
+          "y_mm": 92.026
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 214.966,
+          "y_mm": 94.026
+        },
+        {
+          "number": "4",
+          "net": "",
+          "x_mm": 209.266,
+          "y_mm": 96.376
+        },
+        {
+          "number": "5",
+          "net": "",
+          "x_mm": 209.266,
+          "y_mm": 89.676
+        }
+      ]
+    },
+    "R1": {
+      "reference": "R1",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 144.604,
+      "y_mm": 134.893,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34554",
+          "x_mm": 145.604,
+          "y_mm": 134.893
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 143.604,
+          "y_mm": 134.893
+        }
+      ]
+    },
+    "U2": {
+      "reference": "U2",
+      "footprint": "Cadenza-re-easyedapro:SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR",
+      "x_mm": 176.5095,
+      "y_mm": 94.227,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "+5V",
+          "x_mm": 175.2095,
+          "y_mm": 93.277
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 175.2095,
+          "y_mm": 94.227
+        },
+        {
+          "number": "3",
+          "net": "$1N34652",
+          "x_mm": 175.2095,
+          "y_mm": 95.177
+        },
+        {
+          "number": "4",
+          "net": "+5V",
+          "x_mm": 177.8095,
+          "y_mm": 95.177
+        },
+        {
+          "number": "5",
+          "net": "$1N34657",
+          "x_mm": 177.8095,
+          "y_mm": 93.277
+        }
+      ]
+    },
+    "RST1": {
+      "reference": "RST1",
+      "footprint": "Cadenza-re-easyedapro:SW-SMD_TS36CA",
+      "x_mm": 172.55,
+      "y_mm": 82.9495,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "A",
+          "net": "",
+          "x_mm": 175.925,
+          "y_mm": 81.9245
+        },
+        {
+          "number": "B",
+          "net": "",
+          "x_mm": 169.175,
+          "y_mm": 81.9245
+        },
+        {
+          "number": "C",
+          "net": "CHIP_PU",
+          "x_mm": 174.65,
+          "y_mm": 83.9745
+        },
+        {
+          "number": "D",
+          "net": "GND",
+          "x_mm": 170.45,
+          "y_mm": 83.9745
+        }
+      ]
+    },
+    "R11": {
+      "reference": "R11",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 133.749,
+      "y_mm": 87.5025,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3M",
+          "x_mm": 133.749,
+          "y_mm": 88.5025
+        },
+        {
+          "number": "2",
+          "net": "GPIO0",
+          "x_mm": 133.749,
+          "y_mm": 86.5025
+        }
+      ]
+    },
+    "C7": {
+      "reference": "C7",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 188.495,
+      "y_mm": 87.455,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 187.495,
+          "y_mm": 87.455
+        },
+        {
+          "number": "2",
+          "net": "VOUT",
+          "x_mm": 189.495,
+          "y_mm": 87.455
+        }
+      ]
+    },
+    "C18": {
+      "reference": "C18",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 109.664,
+      "y_mm": 124.186,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "+5V",
+          "x_mm": 110.664,
+          "y_mm": 124.186
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 108.664,
+          "y_mm": 124.186
+        }
+      ]
+    },
+    "C3": {
+      "reference": "C3",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 202.125,
+      "y_mm": 93.0255,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 202.125,
+          "y_mm": 94.0255
+        },
+        {
+          "number": "2",
+          "net": "BAT+",
+          "x_mm": 202.125,
+          "y_mm": 92.0255
+        }
+      ]
+    },
+    "C13": {
+      "reference": "C13",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 136.172,
+      "y_mm": 87.5045,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 136.172,
+          "y_mm": 86.5045
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 136.172,
+          "y_mm": 88.5045
+        }
+      ]
+    },
+    "U3": {
+      "reference": "U3",
+      "footprint": "Cadenza-re-easyedapro:SOP-16_L10.0-W3.9-P1.27-LS6.0-BL",
+      "x_mm": 178.31,
+      "y_mm": 125.2755,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 175.4375,
+          "y_mm": 120.8305
+        },
+        {
+          "number": "10",
+          "net": "",
+          "x_mm": 181.1825,
+          "y_mm": 128.4505
+        },
+        {
+          "number": "11",
+          "net": "",
+          "x_mm": 181.1825,
+          "y_mm": 127.1805
+        },
+        {
+          "number": "12",
+          "net": "",
+          "x_mm": 181.1825,
+          "y_mm": 125.9105
+        },
+        {
+          "number": "13",
+          "net": "DTR",
+          "x_mm": 181.1825,
+          "y_mm": 124.6405
+        },
+        {
+          "number": "14",
+          "net": "RTS",
+          "x_mm": 181.1825,
+          "y_mm": 123.3705
+        },
+        {
+          "number": "15",
+          "net": "",
+          "x_mm": 181.1825,
+          "y_mm": 122.1005
+        },
+        {
+          "number": "16",
+          "net": "3V3M",
+          "x_mm": 181.1825,
+          "y_mm": 120.8305
+        },
+        {
+          "number": "2",
+          "net": "U0RXD",
+          "x_mm": 175.4375,
+          "y_mm": 122.1005
+        },
+        {
+          "number": "3",
+          "net": "U0TXD",
+          "x_mm": 175.4375,
+          "y_mm": 123.3705
+        },
+        {
+          "number": "4",
+          "net": "3V3M",
+          "x_mm": 175.4375,
+          "y_mm": 124.6405
+        },
+        {
+          "number": "5",
+          "net": "D+",
+          "x_mm": 175.4375,
+          "y_mm": 125.9105
+        },
+        {
+          "number": "6",
+          "net": "D-",
+          "x_mm": 175.4375,
+          "y_mm": 127.1805
+        },
+        {
+          "number": "7",
+          "net": "",
+          "x_mm": 175.4375,
+          "y_mm": 128.4505
+        },
+        {
+          "number": "8",
+          "net": "",
+          "x_mm": 175.4375,
+          "y_mm": 129.7205
+        },
+        {
+          "number": "9",
+          "net": "",
+          "x_mm": 181.1825,
+          "y_mm": 129.7205
+        }
+      ]
+    },
+    "CN1": {
+      "reference": "CN1",
+      "footprint": "Cadenza-re-easyedapro:CONN-SMD_2P-P1.25-HC-1.25-2PWT",
+      "x_mm": 101.85,
+      "y_mm": 135.8,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34720",
+          "x_mm": 102.475,
+          "y_mm": 137.085
+        },
+        {
+          "number": "2",
+          "net": "$1N34722",
+          "x_mm": 101.225,
+          "y_mm": 137.085
+        },
+        {
+          "number": "3",
+          "net": "",
+          "x_mm": 104.855,
+          "y_mm": 134.515
+        },
+        {
+          "number": "4",
+          "net": "",
+          "x_mm": 98.845,
+          "y_mm": 134.515
+        }
+      ]
+    },
+    "R17": {
+      "reference": "R17",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 132.672,
+      "y_mm": 119.1855,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO11",
+          "x_mm": 131.672,
+          "y_mm": 119.1855
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 133.672,
+          "y_mm": 119.1855
+        }
+      ]
+    },
+    "C17": {
+      "reference": "C17",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 170.805,
+      "y_mm": 85.717,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "CHIP_PU",
+          "x_mm": 171.805,
+          "y_mm": 85.717
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 169.805,
+          "y_mm": 85.717
+        }
+      ]
+    },
+    "CARD1": {
+      "reference": "CARD1",
+      "footprint": "Cadenza-re-easyedapro:TF-SMD_TF-PUSH",
+      "x_mm": 128.574,
+      "y_mm": 129.0275,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 130.824,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "10",
+          "net": "GND",
+          "x_mm": 120.824,
+          "y_mm": 124.7275
+        },
+        {
+          "number": "11",
+          "net": "GND",
+          "x_mm": 120.824,
+          "y_mm": 134.3275
+        },
+        {
+          "number": "12",
+          "net": "GND",
+          "x_mm": 136.324,
+          "y_mm": 134.3275
+        },
+        {
+          "number": "13",
+          "net": "GND",
+          "x_mm": 135.424,
+          "y_mm": 124.7275
+        },
+        {
+          "number": "2",
+          "net": "GPIO10",
+          "x_mm": 129.724,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "3",
+          "net": "GPIO11",
+          "x_mm": 128.624,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "4",
+          "net": "3V3M",
+          "x_mm": 127.524,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "5",
+          "net": "$1N34770",
+          "x_mm": 126.424,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "6",
+          "net": "GND",
+          "x_mm": 125.324,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "7",
+          "net": "GPIO9",
+          "x_mm": 124.224,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "8",
+          "net": "",
+          "x_mm": 123.124,
+          "y_mm": 123.7275
+        },
+        {
+          "number": "CD",
+          "net": "",
+          "x_mm": 122.024,
+          "y_mm": 123.7275
+        }
+      ]
+    },
+    "U6": {
+      "reference": "U6",
+      "footprint": "Cadenza-re-easyedapro:SOT-23-3_L3.0-W1.7-P0.95-LS2.9-BR",
+      "x_mm": 168.3705,
+      "y_mm": 108.7395,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 167.4205,
+          "y_mm": 109.841
+        },
+        {
+          "number": "2",
+          "net": "3V3LCD",
+          "x_mm": 169.3205,
+          "y_mm": 109.841
+        },
+        {
+          "number": "3",
+          "net": "3V3M",
+          "x_mm": 168.3705,
+          "y_mm": 107.638
+        }
+      ]
+    },
+    "C9": {
+      "reference": "C9",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 181.0055,
+      "y_mm": 93.135,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 182.0055,
+          "y_mm": 93.135
+        },
+        {
+          "number": "2",
+          "net": "+5V",
+          "x_mm": 180.0055,
+          "y_mm": 93.135
+        }
+      ]
+    },
+    "C12": {
+      "reference": "C12",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 185.0035,
+      "y_mm": 118.694,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 186.0035,
+          "y_mm": 118.694
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 184.0035,
+          "y_mm": 118.694
+        }
+      ]
+    },
+    "R4": {
+      "reference": "R4",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 193.194,
+      "y_mm": 110.9875,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34619",
+          "x_mm": 194.194,
+          "y_mm": 110.9875
+        },
+        {
+          "number": "2",
+          "net": "VBUS",
+          "x_mm": 192.194,
+          "y_mm": 110.9875
+        }
+      ]
+    },
+    "C4": {
+      "reference": "C4",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 197.3125,
+      "y_mm": 110.992,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 198.3125,
+          "y_mm": 110.992
+        },
+        {
+          "number": "2",
+          "net": "$1N34619",
+          "x_mm": 196.3125,
+          "y_mm": 110.992
+        }
+      ]
+    },
+    "FPC1": {
+      "reference": "FPC1",
+      "footprint": "Cadenza-re-easyedapro:FPC-SMD_12P-P0.50_FPC-05F-12PH20",
+      "x_mm": 177.575,
+      "y_mm": 109.725,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 176.2875,
+          "y_mm": 112.475
+        },
+        {
+          "number": "10",
+          "net": "GPIO12",
+          "x_mm": 176.2875,
+          "y_mm": 107.975
+        },
+        {
+          "number": "11",
+          "net": "GPIO3",
+          "x_mm": 176.2875,
+          "y_mm": 107.475
+        },
+        {
+          "number": "12",
+          "net": "GND",
+          "x_mm": 176.2875,
+          "y_mm": 106.975
+        },
+        {
+          "number": "13",
+          "net": "",
+          "x_mm": 178.8625,
+          "y_mm": 105.285
+        },
+        {
+          "number": "14",
+          "net": "",
+          "x_mm": 178.8625,
+          "y_mm": 114.165
+        },
+        {
+          "number": "2",
+          "net": "$1N34538",
+          "x_mm": 176.2875,
+          "y_mm": 111.975
+        },
+        {
+          "number": "3",
+          "net": "3V3LCD",
+          "x_mm": 176.2875,
+          "y_mm": 111.475
+        },
+        {
+          "number": "4",
+          "net": "3V3LCD",
+          "x_mm": 176.2875,
+          "y_mm": 110.975
+        },
+        {
+          "number": "5",
+          "net": "GND",
+          "x_mm": 176.2875,
+          "y_mm": 110.475
+        },
+        {
+          "number": "6",
+          "net": "",
+          "x_mm": 176.2875,
+          "y_mm": 109.975
+        },
+        {
+          "number": "7",
+          "net": "GPIO47",
+          "x_mm": 176.2875,
+          "y_mm": 109.475
+        },
+        {
+          "number": "8",
+          "net": "GPIO14",
+          "x_mm": 176.2875,
+          "y_mm": 108.975
+        },
+        {
+          "number": "9",
+          "net": "GPIO48",
+          "x_mm": 176.2875,
+          "y_mm": 108.475
+        }
+      ]
+    },
+    "SCREW1": {
+      "reference": "SCREW1",
+      "footprint": "Cadenza-re-easyedapro:M2螺丝",
+      "x_mm": 93.125,
+      "y_mm": 84.725,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 93.125,
+          "y_mm": 84.725
+        }
+      ]
+    },
+    "L2": {
+      "reference": "L2",
+      "footprint": "Cadenza-re-easyedapro:IND-SMD_L3.0-W3.0_FNR30XXS",
+      "x_mm": 171.507,
+      "y_mm": 95.1795,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34652",
+          "x_mm": 172.857,
+          "y_mm": 95.1795
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 170.157,
+          "y_mm": 95.1795
+        }
+      ]
+    },
+    "C22": {
+      "reference": "C22",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 169.376,
+      "y_mm": 105.7075,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3M",
+          "x_mm": 168.376,
+          "y_mm": 105.7075
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 170.376,
+          "y_mm": 105.7075
+        }
+      ]
+    },
+    "C24": {
+      "reference": "C24",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 126.5425,
+      "y_mm": 121.282,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3M",
+          "x_mm": 127.5425,
+          "y_mm": 121.282
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 125.5425,
+          "y_mm": 121.282
+        }
+      ]
+    },
+    "BOOT1": {
+      "reference": "BOOT1",
+      "footprint": "Cadenza-re-easyedapro:SW-SMD_TS36CA",
+      "x_mm": 133.7005,
+      "y_mm": 82.95,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "A",
+          "net": "",
+          "x_mm": 137.0755,
+          "y_mm": 81.925
+        },
+        {
+          "number": "B",
+          "net": "",
+          "x_mm": 130.3255,
+          "y_mm": 81.925
+        },
+        {
+          "number": "C",
+          "net": "GPIO0",
+          "x_mm": 135.8005,
+          "y_mm": 83.975
+        },
+        {
+          "number": "D",
+          "net": "GND",
+          "x_mm": 131.6005,
+          "y_mm": 83.975
+        }
+      ]
+    },
+    "USB1": {
+      "reference": "USB1",
+      "footprint": "Cadenza-re-easyedapro:USB-C-TH_HX-TYPE-C-16P-180LC-BH15.0",
+      "x_mm": 153.125,
+      "y_mm": 136.121,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "13",
+          "net": "",
+          "x_mm": 148.9,
+          "y_mm": 134.101
+        },
+        {
+          "number": "13",
+          "net": "",
+          "x_mm": 157.35,
+          "y_mm": 134.101
+        },
+        {
+          "number": "14",
+          "net": "",
+          "x_mm": 148.9,
+          "y_mm": 138.141
+        },
+        {
+          "number": "14",
+          "net": "",
+          "x_mm": 157.35,
+          "y_mm": 138.141
+        },
+        {
+          "number": "A1",
+          "net": "GND",
+          "x_mm": 149.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A12",
+          "net": "GND",
+          "x_mm": 156.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A4",
+          "net": "VBUS",
+          "x_mm": 150.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A5",
+          "net": "$1N34554",
+          "x_mm": 151.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A6",
+          "net": "D+",
+          "x_mm": 152.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A7",
+          "net": "D-",
+          "x_mm": 153.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A8",
+          "net": "",
+          "x_mm": 154.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "A9",
+          "net": "VBUS",
+          "x_mm": 155.625,
+          "y_mm": 135.291
+        },
+        {
+          "number": "B1",
+          "net": "GND",
+          "x_mm": 156.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B12",
+          "net": "GND",
+          "x_mm": 149.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B4",
+          "net": "VBUS",
+          "x_mm": 155.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B5",
+          "net": "$1N34556",
+          "x_mm": 154.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B6",
+          "net": "D+",
+          "x_mm": 153.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B7",
+          "net": "D-",
+          "x_mm": 152.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B8",
+          "net": "",
+          "x_mm": 151.625,
+          "y_mm": 136.941
+        },
+        {
+          "number": "B9",
+          "net": "VBUS",
+          "x_mm": 150.625,
+          "y_mm": 136.941
+        }
+      ]
+    },
+    "R16": {
+      "reference": "R16",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 120.45,
+      "y_mm": 120.425,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO9",
+          "x_mm": 121.45,
+          "y_mm": 120.425
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 119.45,
+          "y_mm": 120.425
+        }
+      ]
+    },
+    "R9": {
+      "reference": "R9",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 176.8145,
+      "y_mm": 89.452,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 175.8145,
+          "y_mm": 89.452
+        },
+        {
+          "number": "2",
+          "net": "$1N34657",
+          "x_mm": 177.8145,
+          "y_mm": 89.452
+        }
+      ]
+    },
+    "C1": {
+      "reference": "C1",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 168.3745,
+      "y_mm": 94.1965,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 168.3745,
+          "y_mm": 93.1965
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 168.3745,
+          "y_mm": 95.1965
+        }
+      ]
+    },
+    "C8": {
+      "reference": "C8",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 181.0055,
+      "y_mm": 91.1285,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 182.0055,
+          "y_mm": 91.1285
+        },
+        {
+          "number": "2",
+          "net": "+5V",
+          "x_mm": 180.0055,
+          "y_mm": 91.1285
+        }
+      ]
+    },
+    "R7": {
+      "reference": "R7",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 206.171,
+      "y_mm": 104.764,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34601",
+          "x_mm": 206.171,
+          "y_mm": 105.764
+        },
+        {
+          "number": "2",
+          "net": "BAT+",
+          "x_mm": 206.171,
+          "y_mm": 103.764
+        }
+      ]
+    },
+    "U1": {
+      "reference": "U1",
+      "footprint": "Cadenza-re-easyedapro:ESOP-8_L4.9-W3.9-P1.27-LS6.0-BL-EP",
+      "x_mm": 194.1,
+      "y_mm": 100.725,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "VBUS",
+          "x_mm": 192.195,
+          "y_mm": 103.6335
+        },
+        {
+          "number": "2",
+          "net": "$1N34595",
+          "x_mm": 193.465,
+          "y_mm": 103.6335
+        },
+        {
+          "number": "3",
+          "net": "$1N34601",
+          "x_mm": 194.735,
+          "y_mm": 103.6335
+        },
+        {
+          "number": "4",
+          "net": "$1N34601",
+          "x_mm": 196.005,
+          "y_mm": 103.6335
+        },
+        {
+          "number": "5",
+          "net": "",
+          "x_mm": 196.005,
+          "y_mm": 97.8165
+        },
+        {
+          "number": "6",
+          "net": "$1N34586",
+          "x_mm": 194.735,
+          "y_mm": 97.8165
+        },
+        {
+          "number": "7",
+          "net": "$1N34588",
+          "x_mm": 193.465,
+          "y_mm": 97.8165
+        },
+        {
+          "number": "8",
+          "net": "VOUT",
+          "x_mm": 192.195,
+          "y_mm": 97.8165
+        },
+        {
+          "number": "9",
+          "net": "GND",
+          "x_mm": 194.1,
+          "y_mm": 100.725
+        }
+      ]
+    },
+    "C23": {
+      "reference": "C23",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 126.563,
+      "y_mm": 119.157,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3M",
+          "x_mm": 127.563,
+          "y_mm": 119.157
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 125.563,
+          "y_mm": 119.157
+        }
+      ]
+    },
+    "C6": {
+      "reference": "C6",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 188.495,
+      "y_mm": 89.507,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 187.495,
+          "y_mm": 89.507
+        },
+        {
+          "number": "2",
+          "net": "VOUT",
+          "x_mm": 189.495,
+          "y_mm": 89.507
+        }
+      ]
+    },
+    "C20": {
+      "reference": "C20",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 171.1095,
+      "y_mm": 110.2395,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 171.1095,
+          "y_mm": 109.2395
+        },
+        {
+          "number": "2",
+          "net": "3V3LCD",
+          "x_mm": 171.1095,
+          "y_mm": 111.2395
+        }
+      ]
+    },
+    "Q1": {
+      "reference": "Q1",
+      "footprint": "Cadenza-re-easyedapro:SC-70-6_L2.2-W1.3-P0.65-LS2.1-BR",
+      "x_mm": 184.076,
+      "y_mm": 124.031,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "RTS",
+          "x_mm": 183.126,
+          "y_mm": 123.381
+        },
+        {
+          "number": "2",
+          "net": "DTR",
+          "x_mm": 183.126,
+          "y_mm": 124.031
+        },
+        {
+          "number": "3",
+          "net": "DTR",
+          "x_mm": 183.126,
+          "y_mm": 124.681
+        },
+        {
+          "number": "4",
+          "net": "GPIO0",
+          "x_mm": 185.026,
+          "y_mm": 124.681
+        },
+        {
+          "number": "5",
+          "net": "RTS",
+          "x_mm": 185.026,
+          "y_mm": 124.031
+        },
+        {
+          "number": "6",
+          "net": "CHIP_PU",
+          "x_mm": 185.026,
+          "y_mm": 123.381
+        }
+      ]
+    },
+    "R2": {
+      "reference": "R2",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 144.604,
+      "y_mm": 137.171,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 143.604,
+          "y_mm": 137.171
+        },
+        {
+          "number": "2",
+          "net": "$1N34556",
+          "x_mm": 145.604,
+          "y_mm": 137.171
+        }
+      ]
+    },
+    "R14": {
+      "reference": "R14",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 168.501,
+      "y_mm": 115.099,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 167.501,
+          "y_mm": 115.099
+        },
+        {
+          "number": "2",
+          "net": "$1N34531",
+          "x_mm": 169.501,
+          "y_mm": 115.099
+        }
+      ]
+    },
+    "R15": {
+      "reference": "R15",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 107.225,
+      "y_mm": 90.0,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO21",
+          "x_mm": 107.225,
+          "y_mm": 91.0
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 107.225,
+          "y_mm": 89.0
+        }
+      ]
+    },
+    "C19": {
+      "reference": "C19",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 109.6395,
+      "y_mm": 122.1285,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "+5V",
+          "x_mm": 110.6395,
+          "y_mm": 122.1285
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 108.6395,
+          "y_mm": 122.1285
+        }
+      ]
+    },
+    "R6": {
+      "reference": "R6",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 176.7965,
+      "y_mm": 91.504,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34657",
+          "x_mm": 177.7965,
+          "y_mm": 91.504
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 175.7965,
+          "y_mm": 91.504
+        }
+      ]
+    },
+    "U5": {
+      "reference": "U5",
+      "footprint": "Cadenza-re-easyedapro:TQFN-16_L3.0-W3.0-P0.50-BL-EP1.5",
+      "x_mm": 111.163,
+      "y_mm": 127.69,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO40",
+          "x_mm": 112.663,
+          "y_mm": 128.4385
+        },
+        {
+          "number": "10",
+          "net": "$1N34722",
+          "x_mm": 109.663,
+          "y_mm": 127.44
+        },
+        {
+          "number": "11",
+          "net": "GND",
+          "x_mm": 109.663,
+          "y_mm": 127.94
+        },
+        {
+          "number": "12",
+          "net": "",
+          "x_mm": 109.663,
+          "y_mm": 128.4385
+        },
+        {
+          "number": "13",
+          "net": "",
+          "x_mm": 110.411,
+          "y_mm": 129.19
+        },
+        {
+          "number": "14",
+          "net": "GPIO42",
+          "x_mm": 110.911,
+          "y_mm": 129.19
+        },
+        {
+          "number": "15",
+          "net": "GND",
+          "x_mm": 111.411,
+          "y_mm": 129.19
+        },
+        {
+          "number": "16",
+          "net": "GPIO41",
+          "x_mm": 111.911,
+          "y_mm": 129.19
+        },
+        {
+          "number": "17",
+          "net": "GND",
+          "x_mm": 111.163,
+          "y_mm": 127.69
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 112.663,
+          "y_mm": 127.9385
+        },
+        {
+          "number": "3",
+          "net": "GND",
+          "x_mm": 112.663,
+          "y_mm": 127.4385
+        },
+        {
+          "number": "4",
+          "net": "$1N34731",
+          "x_mm": 112.663,
+          "y_mm": 126.9385
+        },
+        {
+          "number": "5",
+          "net": "",
+          "x_mm": 111.911,
+          "y_mm": 126.19
+        },
+        {
+          "number": "6",
+          "net": "",
+          "x_mm": 111.411,
+          "y_mm": 126.19
+        },
+        {
+          "number": "7",
+          "net": "+5V",
+          "x_mm": 110.911,
+          "y_mm": 126.19
+        },
+        {
+          "number": "8",
+          "net": "+5V",
+          "x_mm": 110.411,
+          "y_mm": 126.19
+        },
+        {
+          "number": "9",
+          "net": "$1N34720",
+          "x_mm": 109.663,
+          "y_mm": 126.94
+        }
+      ]
+    },
+    "Q2": {
+      "reference": "Q2",
+      "footprint": "Cadenza-re-easyedapro:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+      "x_mm": 172.6015,
+      "y_mm": 113.988,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34531",
+          "x_mm": 171.6015,
+          "y_mm": 113.038
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 171.6015,
+          "y_mm": 114.938
+        },
+        {
+          "number": "3",
+          "net": "$1N34538",
+          "x_mm": 173.6015,
+          "y_mm": 113.988
+        }
+      ]
+    },
+    "R10": {
+      "reference": "R10",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 129.4425,
+      "y_mm": 90.79,
+      "rotation_deg": -90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "CHIP_PU",
+          "x_mm": 129.4425,
+          "y_mm": 89.79
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 129.4425,
+          "y_mm": 91.79
+        }
+      ]
+    },
+    "R8": {
+      "reference": "R8",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 134.685,
+      "y_mm": 92.0365,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 134.685,
+          "y_mm": 93.0365
+        },
+        {
+          "number": "2",
+          "net": "GPIO4",
+          "x_mm": 134.685,
+          "y_mm": 91.0365
+        }
+      ]
+    },
+    "SCREW4": {
+      "reference": "SCREW4",
+      "footprint": "Cadenza-re-easyedapro:M2螺丝",
+      "x_mm": 213.125,
+      "y_mm": 134.725,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 213.125,
+          "y_mm": 134.725
+        }
+      ]
+    },
+    "R19": {
+      "reference": "R19",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 152.75,
+      "y_mm": 124.575,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO13",
+          "x_mm": 153.75,
+          "y_mm": 124.575
+        },
+        {
+          "number": "2",
+          "net": "$1N34770",
+          "x_mm": 151.75,
+          "y_mm": 124.575
+        }
+      ]
+    },
+    "R18": {
+      "reference": "R18",
+      "footprint": "Cadenza-re-easyedapro:R0805",
+      "x_mm": 132.672,
+      "y_mm": 121.31,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO10",
+          "x_mm": 131.672,
+          "y_mm": 121.31
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 133.672,
+          "y_mm": 121.31
+        }
+      ]
+    },
+    "L1": {
+      "reference": "L1",
+      "footprint": "Cadenza-re-easyedapro:L0805",
+      "x_mm": 194.442,
+      "y_mm": 92.033,
+      "rotation_deg": 0.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "$1N34588",
+          "x_mm": 193.476,
+          "y_mm": 92.033
+        },
+        {
+          "number": "2",
+          "net": "BAT+",
+          "x_mm": 195.408,
+          "y_mm": 92.033
+        }
+      ]
+    },
+    "C11": {
+      "reference": "C11",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 185.0035,
+      "y_mm": 116.5605,
+      "rotation_deg": 180.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GND",
+          "x_mm": 186.0035,
+          "y_mm": 116.5605
+        },
+        {
+          "number": "2",
+          "net": "3V3M",
+          "x_mm": 184.0035,
+          "y_mm": 116.5605
+        }
+      ]
+    },
+    "C21": {
+      "reference": "C21",
+      "footprint": "Cadenza-re-easyedapro:C0805",
+      "x_mm": 173.6925,
+      "y_mm": 110.2395,
+      "rotation_deg": 90.0,
+      "side": "Top Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "3V3LCD",
+          "x_mm": 173.6925,
+          "y_mm": 111.2395
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 173.6925,
+          "y_mm": 109.2395
+        }
+      ]
+    },
+    "KEY1": {
+      "reference": "KEY1",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 204.925,
+      "y_mm": 83.725,
+      "rotation_deg": 0.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO18",
+          "x_mm": 201.925,
+          "y_mm": 83.725
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 207.925,
+          "y_mm": 83.725
+        }
+      ]
+    },
+    "KEY2": {
+      "reference": "KEY2",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 195.725,
+      "y_mm": 83.725,
+      "rotation_deg": 0.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO8",
+          "x_mm": 192.725,
+          "y_mm": 83.725
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 198.725,
+          "y_mm": 83.725
+        }
+      ]
+    },
+    "KEY6": {
+      "reference": "KEY6",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 109.0,
+      "y_mm": 110.225,
+      "rotation_deg": 180.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO5",
+          "x_mm": 112.0,
+          "y_mm": 110.225
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 106.0,
+          "y_mm": 110.225
+        }
+      ]
+    },
+    "KEY3": {
+      "reference": "KEY3",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 110.525,
+      "y_mm": 83.725,
+      "rotation_deg": 180.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO16",
+          "x_mm": 113.525,
+          "y_mm": 83.725
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 107.525,
+          "y_mm": 83.725
+        }
+      ]
+    },
+    "KEY4": {
+      "reference": "KEY4",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 101.325,
+      "y_mm": 83.725,
+      "rotation_deg": 180.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO17",
+          "x_mm": 104.325,
+          "y_mm": 83.725
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 98.325,
+          "y_mm": 83.725
+        }
+      ]
+    },
+    "LED2": {
+      "reference": "LED2",
+      "footprint": "Cadenza-re-easyedapro:LED-SMD_4P-L2.0-W2.0-BR-1",
+      "x_mm": 203.995,
+      "y_mm": 126.6045,
+      "rotation_deg": 0.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "",
+          "x_mm": 204.67,
+          "y_mm": 125.9545
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 204.67,
+          "y_mm": 127.2545
+        },
+        {
+          "number": "3",
+          "net": "GPIO38",
+          "x_mm": 203.32,
+          "y_mm": 127.2545
+        },
+        {
+          "number": "4",
+          "net": "3V3M",
+          "x_mm": 203.32,
+          "y_mm": 125.9545
+        }
+      ]
+    },
+    "SW2": {
+      "reference": "SW2",
+      "footprint": "Cadenza-re-easyedapro:SW-SMD-6P-L10.5-W10.0_C2858290",
+      "x_mm": 203.995,
+      "y_mm": 109.725,
+      "rotation_deg": 180.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO7",
+          "x_mm": 209.895,
+          "y_mm": 106.475
+        },
+        {
+          "number": "2",
+          "net": "GPIO19",
+          "x_mm": 209.895,
+          "y_mm": 110.175
+        },
+        {
+          "number": "3",
+          "net": "GPIO20",
+          "x_mm": 209.895,
+          "y_mm": 112.975
+        },
+        {
+          "number": "4",
+          "net": "GND",
+          "x_mm": 198.095,
+          "y_mm": 112.975
+        },
+        {
+          "number": "5",
+          "net": "GPIO6",
+          "x_mm": 198.095,
+          "y_mm": 110.175
+        },
+        {
+          "number": "6",
+          "net": "",
+          "x_mm": 198.095,
+          "y_mm": 106.475
+        }
+      ]
+    },
+    "KEY5": {
+      "reference": "KEY5",
+      "footprint": "Cadenza-re-easyedapro:KEY-SMD_L6.0-W6.0-LS6.6",
+      "x_mm": 98.5,
+      "y_mm": 103.675,
+      "rotation_deg": 180.0,
+      "side": "Bottom Layer",
+      "pads": [
+        {
+          "number": "1",
+          "net": "GPIO15",
+          "x_mm": 101.5,
+          "y_mm": 103.675
+        },
+        {
+          "number": "2",
+          "net": "GND",
+          "x_mm": 95.5,
+          "y_mm": 103.675
+        }
+      ]
+    }
+  },
+  "net_endpoints": {
+    "$1N34531": [
+      [
+        "Q2",
+        "1"
+      ],
+      [
+        "R13",
+        "2"
+      ],
+      [
+        "R14",
+        "2"
+      ]
+    ],
+    "$1N34538": [
+      [
+        "FPC1",
+        "2"
+      ],
+      [
+        "Q2",
+        "3"
+      ]
+    ],
+    "$1N34554": [
+      [
+        "R1",
+        "1"
+      ],
+      [
+        "USB1",
+        "A5"
+      ]
+    ],
+    "$1N34556": [
+      [
+        "R2",
+        "2"
+      ],
+      [
+        "USB1",
+        "B5"
+      ]
+    ],
+    "$1N34586": [
+      [
+        "C5",
+        "2"
+      ],
+      [
+        "R5",
+        "1"
+      ],
+      [
+        "U1",
+        "6"
+      ]
+    ],
+    "$1N34588": [
+      [
+        "L1",
+        "1"
+      ],
+      [
+        "U1",
+        "7"
+      ]
+    ],
+    "$1N34595": [
+      [
+        "LED1",
+        "2"
+      ],
+      [
+        "U1",
+        "2"
+      ]
+    ],
+    "$1N34601": [
+      [
+        "R7",
+        "1"
+      ],
+      [
+        "U1",
+        "3"
+      ],
+      [
+        "U1",
+        "4"
+      ]
+    ],
+    "$1N34619": [
+      [
+        "C4",
+        "2"
+      ],
+      [
+        "R4",
+        "1"
+      ]
+    ],
+    "$1N34652": [
+      [
+        "L2",
+        "1"
+      ],
+      [
+        "U2",
+        "3"
+      ]
+    ],
+    "$1N34657": [
+      [
+        "R6",
+        "1"
+      ],
+      [
+        "R9",
+        "2"
+      ],
+      [
+        "U2",
+        "5"
+      ]
+    ],
+    "$1N34720": [
+      [
+        "CN1",
+        "1"
+      ],
+      [
+        "U5",
+        "9"
+      ]
+    ],
+    "$1N34722": [
+      [
+        "CN1",
+        "2"
+      ],
+      [
+        "U5",
+        "10"
+      ]
+    ],
+    "$1N34731": [
+      [
+        "R12",
+        "1"
+      ],
+      [
+        "U5",
+        "4"
+      ]
+    ],
+    "$1N34770": [
+      [
+        "CARD1",
+        "5"
+      ],
+      [
+        "R19",
+        "2"
+      ]
+    ],
+    "+5V": [
+      [
+        "C10",
+        "2"
+      ],
+      [
+        "C18",
+        "1"
+      ],
+      [
+        "C19",
+        "1"
+      ],
+      [
+        "C8",
+        "2"
+      ],
+      [
+        "C9",
+        "2"
+      ],
+      [
+        "SW1",
+        "3"
+      ],
+      [
+        "U2",
+        "1"
+      ],
+      [
+        "U2",
+        "4"
+      ],
+      [
+        "U5",
+        "7"
+      ],
+      [
+        "U5",
+        "8"
+      ]
+    ],
+    "3V3LCD": [
+      [
+        "C20",
+        "2"
+      ],
+      [
+        "C21",
+        "1"
+      ],
+      [
+        "FPC1",
+        "3"
+      ],
+      [
+        "FPC1",
+        "4"
+      ],
+      [
+        "U6",
+        "2"
+      ]
+    ],
+    "3V3M": [
+      [
+        "C1",
+        "2"
+      ],
+      [
+        "C11",
+        "2"
+      ],
+      [
+        "C12",
+        "2"
+      ],
+      [
+        "C13",
+        "2"
+      ],
+      [
+        "C14",
+        "2"
+      ],
+      [
+        "C22",
+        "1"
+      ],
+      [
+        "C23",
+        "1"
+      ],
+      [
+        "C24",
+        "1"
+      ],
+      [
+        "C25",
+        "1"
+      ],
+      [
+        "C26",
+        "2"
+      ],
+      [
+        "CARD1",
+        "4"
+      ],
+      [
+        "L2",
+        "2"
+      ],
+      [
+        "LED2",
+        "4"
+      ],
+      [
+        "R10",
+        "2"
+      ],
+      [
+        "R11",
+        "1"
+      ],
+      [
+        "R12",
+        "2"
+      ],
+      [
+        "R16",
+        "2"
+      ],
+      [
+        "R17",
+        "2"
+      ],
+      [
+        "R18",
+        "2"
+      ],
+      [
+        "R6",
+        "2"
+      ],
+      [
+        "U3",
+        "16"
+      ],
+      [
+        "U3",
+        "4"
+      ],
+      [
+        "U4",
+        "2"
+      ],
+      [
+        "U6",
+        "3"
+      ],
+      [
+        "U7",
+        "5"
+      ]
+    ],
+    "BAT+": [
+      [
+        "C3",
+        "2"
+      ],
+      [
+        "H1",
+        "1"
+      ],
+      [
+        "L1",
+        "2"
+      ],
+      [
+        "R3",
+        "2"
+      ],
+      [
+        "R5",
+        "2"
+      ],
+      [
+        "R7",
+        "2"
+      ]
+    ],
+    "CHIP_PU": [
+      [
+        "C15",
+        "2"
+      ],
+      [
+        "C17",
+        "1"
+      ],
+      [
+        "Q1",
+        "6"
+      ],
+      [
+        "R10",
+        "1"
+      ],
+      [
+        "RST1",
+        "C"
+      ],
+      [
+        "U4",
+        "3"
+      ]
+    ],
+    "D+": [
+      [
+        "U3",
+        "5"
+      ],
+      [
+        "USB1",
+        "A6"
+      ],
+      [
+        "USB1",
+        "B6"
+      ]
+    ],
+    "D-": [
+      [
+        "U3",
+        "6"
+      ],
+      [
+        "USB1",
+        "A7"
+      ],
+      [
+        "USB1",
+        "B7"
+      ]
+    ],
+    "DTR": [
+      [
+        "Q1",
+        "2"
+      ],
+      [
+        "Q1",
+        "3"
+      ],
+      [
+        "U3",
+        "13"
+      ]
+    ],
+    "GND": [
+      [
+        "BOOT1",
+        "D"
+      ],
+      [
+        "C1",
+        "1"
+      ],
+      [
+        "C10",
+        "1"
+      ],
+      [
+        "C11",
+        "1"
+      ],
+      [
+        "C12",
+        "1"
+      ],
+      [
+        "C13",
+        "1"
+      ],
+      [
+        "C14",
+        "1"
+      ],
+      [
+        "C15",
+        "1"
+      ],
+      [
+        "C16",
+        "2"
+      ],
+      [
+        "C17",
+        "2"
+      ],
+      [
+        "C18",
+        "2"
+      ],
+      [
+        "C19",
+        "2"
+      ],
+      [
+        "C2",
+        "1"
+      ],
+      [
+        "C20",
+        "1"
+      ],
+      [
+        "C21",
+        "2"
+      ],
+      [
+        "C22",
+        "2"
+      ],
+      [
+        "C23",
+        "2"
+      ],
+      [
+        "C24",
+        "2"
+      ],
+      [
+        "C25",
+        "2"
+      ],
+      [
+        "C26",
+        "1"
+      ],
+      [
+        "C3",
+        "1"
+      ],
+      [
+        "C4",
+        "1"
+      ],
+      [
+        "C5",
+        "1"
+      ],
+      [
+        "C6",
+        "1"
+      ],
+      [
+        "C7",
+        "1"
+      ],
+      [
+        "C8",
+        "1"
+      ],
+      [
+        "C9",
+        "1"
+      ],
+      [
+        "CARD1",
+        "10"
+      ],
+      [
+        "CARD1",
+        "11"
+      ],
+      [
+        "CARD1",
+        "12"
+      ],
+      [
+        "CARD1",
+        "13"
+      ],
+      [
+        "CARD1",
+        "6"
+      ],
+      [
+        "FPC1",
+        "1"
+      ],
+      [
+        "FPC1",
+        "12"
+      ],
+      [
+        "FPC1",
+        "5"
+      ],
+      [
+        "H1",
+        "2"
+      ],
+      [
+        "KEY1",
+        "2"
+      ],
+      [
+        "KEY2",
+        "2"
+      ],
+      [
+        "KEY3",
+        "2"
+      ],
+      [
+        "KEY4",
+        "2"
+      ],
+      [
+        "KEY5",
+        "2"
+      ],
+      [
+        "KEY6",
+        "2"
+      ],
+      [
+        "LED1",
+        "1"
+      ],
+      [
+        "LED2",
+        "2"
+      ],
+      [
+        "Q2",
+        "2"
+      ],
+      [
+        "R1",
+        "2"
+      ],
+      [
+        "R14",
+        "1"
+      ],
+      [
+        "R15",
+        "2"
+      ],
+      [
+        "R2",
+        "1"
+      ],
+      [
+        "R8",
+        "1"
+      ],
+      [
+        "R9",
+        "1"
+      ],
+      [
+        "RST1",
+        "D"
+      ],
+      [
+        "SW2",
+        "4"
+      ],
+      [
+        "U1",
+        "9"
+      ],
+      [
+        "U2",
+        "2"
+      ],
+      [
+        "U3",
+        "1"
+      ],
+      [
+        "U4",
+        "1"
+      ],
+      [
+        "U4",
+        "40"
+      ],
+      [
+        "U4",
+        "41"
+      ],
+      [
+        "U5",
+        "11"
+      ],
+      [
+        "U5",
+        "15"
+      ],
+      [
+        "U5",
+        "17"
+      ],
+      [
+        "U5",
+        "2"
+      ],
+      [
+        "U5",
+        "3"
+      ],
+      [
+        "U6",
+        "1"
+      ],
+      [
+        "U7",
+        "2"
+      ],
+      [
+        "U7",
+        "3"
+      ],
+      [
+        "USB1",
+        "A1"
+      ],
+      [
+        "USB1",
+        "A12"
+      ],
+      [
+        "USB1",
+        "B1"
+      ],
+      [
+        "USB1",
+        "B12"
+      ]
+    ],
+    "GPIO0": [
+      [
+        "BOOT1",
+        "C"
+      ],
+      [
+        "C16",
+        "1"
+      ],
+      [
+        "Q1",
+        "4"
+      ],
+      [
+        "R11",
+        "2"
+      ],
+      [
+        "U4",
+        "27"
+      ]
+    ],
+    "GPIO1": [
+      [
+        "U4",
+        "39"
+      ],
+      [
+        "U7",
+        "1"
+      ]
+    ],
+    "GPIO10": [
+      [
+        "CARD1",
+        "2"
+      ],
+      [
+        "R18",
+        "1"
+      ],
+      [
+        "U4",
+        "18"
+      ]
+    ],
+    "GPIO11": [
+      [
+        "CARD1",
+        "3"
+      ],
+      [
+        "R17",
+        "1"
+      ],
+      [
+        "U4",
+        "19"
+      ]
+    ],
+    "GPIO12": [
+      [
+        "FPC1",
+        "10"
+      ],
+      [
+        "U4",
+        "20"
+      ]
+    ],
+    "GPIO13": [
+      [
+        "R19",
+        "1"
+      ],
+      [
+        "U4",
+        "21"
+      ]
+    ],
+    "GPIO14": [
+      [
+        "FPC1",
+        "8"
+      ],
+      [
+        "U4",
+        "22"
+      ]
+    ],
+    "GPIO15": [
+      [
+        "KEY5",
+        "1"
+      ],
+      [
+        "U4",
+        "8"
+      ]
+    ],
+    "GPIO16": [
+      [
+        "KEY3",
+        "1"
+      ],
+      [
+        "U4",
+        "9"
+      ]
+    ],
+    "GPIO17": [
+      [
+        "KEY4",
+        "1"
+      ],
+      [
+        "U4",
+        "10"
+      ]
+    ],
+    "GPIO18": [
+      [
+        "KEY1",
+        "1"
+      ],
+      [
+        "U4",
+        "11"
+      ]
+    ],
+    "GPIO19": [
+      [
+        "SW2",
+        "2"
+      ],
+      [
+        "U4",
+        "13"
+      ]
+    ],
+    "GPIO2": [
+      [
+        "U4",
+        "38"
+      ],
+      [
+        "U7",
+        "4"
+      ]
+    ],
+    "GPIO20": [
+      [
+        "SW2",
+        "3"
+      ],
+      [
+        "U4",
+        "14"
+      ]
+    ],
+    "GPIO21": [
+      [
+        "R15",
+        "1"
+      ],
+      [
+        "U4",
+        "23"
+      ],
+      [
+        "U7",
+        "6"
+      ]
+    ],
+    "GPIO3": [
+      [
+        "FPC1",
+        "11"
+      ],
+      [
+        "U4",
+        "15"
+      ]
+    ],
+    "GPIO38": [
+      [
+        "LED2",
+        "3"
+      ],
+      [
+        "U4",
+        "31"
+      ]
+    ],
+    "GPIO39": [
+      [
+        "R13",
+        "1"
+      ],
+      [
+        "U4",
+        "32"
+      ]
+    ],
+    "GPIO4": [
+      [
+        "R3",
+        "1"
+      ],
+      [
+        "R8",
+        "2"
+      ],
+      [
+        "U4",
+        "4"
+      ]
+    ],
+    "GPIO40": [
+      [
+        "U4",
+        "33"
+      ],
+      [
+        "U5",
+        "1"
+      ]
+    ],
+    "GPIO41": [
+      [
+        "U4",
+        "34"
+      ],
+      [
+        "U5",
+        "16"
+      ]
+    ],
+    "GPIO42": [
+      [
+        "U4",
+        "35"
+      ],
+      [
+        "U5",
+        "14"
+      ]
+    ],
+    "GPIO47": [
+      [
+        "FPC1",
+        "7"
+      ],
+      [
+        "U4",
+        "24"
+      ]
+    ],
+    "GPIO48": [
+      [
+        "FPC1",
+        "9"
+      ],
+      [
+        "U4",
+        "25"
+      ]
+    ],
+    "GPIO5": [
+      [
+        "KEY6",
+        "1"
+      ],
+      [
+        "U4",
+        "5"
+      ]
+    ],
+    "GPIO6": [
+      [
+        "SW2",
+        "5"
+      ],
+      [
+        "U4",
+        "6"
+      ]
+    ],
+    "GPIO7": [
+      [
+        "SW2",
+        "1"
+      ],
+      [
+        "U4",
+        "7"
+      ]
+    ],
+    "GPIO8": [
+      [
+        "KEY2",
+        "1"
+      ],
+      [
+        "U4",
+        "12"
+      ]
+    ],
+    "GPIO9": [
+      [
+        "CARD1",
+        "7"
+      ],
+      [
+        "R16",
+        "1"
+      ],
+      [
+        "U4",
+        "17"
+      ]
+    ],
+    "RTS": [
+      [
+        "Q1",
+        "1"
+      ],
+      [
+        "Q1",
+        "5"
+      ],
+      [
+        "U3",
+        "14"
+      ]
+    ],
+    "U0RXD": [
+      [
+        "U3",
+        "2"
+      ],
+      [
+        "U4",
+        "36"
+      ]
+    ],
+    "U0TXD": [
+      [
+        "U3",
+        "3"
+      ],
+      [
+        "U4",
+        "37"
+      ]
+    ],
+    "VBUS": [
+      [
+        "C2",
+        "2"
+      ],
+      [
+        "R4",
+        "2"
+      ],
+      [
+        "U1",
+        "1"
+      ],
+      [
+        "USB1",
+        "A4"
+      ],
+      [
+        "USB1",
+        "A9"
+      ],
+      [
+        "USB1",
+        "B4"
+      ],
+      [
+        "USB1",
+        "B9"
+      ]
+    ],
+    "VOUT": [
+      [
+        "C6",
+        "2"
+      ],
+      [
+        "C7",
+        "2"
+      ],
+      [
+        "SW1",
+        "2"
+      ],
+      [
+        "U1",
+        "8"
+      ]
+    ]
+  }
+}

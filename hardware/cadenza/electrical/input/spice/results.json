@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "status": "pass",
+  "simulator": "ngspice",
+  "simulator_path": "/opt/homebrew/bin/ngspice",
+  "simulator_version": "ngspice-46",
+  "testbench": "input_filter_tb.cir",
+  "testbench_sha256": "7399a152c4fc5d6f4265199406c9f211acf601636cb5aa47cfabf1a75125c940",
+  "model_scope": "ideal_passives_ideal_switch_10pF_assumed_GPIO_input",
+  "thresholds_v": {
+    "vil_max_assumption": 0.825,
+    "vih_min_assumption": 2.475
+  },
+  "acceptance": {
+    "20us_glitch": "must_remain_above_VIL",
+    "75us_and_longer_pulses": "must_cross_below_VIL",
+    "stable_press": "must_settle_below_0.4V"
+  },
+  "corners": {
+    "fast": {
+      "status": "pass",
+      "components": {
+        "RPU": 9900.0,
+        "RSER": 950.0,
+        "CDEB": 3.51e-08
+      },
+      "expected": {
+        "press_tau_s": 3.0425391705069128e-05,
+        "release_tau_s": 0.00034749000000000005,
+        "steady_pressed_v": 0.2889400921658986
+      },
+      "measurements": {
+        "bounce_min_chatter": 0.901714,
+        "bounce_v_after_stable": 0.309091,
+        "bounce_fall_to_vil": 0.000200095,
+        "bounce_rise_to_vih": 0.000950005,
+        "vmin_20us": 1.85166,
+        "vmin_50us": 0.872153,
+        "vmin_75us": 0.54547,
+        "vmin_100us": 0.401785,
+        "vmin_200us": 0.29319
+      },
+      "checks": {
+        "ngspice_exit_zero": true,
+        "20us_glitch_filtered_above_vil": true,
+        "75us_pulse_retained_below_vil": true,
+        "100us_pulse_retained_below_vil": true,
+        "200us_pulse_retained_below_vil": true,
+        "stable_press_is_low": true
+      },
+      "netlist": "generated/input_filter_fast.cir",
+      "log": "generated/input_filter_fast.log"
+    },
+    "nominal": {
+      "status": "pass",
+      "components": {
+        "RPU": 10000.0,
+        "RSER": 1000.0,
+        "CDEB": 3.9e-08
+      },
+      "expected": {
+        "press_tau_s": 3.545454545454545e-05,
+        "release_tau_s": 0.00039,
+        "steady_pressed_v": 0.3
+      },
+      "measurements": {
+        "bounce_min_chatter": 1.06036,
+        "bounce_v_after_stable": 0.339264,
+        "bounce_fall_to_vil": 0.000208008,
+        "bounce_rise_to_vih": 0.00100359,
+        "vmin_20us": 2.00875,
+        "vmin_50us": 1.03338,
+        "vmin_75us": 0.662425,
+        "vmin_100us": 0.479112,
+        "vmin_200us": 0.310707
+      },
+      "checks": {
+        "ngspice_exit_zero": true,
+        "20us_glitch_filtered_above_vil": true,
+        "75us_pulse_retained_below_vil": true,
+        "100us_pulse_retained_below_vil": true,
+        "200us_pulse_retained_below_vil": true,
+        "stable_press_is_low": true
+      },
+      "netlist": "generated/input_filter_nominal.cir",
+      "log": "generated/input_filter_nominal.log"
+    },
+    "slow": {
+      "status": "pass",
+      "components": {
+        "RPU": 10100.0,
+        "RSER": 1050.0,
+        "CDEB": 4.29e-08
+      },
+      "expected": {
+        "press_tau_s": 4.080309417040359e-05,
+        "release_tau_s": 0.00043329,
+        "steady_pressed_v": 0.310762331838565
+      },
+      "measurements": {
+        "bounce_min_chatter": 1.21393,
+        "bounce_v_after_stable": 0.378144,
+        "bounce_fall_to_vil": 0.000217035,
+        "bounce_rise_to_vih": 0.00105787,
+        "vmin_20us": 2.14372,
+        "vmin_50us": 1.18968,
+        "vmin_75us": 0.78714,
+        "vmin_100us": 0.568968,
+        "vmin_200us": 0.333068
+      },
+      "checks": {
+        "ngspice_exit_zero": true,
+        "20us_glitch_filtered_above_vil": true,
+        "75us_pulse_retained_below_vil": true,
+        "100us_pulse_retained_below_vil": true,
+        "200us_pulse_retained_below_vil": true,
+        "stable_press_is_low": true
+      },
+      "netlist": "generated/input_filter_slow.cir",
+      "log": "generated/input_filter_slow.log"
+    }
+  },
+  "limitations": [
+    "does_not_model_real_EC12_or_button_contact_waveforms",
+    "does_not_prove_pulses_per_detent_or_minimum_real_pulse_width",
+    "does_not_replace_software_gray_code_decode_or_debounce",
+    "component_values_are_candidates_not_frozen"
+  ]
+}

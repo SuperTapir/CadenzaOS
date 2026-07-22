@@ -1,0 +1,5344 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-22T02:34:10",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.4",
+    "schematic_parity": [],
+    "source": "Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "孔环宽度 (电路板配置约束 最小孔环宽度 0.1000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "error",
+            "type": "annular_width"
+        },
+        {
+            "description": "孔环宽度 (电路板配置约束 最小孔环宽度 0.1000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "error",
+            "type": "annular_width"
+        },
+        {
+            "description": "孔环宽度 (电路板配置约束 最小孔环宽度 0.1000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "error",
+            "type": "annular_width"
+        },
+        {
+            "description": "孔环宽度 (电路板配置约束 最小孔环宽度 0.1000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "error",
+            "type": "annular_width"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络 GND 和 )",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "34a49c18-2edc-4ddb-80de-9767061dbadf"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1605 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO19] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 138.6795,
+                        "y": 127.854
+                    },
+                    "uuid": "18e451fc-2bb6-46c5-89c8-e041419bd459"
+                },
+                {
+                    "description": "过孔 [GPIO20] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 139.45,
+                        "y": 127.854
+                    },
+                    "uuid": "e4a0dcfd-4a90-4d94-a308-0bd42df6c63c"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1605 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO19] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 138.6795,
+                        "y": 127.854
+                    },
+                    "uuid": "18e451fc-2bb6-46c5-89c8-e041419bd459"
+                },
+                {
+                    "description": "过孔 [GPIO20] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 139.45,
+                        "y": 127.854
+                    },
+                    "uuid": "e4a0dcfd-4a90-4d94-a308-0bd42df6c63c"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "走线 [VBUS] (Bottom Layer), 长度: 4.6230 mm",
+                    "pos": {
+                        "x": 151.0225,
+                        "y": 138.269
+                    },
+                    "uuid": "4f79374a-055f-4ffe-8e24-8e815ac765fc"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [VBUS] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 155.6455,
+                        "y": 138.269
+                    },
+                    "uuid": "a830859d-1d55-417c-a552-1ec0c858272b"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "孔间距违规 (<电路板配置> 中的 \"孔\" 约束 间距 0.2500 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [VBUS] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 155.6455,
+                        "y": 138.269
+                    },
+                    "uuid": "a830859d-1d55-417c-a552-1ec0c858272b"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO19] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 138.6795,
+                        "y": 127.854
+                    },
+                    "uuid": "18e451fc-2bb6-46c5-89c8-e041419bd459"
+                },
+                {
+                    "description": "走线 [GPIO40] (Top Layer), 长度: 28.5240 mm",
+                    "pos": {
+                        "x": 112.663,
+                        "y": 128.438
+                    },
+                    "uuid": "a18b3764-1a57-4c8c-976d-f910fe92d078"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "走线 [D-] (Top Layer), 长度: 7.3175 mm",
+                    "pos": {
+                        "x": 153.328,
+                        "y": 134.3905
+                    },
+                    "uuid": "84471e79-f070-4e4d-8f86-d424ece3ca43"
+                },
+                {
+                    "description": "走线 [D+] (Top Layer), 长度: 0.4197 mm",
+                    "pos": {
+                        "x": 152.625,
+                        "y": 134.687
+                    },
+                    "uuid": "ea1cbe48-98e4-4f9c-b295-14193819c1d4"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1525 mm)",
+            "items": [
+                {
+                    "description": "走线 [D-] (Top Layer), 长度: 7.9835 mm",
+                    "pos": {
+                        "x": 165.8955,
+                        "y": 126.7485
+                    },
+                    "uuid": "87515c6d-a18e-43cd-9f53-0f4fcbd49cfa"
+                },
+                {
+                    "description": "走线 [D+] (Top Layer), 长度: 0.6106 mm",
+                    "pos": {
+                        "x": 173.879,
+                        "y": 126.342
+                    },
+                    "uuid": "a8476f24-7259-4028-8514-629366594db7"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "走线 [D-] (Top Layer), 长度: 0.4593 mm",
+                    "pos": {
+                        "x": 153.328,
+                        "y": 127.073
+                    },
+                    "uuid": "3a5941ab-f010-412a-ac4a-9b1136657086"
+                },
+                {
+                    "description": "走线 [D+] (Top Layer), 长度: 7.6475 mm",
+                    "pos": {
+                        "x": 152.922,
+                        "y": 134.3905
+                    },
+                    "uuid": "84f612de-5fb0-4665-93c1-59095bac01cf"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1525 mm)",
+            "items": [
+                {
+                    "description": "走线 [D+] (Top Layer), 长度: 20.5565 mm",
+                    "pos": {
+                        "x": 153.3225,
+                        "y": 126.342
+                    },
+                    "uuid": "0e723ea3-7c6d-4fb5-8215-e9a7da4d3966"
+                },
+                {
+                    "description": "走线 [D-] (Top Layer), 长度: 0.3429 mm",
+                    "pos": {
+                        "x": 165.653,
+                        "y": 126.991
+                    },
+                    "uuid": "5d841657-f4d5-449a-9bf9-ba844775b262"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "走线 [GPIO6] (Top Layer), 长度: 3.7415 mm",
+                    "pos": {
+                        "x": 146.259,
+                        "y": 93.316
+                    },
+                    "uuid": "39ef3e42-24a3-4f87-96ef-722a77bc8534"
+                },
+                {
+                    "description": "过孔 [GPIO7] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 146.843,
+                        "y": 90.25
+                    },
+                    "uuid": "40a9c055-fc5d-48d9-9ff7-e2a92ffbbe82"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1720 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO19] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 138.6795,
+                        "y": 127.854
+                    },
+                    "uuid": "18e451fc-2bb6-46c5-89c8-e041419bd459"
+                },
+                {
+                    "description": "走线 [GPIO38] (Bottom Layer), 长度: 86.4655 mm",
+                    "pos": {
+                        "x": 116.85,
+                        "y": 127.25
+                    },
+                    "uuid": "fc450ad6-be31-4897-abe2-efd2447fe46c"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1930 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO17] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 140.75,
+                        "y": 99.05
+                    },
+                    "uuid": "3c857be8-eaef-4efb-9785-049b85aad3d4"
+                },
+                {
+                    "description": "走线 [GPIO38] (Bottom Layer), 长度: 54.9750 mm",
+                    "pos": {
+                        "x": 159.025,
+                        "y": 99.675
+                    },
+                    "uuid": "eb2d94b4-be15-4f5a-8d25-9349cd1cfc20"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1900 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO18] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 148.078,
+                        "y": 88.975
+                    },
+                    "uuid": "18e0b34d-c86d-4c53-b5e5-f59b503cab91"
+                },
+                {
+                    "description": "走线 [GPIO8] (Top Layer), 长度: 12.4090 mm",
+                    "pos": {
+                        "x": 148.7,
+                        "y": 100.65
+                    },
+                    "uuid": "910b0709-d221-4289-bbf6-0989b7c53e5b"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "走线 [BAT+] (Bottom Layer), 长度: 2.3723 mm",
+                    "pos": {
+                        "x": 175.0475,
+                        "y": 95.0225
+                    },
+                    "uuid": "a7fa4655-077d-430e-b44e-98efd3af9b5b"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1675 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO18] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 148.078,
+                        "y": 88.975
+                    },
+                    "uuid": "18e0b34d-c86d-4c53-b5e5-f59b503cab91"
+                },
+                {
+                    "description": "走线 [GPIO6] (Bottom Layer), 长度: 66.8485 mm",
+                    "pos": {
+                        "x": 146.259,
+                        "y": 89.5745
+                    },
+                    "uuid": "7c4aa8fa-840f-483d-aa9a-888e2105ca00"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 176.725,
+                        "y": 96.7
+                    },
+                    "uuid": "6d4329e4-0e01-46fb-942e-a93d3dc79091"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "孔间距违规 (<电路板配置> 中的 \"孔\" 约束 间距 0.2500 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 176.725,
+                        "y": 96.7
+                    },
+                    "uuid": "6d4329e4-0e01-46fb-942e-a93d3dc79091"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "走线 [BAT+] (Top Layer), 长度: 5.5750 mm",
+                    "pos": {
+                        "x": 176.725,
+                        "y": 96.7
+                    },
+                    "uuid": "e2c02840-9e63-4c90-8115-762c14dbae34"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 182.3,
+                        "y": 96.7
+                    },
+                    "uuid": "825f5cb9-c4ab-4df5-82e4-e5201ecad60b"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "孔间距违规 (<电路板配置> 中的 \"孔\" 约束 间距 0.2500 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 182.3,
+                        "y": 96.7
+                    },
+                    "uuid": "825f5cb9-c4ab-4df5-82e4-e5201ecad60b"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 176.725,
+                        "y": 96.7
+                    },
+                    "uuid": "6d4329e4-0e01-46fb-942e-a93d3dc79091"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "孔间距违规 (<电路板配置> 中的 \"孔\" 约束 间距 0.2500 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [BAT+] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 176.725,
+                        "y": 96.7
+                    },
+                    "uuid": "6d4329e4-0e01-46fb-942e-a93d3dc79091"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1680 mm)",
+            "items": [
+                {
+                    "description": "走线 [GPIO47] (Bottom Layer), 长度: 20.2500 mm",
+                    "pos": {
+                        "x": 177.825,
+                        "y": 109.575
+                    },
+                    "uuid": "1147ed59-6edb-4f2c-89cf-1f7b233559c7"
+                },
+                {
+                    "description": "过孔 [GPIO14] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 175.175,
+                        "y": 108.975
+                    },
+                    "uuid": "89ccbd43-e8d2-4520-9e47-28de59ba2bdc"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1680 mm)",
+            "items": [
+                {
+                    "description": "走线 [GPIO14] (Bottom Layer), 长度: 20.1500 mm",
+                    "pos": {
+                        "x": 175.175,
+                        "y": 108.975
+                    },
+                    "uuid": "60d74c17-fa5a-487b-9f75-717331b468b6"
+                },
+                {
+                    "description": "过孔 [GPIO47] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 157.575,
+                        "y": 109.575
+                    },
+                    "uuid": "8ccaaf21-8d04-4c4a-aabc-a28af461cd93"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1680 mm)",
+            "items": [
+                {
+                    "description": "走线 [GPIO10] (Bottom Layer), 长度: 10.9250 mm",
+                    "pos": {
+                        "x": 129.725,
+                        "y": 110.4
+                    },
+                    "uuid": "512064c9-0b12-42ff-8e27-89424bcda12e"
+                },
+                {
+                    "description": "过孔 [GPIO11] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 130.325,
+                        "y": 119.175
+                    },
+                    "uuid": "800b8c7c-4706-4188-84c6-d7365409da17"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1542 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO6] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 146.259,
+                        "y": 89.5745
+                    },
+                    "uuid": "543f6604-6c02-4b44-b495-524e482619ca"
+                },
+                {
+                    "description": "走线 [CHIP_PU] (Top Layer), 长度: 0.1980 mm",
+                    "pos": {
+                        "x": 145.535,
+                        "y": 89.765
+                    },
+                    "uuid": "fa59ba0a-4d9b-4013-87a6-7bce24d3c703"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "过孔 [GPIO6] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 146.259,
+                        "y": 89.5745
+                    },
+                    "uuid": "543f6604-6c02-4b44-b495-524e482619ca"
+                },
+                {
+                    "description": "走线 [CHIP_PU] (Top Layer), 长度: 2.2750 mm",
+                    "pos": {
+                        "x": 145.675,
+                        "y": 89.625
+                    },
+                    "uuid": "96d2e343-625b-4598-ace3-a20b0bde7b89"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "走线 [3V3M] (Bottom Layer), 长度: 40.8240 mm",
+                    "pos": {
+                        "x": 127.566,
+                        "y": 97.8855
+                    },
+                    "uuid": "191d317d-9ae7-4f30-9af8-fc9e429deb67"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [3V3M] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 168.39,
+                        "y": 97.8855
+                    },
+                    "uuid": "24c3b3f5-5a59-4e29-a78f-0359450cb2ac"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "孔间距违规 (<电路板配置> 中的 \"孔\" 约束 间距 0.2500 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "过孔 [3V3M] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 168.39,
+                        "y": 97.8855
+                    },
+                    "uuid": "24c3b3f5-5a59-4e29-a78f-0359450cb2ac"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1520 mm)",
+            "items": [
+                {
+                    "description": "走线 [+5V] (Bottom Layer), 长度: 69.3900 mm",
+                    "pos": {
+                        "x": 180.022,
+                        "y": 86.343
+                    },
+                    "uuid": "0703a59f-2b2f-437c-bd24-f43c68049a86"
+                },
+                {
+                    "description": "过孔 [CHIP_PU] (Top Layer - Bottom Layer)",
+                    "pos": {
+                        "x": 174.65,
+                        "y": 85.632
+                    },
+                    "uuid": "dd4250e3-3df6-4806-b0a7-d65be797aec3"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络  和 GND)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "f2ce2bdb-2854-46b8-b6d2-d1f9c8bf9c65"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络 GND 和 )",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "693a4217-5b1f-4af6-9fc6-9f373121f8e2"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络 GND 和 )",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "0112b378-acde-42f0-b3ee-60165568b1a4"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 103.817,
+                        "y": 90.545
+                    },
+                    "uuid": "721e983a-3361-47e6-acc6-46241525d691"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络 GND 和 )",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [GND]",
+                    "pos": {
+                        "x": 103.764,
+                        "y": 91.502
+                    },
+                    "uuid": "0cca2e37-c57f-4b0d-a0e4-1428b6318332"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8595,
+                        "y": 90.492
+                    },
+                    "uuid": "2ba4a1ac-fe2d-433d-9a5a-7c55d7616dcf"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "短路了两个不同网络的项目 (网络 GND 和 )",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [GND]",
+                    "pos": {
+                        "x": 103.764,
+                        "y": 91.502
+                    },
+                    "uuid": "0cca2e37-c57f-4b0d-a0e4-1428b6318332"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8065,
+                        "y": 91.449
+                    },
+                    "uuid": "7b44c857-dc3c-45a3-a908-6db3e4dc21c7"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8595,
+                        "y": 90.492
+                    },
+                    "uuid": "2ba4a1ac-fe2d-433d-9a5a-7c55d7616dcf"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8065,
+                        "y": 91.449
+                    },
+                    "uuid": "7b44c857-dc3c-45a3-a908-6db3e4dc21c7"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 93.545
+                    },
+                    "uuid": "fea3f332-3da2-4d67-8b9a-a9d3f1ea6d87"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.175,
+                        "y": 95.2625
+                    },
+                    "uuid": "c4731ef2-1abe-4b40-8b5c-064337f81ba4"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 150.675,
+                        "y": 94.6275
+                    },
+                    "uuid": "fe6d456a-caa1-4360-b72b-4f8982d8013a"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 96.345
+                    },
+                    "uuid": "4893ee71-d1f0-4499-bef0-fac9e90fd814"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 94.495
+                    },
+                    "uuid": "db406258-a55f-40f0-b25b-e20c2e43e7e4"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 93.995
+                    },
+                    "uuid": "e9c99eea-998a-4a1b-bbbc-fbabb7c3d1ae"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 94.495
+                    },
+                    "uuid": "db406258-a55f-40f0-b25b-e20c2e43e7e4"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 95.895
+                    },
+                    "uuid": "79a4dc70-0720-4d0a-a209-1d73debd336f"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.575,
+                        "y": 95.2625
+                    },
+                    "uuid": "5ccac977-28f2-475a-a117-8264266a5203"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.175,
+                        "y": 95.2625
+                    },
+                    "uuid": "c4731ef2-1abe-4b40-8b5c-064337f81ba4"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 150.675,
+                        "y": 94.6275
+                    },
+                    "uuid": "fe6d456a-caa1-4360-b72b-4f8982d8013a"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.075,
+                        "y": 94.6275
+                    },
+                    "uuid": "d57caad8-0698-4fe9-b93d-643a90bc0bbf"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 95.395
+                    },
+                    "uuid": "847f5663-4acc-4288-8d76-c905699b8281"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 93.995
+                    },
+                    "uuid": "e9c99eea-998a-4a1b-bbbc-fbabb7c3d1ae"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 95.895
+                    },
+                    "uuid": "79a4dc70-0720-4d0a-a209-1d73debd336f"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 95.395
+                    },
+                    "uuid": "847f5663-4acc-4288-8d76-c905699b8281"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 93.545
+                    },
+                    "uuid": "5366ef4f-5799-48ea-a992-e5ce900feaee"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.575,
+                        "y": 95.2625
+                    },
+                    "uuid": "5ccac977-28f2-475a-a117-8264266a5203"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.1190 mm)",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.075,
+                        "y": 94.6275
+                    },
+                    "uuid": "d57caad8-0698-4fe9-b93d-643a90bc0bbf"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "泪滴 [BAT+] 在 Top Layer 上",
+                    "pos": {
+                        "x": 177.091,
+                        "y": 96.446
+                    },
+                    "uuid": "c66163fa-f4ed-425c-9ef6-1e8887a4da70"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "泪滴 [BAT+] 在 Top Layer 上",
+                    "pos": {
+                        "x": 181.934,
+                        "y": 96.954
+                    },
+                    "uuid": "4b2d361a-5257-45be-82da-ed9430145a26"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "泪滴 [VBUS] 在 Bottom Layer 上",
+                    "pos": {
+                        "x": 155.2795,
+                        "y": 138.523
+                    },
+                    "uuid": "fbd9acc5-846a-4f93-9ef0-1578a430f37e"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "泪滴 [3V3M] 在 Bottom Layer 上",
+                    "pos": {
+                        "x": 168.024,
+                        "y": 98.1395
+                    },
+                    "uuid": "8fdca8f9-38fd-4653-9cc8-b27a6d1de530"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "间距违规 ( 间距 0.2000 mm; 实际 0.0000 mm)",
+            "items": [
+                {
+                    "description": "泪滴 [BAT+] 在 Bottom Layer 上",
+                    "pos": {
+                        "x": 176.2865,
+                        "y": 96.621
+                    },
+                    "uuid": "448d2334-1d63-4780-81b9-0a501d3fa268"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Courtyards overlap",
+            "items": [
+                {
+                    "description": "封装 R13",
+                    "pos": {
+                        "x": 168.487,
+                        "y": 113.048
+                    },
+                    "uuid": "1d781726-1608-408c-a277-2556b2d6d0bb"
+                },
+                {
+                    "description": "封装 C20",
+                    "pos": {
+                        "x": 171.1095,
+                        "y": 110.2395
+                    },
+                    "uuid": "c2ef550b-1b18-48da-98b5-35378d478e3d"
+                }
+            ],
+            "severity": "error",
+            "type": "courtyards_overlap"
+        },
+        {
+            "description": "Courtyards overlap",
+            "items": [
+                {
+                    "description": "封装 L2",
+                    "pos": {
+                        "x": 171.507,
+                        "y": 95.1795
+                    },
+                    "uuid": "8fac62fe-5abd-45fe-8954-4a97b814c51f"
+                },
+                {
+                    "description": "封装 C1",
+                    "pos": {
+                        "x": 168.3745,
+                        "y": 94.1965
+                    },
+                    "uuid": "b5d3cc84-9379-4775-9123-3df456150d90"
+                }
+            ],
+            "severity": "error",
+            "type": "courtyards_overlap"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.4798 mm)",
+            "items": [
+                {
+                    "description": "U7 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 103.110843,
+                        "y": 91.036018
+                    },
+                    "uuid": "2421bf91-fd35-4f44-a3d8-8152e58e6f65"
+                },
+                {
+                    "description": "走线 [GPIO5] (Bottom Layer), 长度: 50.3000 mm",
+                    "pos": {
+                        "x": 92.175,
+                        "y": 91.8
+                    },
+                    "uuid": "dd5b4009-0ae9-4534-9143-5cdaf7301dbc"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [VBUS] (Top Layer), 长度: 0.4310 mm",
+                    "pos": {
+                        "x": 155.6455,
+                        "y": 138.8665
+                    },
+                    "uuid": "231db1de-144c-4366-ac93-01afb4fa9c2f"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [VBUS] (Top Layer), 长度: 0.9871 mm",
+                    "pos": {
+                        "x": 192.1945,
+                        "y": 138.4735
+                    },
+                    "uuid": "77187764-8673-4bb9-b559-10f0642af200"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [VBUS] (Top Layer), 长度: 35.5465 mm",
+                    "pos": {
+                        "x": 191.4965,
+                        "y": 139.1715
+                    },
+                    "uuid": "b69ae263-ee85-47e1-a90a-1bcf230e093f"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [$1N34556] (Top Layer), 长度: 0.5940 mm",
+                    "pos": {
+                        "x": 154.2095,
+                        "y": 139.2985
+                    },
+                    "uuid": "0a5aaa28-f963-4716-979b-7c8017e28fd5"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [$1N34556] (Top Layer), 长度: 0.4430 mm",
+                    "pos": {
+                        "x": 145.604,
+                        "y": 138.985
+                    },
+                    "uuid": "0d340434-828c-4fda-b352-76acfaa82da5"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2995 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 139.725
+                    },
+                    "uuid": "92189455-674a-48c4-ba48-57ea426e247b"
+                },
+                {
+                    "description": "走线 [$1N34556] (Top Layer), 长度: 8.2925 mm",
+                    "pos": {
+                        "x": 145.917,
+                        "y": 139.2985
+                    },
+                    "uuid": "47eccfe8-fcaa-4ed0-8ec8-3713701274e4"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2584 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 88.125,
+                        "y": 89.725
+                    },
+                    "uuid": "35125dc0-b4e3-4cb3-aadd-c8b5d542b97b"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.2584 mm)",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 88.125,
+                        "y": 89.725
+                    },
+                    "uuid": "35125dc0-b4e3-4cb3-aadd-c8b5d542b97b"
+                },
+                {
+                    "description": "填充区[GND]在 Bottom Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 87.525,
+                        "y": 79.125
+                    },
+                    "uuid": "2ee5c63a-8378-470b-96b3-355e51b24317"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3638 mm)",
+            "items": [
+                {
+                    "description": "U7 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 103.110843,
+                        "y": 91.036018
+                    },
+                    "uuid": "2421bf91-fd35-4f44-a3d8-8152e58e6f65"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 103.817,
+                        "y": 90.545
+                    },
+                    "uuid": "721e983a-3361-47e6-acc6-46241525d691"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3638 mm)",
+            "items": [
+                {
+                    "description": "U7 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 103.110843,
+                        "y": 91.036018
+                    },
+                    "uuid": "2421bf91-fd35-4f44-a3d8-8152e58e6f65"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [GND]",
+                    "pos": {
+                        "x": 103.764,
+                        "y": 91.502
+                    },
+                    "uuid": "0cca2e37-c57f-4b0d-a0e4-1428b6318332"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3579 mm)",
+            "items": [
+                {
+                    "description": "U7 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 103.110843,
+                        "y": 91.036018
+                    },
+                    "uuid": "2421bf91-fd35-4f44-a3d8-8152e58e6f65"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8595,
+                        "y": 90.492
+                    },
+                    "uuid": "2ba4a1ac-fe2d-433d-9a5a-7c55d7616dcf"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3579 mm)",
+            "items": [
+                {
+                    "description": "U7 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 103.110843,
+                        "y": 91.036018
+                    },
+                    "uuid": "2421bf91-fd35-4f44-a3d8-8152e58e6f65"
+                },
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8065,
+                        "y": 91.449
+                    },
+                    "uuid": "7b44c857-dc3c-45a3-a908-6db3e4dc21c7"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3459 mm)",
+            "items": [
+                {
+                    "description": "RST1 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 173.303422,
+                        "y": 82.97671
+                    },
+                    "uuid": "28a8a6d8-d3af-4bae-ae0d-f851da752792"
+                },
+                {
+                    "description": "Top Layer 上 RST1 的焊盘 C [CHIP_PU]",
+                    "pos": {
+                        "x": 174.65,
+                        "y": 83.9745
+                    },
+                    "uuid": "2687fbc1-083c-4b07-8ec8-a7416fdd1c09"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3459 mm)",
+            "items": [
+                {
+                    "description": "RST1 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 171.003422,
+                        "y": 82.97671
+                    },
+                    "uuid": "537ba194-92d3-4190-8dd0-a315839c2c2e"
+                },
+                {
+                    "description": "Top Layer 上 RST1 的焊盘 D [GND]",
+                    "pos": {
+                        "x": 170.45,
+                        "y": 83.9745
+                    },
+                    "uuid": "8dadc65e-8916-4824-8743-95ce80634b75"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3459 mm)",
+            "items": [
+                {
+                    "description": "BOOT1 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 134.453922,
+                        "y": 82.97721
+                    },
+                    "uuid": "16a11fea-f5b7-4180-8104-3780fe591e93"
+                },
+                {
+                    "description": "Top Layer 上 BOOT1 的焊盘 C [GPIO0]",
+                    "pos": {
+                        "x": 135.8005,
+                        "y": 83.975
+                    },
+                    "uuid": "37d3cc6b-eb39-4556-98af-e898529faf25"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "电路板边缘间距违规 (<电路板配置> 中的 \"板边\" 约束 间距 0.5000 mm; 实际 0.3459 mm)",
+            "items": [
+                {
+                    "description": "BOOT1 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 132.153922,
+                        "y": 82.97721
+                    },
+                    "uuid": "79c67222-c4e0-4eb0-9329-4199eb2ddc05"
+                },
+                {
+                    "description": "Top Layer 上 BOOT1 的焊盘 D [GND]",
+                    "pos": {
+                        "x": 131.6005,
+                        "y": 83.975
+                    },
+                    "uuid": "7345b3c0-af7d-4a29-9044-2110d45bf01c"
+                }
+            ],
+            "severity": "error",
+            "type": "copper_edge_clearance"
+        },
+        {
+            "description": "缓释热焊盘 (花焊盘) 与填充区的连接不完整 (层 Top Layer; 填充区 最小引线数量 2; 实际 1)",
+            "items": [
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                },
+                {
+                    "description": "Top Layer 上 C10 的焊盘 1 [GND]",
+                    "pos": {
+                        "x": 182.0055,
+                        "y": 95.167
+                    },
+                    "uuid": "0f976397-3ef3-4801-baf3-992397c83cb2"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
+            "description": "缓释热焊盘 (花焊盘) 与填充区的连接不完整 (层 Top Layer; 填充区 最小引线数量 2; 实际 1)",
+            "items": [
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                },
+                {
+                    "description": "Top Layer 上 U2 的焊盘 2 [GND]",
+                    "pos": {
+                        "x": 175.2095,
+                        "y": 94.227
+                    },
+                    "uuid": "71c372bb-bdf8-4e38-9f18-86a084effe56"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "0112b378-acde-42f0-b3ee-60165568b1a4"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "0112b378-acde-42f0-b3ee-60165568b1a4"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "34a49c18-2edc-4ddb-80de-9767061dbadf"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "34a49c18-2edc-4ddb-80de-9767061dbadf"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "693a4217-5b1f-4af6-9fc6-9f373121f8e2"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "693a4217-5b1f-4af6-9fc6-9f373121f8e2"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "f2ce2bdb-2854-46b8-b6d2-d1f9c8bf9c65"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "走线 [GND] (Top Layer), 长度: 1.4000 mm",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "f2ce2bdb-2854-46b8-b6d2-d1f9c8bf9c65"
+                },
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 93.545
+                    },
+                    "uuid": "fea3f332-3da2-4d67-8b9a-a9d3f1ea6d87"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 94.945
+                    },
+                    "uuid": "e23569c8-09ef-4d00-b120-3516c870b394"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 150.675,
+                        "y": 94.6275
+                    },
+                    "uuid": "fe6d456a-caa1-4360-b72b-4f8982d8013a"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 150.225,
+                        "y": 96.345
+                    },
+                    "uuid": "4893ee71-d1f0-4499-bef0-fac9e90fd814"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 93.545
+                    },
+                    "uuid": "e9734d38-e40f-4bdc-9ac6-83dc7a59b1c5"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 93.995
+                    },
+                    "uuid": "e9c99eea-998a-4a1b-bbbc-fbabb7c3d1ae"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 94.495
+                    },
+                    "uuid": "db406258-a55f-40f0-b25b-e20c2e43e7e4"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.175,
+                        "y": 95.2625
+                    },
+                    "uuid": "c4731ef2-1abe-4b40-8b5c-064337f81ba4"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.075,
+                        "y": 94.6275
+                    },
+                    "uuid": "d57caad8-0698-4fe9-b93d-643a90bc0bbf"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 94.945
+                    },
+                    "uuid": "c5f89e4a-d200-4ca9-8361-fb46287ae416"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.9425,
+                        "y": 95.395
+                    },
+                    "uuid": "847f5663-4acc-4288-8d76-c905699b8281"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 151.3075,
+                        "y": 95.895
+                    },
+                    "uuid": "79a4dc70-0720-4d0a-a209-1d73debd336f"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 151.625,
+                        "y": 96.345
+                    },
+                    "uuid": "a1419bfe-0be5-43b1-97b0-e7c0812c8fec"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 93.545
+                    },
+                    "uuid": "5366ef4f-5799-48ea-a992-e5ce900feaee"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                },
+                {
+                    "description": "泪滴 [GND] 在 Top Layer 上",
+                    "pos": {
+                        "x": 152.575,
+                        "y": 95.2625
+                    },
+                    "uuid": "5ccac977-28f2-475a-a117-8264266a5203"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U4 的焊盘 41 [<no net>]",
+                    "pos": {
+                        "x": 153.025,
+                        "y": 94.945
+                    },
+                    "uuid": "d0e7a9c9-6710-4ebd-9069-1ac7a30b9bd1"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 103.817,
+                        "y": 90.545
+                    },
+                    "uuid": "721e983a-3361-47e6-acc6-46241525d691"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8595,
+                        "y": 90.492
+                    },
+                    "uuid": "2ba4a1ac-fe2d-433d-9a5a-7c55d7616dcf"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "顶层阻焊开窗区域与不同网络的项目相连",
+            "items": [
+                {
+                    "description": "Top Layer 上 U7 的焊盘 3 [<no net>]",
+                    "pos": {
+                        "x": 102.8065,
+                        "y": 91.449
+                    },
+                    "uuid": "7b44c857-dc3c-45a3-a908-6db3e4dc21c7"
+                },
+                {
+                    "description": "填充区[GND]在 Top Layer 上, 优先级 500",
+                    "pos": {
+                        "x": 86.625,
+                        "y": 78.9
+                    },
+                    "uuid": "9dadb1ff-5ac2-4b6d-800d-9bdf81d3ade8"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 弧线",
+                    "pos": {
+                        "x": 208.125,
+                        "y": 89.725
+                    },
+                    "uuid": "aa398037-f44c-480d-898d-806988c79725"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 221.712254,
+                        "y": 95.420824
+                    },
+                    "uuid": "47375d6a-0e67-4761-b654-9d3fad98b928"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 弧线",
+                    "pos": {
+                        "x": 208.125,
+                        "y": 89.725
+                    },
+                    "uuid": "aa398037-f44c-480d-898d-806988c79725"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 217.126932,
+                        "y": 99.519654
+                    },
+                    "uuid": "cf3faa89-1a30-4801-b4b8-704d97b6be63"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "RST1 的 多边形, 位于 Multi-Layer",
+                    "pos": {
+                        "x": 171.003422,
+                        "y": 82.97671
+                    },
+                    "uuid": "537ba194-92d3-4190-8dd0-a315839c2c2e"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 79.725
+                    },
+                    "uuid": "852e2d4b-7849-4cc0-a515-482f28b061d0"
+                },
+                {
+                    "description": "U4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 144.125,
+                        "y": 79.725
+                    },
+                    "uuid": "c35db3fd-6a79-4e74-8326-43df6de1b7ab"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 79.725
+                    },
+                    "uuid": "852e2d4b-7849-4cc0-a515-482f28b061d0"
+                },
+                {
+                    "description": "U4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 162.125,
+                        "y": 79.725
+                    },
+                    "uuid": "42086cb9-abbc-4a1b-96ec-4b3de6edca49"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 79.725
+                    },
+                    "uuid": "852e2d4b-7849-4cc0-a515-482f28b061d0"
+                },
+                {
+                    "description": "U4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 162.142,
+                        "y": 86.544
+                    },
+                    "uuid": "ca46d725-dffc-4d35-a281-c65d4efb750a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 79.725
+                    },
+                    "uuid": "852e2d4b-7849-4cc0-a515-482f28b061d0"
+                },
+                {
+                    "description": "SW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 182.011,
+                        "y": 81.726
+                    },
+                    "uuid": "fcb9d698-e917-4d4a-ab86-8276f8db5d09"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Multi-Layer 上的 线段",
+                    "pos": {
+                        "x": 98.125,
+                        "y": 79.725
+                    },
+                    "uuid": "852e2d4b-7849-4cc0-a515-482f28b061d0"
+                },
+                {
+                    "description": "SW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 184.028,
+                        "y": 81.726
+                    },
+                    "uuid": "1c21137f-bd51-43c9-9957-09ee5cd2ad43"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Padstack 存在问题 (PTH 焊盘孔缺少铜箔)",
+            "items": [
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "padstack"
+        },
+        {
+            "description": "Padstack 存在问题 (PTH 焊盘孔缺少铜箔)",
+            "items": [
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "warning",
+            "type": "padstack"
+        },
+        {
+            "description": "Padstack 存在问题 (PTH 焊盘孔缺少铜箔)",
+            "items": [
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "warning",
+            "type": "padstack"
+        },
+        {
+            "description": "Padstack 存在问题 (PTH 焊盘孔缺少铜箔)",
+            "items": [
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "warning",
+            "type": "padstack"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C26",
+                    "pos": {
+                        "x": 106.37,
+                        "y": 96.7065
+                    },
+                    "uuid": "0177a3f7-2d26-44a5-bcf7-b2d75d8c4f7b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U4",
+                    "pos": {
+                        "x": 153.125,
+                        "y": 96.12
+                    },
+                    "uuid": "05f50e62-bd6a-4682-bbe3-28baea7314e1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SCREW3",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "0727e8b4-62e2-45cb-be71-cbfbfd223141"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C14",
+                    "pos": {
+                        "x": 138.581,
+                        "y": 87.5045
+                    },
+                    "uuid": "0be9cd1c-da97-4017-9389-754d23a46e08"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C2",
+                    "pos": {
+                        "x": 193.2,
+                        "y": 108.575
+                    },
+                    "uuid": "0e5d5fab-5b3b-431b-9176-931a7d4093db"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C25",
+                    "pos": {
+                        "x": 106.37,
+                        "y": 94.608
+                    },
+                    "uuid": "129a9db5-44fa-4378-a894-8956f59b79e7"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R3",
+                    "pos": {
+                        "x": 137.098,
+                        "y": 92.0365
+                    },
+                    "uuid": "15e3f8ef-9c98-4f78-9cdb-875efdf5d9d7"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C16",
+                    "pos": {
+                        "x": 126.925,
+                        "y": 82.925
+                    },
+                    "uuid": "17201f21-4a5d-4e58-bc80-fae2a7d801cb"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R5",
+                    "pos": {
+                        "x": 199.975,
+                        "y": 93.025
+                    },
+                    "uuid": "18cbd432-0597-44ae-b9ba-a1d29ba42bf2"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U7",
+                    "pos": {
+                        "x": 104.093,
+                        "y": 90.997
+                    },
+                    "uuid": "1c6b498e-ff4c-4510-8db1-97917a763e25"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R13",
+                    "pos": {
+                        "x": 168.487,
+                        "y": 113.048
+                    },
+                    "uuid": "1d781726-1608-408c-a277-2556b2d6d0bb"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SW1",
+                    "pos": {
+                        "x": 182.022,
+                        "y": 83.925
+                    },
+                    "uuid": "1f4ad9f3-8e4e-405e-a847-871ba0c51fa0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C5",
+                    "pos": {
+                        "x": 197.825,
+                        "y": 95.05
+                    },
+                    "uuid": "20376cc6-1d52-4089-8432-00c2d00b11e0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 LED1",
+                    "pos": {
+                        "x": 160.85,
+                        "y": 135.821
+                    },
+                    "uuid": "20d5cc3c-00dc-4084-b7ca-3548b2328ec9"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SCREW2",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "2592781c-351e-4f74-8510-7064267670b0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C10",
+                    "pos": {
+                        "x": 181.0055,
+                        "y": 95.167
+                    },
+                    "uuid": "2890c159-e368-46e0-8a22-0f37e8c18a44"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C15",
+                    "pos": {
+                        "x": 131.55,
+                        "y": 90.7745
+                    },
+                    "uuid": "2c047204-bc30-4296-baf0-8012628a574b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R12",
+                    "pos": {
+                        "x": 114.285,
+                        "y": 125.9305
+                    },
+                    "uuid": "35e6bba4-3893-4464-93a2-8bc5d01862d8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 H1",
+                    "pos": {
+                        "x": 212.116,
+                        "y": 93.026
+                    },
+                    "uuid": "417ede02-0708-45cf-aee8-492110df5ce1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R1",
+                    "pos": {
+                        "x": 144.604,
+                        "y": 134.893
+                    },
+                    "uuid": "42271abc-e7fa-4816-8c59-2224012fbbf1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U2",
+                    "pos": {
+                        "x": 176.5095,
+                        "y": 94.227
+                    },
+                    "uuid": "45b4544e-8b97-49b1-9412-be11c9135855"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 RST1",
+                    "pos": {
+                        "x": 172.55,
+                        "y": 82.9495
+                    },
+                    "uuid": "4d20fde3-4b4e-43b9-944e-6e62c7edbc51"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R11",
+                    "pos": {
+                        "x": 133.749,
+                        "y": 87.5025
+                    },
+                    "uuid": "4d6eb8e3-4147-4ea1-91a6-53c84facbc0d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C7",
+                    "pos": {
+                        "x": 188.495,
+                        "y": 87.455
+                    },
+                    "uuid": "4f97e921-3eea-4ba3-930f-9738afcb0dff"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C18",
+                    "pos": {
+                        "x": 109.664,
+                        "y": 124.186
+                    },
+                    "uuid": "54c79bd9-47a5-41fa-a328-002401afec78"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C3",
+                    "pos": {
+                        "x": 202.125,
+                        "y": 93.0255
+                    },
+                    "uuid": "5c3fa19f-380b-40fc-8e9e-7bafb582fcd8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C13",
+                    "pos": {
+                        "x": 136.172,
+                        "y": 87.5045
+                    },
+                    "uuid": "5d5949cf-adc1-476e-ae38-108ff16852ca"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U3",
+                    "pos": {
+                        "x": 178.31,
+                        "y": 125.2755
+                    },
+                    "uuid": "607df4df-49e8-4d93-af19-c58441b711b3"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 CN1",
+                    "pos": {
+                        "x": 101.85,
+                        "y": 135.8
+                    },
+                    "uuid": "6177def3-b369-4b33-a54e-5a3a2fc505b8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R17",
+                    "pos": {
+                        "x": 132.672,
+                        "y": 119.1855
+                    },
+                    "uuid": "67b272cf-663b-4fea-ade7-1367adbbe1b4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C17",
+                    "pos": {
+                        "x": 170.805,
+                        "y": 85.717
+                    },
+                    "uuid": "6db4b92d-8768-46fe-9b52-17501ef190a5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 CARD1",
+                    "pos": {
+                        "x": 128.574,
+                        "y": 129.0275
+                    },
+                    "uuid": "772255d4-186a-463b-9ec0-682a0975611e"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U6",
+                    "pos": {
+                        "x": 168.3705,
+                        "y": 108.7395
+                    },
+                    "uuid": "7dd90ffe-0c3c-4db3-86d4-46e053743c2b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C9",
+                    "pos": {
+                        "x": 181.0055,
+                        "y": 93.135
+                    },
+                    "uuid": "7fb349e8-2aee-4adc-9c7e-4e577d5c4854"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C12",
+                    "pos": {
+                        "x": 185.0035,
+                        "y": 118.694
+                    },
+                    "uuid": "802738f1-2abd-4a34-88ee-6669e67362f4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R4",
+                    "pos": {
+                        "x": 193.194,
+                        "y": 110.9875
+                    },
+                    "uuid": "813b2466-2cf7-4f61-bfa4-d90e8c0a8ec4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C4",
+                    "pos": {
+                        "x": 197.3125,
+                        "y": 110.992
+                    },
+                    "uuid": "81bbea68-d5e2-4f6f-8390-4379e279d1e5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 FPC1",
+                    "pos": {
+                        "x": 177.575,
+                        "y": 109.725
+                    },
+                    "uuid": "84a4b1c3-b944-43ef-a0b4-cc16798797d5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SCREW1",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "8980fad8-efa0-4f56-81d4-95ac543890c9"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 L2",
+                    "pos": {
+                        "x": 171.507,
+                        "y": 95.1795
+                    },
+                    "uuid": "8fac62fe-5abd-45fe-8954-4a97b814c51f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C22",
+                    "pos": {
+                        "x": 169.376,
+                        "y": 105.7075
+                    },
+                    "uuid": "98389227-4540-4293-a8b8-55c255bf7493"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C24",
+                    "pos": {
+                        "x": 126.5425,
+                        "y": 121.282
+                    },
+                    "uuid": "9d8f8917-cfa4-43b8-9dc0-0e3b031a66f3"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 BOOT1",
+                    "pos": {
+                        "x": 133.7005,
+                        "y": 82.95
+                    },
+                    "uuid": "a01f7c32-d271-4e83-aefe-435749272cf3"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 USB1",
+                    "pos": {
+                        "x": 153.125,
+                        "y": 136.121
+                    },
+                    "uuid": "a18c344b-61cb-440e-b94e-f4fb8bcfb51c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R16",
+                    "pos": {
+                        "x": 120.45,
+                        "y": 120.425
+                    },
+                    "uuid": "b0ca5477-b168-48b0-b0c6-865ae6eee514"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R9",
+                    "pos": {
+                        "x": 176.8145,
+                        "y": 89.452
+                    },
+                    "uuid": "b390d3cc-fa6b-4e1f-a6b1-99692e368d10"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C1",
+                    "pos": {
+                        "x": 168.3745,
+                        "y": 94.1965
+                    },
+                    "uuid": "b5d3cc84-9379-4775-9123-3df456150d90"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C8",
+                    "pos": {
+                        "x": 181.0055,
+                        "y": 91.1285
+                    },
+                    "uuid": "b6910fef-ee81-49f6-88c1-9fc505cc616e"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R7",
+                    "pos": {
+                        "x": 206.171,
+                        "y": 104.764
+                    },
+                    "uuid": "b8c3e8b0-cda9-4473-8a52-9c6fb2778db8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U1",
+                    "pos": {
+                        "x": 194.1,
+                        "y": 100.725
+                    },
+                    "uuid": "bbe02621-b845-4765-a9ed-40f8208d927b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C23",
+                    "pos": {
+                        "x": 126.563,
+                        "y": 119.157
+                    },
+                    "uuid": "bca772cd-4914-4ed6-92a3-d2af72336fe4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C6",
+                    "pos": {
+                        "x": 188.495,
+                        "y": 89.507
+                    },
+                    "uuid": "c1ad113e-87dd-4caa-9fd6-645ac803cadf"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C20",
+                    "pos": {
+                        "x": 171.1095,
+                        "y": 110.2395
+                    },
+                    "uuid": "c2ef550b-1b18-48da-98b5-35378d478e3d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 Q1",
+                    "pos": {
+                        "x": 184.076,
+                        "y": 124.031
+                    },
+                    "uuid": "c53b1d21-7567-491d-8431-749fc9ac55b4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R2",
+                    "pos": {
+                        "x": 144.604,
+                        "y": 137.171
+                    },
+                    "uuid": "cb12284d-a066-4606-b923-be2a1355af7f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R14",
+                    "pos": {
+                        "x": 168.501,
+                        "y": 115.099
+                    },
+                    "uuid": "d48239ce-1c99-4e67-b97d-61fd5ef5ae33"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R15",
+                    "pos": {
+                        "x": 107.225,
+                        "y": 90.0
+                    },
+                    "uuid": "da1b2500-b390-498d-afa7-f48366c45342"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C19",
+                    "pos": {
+                        "x": 109.6395,
+                        "y": 122.1285
+                    },
+                    "uuid": "db8fdb99-d3ee-4289-94f2-7cd640dd0a7d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R6",
+                    "pos": {
+                        "x": 176.7965,
+                        "y": 91.504
+                    },
+                    "uuid": "df253ed9-3c2f-4ebe-9fb7-21991dffc882"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 U5",
+                    "pos": {
+                        "x": 111.163,
+                        "y": 127.69
+                    },
+                    "uuid": "e088866a-6147-4fc5-9eeb-6cdc8825bf82"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 Q2",
+                    "pos": {
+                        "x": 172.6015,
+                        "y": 113.988
+                    },
+                    "uuid": "e8b05347-3031-4395-b35c-6e6bfb801b73"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R10",
+                    "pos": {
+                        "x": 129.4425,
+                        "y": 90.79
+                    },
+                    "uuid": "e99778dc-3787-4e27-a2df-01ad67bbdf2d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R8",
+                    "pos": {
+                        "x": 134.685,
+                        "y": 92.0365
+                    },
+                    "uuid": "eccebd5b-c99a-43af-8cfc-711ec0d77d40"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SCREW4",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "ed08a2df-2102-4f2b-8ef9-d38ce80e6b4f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R19",
+                    "pos": {
+                        "x": 152.75,
+                        "y": 124.575
+                    },
+                    "uuid": "f1daa470-c9c8-4b37-a121-8669829a4512"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 R18",
+                    "pos": {
+                        "x": 132.672,
+                        "y": 121.31
+                    },
+                    "uuid": "f7367898-3683-42fe-b0de-dc3e1558e2ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 L1",
+                    "pos": {
+                        "x": 194.442,
+                        "y": 92.033
+                    },
+                    "uuid": "f99e4935-d9e3-437a-ae39-c793a71e22a5"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C11",
+                    "pos": {
+                        "x": 185.0035,
+                        "y": 116.5605
+                    },
+                    "uuid": "f9b227ac-ab02-435f-b2fa-c06ec152930f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 C21",
+                    "pos": {
+                        "x": 173.6925,
+                        "y": 110.2395
+                    },
+                    "uuid": "fecf2bc6-ec2b-4020-b150-e2882e4365d7"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY1",
+                    "pos": {
+                        "x": 204.925,
+                        "y": 83.725
+                    },
+                    "uuid": "1c34d57d-5bc1-48fb-be92-c44bb460c74b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY2",
+                    "pos": {
+                        "x": 195.725,
+                        "y": 83.725
+                    },
+                    "uuid": "44322931-5205-4843-9b2c-54e03f7a71ec"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY6",
+                    "pos": {
+                        "x": 109.0,
+                        "y": 110.225
+                    },
+                    "uuid": "6652e271-77f3-405e-82da-2d666bd8a52b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY3",
+                    "pos": {
+                        "x": 110.525,
+                        "y": 83.725
+                    },
+                    "uuid": "6fc320d1-5766-436c-b549-eb9888c57d8d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY4",
+                    "pos": {
+                        "x": 101.325,
+                        "y": 83.725
+                    },
+                    "uuid": "93c1d7a9-f5a9-4210-a691-32a264f49ae8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 LED2",
+                    "pos": {
+                        "x": 203.995,
+                        "y": 126.6045
+                    },
+                    "uuid": "97127686-145a-467c-91ef-12ca729d4494"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 SW2",
+                    "pos": {
+                        "x": 203.995,
+                        "y": 109.725
+                    },
+                    "uuid": "b31465d5-0969-46bd-a661-453e97ff1799"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "当前配置中不包含封装库 'Cadenza-re-easyedapro'",
+            "items": [
+                {
+                    "description": "封装 KEY5",
+                    "pos": {
+                        "x": 98.5,
+                        "y": 103.675
+                    },
+                    "uuid": "d38755fd-2401-44b0-8b65-c808aa7c491d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "文本线宽超出范围 (TrueType 字体字符的笔画线宽不足)",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '游戏掌机\n第7次正式板\nDesigned by   Chaeng'",
+                    "pos": {
+                        "x": 129.1,
+                        "y": 130.1
+                    },
+                    "uuid": "f99e5236-f35b-4e3e-a834-ac4d3223fd49"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_thickness"
+        },
+        {
+            "description": "文本线宽超出范围 (TrueType 字体字符的笔画线宽不足)",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '开始'",
+                    "pos": {
+                        "x": 104.2975,
+                        "y": 91.1315
+                    },
+                    "uuid": "fd5e7add-43f5-4979-ad5a-0cf1d71c7d3d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_thickness"
+        },
+        {
+            "description": "文本线宽超出范围 (TrueType 字体字符的笔画线宽不足)",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '选择'",
+                    "pos": {
+                        "x": 113.525,
+                        "y": 91.15
+                    },
+                    "uuid": "eeccafc6-c53e-43cf-b5cb-c91a29f8b0b1"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_thickness"
+        },
+        {
+            "description": "文本线宽超出范围 (TrueType 字体字符的笔画线宽不足)",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '配置'",
+                    "pos": {
+                        "x": 198.7,
+                        "y": 91.025
+                    },
+                    "uuid": "96212642-272a-4218-904d-f2582851ee81"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_thickness"
+        },
+        {
+            "description": "文本线宽超出范围 (TrueType 字体字符的笔画线宽不足)",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '菜单'",
+                    "pos": {
+                        "x": 207.95,
+                        "y": 91.05
+                    },
+                    "uuid": "fdc40120-6a59-411c-b6f5-37b6acacc6e6"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_thickness"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 112.131
+                    },
+                    "uuid": "c6746e02-2a1d-4efa-bf81-e2ca816b87a0"
+                },
+                {
+                    "description": "C20 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.3585,
+                        "y": 112.203
+                    },
+                    "uuid": "cd5a0aea-4a66-439d-b509-bb8fa3542af8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "C20 的 弧线, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.3585,
+                        "y": 112.0505
+                    },
+                    "uuid": "33dc4175-c298-4e7b-9017-cea045d086fc"
+                },
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 112.131
+                    },
+                    "uuid": "c6746e02-2a1d-4efa-bf81-e2ca816b87a0"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 112.131
+                    },
+                    "uuid": "c6746e02-2a1d-4efa-bf81-e2ca816b87a0"
+                },
+                {
+                    "description": "C20 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.206,
+                        "y": 110.6405
+                    },
+                    "uuid": "e8f4d233-a276-47c3-83b4-9a5543c9cef9"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "C20 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.3585,
+                        "y": 112.203
+                    },
+                    "uuid": "cd5a0aea-4a66-439d-b509-bb8fa3542af8"
+                },
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 113.965
+                    },
+                    "uuid": "f0f8d6cb-d381-47fd-a077-81a2ebc994a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "C20 的 弧线, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.3585,
+                        "y": 112.0505
+                    },
+                    "uuid": "33dc4175-c298-4e7b-9017-cea045d086fc"
+                },
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 113.965
+                    },
+                    "uuid": "f0f8d6cb-d381-47fd-a077-81a2ebc994a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "C20 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.206,
+                        "y": 110.6405
+                    },
+                    "uuid": "e8f4d233-a276-47c3-83b4-9a5543c9cef9"
+                },
+                {
+                    "description": "R13 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 170.248,
+                        "y": 113.965
+                    },
+                    "uuid": "f0f8d6cb-d381-47fd-a077-81a2ebc994a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.6375
+                    },
+                    "uuid": "d84d6b29-96e6-4a81-9cc0-53df9ab69c4c"
+                },
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "c3681007-29f9-4532-bd32-33bd2a6f33d9"
+                },
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "bc39ed31-75d4-4ef7-bb0f-6000f7d19418"
+                },
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW3 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "45f14fb9-3cdb-4928-8dc4-bc90386e1035"
+                },
+                {
+                    "description": "SCREW3 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 134.725
+                    },
+                    "uuid": "283bc016-c9e5-4f91-86c1-53be1beddf3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.6375
+                    },
+                    "uuid": "14c0b995-7437-4573-a66b-b0203746756f"
+                },
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "6e337719-dae5-4823-bcfb-15b30fe52b05"
+                },
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "c947e387-e296-4da3-9151-fa5f5ca8e8e7"
+                },
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW1 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "6973e52b-fc0a-4127-a3bf-fe95d81cd53d"
+                },
+                {
+                    "description": "SCREW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 93.125,
+                        "y": 84.725
+                    },
+                    "uuid": "d2a1e3a9-d2a6-4b77-aa73-44ae7945828a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.6375
+                    },
+                    "uuid": "4bce9ab8-8428-4fea-a024-8480026d664f"
+                },
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "81059896-f486-4682-b058-cf320a047ea0"
+                },
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "e7197cd0-a4b7-45b5-873c-7fe3880760ea"
+                },
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW2 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "41c8924d-cda4-4a7c-a093-e7c565e2f8b0"
+                },
+                {
+                    "description": "SCREW2 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 84.725
+                    },
+                    "uuid": "886876c5-cf03-4f5e-98fb-4523c082d0a3"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.6375
+                    },
+                    "uuid": "2c365a02-473b-4c75-ade8-2bc06113614a"
+                },
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "2072fa5b-dd5d-4849-b3de-e91ce68acecf"
+                },
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "572814cc-ac41-4a33-a27e-750d6b0537f5"
+                },
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "SCREW4 的 线段, 位于 Top Silkscreen Layer",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "ccf43012-05ad-4d8b-84a1-0d59a3cd80e8"
+                },
+                {
+                    "description": "SCREW4 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 213.125,
+                        "y": 134.725
+                    },
+                    "uuid": "56305113-e609-4b8d-ae2f-3104c8eb87f1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY1 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 207.925,
+                        "y": 84.956
+                    },
+                    "uuid": "747f2c7e-901a-42c1-bcdb-cfef4d3b2f50"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 217.126932,
+                        "y": 99.519654
+                    },
+                    "uuid": "cf3faa89-1a30-4801-b4b8-704d97b6be63"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 217.126932,
+                        "y": 99.519654
+                    },
+                    "uuid": "cf3faa89-1a30-4801-b4b8-704d97b6be63"
+                },
+                {
+                    "description": "KEY1 的 圆形, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 204.925,
+                        "y": 83.725
+                    },
+                    "uuid": "fe0b2f80-92f9-4009-bb07-6c91faaf7f17"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '菜单'",
+                    "pos": {
+                        "x": 207.95,
+                        "y": 91.05
+                    },
+                    "uuid": "fdc40120-6a59-411c-b6f5-37b6acacc6e6"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY1 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 201.925,
+                        "y": 86.725
+                    },
+                    "uuid": "2bf0eeed-3d8f-48eb-8eb3-73f20cf68677"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "KEY1 的 弧线, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 202.024019,
+                        "y": 86.526449
+                    },
+                    "uuid": "ef3cb822-695d-49f3-9864-d367282d6487"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY1 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 201.925,
+                        "y": 86.725
+                    },
+                    "uuid": "7be1c9eb-341e-4ef5-97e6-7fd9c4d83078"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "KEY1 的 圆形, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 204.925,
+                        "y": 83.725
+                    },
+                    "uuid": "fe0b2f80-92f9-4009-bb07-6c91faaf7f17"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY1 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 201.925,
+                        "y": 82.494
+                    },
+                    "uuid": "a09f194f-3700-4a86-a9ad-68a5a87a86e2"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 198.725,
+                        "y": 80.725
+                    },
+                    "uuid": "a6bd5c6f-1a9e-476b-a05f-0c5c161968eb"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 198.725,
+                        "y": 84.956
+                    },
+                    "uuid": "7d9bd548-44d7-4db8-b7f8-c845e9f53454"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 192.725,
+                        "y": 82.494
+                    },
+                    "uuid": "8819a375-155e-4626-90c0-35f550c0fa1f"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 圆形, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 195.725,
+                        "y": 83.725
+                    },
+                    "uuid": "2d46f932-e4b3-40cb-8444-02beff10992b"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 192.725,
+                        "y": 86.725
+                    },
+                    "uuid": "3a260ae2-3fae-484a-9b4a-1bf227f98b36"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 线段, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 192.725,
+                        "y": 86.725
+                    },
+                    "uuid": "777d211e-85c1-446f-b10a-b20c04328684"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 弧线, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 192.824019,
+                        "y": 86.526449
+                    },
+                    "uuid": "a35baa7e-fb2a-4b2c-a495-5c8bdd75bc1c"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "KEY2 的 弧线, 位于 Bottom Silkscreen Layer",
+                    "pos": {
+                        "x": 198.69495,
+                        "y": 86.65648
+                    },
+                    "uuid": "22a4e1be-9c9a-4124-92ea-49287dda5847"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 PCB 文本 '配置'",
+                    "pos": {
+                        "x": 198.7,
+                        "y": 91.025
+                    },
+                    "uuid": "96212642-272a-4218-904d-f2582851ee81"
+                },
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 217.126932,
+                        "y": 99.519654
+                    },
+                    "uuid": "cf3faa89-1a30-4801-b4b8-704d97b6be63"
+                },
+                {
+                    "description": "Bottom Layer 上 KEY1 的焊盘 2 [GND]",
+                    "pos": {
+                        "x": 207.925,
+                        "y": 83.725
+                    },
+                    "uuid": "59144c92-9892-4875-892f-e5ee7a9eb2d2"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                },
+                {
+                    "description": "SW1 的PTH 焊盘 1 [<no net>]",
+                    "pos": {
+                        "x": 184.022,
+                        "y": 83.925
+                    },
+                    "uuid": "6976a60c-2dfc-49e8-bccc-8947d934aba6"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                },
+                {
+                    "description": "SW1 的PTH 焊盘 2 [VOUT]",
+                    "pos": {
+                        "x": 182.022,
+                        "y": 83.925
+                    },
+                    "uuid": "ef38f1b6-102f-4db8-a0b7-283550b5ae99"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                },
+                {
+                    "description": "SW1 的PTH 焊盘 3 [+5V]",
+                    "pos": {
+                        "x": 180.022,
+                        "y": 83.925
+                    },
+                    "uuid": "f016cc9d-7c52-4d9d-8099-a36865b70693"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                },
+                {
+                    "description": "SW1 的PTH 焊盘 5 [<no net>]",
+                    "pos": {
+                        "x": 186.172,
+                        "y": 83.925
+                    },
+                    "uuid": "3008bf93-220b-4d34-bba6-0537ecdb6c24"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 矩形",
+                    "pos": {
+                        "x": 116.385,
+                        "y": 83.425
+                    },
+                    "uuid": "96727356-ae6a-4861-b395-e1e5787163a5"
+                },
+                {
+                    "description": "SW1 的PTH 焊盘 4 [<no net>]",
+                    "pos": {
+                        "x": 177.872,
+                        "y": 83.925
+                    },
+                    "uuid": "3f4c3f8f-6d18-4a05-a296-0029bc781513"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "Bottom Layer 上 KEY1 的焊盘 1 [GPIO18]",
+                    "pos": {
+                        "x": 201.925,
+                        "y": 83.725
+                    },
+                    "uuid": "8cb69202-fb93-4751-a93a-c48efc32e14c"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "Bottom Layer 上 KEY2 的焊盘 1 [GPIO8]",
+                    "pos": {
+                        "x": 192.725,
+                        "y": 83.725
+                    },
+                    "uuid": "ff9911e6-f623-4005-b219-d51f74a17416"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Bottom Silkscreen Layer 上的 多边形",
+                    "pos": {
+                        "x": 196.707953,
+                        "y": 93.171786
+                    },
+                    "uuid": "d21e1270-b915-41ea-879c-b8eb73cd5bba"
+                },
+                {
+                    "description": "Bottom Layer 上 KEY2 的焊盘 2 [GND]",
+                    "pos": {
+                        "x": 198.725,
+                        "y": 83.725
+                    },
+                    "uuid": "11101fb4-34e2-48e9-ad85-d479503a5cbb"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        }
+    ]
+}

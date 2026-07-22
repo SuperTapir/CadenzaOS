@@ -1,0 +1,137 @@
+{
+  "schema_version": 2,
+  "status": "PASS_NON_FROZEN_AUDIT",
+  "production_ready": false,
+  "checks": {
+    "reference_input_hash_unchanged": true,
+    "outer_bbox_xy_preserved": true,
+    "four_cover_mounting_holes_preserved": true,
+    "candidate_pcb_critical_placements_match": true,
+    "screen_shift_transform_exact": true,
+    "sharp_window_is_60_by_36_48": true,
+    "j_disp1_usb_gap_matches_current_pcb": true,
+    "current_outputs_complete_and_valid": true,
+    "hard_collisions_zero_under_declared_proxy_z": true,
+    "fpc_route_conflict_retained_as_pending": true,
+    "component_projection_coverage_declared": true,
+    "screen_projection_overlap_not_hidden": true,
+    "production_status_remains_false": true,
+    "physical_gates_present": true
+  },
+  "semantic_signature_sha256": "339ac746a899c83975b414beac8e933b1c2ead6e1ea828825f6dfdb6858a346f",
+  "semantic_evidence": {
+    "reference_bbox": [
+      -1.000315,
+      -1.000315,
+      -3.000264,
+      131.000317,
+      62.787454,
+      0.000366
+    ],
+    "front_bbox": [
+      -1.000315,
+      -1.000315,
+      -3.000579,
+      131.000317,
+      62.787454,
+      0.000681
+    ],
+    "cover_mounting_holes": [
+      [
+        5.0,
+        55.0001,
+        3.0
+      ],
+      [
+        5.0001,
+        4.9999,
+        3.0
+      ],
+      [
+        125.0003,
+        4.9999,
+        3.0
+      ],
+      [
+        125.0003,
+        55.0003,
+        3.0
+      ]
+    ],
+    "window_xy": [
+      36.5,
+      13.26,
+      96.5,
+      49.74
+    ],
+    "front_fpc_pass_through_slot_xy": [
+      61.68,
+      9.14,
+      71.32,
+      13.36
+    ],
+    "panel_xy": [
+      35.1,
+      10.09,
+      97.9,
+      52.91
+    ],
+    "j_disp1": {
+      "reference": "J_DISP1",
+      "value": "FH34SRJ-10S-0.5SH(50)",
+      "footprint": "Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact",
+      "side": "front",
+      "position_kicad_mm": [
+        154.625,
+        128.5
+      ],
+      "position_enclosure_mm": [
+        66.5,
+        11.225
+      ],
+      "rotation_deg": 0.0,
+      "courtyard_xy_enclosure_mm": [
+        62.475,
+        7.4,
+        70.525,
+        12.25
+      ]
+    },
+    "usb1": {
+      "reference": "USB1",
+      "value": "",
+      "footprint": "USB-C-TH_HX-TYPE-C-16P-180LC-BH15.0",
+      "side": "front",
+      "position_kicad_mm": [
+        153.125,
+        136.121
+      ],
+      "position_enclosure_mm": [
+        65.0,
+        3.604
+      ],
+      "rotation_deg": 0.0,
+      "courtyard_xy_enclosure_mm": [
+        58.669567,
+        0.8035,
+        71.3005,
+        6.434433
+      ]
+    },
+    "j_to_usb_gap_y_mm": 0.965567,
+    "screen_projection_overlap_count": 31,
+    "hard_collision_max_mm3": 0.0,
+    "route_overlap_min_mm3": 13.693049999999994,
+    "valid_step_count": 11
+  },
+  "stable_artifact_hashes": {
+    "stl_bundle_sha256": "07c2b3a8e8873d20f6e76b3c533d207aa273e58f623df7b3cc165a7040088437",
+    "note": "STEP byte hashes excluded because exporter timestamps vary; STEP validity and geometry semantics are audited."
+  },
+  "missing_outputs": [],
+  "limits": [
+    "Zero hard collision is conditional on a declared provisional PCB Z datum, not a measured closed-shell stack.",
+    "Thirty-one front-side courtyards overlap the screen panel in XY; component heights and board seating remain required.",
+    "FPC bend keepout intersects FH34, USB1 and front-shell material outside the candidate slot; real fold direction, Pin 1, slot coverage and latch access remain physical gates."
+  ]
+}

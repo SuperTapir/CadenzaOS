@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "status": "PASS_SYNC_VERIFIED",
+  "checks_passed": 33,
+  "checks_total": 33,
+  "selection_frozen": false,
+  "routed": false,
+  "drc_passed": false,
+  "production_ready": false,
+  "sources": {
+    "reference_board": "hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+    "reference_board_sha256": "70a46bd100ed8184edcd2e90d3dbd21fff676999e0f3fa71cad1121c8c7b4101",
+    "netlist": "hardware/cadenza/derived/l1-candidate/candidate.netlist.xml",
+    "netlist_sha256": "40a5f97f77034897099e21b31176b486de2ea824a5a7987637af299a406d32db",
+    "placement": "hardware/cadenza/derived/l1-pcb-placement/placement-feasibility.json",
+    "placement_sha256": "e789f03211d57aaef8bbe32ea5956ca7554dd027d549e07c605502984fd217da",
+    "generation_report": "hardware/cadenza/derived/l1-pcb-candidate/generation-report.json",
+    "generation_report_sha256": "990508878a609b4504ea8c3404e5f04021ecb5c88fc4e92df9493f6c788ceadb"
+  },
+  "cross_variant_checks": {
+    "source_hash_matches_placement_evidence": true,
+    "source_hash_matches_generation_evidence": true,
+    "netlist_hash_matches_generation_evidence": true,
+    "placement_hash_matches_generation_evidence": true,
+    "board_hashes_match_generation_report": true,
+    "variants_static_board_identical_outside_j_disp1": true,
+    "j_disp1_pose_differs_by_180_degrees": true
+  },
+  "variants": {
+    "rotation_0": {
+      "path": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-0.kicad_pcb",
+      "sha256": "edc886259bd1c50683d27843962ce36ea2a920e3a78cf4da8ea3c5458517d3d6",
+      "footprints": 94,
+      "named_nets": 97,
+      "missing_endpoints": [],
+      "wrong_endpoint_nets": [],
+      "extra_physical_pads": [
+        {
+          "endpoint": [
+            "J_DISP1",
+            "MP"
+          ],
+          "actual": ""
+        },
+        {
+          "endpoint": [
+            "J_DISP1",
+            "MP"
+          ],
+          "actual": ""
+        }
+      ],
+      "uuid_audit": {
+        "scope": "footprints_and_pads",
+        "items": 422,
+        "duplicate_uuids": []
+      },
+      "preserved_pose_mismatches": [],
+      "expected_moved_positions_board_xy_mm": {
+        "USB1": [
+          169.325,
+          136.121
+        ],
+        "R1": [
+          178.998,
+          134.893
+        ],
+        "R2": [
+          178.998,
+          137.171
+        ]
+      },
+      "actual_moved_positions_board_xy_mm": {
+        "USB1": [
+          169.325,
+          136.121
+        ],
+        "R1": [
+          178.998,
+          134.893
+        ],
+        "R2": [
+          178.998,
+          137.171
+        ]
+      },
+      "rerouted_net_copper_items": {},
+      "checks": {
+        "footprint_count_94": true,
+        "reference_set_exactly_netlist": true,
+        "deleted_references_absent": true,
+        "net_names_exactly_netlist": true,
+        "all_logical_endpoints_present": true,
+        "all_physical_endpoint_nets_match": true,
+        "only_two_j_disp1_mp_extra_pads": true,
+        "footprint_and_pad_uuids_unique": true,
+        "edge_cuts_exactly_preserved": true,
+        "four_mounting_holes_exactly_preserved": true,
+        "preserved_reference_poses_exact": true,
+        "usb_r1_r2_positions_match_plan": true,
+        "rerouted_target_nets_have_no_old_tracks_or_vias": true
+      }
+    },
+    "rotation_180": {
+      "path": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-180.kicad_pcb",
+      "sha256": "71fb4b26e1757cc5561ffb23b7bf7d3ca1457bfa5eb05bc86e0698f206f0c019",
+      "footprints": 94,
+      "named_nets": 97,
+      "missing_endpoints": [],
+      "wrong_endpoint_nets": [],
+      "extra_physical_pads": [
+        {
+          "endpoint": [
+            "J_DISP1",
+            "MP"
+          ],
+          "actual": ""
+        },
+        {
+          "endpoint": [
+            "J_DISP1",
+            "MP"
+          ],
+          "actual": ""
+        }
+      ],
+      "uuid_audit": {
+        "scope": "footprints_and_pads",
+        "items": 422,
+        "duplicate_uuids": []
+      },
+      "preserved_pose_mismatches": [],
+      "expected_moved_positions_board_xy_mm": {
+        "USB1": [
+          169.325,
+          136.121
+        ],
+        "R1": [
+          178.998,
+          134.893
+        ],
+        "R2": [
+          178.998,
+          137.171
+        ]
+      },
+      "actual_moved_positions_board_xy_mm": {
+        "USB1": [
+          169.325,
+          136.121
+        ],
+        "R1": [
+          178.998,
+          134.893
+        ],
+        "R2": [
+          178.998,
+          137.171
+        ]
+      },
+      "rerouted_net_copper_items": {},
+      "checks": {
+        "footprint_count_94": true,
+        "reference_set_exactly_netlist": true,
+        "deleted_references_absent": true,
+        "net_names_exactly_netlist": true,
+        "all_logical_endpoints_present": true,
+        "all_physical_endpoint_nets_match": true,
+        "only_two_j_disp1_mp_extra_pads": true,
+        "footprint_and_pad_uuids_unique": true,
+        "edge_cuts_exactly_preserved": true,
+        "four_mounting_holes_exactly_preserved": true,
+        "preserved_reference_poses_exact": true,
+        "usb_r1_r2_positions_match_plan": true,
+        "rerouted_target_nets_have_no_old_tracks_or_vias": true
+      }
+    }
+  },
+  "limits": [
+    "This verifies synchronization and preserved mechanics, not routing quality.",
+    "DRC remains failing with 49 unconnected items per variant.",
+    "FPC contact face, Pin 1, latch access and natural cable exit remain physically unverified."
+  ]
+}

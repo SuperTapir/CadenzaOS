@@ -1,0 +1,355 @@
+{
+  "candidates": [
+    {
+      "body": {
+        "xmax": 4.05,
+        "xmin": -4.05,
+        "ymax": 4.4,
+        "ymin": -1.2
+      },
+      "contact_side": "bottom",
+      "id": "fh12_bottom",
+      "lcsc": "C506791",
+      "mpn": "FH12-10S-0.5SH(55)",
+      "orientation_frozen": false,
+      "pads": [
+        {
+          "height": 1.3,
+          "number": "1",
+          "width": 0.3,
+          "x": -2.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "2",
+          "width": 0.3,
+          "x": -1.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "3",
+          "width": 0.3,
+          "x": -1.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "4",
+          "width": 0.3,
+          "x": -0.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "5",
+          "width": 0.3,
+          "x": -0.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "6",
+          "width": 0.3,
+          "x": 0.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "7",
+          "width": 0.3,
+          "x": 0.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "8",
+          "width": 0.3,
+          "x": 1.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "9",
+          "width": 0.3,
+          "x": 1.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "10",
+          "width": 0.3,
+          "x": 2.25,
+          "y": -1.85
+        },
+        {
+          "height": 2.2,
+          "number": "MP",
+          "width": 1.8,
+          "x": -4.15,
+          "y": 1.4
+        },
+        {
+          "height": 2.2,
+          "number": "MP",
+          "width": 1.8,
+          "x": 4.15,
+          "y": 1.4
+        }
+      ],
+      "source": "hardware/cadenza/libraries/display-fpc-variants/Cadenza_Display_FPC_Variants.pretty/Hirose_FH12-10S-0.5SH_55_1x10_P0.50mm_BottomContact.kicad_mod",
+      "source_sha256": "75e32b44d55ac0d5cea8b2e5c30c0238cc6ff3120757211078e018ce545e61cd",
+      "svg": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12_bottom-a4.svg"
+    },
+    {
+      "body": {
+        "xmax": 4.55,
+        "xmin": -4.55,
+        "ymax": 5.0,
+        "ymin": -1.2
+      },
+      "contact_side": "top",
+      "id": "fh12a_top",
+      "lcsc": "C3168239",
+      "mpn": "FH12A-10S-0.5SH(55)",
+      "orientation_frozen": false,
+      "pads": [
+        {
+          "height": 1.3,
+          "number": "1",
+          "width": 0.3,
+          "x": -2.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "2",
+          "width": 0.3,
+          "x": -1.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "3",
+          "width": 0.3,
+          "x": -1.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "4",
+          "width": 0.3,
+          "x": -0.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "5",
+          "width": 0.3,
+          "x": -0.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "6",
+          "width": 0.3,
+          "x": 0.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "7",
+          "width": 0.3,
+          "x": 0.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "8",
+          "width": 0.3,
+          "x": 1.25,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "9",
+          "width": 0.3,
+          "x": 1.75,
+          "y": -1.85
+        },
+        {
+          "height": 1.3,
+          "number": "10",
+          "width": 0.3,
+          "x": 2.25,
+          "y": -1.85
+        },
+        {
+          "height": 2.2,
+          "number": "MP",
+          "width": 1.8,
+          "x": -4.15,
+          "y": 1.4
+        },
+        {
+          "height": 2.2,
+          "number": "MP",
+          "width": 1.8,
+          "x": 4.15,
+          "y": 1.4
+        }
+      ],
+      "source": "hardware/cadenza/libraries/display-fpc-variants/Cadenza_Display_FPC_Variants.pretty/Hirose_FH12A-10S-0.5SH_55_1x10_P0.50mm_TopContact.kicad_mod",
+      "source_sha256": "a33fb423e63c76ef9155e1bc04fc0807d95b9c7625a4e2f955cf62ae0989dc2d",
+      "svg": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12a_top-a4.svg"
+    },
+    {
+      "body": {
+        "xmax": 3.5,
+        "xmin": -3.5,
+        "ymax": 3.3,
+        "ymin": -0.5
+      },
+      "contact_side": "top_and_bottom",
+      "id": "fh34srj_dual",
+      "lcsc": "C324723",
+      "mpn": "FH34SRJ-10S-0.5SH(50)",
+      "orientation_frozen": false,
+      "pads": [
+        {
+          "height": 0.8,
+          "number": "1",
+          "width": 0.3,
+          "x": 2.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "2",
+          "width": 0.3,
+          "x": 1.75,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "3",
+          "width": 0.3,
+          "x": 1.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "4",
+          "width": 0.3,
+          "x": 0.75,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "5",
+          "width": 0.3,
+          "x": 0.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "6",
+          "width": 0.3,
+          "x": -0.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "7",
+          "width": 0.3,
+          "x": -0.75,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "8",
+          "width": 0.3,
+          "x": -1.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "9",
+          "width": 0.3,
+          "x": -1.75,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "10",
+          "width": 0.3,
+          "x": -2.25,
+          "y": 0.0
+        },
+        {
+          "height": 0.8,
+          "number": "MP",
+          "width": 0.8,
+          "x": -3.05,
+          "y": 2.9
+        },
+        {
+          "height": 0.8,
+          "number": "MP",
+          "width": 0.8,
+          "x": 3.05,
+          "y": 2.9
+        }
+      ],
+      "source": "hardware/cadenza/libraries/display-fpc-variants/Cadenza_Display_FPC_Variants.pretty/Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact.kicad_mod",
+      "source_sha256": "8cf1bfc189d0d1e45b7c0064edfe8c953a8b9106147de23506f2f6ac8e1a6c4b",
+      "svg": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh34srj_dual-a4.svg"
+    }
+  ],
+  "generated_at": "2026-07-21T20:56:51.193088+00:00",
+  "generator": "hardware/cadenza/validation/physical-evidence/fit-sheets/generate_fit_sheets.py",
+  "orientation_frozen": false,
+  "outputs": [
+    {
+      "bytes": 17037,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12_bottom-a4.svg",
+      "sha256": "4fb6ad5649f56f0e722e44aed809c522ee3918369d4c92dcd11022dc35728203"
+    },
+    {
+      "bytes": 17031,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12a_top-a4.svg",
+      "sha256": "a8d09a0673597d14adbc12950ac4d78e1c8a27efa3550ec081f1b229e22dcaa5"
+    },
+    {
+      "bytes": 17016,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh34srj_dual-a4.svg",
+      "sha256": "8cc3363a8d1b64927c4341a8b58b69d83443f269948bd2d4c4131e883be8a9de"
+    },
+    {
+      "bytes": 15642,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-caliper-record-a4.svg",
+      "sha256": "841b497a682c12433fad426bdf4f0e3151ce4ade881ffc3c04ae390ae8b6bde1"
+    },
+    {
+      "bytes": 41693,
+      "path": "output/pdf/cadenza-physical-fit-sheets-a4.pdf",
+      "sha256": "54adceeac0e7c7b871dd3755aaa0a6337edef0fbf59aef85de8e38ad032c7261"
+    }
+  ],
+  "page": {
+    "format": "A4",
+    "height_mm": 297.0,
+    "pdf_pages": 4,
+    "print_scale": 1.0,
+    "width_mm": 210.0
+  },
+  "pdf": "output/pdf/cadenza-physical-fit-sheets-a4.pdf",
+  "record_svg": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-caliper-record-a4.svg",
+  "schema_version": 1,
+  "warnings": [
+    "Print at 100% / Actual Size; disable Fit to Page and Shrink.",
+    "Measure the 10 mm and 50 mm rulers before using any overlay.",
+    "Printed geometry cannot replace the powered-off Pin 1 continuity test."
+  ]
+}

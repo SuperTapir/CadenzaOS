@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "PASS_LOCAL_ROUTING_GENERATED",
+  "scope": "reviewed local Power/Lock and complete USB connector routes",
+  "selection_frozen": false,
+  "routing_complete": false,
+  "drc_passed": false,
+  "production_ready": false,
+  "route_count": 13,
+  "variants": [
+    {
+      "name": "rotation-0",
+      "source": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-0.kicad_pcb",
+      "source_sha256": "edc886259bd1c50683d27843962ce36ea2a920e3a78cf4da8ea3c5458517d3d6",
+      "output": "hardware/cadenza/derived/l1-pcb-routing-candidate/Cadenza-L1-rotation-0-local-routing.kicad_pcb",
+      "output_sha256": "fac26ec0d31e7cda0d8af15e05e755800b844a15fc91d501b22fb3f9ec6e8ce8",
+      "tracks_before": 442,
+      "tracks_added": 51,
+      "tracks_after": 493,
+      "regular_zones_refilled": 4
+    },
+    {
+      "name": "rotation-180",
+      "source": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-180.kicad_pcb",
+      "source_sha256": "71fb4b26e1757cc5561ffb23b7bf7d3ca1457bfa5eb05bc86e0698f206f0c019",
+      "output": "hardware/cadenza/derived/l1-pcb-routing-candidate/Cadenza-L1-rotation-180-local-routing.kicad_pcb",
+      "output_sha256": "d06ea6f221c6e90b92713034ee30486cef702a01b031e4a91fad5e69667ca9e0",
+      "tracks_before": 442,
+      "tracks_added": 51,
+      "tracks_after": 493,
+      "regular_zones_refilled": 4
+    }
+  ],
+  "pending": [
+    "DRC-check every added segment and revise any collision",
+    "calculate and document USB D+/D- impedance after the JLC stack-up is selected",
+    "review the inherited 0.508 mm USB VBUS width against the final copper stack-up and charge-current limit",
+    "route Sharp display, remaining MCU Power/Lock control, LED and all testpoints",
+    "route the high-current U1 VOUT to R_PWR6 bridge with explicit copper-width and obstacle review",
+    "refill zones, verify connectivity, then run EMC/DFM"
+  ]
+}

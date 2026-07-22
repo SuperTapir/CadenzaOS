@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "gate": "l1-schematic-pre-edit-baseline",
+  "status": "PASS",
+  "pass": true,
+  "read_only_scope": {
+    "manifest": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-schematic-dryrun/SOURCE_MANIFEST.sha256",
+    "working_base_netlist": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/working-base/connectivity.netlist.xml",
+    "note": "The verifier does not invoke KiCad or modify the schematic, working-base, golden files, or OpenSpec."
+  },
+  "checks": [
+    {
+      "name": "manifest_entry_count",
+      "pass": true,
+      "expected": 39,
+      "actual": 39,
+      "parse_errors": []
+    },
+    {
+      "name": "manifest_files_match",
+      "pass": true,
+      "checked": 39,
+      "mismatches": [],
+      "note": "Unlisted files in baseline-proof are permitted and do not alter the source manifest."
+    },
+    {
+      "name": "derived_schematic_matches_manifest",
+      "pass": true,
+      "expected": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+      "actual": "1d3ee26e1fd7aee38fa1636f32753dfe49b6c6bf6b1f5c19aefac4dae8223a7c",
+      "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-schematic-dryrun/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_sch"
+    },
+    {
+      "name": "netlist_components_semantically_equal",
+      "pass": true,
+      "differences": {},
+      "parse_error": null
+    },
+    {
+      "name": "netlist_endpoints_semantically_equal",
+      "pass": true,
+      "pre_edit_only_count": 0,
+      "working_base_only_count": 0,
+      "parse_error": null
+    },
+    {
+      "name": "baseline_counts",
+      "pass": true,
+      "expected": {
+        "components": 77,
+        "nets": 102
+      },
+      "actual": {
+        "components": 77,
+        "nets": 102
+      }
+    },
+    {
+      "name": "erc_exact_distribution",
+      "pass": true,
+      "expected": {
+        "total": 691,
+        "severities": {
+          "error": 18,
+          "warning": 673
+        },
+        "types": {
+          "endpoint_off_grid": 389,
+          "footprint_link_issues": 3,
+          "lib_symbol_mismatch": 33,
+          "pin_not_driven": 14,
+          "pin_to_pin": 187,
+          "power_pin_not_driven": 4,
+          "unconnected_wire_endpoint": 61
+        }
+      },
+      "actual": {
+        "total": 691,
+        "severities": {
+          "error": 18,
+          "warning": 673
+        },
+        "types": {
+          "endpoint_off_grid": 389,
+          "footprint_link_issues": 3,
+          "lib_symbol_mismatch": 33,
+          "pin_not_driven": 14,
+          "pin_to_pin": 187,
+          "power_pin_not_driven": 4,
+          "unconnected_wire_endpoint": 61
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "name": "pre_edit_pdf",
+      "pass": true,
+      "exists": true,
+      "bytes": 311629,
+      "pages": 1,
+      "page_check": "pdfinfo"
+    }
+  ]
+}

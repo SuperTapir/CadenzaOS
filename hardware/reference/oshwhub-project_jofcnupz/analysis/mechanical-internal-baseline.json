@@ -1,0 +1,7888 @@
+{
+  "schema_version": 1,
+  "units": "mm",
+  "coordinate_convention": {
+    "x": "PCB left to right, 0..130",
+    "y": "enclosure lower edge to upper edge, 0..60; equals 60 - PCB baseline y_from_top",
+    "z": "top/bottom cover mating plane is 0; top cover is negative Z and bottom enclosure is positive Z"
+  },
+  "method": {
+    "kernel": "OpenCascade via cadquery-ocp 7.9.3.1.1",
+    "exact_geometry_note": "BREP face inventory is measured from frozen STEP inputs.",
+    "interpretation_note": "Functional names are explicitly confidence-labelled because STEP has no feature history."
+  },
+  "models": {
+    "顶盖V7": {
+      "source": "顶盖V7.step",
+      "sha256": "41a991f288e6c38a120f876404848cc09c7c30d14df6e56ff053dea67efe9bee",
+      "read_ok": true,
+      "solids": 1,
+      "faces": 40,
+      "surface_type_counts": {
+        "plane": 20,
+        "torus": 6,
+        "cylinder": 14
+      },
+      "bbox_mm": {
+        "xmin": -1.000315,
+        "ymin": -1.000315,
+        "zmin": -3.000264,
+        "xmax": 131.000317,
+        "ymax": 62.787454,
+        "zmax": 0.000366,
+        "width": 132.000632,
+        "height": 63.787769,
+        "depth": 3.00063
+      },
+      "volume_mm3": 10727.756181,
+      "centroid_mm": [
+        63.931113,
+        28.578458,
+        -1.491916
+      ],
+      "horizontal_planar_levels_area_mm2": {
+        "-2.999949": 3357.962468,
+        "0.000051": 3600.356146
+      },
+      "face_inventory": [
+        {
+          "id": 1,
+          "surface": "plane",
+          "area_mm2": 6.600024,
+          "centroid_mm": [
+            115.900001,
+            14.3,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 114.799997,
+            "ymin": 14.3,
+            "zmin": -2.999949,
+            "xmax": 117.000006,
+            "ymax": 14.3,
+            "zmax": 5.1e-05,
+            "width": 2.200008,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 2,
+          "surface": "plane",
+          "area_mm2": 7.079997,
+          "centroid_mm": [
+            117.000006,
+            13.12,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 117.000005,
+            "ymin": 11.94,
+            "zmin": -2.999949,
+            "xmax": 117.000006,
+            "ymax": 14.3,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 2.359999,
+            "depth": 3.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 3,
+          "surface": "plane",
+          "area_mm2": 6.600024,
+          "centroid_mm": [
+            115.900001,
+            11.940001,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 114.799997,
+            "ymin": 11.94,
+            "zmin": -2.999949,
+            "xmax": 117.000006,
+            "ymax": 11.940001,
+            "zmax": 5.1e-05,
+            "width": 2.200008,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 4,
+          "surface": "plane",
+          "area_mm2": 7.079997,
+          "centroid_mm": [
+            114.799997,
+            13.12,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 114.799997,
+            "ymin": 11.94,
+            "zmin": -2.999949,
+            "xmax": 114.799998,
+            "ymax": 14.3,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 2.359999,
+            "depth": 3.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 5,
+          "surface": "torus",
+          "area_mm2": 62.927172,
+          "centroid_mm": [
+            20.873751,
+            29.496251,
+            -2.500918
+          ],
+          "bbox_mm": {
+            "xmin": 14.086611,
+            "ymin": 22.709111,
+            "zmin": -2.999949,
+            "xmax": 27.660891,
+            "ymax": 36.283392,
+            "zmax": -0.434949,
+            "width": 13.574281,
+            "height": 13.574281,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.2055,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            20.873751,
+            29.496251,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 6,
+          "surface": "plane",
+          "area_mm2": 3346.310751,
+          "centroid_mm": [
+            64.976387,
+            27.210691,
+            -2.999949
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": -1.0,
+            "zmin": -2.999949,
+            "xmax": 131.000002,
+            "ymax": 61.000001,
+            "zmax": -2.999949,
+            "width": 132.000002,
+            "height": 62.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 7,
+          "surface": "cylinder",
+          "area_mm2": 34.923515,
+          "centroid_mm": [
+            20.873751,
+            29.496251,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 17.168251,
+            "ymin": 25.790751,
+            "zmin": -1.499949,
+            "xmax": 24.579251,
+            "ymax": 33.201752,
+            "zmax": 5.1e-05,
+            "width": 7.411,
+            "height": 7.411,
+            "depth": 1.5
+          },
+          "radius_mm": 3.7055,
+          "axis_origin_mm": [
+            20.873751,
+            29.496251,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 8,
+          "surface": "torus",
+          "area_mm2": 62.927172,
+          "centroid_mm": [
+            10.37459,
+            36.05213,
+            -2.500918
+          ],
+          "bbox_mm": {
+            "xmin": 3.58745,
+            "ymin": 29.264989,
+            "zmin": -2.999949,
+            "xmax": 17.161731,
+            "ymax": 42.83927,
+            "zmax": -0.434949,
+            "width": 13.574281,
+            "height": 13.574281,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.2055,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            10.37459,
+            36.05213,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 9,
+          "surface": "cylinder",
+          "area_mm2": 34.923515,
+          "centroid_mm": [
+            10.37459,
+            36.05213,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 6.66909,
+            "ymin": 32.34663,
+            "zmin": -1.499949,
+            "xmax": 14.08009,
+            "ymax": 39.75763,
+            "zmax": 5.1e-05,
+            "width": 7.411,
+            "height": 7.411,
+            "depth": 1.5
+          },
+          "radius_mm": 3.7055,
+          "axis_origin_mm": [
+            10.37459,
+            36.05213,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 10,
+          "surface": "torus",
+          "area_mm2": 60.497339,
+          "centroid_mm": [
+            116.962407,
+            55.966487,
+            -2.481869
+          ],
+          "bbox_mm": {
+            "xmin": 110.012964,
+            "ymin": 49.212965,
+            "zmin": -2.999949,
+            "xmax": 123.587031,
+            "ymax": 62.787032,
+            "zmax": -0.434949,
+            "width": 13.574067,
+            "height": 13.574067,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.205401,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            116.799997,
+            55.999999,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 11,
+          "surface": "torus",
+          "area_mm2": 60.49731,
+          "centroid_mm": [
+            107.437588,
+            55.966487,
+            -2.481868
+          ],
+          "bbox_mm": {
+            "xmin": 100.812964,
+            "ymin": 49.212965,
+            "zmin": -2.999949,
+            "xmax": 114.387031,
+            "ymax": 62.787032,
+            "zmax": -0.434949,
+            "width": 13.574067,
+            "height": 13.574067,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.205401,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            107.599998,
+            55.999999,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 12,
+          "surface": "plane",
+          "area_mm2": 5.82627,
+          "centroid_mm": [
+            112.199997,
+            60.261071,
+            -2.999949
+          ],
+          "bbox_mm": {
+            "xmin": 109.047817,
+            "ymin": 58.436431,
+            "zmin": -2.999949,
+            "xmax": 115.352178,
+            "ymax": 61.000001,
+            "zmax": -2.999949,
+            "width": 6.30436,
+            "height": 2.56357,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 13,
+          "surface": "plane",
+          "area_mm2": 329.914576,
+          "centroid_mm": [
+            65.000008,
+            61.000001,
+            -1.499562
+          ],
+          "bbox_mm": {
+            "xmin": 9.999685,
+            "ymin": 60.999686,
+            "zmin": -3.000264,
+            "xmax": 120.000317,
+            "ymax": 61.000316,
+            "zmax": 0.000366,
+            "width": 110.000632,
+            "height": 0.00063,
+            "depth": 3.00063
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 14,
+          "surface": "cylinder",
+          "area_mm2": 34.922585,
+          "centroid_mm": [
+            116.799997,
+            55.999999,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 113.094596,
+            "ymin": 52.294597,
+            "zmin": -1.499949,
+            "xmax": 120.505399,
+            "ymax": 59.7054,
+            "zmax": 5.1e-05,
+            "width": 7.410803,
+            "height": 7.410803,
+            "depth": 1.5
+          },
+          "radius_mm": 3.705401,
+          "axis_origin_mm": [
+            116.799997,
+            55.999999,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 15,
+          "surface": "cylinder",
+          "area_mm2": 34.922585,
+          "centroid_mm": [
+            107.599998,
+            55.999999,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 103.894596,
+            "ymin": 52.294597,
+            "zmin": -1.499949,
+            "xmax": 111.305399,
+            "ymax": 59.7054,
+            "zmax": 5.1e-05,
+            "width": 7.410803,
+            "height": 7.410803,
+            "depth": 1.5
+          },
+          "radius_mm": 3.705401,
+          "axis_origin_mm": [
+            107.599998,
+            55.999999,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 16,
+          "surface": "torus",
+          "area_mm2": 60.497985,
+          "centroid_mm": [
+            22.56245,
+            55.966462,
+            -2.481862
+          ],
+          "bbox_mm": {
+            "xmin": 15.612859,
+            "ymin": 49.212858,
+            "zmin": -2.999949,
+            "xmax": 29.18714,
+            "ymax": 62.787139,
+            "zmax": -0.434949,
+            "width": 13.574281,
+            "height": 13.574281,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.2055,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            22.399999,
+            55.999999,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 17,
+          "surface": "torus",
+          "area_mm2": 60.497956,
+          "centroid_mm": [
+            13.037549,
+            55.966462,
+            -2.481861
+          ],
+          "bbox_mm": {
+            "xmin": 6.412859,
+            "ymin": 49.212858,
+            "zmin": -2.999949,
+            "xmax": 19.98714,
+            "ymax": 62.787139,
+            "zmax": -0.434949,
+            "width": 13.574281,
+            "height": 13.574281,
+            "depth": 2.565
+          },
+          "major_radius_mm": 5.2055,
+          "minor_radius_mm": 1.5,
+          "axis_origin_mm": [
+            13.2,
+            55.999999,
+            -1.499949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 18,
+          "surface": "plane",
+          "area_mm2": 5.825447,
+          "centroid_mm": [
+            17.8,
+            60.261117,
+            -2.999949
+          ],
+          "bbox_mm": {
+            "xmin": 14.648174,
+            "ymin": 58.436642,
+            "zmin": -2.999949,
+            "xmax": 20.951825,
+            "ymax": 61.000001,
+            "zmax": -2.999949,
+            "width": 6.303651,
+            "height": 2.563359,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 19,
+          "surface": "cylinder",
+          "area_mm2": 34.923515,
+          "centroid_mm": [
+            22.399999,
+            55.999999,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 18.694499,
+            "ymin": 52.294499,
+            "zmin": -1.499949,
+            "xmax": 26.1055,
+            "ymax": 59.705499,
+            "zmax": 5.1e-05,
+            "width": 7.411,
+            "height": 7.411,
+            "depth": 1.5
+          },
+          "radius_mm": 3.7055,
+          "axis_origin_mm": [
+            22.399999,
+            55.999999,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 20,
+          "surface": "cylinder",
+          "area_mm2": 34.923515,
+          "centroid_mm": [
+            13.2,
+            55.999999,
+            -0.749949
+          ],
+          "bbox_mm": {
+            "xmin": 9.4945,
+            "ymin": 52.294499,
+            "zmin": -1.499949,
+            "xmax": 16.9055,
+            "ymax": 59.705499,
+            "zmax": 5.1e-05,
+            "width": 7.411,
+            "height": 7.411,
+            "depth": 1.5
+          },
+          "radius_mm": 3.7055,
+          "axis_origin_mm": [
+            13.2,
+            55.999999,
+            -3.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 21,
+          "surface": "plane",
+          "area_mm2": 36.000001,
+          "centroid_mm": [
+            122.500002,
+            30.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 122.500002,
+            "ymin": 24.0,
+            "zmin": -2.999949,
+            "xmax": 122.500002,
+            "ymax": 36.000001,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 12.0,
+            "depth": 3.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 22,
+          "surface": "plane",
+          "area_mm2": 40.500001,
+          "centroid_mm": [
+            115.750002,
+            24.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 109.000002,
+            "ymin": 24.0,
+            "zmin": -2.999949,
+            "xmax": 122.500002,
+            "ymax": 24.0,
+            "zmax": 5.1e-05,
+            "width": 13.5,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 23,
+          "surface": "plane",
+          "area_mm2": 36.000001,
+          "centroid_mm": [
+            109.000002,
+            30.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 109.000002,
+            "ymin": 24.0,
+            "zmin": -2.999949,
+            "xmax": 109.000002,
+            "ymax": 36.000001,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 12.0,
+            "depth": 3.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 24,
+          "surface": "plane",
+          "area_mm2": 40.500001,
+          "centroid_mm": [
+            115.750002,
+            36.000001,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 109.000002,
+            "ymin": 36.0,
+            "zmin": -2.999949,
+            "xmax": 122.500002,
+            "ymax": 36.000001,
+            "zmax": 5.1e-05,
+            "width": 13.5,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 25,
+          "surface": "plane",
+          "area_mm2": 161.580008,
+          "centroid_mm": [
+            27.630001,
+            30.000001,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 27.630001,
+            "ymin": 3.07,
+            "zmin": -2.999949,
+            "xmax": 27.630001,
+            "ymax": 56.930003,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 53.860003,
+            "depth": 3.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 26,
+          "surface": "plane",
+          "area_mm2": 224.220011,
+          "centroid_mm": [
+            65.000003,
+            56.930003,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 27.630001,
+            "ymin": 56.930003,
+            "zmin": -2.999949,
+            "xmax": 102.370005,
+            "ymax": 56.930003,
+            "zmax": 5.1e-05,
+            "width": 74.740004,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 27,
+          "surface": "plane",
+          "area_mm2": 330.000006,
+          "centroid_mm": [
+            65.000001,
+            -1.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": -1.0,
+            "zmin": -2.999949,
+            "xmax": 120.000002,
+            "ymax": -1.0,
+            "zmax": 5.1e-05,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 28,
+          "surface": "cylinder",
+          "area_mm2": 51.836279,
+          "centroid_mm": [
+            127.002819,
+            2.997183,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": -1.0,
+            "zmin": -2.999949,
+            "xmax": 131.000002,
+            "ymax": 10.0,
+            "zmax": 5.1e-05,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 3.0
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            5.1e-05
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 29,
+          "surface": "plane",
+          "area_mm2": 120.000003,
+          "centroid_mm": [
+            131.000002,
+            30.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 131.000002,
+            "ymin": 10.0,
+            "zmin": -2.999949,
+            "xmax": 131.000002,
+            "ymax": 50.000001,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 3.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 30,
+          "surface": "cylinder",
+          "area_mm2": 51.836279,
+          "centroid_mm": [
+            127.002819,
+            57.002818,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 50.000001,
+            "zmin": -2.999949,
+            "xmax": 131.000002,
+            "ymax": 61.000001,
+            "zmax": 5.1e-05,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 3.0
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            5.1e-05
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 31,
+          "surface": "plane",
+          "area_mm2": 161.580008,
+          "centroid_mm": [
+            102.370005,
+            30.000001,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 102.370005,
+            "ymin": 3.07,
+            "zmin": -2.999949,
+            "xmax": 102.370005,
+            "ymax": 56.930003,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 53.860003,
+            "depth": 3.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 32,
+          "surface": "plane",
+          "area_mm2": 224.220011,
+          "centroid_mm": [
+            65.000003,
+            3.07,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 27.630001,
+            "ymin": 3.07,
+            "zmin": -2.999949,
+            "xmax": 102.370005,
+            "ymax": 3.07,
+            "zmax": 5.1e-05,
+            "width": 74.740004,
+            "height": 0.0,
+            "depth": 3.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 33,
+          "surface": "cylinder",
+          "area_mm2": 28.274382,
+          "centroid_mm": [
+            125.000287,
+            55.000251,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 53.500249,
+            "zmin": -2.999949,
+            "xmax": 126.50029,
+            "ymax": 56.500254,
+            "zmax": 5.1e-05,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 3.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            125.000287,
+            55.000251,
+            -2.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 34,
+          "surface": "cylinder",
+          "area_mm2": 28.274382,
+          "centroid_mm": [
+            125.000287,
+            4.999914,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 3.499911,
+            "zmin": -2.999949,
+            "xmax": 126.50029,
+            "ymax": 6.499916,
+            "zmax": 5.1e-05,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 3.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            125.000287,
+            4.999914,
+            -2.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 35,
+          "surface": "cylinder",
+          "area_mm2": 28.274382,
+          "centroid_mm": [
+            5.00001,
+            55.000109,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 3.500008,
+            "ymin": 53.500107,
+            "zmin": -2.999949,
+            "xmax": 6.500013,
+            "ymax": 56.500112,
+            "zmax": 5.1e-05,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 3.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            5.00001,
+            55.000109,
+            -2.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 36,
+          "surface": "cylinder",
+          "area_mm2": 28.274382,
+          "centroid_mm": [
+            5.00013,
+            4.999914,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": 3.500127,
+            "ymin": 3.499911,
+            "zmin": -2.999949,
+            "xmax": 6.500132,
+            "ymax": 6.499916,
+            "zmax": 5.1e-05,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 3.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            5.00013,
+            4.999914,
+            -2.299949
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 37,
+          "surface": "cylinder",
+          "area_mm2": 51.836279,
+          "centroid_mm": [
+            2.997183,
+            57.002818,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": 50.000001,
+            "zmin": -2.999949,
+            "xmax": 10.0,
+            "ymax": 61.000001,
+            "zmax": 5.1e-05,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 3.0
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            5.1e-05
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 38,
+          "surface": "plane",
+          "area_mm2": 120.000003,
+          "centroid_mm": [
+            -1.0,
+            30.0,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": 10.0,
+            "zmin": -2.999949,
+            "xmax": -1.0,
+            "ymax": 50.000001,
+            "zmax": 5.1e-05,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 3.0
+          },
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 39,
+          "surface": "cylinder",
+          "area_mm2": 51.836279,
+          "centroid_mm": [
+            2.997183,
+            2.997183,
+            -1.499949
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": -1.0,
+            "zmin": -2.999949,
+            "xmax": 10.0,
+            "ymax": 10.0,
+            "zmax": 5.1e-05,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 3.0
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            5.1e-05
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 40,
+          "surface": "plane",
+          "area_mm2": 3600.356146,
+          "centroid_mm": [
+            63.826288,
+            28.71186,
+            5.1e-05
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": -1.0,
+            "zmin": 5.1e-05,
+            "xmax": 131.000002,
+            "ymax": 61.000001,
+            "zmax": 5.1e-05,
+            "width": 132.000002,
+            "height": 62.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      ]
+    },
+    "底盒V7": {
+      "source": "底盒V7.step",
+      "sha256": "c3636deb59fdeafd3ed45d4dca8393170574e873677a9b8ff70b88e26512eb80",
+      "read_ok": true,
+      "solids": 1,
+      "faces": 219,
+      "surface_type_counts": {
+        "cylinder": 70,
+        "plane": 141,
+        "torus": 4,
+        "cone": 4
+      },
+      "bbox_mm": {
+        "xmin": -1.906319,
+        "ymin": -1.906319,
+        "zmin": 4.6e-05,
+        "xmax": 131.906321,
+        "ymax": 62.000006,
+        "zmax": 14.600056,
+        "width": 133.81264,
+        "height": 63.906325,
+        "depth": 14.60001
+      },
+      "volume_mm3": 24494.187101,
+      "centroid_mm": [
+        65.777844,
+        30.115296,
+        10.858369
+      ],
+      "horizontal_planar_levels_area_mm2": {
+        "0.000051": 365.973451,
+        "1.600051": 421.186527,
+        "2.400000": 18.0,
+        "2.797079": 10.211615,
+        "5.800000": 10.211615,
+        "6.600051": 72.21318,
+        "11.334716": 4.143596,
+        "12.600000": 527.91761,
+        "12.600001": 90.51564,
+        "12.600051": 6884.061497,
+        "14.600051": 6368.767707
+      },
+      "face_inventory": [
+        {
+          "id": 1,
+          "surface": "cylinder",
+          "area_mm2": 20.632797,
+          "centroid_mm": [
+            84.430756,
+            60.750001,
+            2.812081
+          ],
+          "bbox_mm": {
+            "xmin": 82.78885,
+            "ymin": 59.000001,
+            "zmin": 1.69281,
+            "xmax": 86.072662,
+            "ymax": 62.000001,
+            "zmax": 4.976622,
+            "width": 3.283812,
+            "height": 3.0,
+            "depth": 3.283812
+          },
+          "radius_mm": 1.641906,
+          "axis_origin_mm": [
+            84.430756,
+            61.000001,
+            3.334716
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 2,
+          "surface": "plane",
+          "area_mm2": 9.174295,
+          "centroid_mm": [
+            51.412851,
+            59.500001,
+            1.600051
+          ],
+          "bbox_mm": {
+            "xmin": 46.825703,
+            "ymin": 59.000001,
+            "zmin": 1.600051,
+            "xmax": 55.999999,
+            "ymax": 60.000001,
+            "zmax": 1.600051,
+            "width": 9.174295,
+            "height": 1.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 3,
+          "surface": "plane",
+          "area_mm2": 402.837937,
+          "centroid_mm": [
+            65.687146,
+            27.767914,
+            1.600051
+          ],
+          "bbox_mm": {
+            "xmin": -0.0,
+            "ymin": -0.0,
+            "zmin": 1.600051,
+            "xmax": 130.000002,
+            "ymax": 60.000001,
+            "zmax": 1.600051,
+            "width": 130.000002,
+            "height": 60.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 4,
+          "surface": "plane",
+          "area_mm2": 28.092462,
+          "centroid_mm": [
+            45.569241,
+            59.000001,
+            6.314734
+          ],
+          "bbox_mm": {
+            "xmin": 43.927333,
+            "ymin": 58.999999,
+            "zmin": 1.692808,
+            "xmax": 47.211149,
+            "ymax": 59.000003,
+            "zmax": 10.600002,
+            "width": 3.283816,
+            "height": 4e-06,
+            "depth": 8.907194
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 5,
+          "surface": "plane",
+          "area_mm2": 297.719387,
+          "centroid_mm": [
+            64.999999,
+            59.000001,
+            6.28568
+          ],
+          "bbox_mm": {
+            "xmin": 46.825701,
+            "ymin": 58.999999,
+            "zmin": 1.600049,
+            "xmax": 83.174296,
+            "ymax": 59.000003,
+            "zmax": 10.600002,
+            "width": 36.348594,
+            "height": 4e-06,
+            "depth": 8.999953
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 6,
+          "surface": "plane",
+          "area_mm2": 301.304767,
+          "centroid_mm": [
+            26.739596,
+            59.000001,
+            6.093781
+          ],
+          "bbox_mm": {
+            "xmin": 9.999998,
+            "ymin": 58.999999,
+            "zmin": 1.600049,
+            "xmax": 44.312781,
+            "ymax": 59.000003,
+            "zmax": 10.600002,
+            "width": 34.312783,
+            "height": 4e-06,
+            "depth": 8.999953
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 7,
+          "surface": "cylinder",
+          "area_mm2": 351.934019,
+          "centroid_mm": [
+            64.803639,
+            58.278349,
+            11.874304
+          ],
+          "bbox_mm": {
+            "xmin": 6.353069,
+            "ymin": 56.999999,
+            "zmin": 10.6,
+            "xmax": 123.646912,
+            "ymax": 58.999999,
+            "zmax": 12.6,
+            "width": 117.293843,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            0.0,
+            56.999999,
+            10.6
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 8,
+          "surface": "plane",
+          "area_mm2": 8.469277,
+          "centroid_mm": [
+            45.569241,
+            62.000001,
+            3.334716
+          ],
+          "bbox_mm": {
+            "xmin": 43.927335,
+            "ymin": 62.000001,
+            "zmin": 1.69281,
+            "xmax": 47.211147,
+            "ymax": 62.000001,
+            "zmax": 4.976622,
+            "width": 3.283812,
+            "height": 0.0,
+            "depth": 3.283812
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 9,
+          "surface": "plane",
+          "area_mm2": 8.469277,
+          "centroid_mm": [
+            84.430756,
+            62.000001,
+            3.334716
+          ],
+          "bbox_mm": {
+            "xmin": 82.78885,
+            "ymin": 62.000001,
+            "zmin": 1.69281,
+            "xmax": 86.072662,
+            "ymax": 62.000001,
+            "zmax": 4.976622,
+            "width": 3.283812,
+            "height": 0.0,
+            "depth": 3.283812
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 10,
+          "surface": "cylinder",
+          "area_mm2": 1.601494,
+          "centroid_mm": [
+            60.949042,
+            1.420008,
+            12.174549
+          ],
+          "bbox_mm": {
+            "xmin": 59.687387,
+            "ymin": 1.173912,
+            "zmin": 11.415721,
+            "xmax": 61.725122,
+            "ymax": 3.0,
+            "zmax": 12.6,
+            "width": 2.037735,
+            "height": 1.826089,
+            "depth": 1.184279
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            61.725122,
+            3.223912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 11,
+          "surface": "plane",
+          "area_mm2": 7.745183,
+          "centroid_mm": [
+            64.995122,
+            1.173912,
+            12.00786
+          ],
+          "bbox_mm": {
+            "xmin": 61.725122,
+            "ymin": 1.173912,
+            "zmin": 11.415721,
+            "xmax": 68.265122,
+            "ymax": 1.173912,
+            "zmax": 12.6,
+            "width": 6.54,
+            "height": 0.0,
+            "depth": 1.184279
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 12,
+          "surface": "cylinder",
+          "area_mm2": 1.601492,
+          "centroid_mm": [
+            69.041201,
+            1.420008,
+            12.174551
+          ],
+          "bbox_mm": {
+            "xmin": 68.265122,
+            "ymin": 1.173912,
+            "zmin": 11.415721,
+            "xmax": 70.302857,
+            "ymax": 3.0,
+            "zmax": 12.6,
+            "width": 2.037735,
+            "height": 1.826089,
+            "depth": 1.184279
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            68.265122,
+            3.223912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 13,
+          "surface": "cylinder",
+          "area_mm2": 338.033706,
+          "centroid_mm": [
+            65.000408,
+            1.713391,
+            11.859559
+          ],
+          "bbox_mm": {
+            "xmin": 6.353101,
+            "ymin": 1.0,
+            "zmin": 10.6,
+            "xmax": 123.647102,
+            "ymax": 3.0,
+            "zmax": 12.6,
+            "width": 117.294001,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            0.0,
+            3.0,
+            10.6
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 14,
+          "surface": "cylinder",
+          "area_mm2": 672.905892,
+          "centroid_mm": [
+            65.000133,
+            0.408412,
+            13.110796
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": -1.0,
+            "zmin": 10.600051,
+            "xmax": 120.000002,
+            "ymax": 3.0,
+            "zmax": 14.600051,
+            "width": 110.000002,
+            "height": 4.0,
+            "depth": 4.0
+          },
+          "radius_mm": 4.0,
+          "axis_origin_mm": [
+            37.5,
+            3.0,
+            10.600051
+          ],
+          "axis_direction": [
+            1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 15,
+          "surface": "torus",
+          "area_mm2": 94.219972,
+          "centroid_mm": [
+            126.178539,
+            3.821463,
+            13.000759
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": -1.906314,
+            "zmin": 10.600051,
+            "xmax": 131.906316,
+            "ymax": 10.0,
+            "zmax": 14.600051,
+            "width": 11.906314,
+            "height": 11.906314,
+            "depth": 4.0
+          },
+          "major_radius_mm": 7.0,
+          "minor_radius_mm": 4.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            10.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 16,
+          "surface": "cylinder",
+          "area_mm2": 251.327418,
+          "centroid_mm": [
+            129.546481,
+            30.0,
+            13.14653
+          ],
+          "bbox_mm": {
+            "xmin": 127.000002,
+            "ymin": 10.0,
+            "zmin": 10.600051,
+            "xmax": 131.000002,
+            "ymax": 50.000001,
+            "zmax": 14.600051,
+            "width": 4.0,
+            "height": 40.000001,
+            "depth": 4.0
+          },
+          "radius_mm": 4.0,
+          "axis_origin_mm": [
+            127.000002,
+            20.0,
+            10.600051
+          ],
+          "axis_direction": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 17,
+          "surface": "torus",
+          "area_mm2": 94.219972,
+          "centroid_mm": [
+            126.178539,
+            56.178538,
+            13.000759
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 50.000001,
+            "zmin": 10.600051,
+            "xmax": 131.906316,
+            "ymax": 61.906315,
+            "zmax": 14.600051,
+            "width": 11.906314,
+            "height": 11.906314,
+            "depth": 4.0
+          },
+          "major_radius_mm": 7.0,
+          "minor_radius_mm": 4.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            10.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 18,
+          "surface": "cylinder",
+          "area_mm2": 689.672677,
+          "centroid_mm": [
+            65.000001,
+            59.543414,
+            13.151197
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 57.000001,
+            "zmin": 10.600051,
+            "xmax": 120.000002,
+            "ymax": 61.000001,
+            "zmax": 14.600051,
+            "width": 110.000002,
+            "height": 4.0,
+            "depth": 4.0
+          },
+          "radius_mm": 4.0,
+          "axis_origin_mm": [
+            92.500001,
+            57.000001,
+            10.600051
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 19,
+          "surface": "torus",
+          "area_mm2": 94.219972,
+          "centroid_mm": [
+            3.821463,
+            56.178538,
+            13.000759
+          ],
+          "bbox_mm": {
+            "xmin": -1.906314,
+            "ymin": 50.000001,
+            "zmin": 10.600051,
+            "xmax": 10.0,
+            "ymax": 61.906315,
+            "zmax": 14.600051,
+            "width": 11.906314,
+            "height": 11.906314,
+            "depth": 4.0
+          },
+          "major_radius_mm": 7.0,
+          "minor_radius_mm": 4.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            10.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 20,
+          "surface": "cylinder",
+          "area_mm2": 251.327418,
+          "centroid_mm": [
+            0.453521,
+            30.0,
+            13.14653
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": 10.0,
+            "zmin": 10.600051,
+            "xmax": 3.0,
+            "ymax": 50.000001,
+            "zmax": 14.600051,
+            "width": 4.0,
+            "height": 40.000001,
+            "depth": 4.0
+          },
+          "radius_mm": 4.0,
+          "axis_origin_mm": [
+            3.0,
+            40.000001,
+            10.600051
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 21,
+          "surface": "torus",
+          "area_mm2": 94.219972,
+          "centroid_mm": [
+            3.821463,
+            3.821463,
+            13.000759
+          ],
+          "bbox_mm": {
+            "xmin": -1.906314,
+            "ymin": -1.906314,
+            "zmin": 10.600051,
+            "xmax": 10.0,
+            "ymax": 10.0,
+            "zmax": 14.600051,
+            "width": 11.906314,
+            "height": 11.906314,
+            "depth": 4.0
+          },
+          "major_radius_mm": 7.0,
+          "minor_radius_mm": 4.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            10.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 22,
+          "surface": "cylinder",
+          "area_mm2": 5.783029,
+          "centroid_mm": [
+            60.364732,
+            1.972832,
+            13.505136
+          ],
+          "bbox_mm": {
+            "xmin": 59.675122,
+            "ymin": 1.173912,
+            "zmin": 12.600051,
+            "xmax": 61.725122,
+            "ymax": 3.223912,
+            "zmax": 14.600051,
+            "width": 2.05,
+            "height": 2.05,
+            "depth": 2.0
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            61.725122,
+            3.223912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 23,
+          "surface": "plane",
+          "area_mm2": 10.194868,
+          "centroid_mm": [
+            64.995122,
+            1.173912,
+            13.379475
+          ],
+          "bbox_mm": {
+            "xmin": 61.725122,
+            "ymin": 1.173912,
+            "zmin": 12.600051,
+            "xmax": 68.265122,
+            "ymax": 1.173912,
+            "zmax": 14.158899,
+            "width": 6.54,
+            "height": 0.0,
+            "depth": 1.558848
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 24,
+          "surface": "cylinder",
+          "area_mm2": 5.783025,
+          "centroid_mm": [
+            69.625512,
+            1.972832,
+            13.505135
+          ],
+          "bbox_mm": {
+            "xmin": 68.265122,
+            "ymin": 1.173912,
+            "zmin": 12.600051,
+            "xmax": 70.315122,
+            "ymax": 3.223912,
+            "zmax": 14.600051,
+            "width": 2.05,
+            "height": 2.05,
+            "depth": 2.0
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            68.265122,
+            3.223912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 25,
+          "surface": "plane",
+          "area_mm2": 1.035899,
+          "centroid_mm": [
+            86.322662,
+            59.896057,
+            11.334716
+          ],
+          "bbox_mm": {
+            "xmin": 86.072662,
+            "ymin": 58.860158,
+            "zmin": 11.334716,
+            "xmax": 86.572662,
+            "ymax": 60.931956,
+            "zmax": 11.334716,
+            "width": 0.5,
+            "height": 2.071798,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 26,
+          "surface": "plane",
+          "area_mm2": 16.017165,
+          "centroid_mm": [
+            86.572662,
+            59.996789,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 86.572662,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 86.572662,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 27,
+          "surface": "cylinder",
+          "area_mm2": 183.154852,
+          "centroid_mm": [
+            127.002819,
+            57.002818,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 50.000001,
+            "zmin": 5.1e-05,
+            "xmax": 131.000002,
+            "ymax": 61.000001,
+            "zmax": 10.600051,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 10.6
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 28,
+          "surface": "plane",
+          "area_mm2": 424.000009,
+          "centroid_mm": [
+            131.000002,
+            30.0,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": 131.000002,
+            "ymin": 10.0,
+            "zmin": 5.1e-05,
+            "xmax": 131.000002,
+            "ymax": 50.000001,
+            "zmax": 10.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 10.6
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 29,
+          "surface": "cylinder",
+          "area_mm2": 183.154852,
+          "centroid_mm": [
+            127.002819,
+            2.997183,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": -1.0,
+            "zmin": 5.1e-05,
+            "xmax": 131.000002,
+            "ymax": 10.0,
+            "zmax": 10.600051,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 10.6
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 30,
+          "surface": "plane",
+          "area_mm2": 1118.601127,
+          "centroid_mm": [
+            66.079503,
+            -1.0,
+            5.421874
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": -1.0,
+            "zmin": 5.1e-05,
+            "xmax": 120.000002,
+            "ymax": -1.0,
+            "zmax": 10.600051,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 10.6
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 31,
+          "surface": "cylinder",
+          "area_mm2": 183.154852,
+          "centroid_mm": [
+            2.997183,
+            2.997183,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": -1.0,
+            "zmin": 5.1e-05,
+            "xmax": 10.0,
+            "ymax": 10.0,
+            "zmax": 10.600051,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 10.6
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 32,
+          "surface": "plane",
+          "area_mm2": 1074.008155,
+          "centroid_mm": [
+            64.587472,
+            61.000001,
+            5.256287
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 61.000001,
+            "zmin": 5.1e-05,
+            "xmax": 120.000002,
+            "ymax": 61.000001,
+            "zmax": 10.600051,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 10.6
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 33,
+          "surface": "plane",
+          "area_mm2": 19.623353,
+          "centroid_mm": [
+            45.569241,
+            61.000001,
+            7.600921
+          ],
+          "bbox_mm": {
+            "xmin": 43.927335,
+            "ymin": 61.000001,
+            "zmin": 3.334716,
+            "xmax": 47.211147,
+            "ymax": 61.000001,
+            "zmax": 10.600051,
+            "width": 3.283812,
+            "height": 0.0,
+            "depth": 7.265335
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 34,
+          "surface": "plane",
+          "area_mm2": 424.000009,
+          "centroid_mm": [
+            -1.0,
+            30.0,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": 10.0,
+            "zmin": 5.1e-05,
+            "xmax": -1.0,
+            "ymax": 50.000001,
+            "zmax": 10.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 10.6
+          },
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 35,
+          "surface": "plane",
+          "area_mm2": 224.515229,
+          "centroid_mm": [
+            64.706072,
+            58.012501,
+            12.6
+          ],
+          "bbox_mm": {
+            "xmin": 6.353069,
+            "ymin": 56.999999,
+            "zmin": 12.6,
+            "xmax": 123.646912,
+            "ymax": 59.000001,
+            "zmax": 12.6,
+            "width": 117.293843,
+            "height": 2.000002,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 36,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            115.000002,
+            57.000001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 57.000001,
+            "zmin": 6.600051,
+            "xmax": 116.000002,
+            "ymax": 57.000001,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 37,
+          "surface": "plane",
+          "area_mm2": 5.913171,
+          "centroid_mm": [
+            114.000002,
+            57.496281,
+            9.557164
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 56.999999,
+            "zmin": 6.600051,
+            "xmax": 114.000002,
+            "ymax": 58.000001,
+            "zmax": 12.6,
+            "width": 0.0,
+            "height": 1.000002,
+            "depth": 5.999949
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 38,
+          "surface": "plane",
+          "area_mm2": 5.1e-05,
+          "centroid_mm": [
+            114.000002,
+            57.500001,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 56.999999,
+            "zmin": 12.6,
+            "xmax": 114.000002,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 1.000002,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 39,
+          "surface": "plane",
+          "area_mm2": 17.195971,
+          "centroid_mm": [
+            115.5,
+            58.000001,
+            9.46605
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 58.000001,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 58.000001,
+            "zmax": 12.332049,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 5.731999
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 40,
+          "surface": "plane",
+          "area_mm2": 17.913235,
+          "centroid_mm": [
+            35.000005,
+            56.493928,
+            9.585903
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 35.000005,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 3.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 41,
+          "surface": "plane",
+          "area_mm2": 17.195971,
+          "centroid_mm": [
+            36.500003,
+            58.000001,
+            9.46605
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 58.000001,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 58.000001,
+            "zmax": 12.332049,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 5.731999
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 42,
+          "surface": "plane",
+          "area_mm2": 5.913171,
+          "centroid_mm": [
+            38.000001,
+            57.496281,
+            9.557164
+          ],
+          "bbox_mm": {
+            "xmin": 38.0,
+            "ymin": 57.000001,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 58.000001,
+            "zmax": 12.6,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 5.999949
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 43,
+          "surface": "cylinder",
+          "area_mm2": 183.154852,
+          "centroid_mm": [
+            2.997183,
+            57.002818,
+            5.300051
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": 50.000001,
+            "zmin": 5.1e-05,
+            "xmax": 10.0,
+            "ymax": 61.000001,
+            "zmax": 10.600051,
+            "width": 11.0,
+            "height": 11.0,
+            "depth": 10.6
+          },
+          "radius_mm": 11.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 44,
+          "surface": "cylinder",
+          "area_mm2": 150.228428,
+          "centroid_mm": [
+            6.176421,
+            53.823669,
+            7.077331
+          ],
+          "bbox_mm": {
+            "xmin": 1.772092,
+            "ymin": 51.500107,
+            "zmin": 1.600051,
+            "xmax": 8.500013,
+            "ymax": 58.227996,
+            "zmax": 12.600051,
+            "width": 6.727921,
+            "height": 6.727889,
+            "depth": 11.0
+          },
+          "radius_mm": 3.500003,
+          "axis_origin_mm": [
+            5.00001,
+            55.000109,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 45,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            121.850375,
+            58.741166,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 58.228005,
+            "zmin": 12.6,
+            "xmax": 123.646912,
+            "ymax": 59.000001,
+            "zmax": 12.600051,
+            "width": 3.64691,
+            "height": 0.771996,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 46,
+          "surface": "cylinder",
+          "area_mm2": 36.93926,
+          "centroid_mm": [
+            121.899936,
+            58.730805,
+            6.529711
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 58.228005,
+            "zmin": 1.600051,
+            "xmax": 123.646912,
+            "ymax": 59.000001,
+            "zmax": 12.178607,
+            "width": 3.64691,
+            "height": 0.771996,
+            "depth": 10.578556
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 47,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            8.149615,
+            58.741163,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 6.353069,
+            "ymin": 58.227995,
+            "zmin": 12.6,
+            "xmax": 10.0,
+            "ymax": 59.000001,
+            "zmax": 12.600051,
+            "width": 3.646931,
+            "height": 0.772006,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 48,
+          "surface": "plane",
+          "area_mm2": 0.005619,
+          "centroid_mm": [
+            65.000001,
+            59.000001,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 59.000001,
+            "zmin": 12.6,
+            "xmax": 120.000002,
+            "ymax": 59.000001,
+            "zmax": 12.600051,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 49,
+          "surface": "plane",
+          "area_mm2": 285.972473,
+          "centroid_mm": [
+            103.762415,
+            59.000001,
+            6.190032
+          ],
+          "bbox_mm": {
+            "xmin": 85.687216,
+            "ymin": 58.999999,
+            "zmin": 1.600049,
+            "xmax": 120.000004,
+            "ymax": 59.000003,
+            "zmax": 10.600002,
+            "width": 34.312788,
+            "height": 4e-06,
+            "depth": 8.999953
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 50,
+          "surface": "plane",
+          "area_mm2": 212.887434,
+          "centroid_mm": [
+            65.000543,
+            1.989844,
+            12.6
+          ],
+          "bbox_mm": {
+            "xmin": 6.353101,
+            "ymin": 1.0,
+            "zmin": 12.6,
+            "xmax": 123.647102,
+            "ymax": 3.0,
+            "zmax": 12.6,
+            "width": 117.294001,
+            "height": 2.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 51,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            8.149632,
+            1.258833,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 6.353101,
+            "ymin": 1.0,
+            "zmin": 12.6,
+            "xmax": 10.0,
+            "ymax": 1.771991,
+            "zmax": 12.600051,
+            "width": 3.646899,
+            "height": 0.771991,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 52,
+          "surface": "cylinder",
+          "area_mm2": 36.93997,
+          "centroid_mm": [
+            8.100081,
+            1.269191,
+            6.529818
+          ],
+          "bbox_mm": {
+            "xmin": 6.353101,
+            "ymin": 1.0,
+            "zmin": 1.600051,
+            "xmax": 10.0,
+            "ymax": 1.771991,
+            "zmax": 12.178605,
+            "width": 3.646899,
+            "height": 0.771991,
+            "depth": 10.578554
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 53,
+          "surface": "plane",
+          "area_mm2": 0.005619,
+          "centroid_mm": [
+            65.000001,
+            1.0,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 1.0,
+            "zmin": 12.6,
+            "xmax": 120.000002,
+            "ymax": 1.0,
+            "zmax": 12.600051,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 54,
+          "surface": "plane",
+          "area_mm2": 971.893735,
+          "centroid_mm": [
+            65.474468,
+            1.0,
+            6.168468
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 1.0,
+            "zmin": 1.600051,
+            "xmax": 120.000002,
+            "ymax": 1.0,
+            "zmax": 10.6,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 8.999949
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 55,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            121.850475,
+            1.258863,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 1.0,
+            "zmin": 12.6,
+            "xmax": 123.647102,
+            "ymax": 1.77208,
+            "zmax": 12.600051,
+            "width": 3.6471,
+            "height": 0.772081,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 56,
+          "surface": "cylinder",
+          "area_mm2": 36.942302,
+          "centroid_mm": [
+            121.900031,
+            1.269223,
+            6.52984
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 1.0,
+            "zmin": 1.600051,
+            "xmax": 123.647102,
+            "ymax": 1.77208,
+            "zmax": 12.178674,
+            "width": 3.6471,
+            "height": 0.772081,
+            "depth": 10.578624
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 57,
+          "surface": "cylinder",
+          "area_mm2": 150.22297,
+          "centroid_mm": [
+            123.823761,
+            6.17639,
+            7.07733
+          ],
+          "bbox_mm": {
+            "xmin": 121.500284,
+            "ymin": 1.77208,
+            "zmin": 1.600051,
+            "xmax": 128.228067,
+            "ymax": 8.499916,
+            "zmax": 12.600051,
+            "width": 6.727782,
+            "height": 6.727836,
+            "depth": 11.0
+          },
+          "radius_mm": 3.500003,
+          "axis_origin_mm": [
+            125.000287,
+            4.999914,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 58,
+          "surface": "cylinder",
+          "area_mm2": 139.807781,
+          "centroid_mm": [
+            1.740817,
+            29.999972,
+            11.894844
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 6.352746,
+            "zmin": 10.6,
+            "xmax": 3.0,
+            "ymax": 53.647127,
+            "zmax": 12.600001,
+            "width": 2.0,
+            "height": 47.294381,
+            "depth": 2.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            3.0,
+            0.0,
+            10.600001
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 59,
+          "surface": "plane",
+          "area_mm2": 90.51564,
+          "centroid_mm": [
+            2.002138,
+            29.999961,
+            12.600001
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 6.352746,
+            "zmin": 12.6,
+            "xmax": 3.0,
+            "ymax": 53.647127,
+            "zmax": 12.600001,
+            "width": 2.0,
+            "height": 47.294381,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 60,
+          "surface": "cylinder",
+          "area_mm2": 36.944084,
+          "centroid_mm": [
+            1.269247,
+            8.099887,
+            6.529858
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 6.352746,
+            "zmin": 1.600051,
+            "xmax": 1.772149,
+            "ymax": 10.0,
+            "zmax": 12.178728,
+            "width": 0.772149,
+            "height": 3.647254,
+            "depth": 10.578678
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 61,
+          "surface": "cylinder",
+          "area_mm2": 0.000189,
+          "centroid_mm": [
+            1.258886,
+            8.149446,
+            12.600026
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 6.352746,
+            "zmin": 12.6,
+            "xmax": 1.772149,
+            "ymax": 10.0,
+            "zmax": 12.600051,
+            "width": 0.772149,
+            "height": 3.647254,
+            "depth": 5e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 62,
+          "surface": "plane",
+          "area_mm2": 359.998,
+          "centroid_mm": [
+            1.0,
+            30.0,
+            6.100026
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 10.0,
+            "zmin": 1.600051,
+            "xmax": 1.0,
+            "ymax": 50.000001,
+            "zmax": 10.600001,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 8.99995
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 63,
+          "surface": "plane",
+          "area_mm2": 0.002008,
+          "centroid_mm": [
+            1.0,
+            30.0,
+            12.600026
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 10.0,
+            "zmin": 12.6,
+            "xmax": 1.0,
+            "ymax": 50.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 5e-05
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 64,
+          "surface": "cylinder",
+          "area_mm2": 36.942605,
+          "centroid_mm": [
+            1.269227,
+            51.900044,
+            6.529844
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 50.000001,
+            "zmin": 1.600051,
+            "xmax": 1.772092,
+            "ymax": 53.647127,
+            "zmax": 12.178684,
+            "width": 0.772092,
+            "height": 3.647126,
+            "depth": 10.578633
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 65,
+          "surface": "cylinder",
+          "area_mm2": 0.000189,
+          "centroid_mm": [
+            1.258867,
+            51.850488,
+            12.600026
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 50.000001,
+            "zmin": 12.6,
+            "xmax": 1.772092,
+            "ymax": 53.647127,
+            "zmax": 12.600051,
+            "width": 0.772092,
+            "height": 3.647126,
+            "depth": 5e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 66,
+          "surface": "plane",
+          "area_mm2": 90.514947,
+          "centroid_mm": [
+            127.997864,
+            30.000051,
+            12.6
+          ],
+          "bbox_mm": {
+            "xmin": 126.999997,
+            "ymin": 6.353227,
+            "zmin": 12.6,
+            "xmax": 129.000002,
+            "ymax": 53.646854,
+            "zmax": 12.6,
+            "width": 2.000005,
+            "height": 47.293627,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 67,
+          "surface": "cylinder",
+          "area_mm2": 139.809997,
+          "centroid_mm": [
+            128.259197,
+            30.000036,
+            11.894827
+          ],
+          "bbox_mm": {
+            "xmin": 126.999997,
+            "ymin": 6.353227,
+            "zmin": 10.6,
+            "xmax": 128.999997,
+            "ymax": 53.646854,
+            "zmax": 12.6,
+            "width": 2.0,
+            "height": 47.293627,
+            "depth": 2.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            126.999997,
+            0.0,
+            10.6
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 68,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            128.741188,
+            8.149698,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 128.228066,
+            "ymin": 6.353227,
+            "zmin": 12.6,
+            "xmax": 129.000002,
+            "ymax": 10.0,
+            "zmax": 12.600051,
+            "width": 0.771936,
+            "height": 3.646773,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 69,
+          "surface": "cylinder",
+          "area_mm2": 36.937699,
+          "centroid_mm": [
+            128.730828,
+            8.100141,
+            6.529698
+          ],
+          "bbox_mm": {
+            "xmin": 128.228066,
+            "ymin": 6.353227,
+            "zmin": 1.600051,
+            "xmax": 129.000002,
+            "ymax": 10.0,
+            "zmax": 12.178558,
+            "width": 0.771936,
+            "height": 3.646773,
+            "depth": 10.578507
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 70,
+          "surface": "plane",
+          "area_mm2": 0.002043,
+          "centroid_mm": [
+            129.000002,
+            30.0,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 129.000002,
+            "ymin": 10.0,
+            "zmin": 12.6,
+            "xmax": 129.000002,
+            "ymax": 50.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 71,
+          "surface": "plane",
+          "area_mm2": 359.997965,
+          "centroid_mm": [
+            129.000002,
+            30.0,
+            6.100025
+          ],
+          "bbox_mm": {
+            "xmin": 128.999997,
+            "ymin": 9.999995,
+            "zmin": 1.600046,
+            "xmax": 129.000007,
+            "ymax": 50.000006,
+            "zmax": 10.600005,
+            "width": 1e-05,
+            "height": 40.000011,
+            "depth": 8.999959
+          },
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 72,
+          "surface": "cylinder",
+          "area_mm2": 0.000192,
+          "centroid_mm": [
+            128.741176,
+            51.850345,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 128.228031,
+            "ymin": 50.000001,
+            "zmin": 12.6,
+            "xmax": 129.000002,
+            "ymax": 53.646854,
+            "zmax": 12.600051,
+            "width": 0.771971,
+            "height": 3.646853,
+            "depth": 5.1e-05
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 73,
+          "surface": "cylinder",
+          "area_mm2": 36.938626,
+          "centroid_mm": [
+            128.730816,
+            51.899903,
+            6.529707
+          ],
+          "bbox_mm": {
+            "xmin": 128.228031,
+            "ymin": 50.000001,
+            "zmin": 1.600051,
+            "xmax": 129.000002,
+            "ymax": 53.646854,
+            "zmax": 12.178585,
+            "width": 0.771971,
+            "height": 3.646853,
+            "depth": 10.578535
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 74,
+          "surface": "cylinder",
+          "area_mm2": 150.21969,
+          "centroid_mm": [
+            123.823736,
+            53.823709,
+            7.077329
+          ],
+          "bbox_mm": {
+            "xmin": 121.500284,
+            "ymin": 51.500249,
+            "zmin": 1.600051,
+            "xmax": 128.228031,
+            "ymax": 58.228005,
+            "zmax": 12.600051,
+            "width": 6.727747,
+            "height": 6.727756,
+            "depth": 11.0
+          },
+          "radius_mm": 3.500003,
+          "axis_origin_mm": [
+            125.000287,
+            55.000251,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 75,
+          "surface": "plane",
+          "area_mm2": 10.211615,
+          "centroid_mm": [
+            93.897101,
+            60.000001,
+            5.8
+          ],
+          "bbox_mm": {
+            "xmin": 91.344197,
+            "ymin": 59.000001,
+            "zmin": 5.8,
+            "xmax": 96.450005,
+            "ymax": 61.000001,
+            "zmax": 5.8,
+            "width": 5.105808,
+            "height": 2.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 76,
+          "surface": "plane",
+          "area_mm2": 6.005843,
+          "centroid_mm": [
+            96.450005,
+            60.000001,
+            4.29854
+          ],
+          "bbox_mm": {
+            "xmin": 96.450004,
+            "ymin": 59.000001,
+            "zmin": 2.797079,
+            "xmax": 96.450005,
+            "ymax": 61.000001,
+            "zmax": 5.8,
+            "width": 0.0,
+            "height": 2.0,
+            "depth": 3.002921
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 77,
+          "surface": "plane",
+          "area_mm2": 10.211615,
+          "centroid_mm": [
+            93.897101,
+            60.000001,
+            2.797079
+          ],
+          "bbox_mm": {
+            "xmin": 91.344197,
+            "ymin": 59.000001,
+            "zmin": 2.797079,
+            "xmax": 96.450005,
+            "ymax": 61.000001,
+            "zmax": 2.797079,
+            "width": 5.105808,
+            "height": 2.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 78,
+          "surface": "plane",
+          "area_mm2": 6.005843,
+          "centroid_mm": [
+            91.344197,
+            60.000001,
+            4.29854
+          ],
+          "bbox_mm": {
+            "xmin": 91.344197,
+            "ymin": 59.000001,
+            "zmin": 2.797079,
+            "xmax": 91.344197,
+            "ymax": 61.000001,
+            "zmax": 5.8,
+            "width": 0.0,
+            "height": 2.0,
+            "depth": 3.002921
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 79,
+          "surface": "cylinder",
+          "area_mm2": 6.440265,
+          "centroid_mm": [
+            69.570192,
+            5.288982,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 68.265122,
+            "ymin": 3.983912,
+            "zmin": 12.600051,
+            "xmax": 70.315122,
+            "ymax": 6.033912,
+            "zmax": 14.600051,
+            "width": 2.05,
+            "height": 2.05,
+            "depth": 2.0
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            68.265122,
+            3.983912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 80,
+          "surface": "plane",
+          "area_mm2": 13.08,
+          "centroid_mm": [
+            64.995122,
+            6.033912,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 61.725122,
+            "ymin": 6.033912,
+            "zmin": 12.600051,
+            "xmax": 68.265122,
+            "ymax": 6.033912,
+            "zmax": 14.600051,
+            "width": 6.54,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 81,
+          "surface": "cylinder",
+          "area_mm2": 6.440265,
+          "centroid_mm": [
+            60.420051,
+            5.288982,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 59.675122,
+            "ymin": 3.983912,
+            "zmin": 12.600051,
+            "xmax": 61.725122,
+            "ymax": 6.033912,
+            "zmax": 14.600051,
+            "width": 2.05,
+            "height": 2.05,
+            "depth": 2.0
+          },
+          "radius_mm": 2.05,
+          "axis_origin_mm": [
+            61.725122,
+            3.983912,
+            0.0
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 82,
+          "surface": "plane",
+          "area_mm2": 1.52,
+          "centroid_mm": [
+            59.675122,
+            3.603912,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 59.675122,
+            "ymin": 3.223912,
+            "zmin": 12.600051,
+            "xmax": 59.675122,
+            "ymax": 3.983912,
+            "zmax": 14.600051,
+            "width": 0.0,
+            "height": 0.76,
+            "depth": 2.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 83,
+          "surface": "plane",
+          "area_mm2": 1.52,
+          "centroid_mm": [
+            70.315122,
+            3.603912,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 70.315122,
+            "ymin": 3.223912,
+            "zmin": 12.600051,
+            "xmax": 70.315122,
+            "ymax": 3.983912,
+            "zmax": 14.600051,
+            "width": 0.0,
+            "height": 0.76,
+            "depth": 2.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 84,
+          "surface": "cone",
+          "area_mm2": 1.980973,
+          "centroid_mm": [
+            33.289745,
+            -0.374928,
+            1.308057
+          ],
+          "bbox_mm": {
+            "xmin": 32.67405,
+            "ymin": -1.0,
+            "zmin": 0.650051,
+            "xmax": 33.87405,
+            "ymax": 1.0,
+            "zmax": 1.850051,
+            "width": 1.2,
+            "height": 2.0,
+            "depth": 1.2
+          },
+          "reference_radius_mm": 0.7,
+          "semi_angle_deg": 26.565051,
+          "axis_origin_mm": [
+            33.87405,
+            -0.0,
+            1.850051
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 85,
+          "surface": "plane",
+          "area_mm2": 1.263379,
+          "centroid_mm": [
+            39.52405,
+            0.95,
+            1.625051
+          ],
+          "bbox_mm": {
+            "xmin": 33.87405,
+            "ymin": 0.9,
+            "zmin": 1.600051,
+            "xmax": 45.17405,
+            "ymax": 1.0,
+            "zmax": 1.650051,
+            "width": 11.3,
+            "height": 0.1,
+            "depth": 0.05
+          },
+          "normal": [
+            -0.0,
+            -0.447214,
+            0.894427
+          ]
+        },
+        {
+          "id": 86,
+          "surface": "plane",
+          "area_mm2": 25.267568,
+          "centroid_mm": [
+            39.52405,
+            -0.0,
+            3.700051
+          ],
+          "bbox_mm": {
+            "xmin": 33.87405,
+            "ymin": -1.0,
+            "zmin": 3.200051,
+            "xmax": 45.17405,
+            "ymax": 1.0,
+            "zmax": 4.200051,
+            "width": 11.3,
+            "height": 2.0,
+            "depth": 1.0
+          },
+          "normal": [
+            -0.0,
+            -0.447214,
+            -0.894427
+          ]
+        },
+        {
+          "id": 87,
+          "surface": "cone",
+          "area_mm2": 2.458685,
+          "centroid_mm": [
+            33.352628,
+            -0.238095,
+            3.521473
+          ],
+          "bbox_mm": {
+            "xmin": 32.67405,
+            "ymin": -1.0,
+            "zmin": 3.000051,
+            "xmax": 33.87405,
+            "ymax": 1.0,
+            "zmax": 4.200051,
+            "width": 1.2,
+            "height": 2.0,
+            "depth": 1.2
+          },
+          "reference_radius_mm": 0.7,
+          "semi_angle_deg": 26.565051,
+          "axis_origin_mm": [
+            33.87405,
+            -0.0,
+            3.000051
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 88,
+          "surface": "cone",
+          "area_mm2": 2.458685,
+          "centroid_mm": [
+            45.695472,
+            -0.238095,
+            3.521473
+          ],
+          "bbox_mm": {
+            "xmin": 45.17405,
+            "ymin": -1.0,
+            "zmin": 3.000051,
+            "xmax": 46.37405,
+            "ymax": 1.0,
+            "zmax": 4.200051,
+            "width": 1.2,
+            "height": 2.0,
+            "depth": 1.2
+          },
+          "reference_radius_mm": 0.7,
+          "semi_angle_deg": 26.565051,
+          "axis_origin_mm": [
+            45.17405,
+            -0.0,
+            3.000051
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 89,
+          "surface": "plane",
+          "area_mm2": 2.571478,
+          "centroid_mm": [
+            33.17405,
+            -0.0,
+            2.425051
+          ],
+          "bbox_mm": {
+            "xmin": 32.67405,
+            "ymin": -1.0,
+            "zmin": 1.850051,
+            "xmax": 33.67405,
+            "ymax": 1.0,
+            "zmax": 3.000051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 1.15
+          },
+          "normal": [
+            0.894427,
+            -0.447214,
+            -0.0
+          ]
+        },
+        {
+          "id": 90,
+          "surface": "plane",
+          "area_mm2": 2.571478,
+          "centroid_mm": [
+            45.87405,
+            0.0,
+            2.425051
+          ],
+          "bbox_mm": {
+            "xmin": 45.37405,
+            "ymin": -1.0,
+            "zmin": 1.850051,
+            "xmax": 46.37405,
+            "ymax": 1.0,
+            "zmax": 3.000051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 1.15
+          },
+          "normal": [
+            -0.894427,
+            -0.447214,
+            0.0
+          ]
+        },
+        {
+          "id": 91,
+          "surface": "cone",
+          "area_mm2": 1.980973,
+          "centroid_mm": [
+            45.758355,
+            -0.374928,
+            1.308057
+          ],
+          "bbox_mm": {
+            "xmin": 45.17405,
+            "ymin": -1.0,
+            "zmin": 0.650051,
+            "xmax": 46.37405,
+            "ymax": 1.0,
+            "zmax": 1.850051,
+            "width": 1.2,
+            "height": 2.0,
+            "depth": 1.2
+          },
+          "reference_radius_mm": 0.7,
+          "semi_angle_deg": 26.565051,
+          "axis_origin_mm": [
+            45.17405,
+            -0.0,
+            1.850051
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 92,
+          "surface": "plane",
+          "area_mm2": 12.633784,
+          "centroid_mm": [
+            39.52405,
+            -0.5,
+            0.900051
+          ],
+          "bbox_mm": {
+            "xmin": 33.87405,
+            "ymin": -1.0,
+            "zmin": 0.650051,
+            "xmax": 45.17405,
+            "ymax": 0.0,
+            "zmax": 1.150051,
+            "width": 11.3,
+            "height": 1.0,
+            "depth": 0.5
+          },
+          "normal": [
+            -0.0,
+            -0.447214,
+            0.894427
+          ]
+        },
+        {
+          "id": 93,
+          "surface": "plane",
+          "area_mm2": 170.487724,
+          "centroid_mm": [
+            65.8237,
+            -0.0,
+            0.781362
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": -0.0,
+            "zmin": 5.1e-05,
+            "xmax": 120.000002,
+            "ymax": 0.0,
+            "zmax": 1.600051,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 1.6
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 94,
+          "surface": "plane",
+          "area_mm2": 16.017148,
+          "centroid_mm": [
+            43.427335,
+            59.99679,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 43.427335,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 43.427336,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 95,
+          "surface": "plane",
+          "area_mm2": 1.035899,
+          "centroid_mm": [
+            43.677335,
+            59.896057,
+            11.334716
+          ],
+          "bbox_mm": {
+            "xmin": 43.427335,
+            "ymin": 58.860158,
+            "zmin": 11.334716,
+            "xmax": 43.927336,
+            "ymax": 60.931956,
+            "zmax": 11.334716,
+            "width": 0.5,
+            "height": 2.071798,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 96,
+          "surface": "plane",
+          "area_mm2": 16.017165,
+          "centroid_mm": [
+            43.927335,
+            59.996789,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 43.927335,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 43.927336,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 97,
+          "surface": "cylinder",
+          "area_mm2": 20.632797,
+          "centroid_mm": [
+            45.569241,
+            60.750001,
+            2.812081
+          ],
+          "bbox_mm": {
+            "xmin": 43.927335,
+            "ymin": 59.000001,
+            "zmin": 1.69281,
+            "xmax": 47.211147,
+            "ymax": 62.000001,
+            "zmax": 4.976622,
+            "width": 3.283812,
+            "height": 3.0,
+            "depth": 3.283812
+          },
+          "radius_mm": 1.641906,
+          "axis_origin_mm": [
+            45.569241,
+            61.000001,
+            3.334716
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 98,
+          "surface": "plane",
+          "area_mm2": 16.017148,
+          "centroid_mm": [
+            47.211147,
+            59.99679,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 47.211147,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 47.211147,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 99,
+          "surface": "plane",
+          "area_mm2": 1.035899,
+          "centroid_mm": [
+            47.461147,
+            59.896057,
+            11.334716
+          ],
+          "bbox_mm": {
+            "xmin": 47.211147,
+            "ymin": 58.860158,
+            "zmin": 11.334716,
+            "xmax": 47.711147,
+            "ymax": 60.931956,
+            "zmax": 11.334716,
+            "width": 0.5,
+            "height": 2.071798,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 100,
+          "surface": "plane",
+          "area_mm2": 16.017165,
+          "centroid_mm": [
+            47.711147,
+            59.996789,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 47.711147,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 47.711147,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 101,
+          "surface": "cylinder",
+          "area_mm2": 10.772615,
+          "centroid_mm": [
+            45.569241,
+            60.12464,
+            2.130868
+          ],
+          "bbox_mm": {
+            "xmin": 43.427335,
+            "ymin": 59.000001,
+            "zmin": 1.19281,
+            "xmax": 47.711147,
+            "ymax": 61.000001,
+            "zmax": 3.334716,
+            "width": 4.283812,
+            "height": 2.0,
+            "depth": 2.141906
+          },
+          "radius_mm": 2.141906,
+          "axis_origin_mm": [
+            45.569241,
+            61.000001,
+            3.334716
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 102,
+          "surface": "plane",
+          "area_mm2": 7.068607,
+          "centroid_mm": [
+            125.000287,
+            4.999914,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 3.499911,
+            "zmin": 6.600051,
+            "xmax": 126.50029,
+            "ymax": 6.499916,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 103,
+          "surface": "plane",
+          "area_mm2": 7.068607,
+          "centroid_mm": [
+            5.00013,
+            4.999914,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 3.500127,
+            "ymin": 3.499911,
+            "zmin": 6.600051,
+            "xmax": 6.500132,
+            "ymax": 6.499916,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 104,
+          "surface": "plane",
+          "area_mm2": 7.068607,
+          "centroid_mm": [
+            5.00001,
+            55.000109,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 3.500008,
+            "ymin": 53.500107,
+            "zmin": 6.600051,
+            "xmax": 6.500013,
+            "ymax": 56.500112,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 105,
+          "surface": "plane",
+          "area_mm2": 7.068607,
+          "centroid_mm": [
+            125.000287,
+            55.000251,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 53.500249,
+            "zmin": 6.600051,
+            "xmax": 126.50029,
+            "ymax": 56.500254,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 106,
+          "surface": "plane",
+          "area_mm2": 18.000012,
+          "centroid_mm": [
+            116.999997,
+            7.500001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 116.999997,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 3.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 107,
+          "surface": "plane",
+          "area_mm2": 5.999974,
+          "centroid_mm": [
+            116.5,
+            9.000002,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 116.000002,
+            "ymin": 9.000002,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 108,
+          "surface": "plane",
+          "area_mm2": 12.000012,
+          "centroid_mm": [
+            116.000002,
+            8.000001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 116.000002,
+            "ymin": 7.0,
+            "zmin": 6.600051,
+            "xmax": 116.000002,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 2.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 109,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            115.000002,
+            7.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 7.0,
+            "zmin": 6.600051,
+            "xmax": 116.000002,
+            "ymax": 7.0,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 110,
+          "surface": "plane",
+          "area_mm2": 6.0,
+          "centroid_mm": [
+            114.000002,
+            6.5,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 114.000002,
+            "ymax": 7.0,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 111,
+          "surface": "plane",
+          "area_mm2": 17.999974,
+          "centroid_mm": [
+            115.5,
+            6.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 6.0,
+            "zmax": 12.600051,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 112,
+          "surface": "plane",
+          "area_mm2": 4.999989,
+          "centroid_mm": [
+            115.899999,
+            7.1,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 9.000002,
+            "zmax": 6.600051,
+            "width": 2.999996,
+            "height": 3.000002,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 113,
+          "surface": "plane",
+          "area_mm2": 5.999974,
+          "centroid_mm": [
+            116.5,
+            54.999999,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 116.000002,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 54.999999,
+            "zmax": 12.600051,
+            "width": 0.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 114,
+          "surface": "plane",
+          "area_mm2": 17.913235,
+          "centroid_mm": [
+            116.999997,
+            56.493928,
+            9.585903
+          ],
+          "bbox_mm": {
+            "xmin": 116.999997,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 3.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 115,
+          "surface": "plane",
+          "area_mm2": 0.000153,
+          "centroid_mm": [
+            115.5,
+            58.000001,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 58.000001,
+            "zmin": 12.6,
+            "xmax": 116.999997,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 116,
+          "surface": "plane",
+          "area_mm2": 12.000012,
+          "centroid_mm": [
+            116.000002,
+            56.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 116.000002,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 116.000002,
+            "ymax": 57.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 2.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 117,
+          "surface": "plane",
+          "area_mm2": 4.999989,
+          "centroid_mm": [
+            115.899999,
+            56.900001,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 114.000002,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 116.999997,
+            "ymax": 58.000001,
+            "zmax": 6.600051,
+            "width": 2.999996,
+            "height": 3.000002,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 118,
+          "surface": "plane",
+          "area_mm2": 6.0,
+          "centroid_mm": [
+            38.000001,
+            6.5,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 38.0,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 7.0,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 119,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            37.000001,
+            7.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 36.0,
+            "ymin": 7.0,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 7.0,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 120,
+          "surface": "plane",
+          "area_mm2": 12.000012,
+          "centroid_mm": [
+            36.000001,
+            8.000001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 36.0,
+            "ymin": 7.0,
+            "zmin": 6.600051,
+            "xmax": 36.000001,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 2.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 121,
+          "surface": "plane",
+          "area_mm2": 5.999974,
+          "centroid_mm": [
+            35.500003,
+            9.000002,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 9.000002,
+            "zmin": 6.600051,
+            "xmax": 36.000001,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 122,
+          "surface": "plane",
+          "area_mm2": 18.000012,
+          "centroid_mm": [
+            35.000005,
+            7.500001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 35.000005,
+            "ymax": 9.000002,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 3.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 123,
+          "surface": "plane",
+          "area_mm2": 17.999974,
+          "centroid_mm": [
+            36.500003,
+            6.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 6.0,
+            "zmax": 12.600051,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 124,
+          "surface": "plane",
+          "area_mm2": 4.999989,
+          "centroid_mm": [
+            36.100003,
+            7.1,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 6.0,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 9.000002,
+            "zmax": 6.600051,
+            "width": 2.999996,
+            "height": 3.000002,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 125,
+          "surface": "plane",
+          "area_mm2": 5.999974,
+          "centroid_mm": [
+            35.500003,
+            54.999999,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 36.000001,
+            "ymax": 54.999999,
+            "zmax": 12.600051,
+            "width": 0.999996,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 126,
+          "surface": "plane",
+          "area_mm2": 12.000012,
+          "centroid_mm": [
+            36.000001,
+            56.0,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 36.0,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 36.000001,
+            "ymax": 57.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 2.000002,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 127,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            37.000001,
+            57.000001,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 36.0,
+            "ymin": 57.000001,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 57.000001,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.0,
+            "depth": 6.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 128,
+          "surface": "plane",
+          "area_mm2": 5.1e-05,
+          "centroid_mm": [
+            38.000001,
+            57.500001,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 38.0,
+            "ymin": 57.000001,
+            "zmin": 12.6,
+            "xmax": 38.000001,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 129,
+          "surface": "plane",
+          "area_mm2": 0.000153,
+          "centroid_mm": [
+            36.500003,
+            58.000001,
+            12.600025
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 58.000001,
+            "zmin": 12.6,
+            "xmax": 38.000001,
+            "ymax": 58.000001,
+            "zmax": 12.600051,
+            "width": 2.999996,
+            "height": 0.0,
+            "depth": 5.1e-05
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 130,
+          "surface": "plane",
+          "area_mm2": 4.999989,
+          "centroid_mm": [
+            36.100003,
+            56.900001,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 35.000005,
+            "ymin": 54.999999,
+            "zmin": 6.600051,
+            "xmax": 38.000001,
+            "ymax": 58.000001,
+            "zmax": 6.600051,
+            "width": 2.999996,
+            "height": 3.000002,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 131,
+          "surface": "cylinder",
+          "area_mm2": 37.699112,
+          "centroid_mm": [
+            30.335296,
+            17.556646,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 29.335296,
+            "ymin": 16.556646,
+            "zmin": 6.600051,
+            "xmax": 31.335296,
+            "ymax": 18.556646,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 2.0,
+            "depth": 6.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            30.335296,
+            17.556646,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 132,
+          "surface": "cylinder",
+          "area_mm2": 18.849556,
+          "centroid_mm": [
+            29.061173,
+            18.829002,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.335296,
+            "ymin": 17.555259,
+            "zmin": 6.600051,
+            "xmax": 30.333909,
+            "ymax": 19.556646,
+            "zmax": 12.600051,
+            "width": 1.998613,
+            "height": 2.001387,
+            "depth": 6.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            30.335296,
+            17.556646,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 133,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            28.33599,
+            16.555259,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.335296,
+            "ymin": 15.555259,
+            "zmin": 6.600051,
+            "xmax": 28.336684,
+            "ymax": 17.555259,
+            "zmax": 12.600051,
+            "width": 0.001388,
+            "height": 2.0,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            -0.000694,
+            0.0
+          ]
+        },
+        {
+          "id": 134,
+          "surface": "plane",
+          "area_mm2": 22.280809,
+          "centroid_mm": [
+            30.193417,
+            15.556547,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.336684,
+            "ymin": 15.555259,
+            "zmin": 6.600051,
+            "xmax": 32.050151,
+            "ymax": 15.557835,
+            "zmax": 12.600051,
+            "width": 3.713467,
+            "height": 0.002576,
+            "depth": 6.0
+          },
+          "normal": [
+            0.000694,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 135,
+          "surface": "cylinder",
+          "area_mm2": 3.389083,
+          "centroid_mm": [
+            32.236778,
+            15.756469,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 32.050151,
+            "ymin": 15.557835,
+            "zmin": 6.600051,
+            "xmax": 32.336369,
+            "ymax": 16.010175,
+            "zmax": 12.600051,
+            "width": 0.286218,
+            "height": 0.45234,
+            "depth": 6.0
+          },
+          "radius_mm": 0.5,
+          "axis_origin_mm": [
+            31.836369,
+            16.009828,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 136,
+          "surface": "plane",
+          "area_mm2": 21.287155,
+          "centroid_mm": [
+            32.335139,
+            17.784104,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 32.333908,
+            "ymin": 16.010175,
+            "zmin": 6.600051,
+            "xmax": 32.336369,
+            "ymax": 19.558033,
+            "zmax": 12.600051,
+            "width": 0.002461,
+            "height": 3.547858,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            0.000694,
+            0.0
+          ]
+        },
+        {
+          "id": 137,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            31.333908,
+            19.557339,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 30.333908,
+            "ymin": 19.556645,
+            "zmin": 6.600051,
+            "xmax": 32.333908,
+            "ymax": 19.558033,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.001388,
+            "depth": 6.0
+          },
+          "normal": [
+            -0.000694,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 138,
+          "surface": "plane",
+          "area_mm2": 11.9634,
+          "centroid_mm": [
+            30.440944,
+            17.451064,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.335296,
+            "ymin": 15.555259,
+            "zmin": 6.600051,
+            "xmax": 32.336369,
+            "ymax": 19.558033,
+            "zmax": 6.600051,
+            "width": 4.001074,
+            "height": 4.002774,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 139,
+          "surface": "plane",
+          "area_mm2": 3.141593,
+          "centroid_mm": [
+            30.335296,
+            17.556646,
+            12.600051
+          ],
+          "bbox_mm": {
+            "xmin": 29.335296,
+            "ymin": 16.556646,
+            "zmin": 12.600051,
+            "xmax": 31.335296,
+            "ymax": 18.556646,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 2.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 140,
+          "surface": "cylinder",
+          "area_mm2": 37.699112,
+          "centroid_mm": [
+            6.382685,
+            41.500326,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 5.382685,
+            "ymin": 40.500326,
+            "zmin": 6.600051,
+            "xmax": 7.382685,
+            "ymax": 42.500326,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 2.0,
+            "depth": 6.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            6.382685,
+            41.500326,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 141,
+          "surface": "plane",
+          "area_mm2": 21.584659,
+          "centroid_mm": [
+            6.58437,
+            43.500285,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.785648,
+            "ymin": 43.49992,
+            "zmin": 6.600051,
+            "xmax": 8.383091,
+            "ymax": 43.500651,
+            "zmax": 12.600051,
+            "width": 3.597443,
+            "height": 0.000731,
+            "depth": 6.0
+          },
+          "normal": [
+            0.000203,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 142,
+          "surface": "cylinder",
+          "area_mm2": 2.807601,
+          "centroid_mm": [
+            4.568253,
+            43.430838,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.38305,
+            "ymin": 43.297293,
+            "zmin": 6.600051,
+            "xmax": 4.785648,
+            "ymax": 43.500651,
+            "zmax": 12.600051,
+            "width": 0.402598,
+            "height": 0.203358,
+            "depth": 6.0
+          },
+          "radius_mm": 0.5,
+          "axis_origin_mm": [
+            4.785547,
+            43.000651,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 143,
+          "surface": "plane",
+          "area_mm2": 22.779362,
+          "centroid_mm": [
+            4.382665,
+            41.399013,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.382279,
+            "ymin": 39.500732,
+            "zmin": 6.600051,
+            "xmax": 4.38305,
+            "ymax": 43.297293,
+            "zmax": 12.600051,
+            "width": 0.000771,
+            "height": 3.79656,
+            "depth": 6.0
+          },
+          "normal": [
+            -1.0,
+            0.000203,
+            0.0
+          ]
+        },
+        {
+          "id": 144,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            5.382279,
+            39.500529,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.382279,
+            "ymin": 39.500326,
+            "zmin": 6.600051,
+            "xmax": 6.382279,
+            "ymax": 39.500733,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 0.000406,
+            "depth": 6.0
+          },
+          "normal": [
+            -0.000203,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 145,
+          "surface": "cylinder",
+          "area_mm2": 18.849556,
+          "centroid_mm": [
+            7.655666,
+            40.226828,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 6.382279,
+            "ymin": 39.500326,
+            "zmin": 6.600051,
+            "xmax": 8.382685,
+            "ymax": 41.49992,
+            "zmax": 12.600051,
+            "width": 2.000406,
+            "height": 1.999594,
+            "depth": 6.0
+          },
+          "radius_mm": 2.0,
+          "axis_origin_mm": [
+            6.382685,
+            41.500326,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 146,
+          "surface": "plane",
+          "area_mm2": 12.0,
+          "centroid_mm": [
+            8.382888,
+            42.49992,
+            9.600051
+          ],
+          "bbox_mm": {
+            "xmin": 8.382685,
+            "ymin": 41.49992,
+            "zmin": 6.600051,
+            "xmax": 8.383091,
+            "ymax": 43.49992,
+            "zmax": 12.600051,
+            "width": 0.000406,
+            "height": 2.0,
+            "depth": 6.0
+          },
+          "normal": [
+            1.0,
+            -0.000203,
+            0.0
+          ]
+        },
+        {
+          "id": 147,
+          "surface": "plane",
+          "area_mm2": 11.975396,
+          "centroid_mm": [
+            6.275279,
+            41.607698,
+            6.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.382279,
+            "ymin": 39.500326,
+            "zmin": 6.600051,
+            "xmax": 8.383091,
+            "ymax": 43.500651,
+            "zmax": 6.600051,
+            "width": 4.000812,
+            "height": 4.000325,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 148,
+          "surface": "plane",
+          "area_mm2": 3.141593,
+          "centroid_mm": [
+            6.382685,
+            41.500326,
+            12.600051
+          ],
+          "bbox_mm": {
+            "xmin": 5.382685,
+            "ymin": 40.500326,
+            "zmin": 12.600051,
+            "xmax": 7.382685,
+            "ymax": 42.500326,
+            "zmax": 12.600051,
+            "width": 2.0,
+            "height": 2.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 149,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            7.36338,
+            25.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 6.999999,
+            "ymin": 24.5,
+            "zmin": 12.600051,
+            "xmax": 8.0,
+            "ymax": 26.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            7.999999,
+            25.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 150,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            8.499999,
+            26.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 7.999999,
+            "ymin": 26.5,
+            "zmin": 12.600051,
+            "xmax": 9.0,
+            "ymax": 26.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 151,
+          "surface": "plane",
+          "area_mm2": 38.000001,
+          "centroid_mm": [
+            18.5,
+            26.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 8.999999,
+            "ymin": 26.5,
+            "zmin": 12.600051,
+            "xmax": 28.0,
+            "ymax": 26.5,
+            "zmax": 14.600051,
+            "width": 19.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 152,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            28.5,
+            26.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.0,
+            "ymin": 26.5,
+            "zmin": 12.600051,
+            "xmax": 29.0,
+            "ymax": 26.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 153,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            29.63662,
+            25.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 29.0,
+            "ymin": 24.5,
+            "zmin": 12.600051,
+            "xmax": 30.0,
+            "ymax": 26.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            29.0,
+            25.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 154,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            28.5,
+            24.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.0,
+            "ymin": 24.5,
+            "zmin": 12.600051,
+            "xmax": 29.0,
+            "ymax": 24.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 155,
+          "surface": "plane",
+          "area_mm2": 38.000001,
+          "centroid_mm": [
+            18.5,
+            24.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 8.999999,
+            "ymin": 24.5,
+            "zmin": 12.600051,
+            "xmax": 28.0,
+            "ymax": 24.5,
+            "zmax": 14.600051,
+            "width": 19.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 156,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            8.499999,
+            24.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 7.999999,
+            "ymin": 24.5,
+            "zmin": 12.600051,
+            "xmax": 9.0,
+            "ymax": 24.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 157,
+          "surface": "plane",
+          "area_mm2": 18.462736,
+          "centroid_mm": [
+            18.384316,
+            42.500001,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 13.768632,
+            "ymin": 42.5,
+            "zmin": 12.600051,
+            "xmax": 23.0,
+            "ymax": 42.500001,
+            "zmax": 14.600051,
+            "width": 9.231368,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 158,
+          "surface": "cylinder",
+          "area_mm2": 6.596752,
+          "centroid_mm": [
+            23.60264,
+            41.452662,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 22.843858,
+            "ymin": 40.5,
+            "zmin": 12.600051,
+            "xmax": 24.0,
+            "ymax": 42.500001,
+            "zmax": 14.600051,
+            "width": 1.156142,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            23.0,
+            41.500001,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 159,
+          "surface": "plane",
+          "area_mm2": 17.838169,
+          "centroid_mm": [
+            18.384316,
+            40.512266,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 13.924773,
+            "ymin": 40.512266,
+            "zmin": 12.600051,
+            "xmax": 22.843858,
+            "ymax": 40.512266,
+            "zmax": 14.600051,
+            "width": 8.919085,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 160,
+          "surface": "cylinder",
+          "area_mm2": 6.596752,
+          "centroid_mm": [
+            13.165991,
+            41.452662,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 12.768632,
+            "ymin": 40.5,
+            "zmin": 12.600051,
+            "xmax": 13.924774,
+            "ymax": 42.500001,
+            "zmax": 14.600051,
+            "width": 1.156142,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            13.768632,
+            41.500001,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 161,
+          "surface": "plane",
+          "area_mm2": 48.000001,
+          "centroid_mm": [
+            18.0,
+            28.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 5.999999,
+            "ymin": 28.5,
+            "zmin": 12.600051,
+            "xmax": 30.0,
+            "ymax": 28.5,
+            "zmax": 14.600051,
+            "width": 24.000001,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 162,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            5.36338,
+            29.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 4.999999,
+            "ymin": 28.5,
+            "zmin": 12.600051,
+            "xmax": 6.0,
+            "ymax": 30.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            5.999999,
+            29.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 163,
+          "surface": "plane",
+          "area_mm2": 48.000001,
+          "centroid_mm": [
+            18.0,
+            30.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 5.999999,
+            "ymin": 30.5,
+            "zmin": 12.600051,
+            "xmax": 30.0,
+            "ymax": 30.5,
+            "zmax": 14.600051,
+            "width": 24.000001,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 164,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            30.63662,
+            29.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 30.0,
+            "ymin": 28.5,
+            "zmin": 12.600051,
+            "xmax": 31.0,
+            "ymax": 30.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            30.0,
+            29.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 165,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            10.749999,
+            20.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.499999,
+            "ymin": 20.5,
+            "zmin": 12.600051,
+            "xmax": 11.0,
+            "ymax": 20.5,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 166,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            9.86338,
+            21.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 9.499999,
+            "ymin": 20.5,
+            "zmin": 12.600051,
+            "xmax": 10.5,
+            "ymax": 22.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            10.5,
+            21.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 167,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            10.749999,
+            22.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.499999,
+            "ymin": 22.5,
+            "zmin": 12.600051,
+            "xmax": 11.0,
+            "ymax": 22.5,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 168,
+          "surface": "plane",
+          "area_mm2": 30.0,
+          "centroid_mm": [
+            18.5,
+            22.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.999999,
+            "ymin": 22.5,
+            "zmin": 12.600051,
+            "xmax": 26.0,
+            "ymax": 22.5,
+            "zmax": 14.600051,
+            "width": 15.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 169,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            26.25,
+            22.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.0,
+            "ymin": 22.5,
+            "zmin": 12.600051,
+            "xmax": 26.5,
+            "ymax": 22.5,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 170,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            27.13662,
+            21.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.5,
+            "ymin": 20.5,
+            "zmin": 12.600051,
+            "xmax": 27.5,
+            "ymax": 22.5,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            26.5,
+            21.5,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 171,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            26.25,
+            20.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.0,
+            "ymin": 20.5,
+            "zmin": 12.600051,
+            "xmax": 26.5,
+            "ymax": 20.5,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 172,
+          "surface": "plane",
+          "area_mm2": 30.0,
+          "centroid_mm": [
+            18.5,
+            20.5,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.999999,
+            "ymin": 20.5,
+            "zmin": 12.600051,
+            "xmax": 26.0,
+            "ymax": 20.5,
+            "zmax": 14.600051,
+            "width": 15.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 173,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            26.25,
+            38.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.0,
+            "ymin": 38.48487,
+            "zmin": 12.600051,
+            "xmax": 26.5,
+            "ymax": 38.484871,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 174,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            27.13662,
+            37.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.5,
+            "ymin": 36.48487,
+            "zmin": 12.600051,
+            "xmax": 27.5,
+            "ymax": 38.484871,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            26.5,
+            37.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 175,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            26.25,
+            36.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 26.0,
+            "ymin": 36.48487,
+            "zmin": 12.600051,
+            "xmax": 26.5,
+            "ymax": 36.484871,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 176,
+          "surface": "plane",
+          "area_mm2": 30.0,
+          "centroid_mm": [
+            18.5,
+            36.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.999999,
+            "ymin": 36.48487,
+            "zmin": 12.600051,
+            "xmax": 26.0,
+            "ymax": 36.484871,
+            "zmax": 14.600051,
+            "width": 15.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 177,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            10.749999,
+            36.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.499999,
+            "ymin": 36.48487,
+            "zmin": 12.600051,
+            "xmax": 11.0,
+            "ymax": 36.484871,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 178,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            9.86338,
+            37.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 9.499999,
+            "ymin": 36.48487,
+            "zmin": 12.600051,
+            "xmax": 10.5,
+            "ymax": 38.484871,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            10.5,
+            37.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 179,
+          "surface": "plane",
+          "area_mm2": 1.0,
+          "centroid_mm": [
+            10.749999,
+            38.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.499999,
+            "ymin": 38.48487,
+            "zmin": 12.600051,
+            "xmax": 11.0,
+            "ymax": 38.484871,
+            "zmax": 14.600051,
+            "width": 0.5,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 180,
+          "surface": "plane",
+          "area_mm2": 30.0,
+          "centroid_mm": [
+            18.5,
+            38.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 10.999999,
+            "ymin": 38.48487,
+            "zmin": 12.600051,
+            "xmax": 26.0,
+            "ymax": 38.484871,
+            "zmax": 14.600051,
+            "width": 15.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 181,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            8.499999,
+            32.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 7.999999,
+            "ymin": 32.48487,
+            "zmin": 12.600051,
+            "xmax": 9.0,
+            "ymax": 32.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 182,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            7.36338,
+            33.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 6.999999,
+            "ymin": 32.48487,
+            "zmin": 12.600051,
+            "xmax": 8.0,
+            "ymax": 34.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            7.999999,
+            33.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 183,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            8.499999,
+            34.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 7.999999,
+            "ymin": 34.48487,
+            "zmin": 12.600051,
+            "xmax": 9.0,
+            "ymax": 34.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            -0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 184,
+          "surface": "plane",
+          "area_mm2": 38.000001,
+          "centroid_mm": [
+            18.5,
+            34.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 8.999999,
+            "ymin": 34.48487,
+            "zmin": 12.600051,
+            "xmax": 28.0,
+            "ymax": 34.48487,
+            "zmax": 14.600051,
+            "width": 19.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 185,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            28.5,
+            34.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.0,
+            "ymin": 34.48487,
+            "zmin": 12.600051,
+            "xmax": 29.0,
+            "ymax": 34.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 186,
+          "surface": "cylinder",
+          "area_mm2": 6.283185,
+          "centroid_mm": [
+            29.63662,
+            33.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 29.0,
+            "ymin": 32.48487,
+            "zmin": 12.600051,
+            "xmax": 30.0,
+            "ymax": 34.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            29.0,
+            33.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 187,
+          "surface": "plane",
+          "area_mm2": 2.0,
+          "centroid_mm": [
+            28.5,
+            32.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 28.0,
+            "ymin": 32.48487,
+            "zmin": 12.600051,
+            "xmax": 29.0,
+            "ymax": 32.48487,
+            "zmax": 14.600051,
+            "width": 1.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 188,
+          "surface": "plane",
+          "area_mm2": 38.000001,
+          "centroid_mm": [
+            18.5,
+            32.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 8.999999,
+            "ymin": 32.48487,
+            "zmin": 12.600051,
+            "xmax": 28.0,
+            "ymax": 32.48487,
+            "zmax": 14.600051,
+            "width": 19.0,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 189,
+          "surface": "plane",
+          "area_mm2": 18.462736,
+          "centroid_mm": [
+            18.384316,
+            16.48487,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 13.768632,
+            "ymin": 16.48487,
+            "zmin": 12.600051,
+            "xmax": 23.0,
+            "ymax": 16.48487,
+            "zmax": 14.600051,
+            "width": 9.231368,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 190,
+          "surface": "cylinder",
+          "area_mm2": 6.596752,
+          "centroid_mm": [
+            13.165991,
+            17.532209,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 12.768632,
+            "ymin": 16.48487,
+            "zmin": 12.600051,
+            "xmax": 13.924774,
+            "ymax": 18.48487,
+            "zmax": 14.600051,
+            "width": 1.156142,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            13.768632,
+            17.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 191,
+          "surface": "plane",
+          "area_mm2": 17.838169,
+          "centroid_mm": [
+            18.384316,
+            18.472605,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 13.924773,
+            "ymin": 18.472605,
+            "zmin": 12.600051,
+            "xmax": 22.843858,
+            "ymax": 18.472605,
+            "zmax": 14.600051,
+            "width": 8.919085,
+            "height": 0.0,
+            "depth": 2.0
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 192,
+          "surface": "cylinder",
+          "area_mm2": 6.596752,
+          "centroid_mm": [
+            23.60264,
+            17.532209,
+            13.600051
+          ],
+          "bbox_mm": {
+            "xmin": 22.843858,
+            "ymin": 16.48487,
+            "zmin": 12.600051,
+            "xmax": 24.0,
+            "ymax": 18.48487,
+            "zmax": 14.600051,
+            "width": 1.156142,
+            "height": 2.0,
+            "depth": 2.0
+          },
+          "radius_mm": 1.0,
+          "axis_origin_mm": [
+            23.0,
+            17.48487,
+            12.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 193,
+          "surface": "plane",
+          "area_mm2": 18.0,
+          "centroid_mm": [
+            64.999999,
+            59.500001,
+            2.4
+          ],
+          "bbox_mm": {
+            "xmin": 55.999999,
+            "ymin": 59.000001,
+            "zmin": 2.4,
+            "xmax": 73.999998,
+            "ymax": 60.000001,
+            "zmax": 2.4,
+            "width": 18.0,
+            "height": 1.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 194,
+          "surface": "plane",
+          "area_mm2": 0.799949,
+          "centroid_mm": [
+            73.999998,
+            59.500001,
+            2.000025
+          ],
+          "bbox_mm": {
+            "xmin": 73.999998,
+            "ymin": 59.000001,
+            "zmin": 1.600051,
+            "xmax": 73.999998,
+            "ymax": 60.000001,
+            "zmax": 2.4,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 0.799949
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 195,
+          "surface": "plane",
+          "area_mm2": 0.799949,
+          "centroid_mm": [
+            55.999999,
+            59.500001,
+            2.000025
+          ],
+          "bbox_mm": {
+            "xmin": 55.999999,
+            "ymin": 59.000001,
+            "zmin": 1.600051,
+            "xmax": 55.999999,
+            "ymax": 60.000001,
+            "zmax": 2.4,
+            "width": 0.0,
+            "height": 1.0,
+            "depth": 0.799949
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 196,
+          "surface": "plane",
+          "area_mm2": 28.092462,
+          "centroid_mm": [
+            84.430756,
+            59.000001,
+            6.314734
+          ],
+          "bbox_mm": {
+            "xmin": 82.788848,
+            "ymin": 58.999999,
+            "zmin": 1.692808,
+            "xmax": 86.072664,
+            "ymax": 59.000003,
+            "zmax": 10.600002,
+            "width": 3.283816,
+            "height": 4e-06,
+            "depth": 8.907194
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 197,
+          "surface": "plane",
+          "area_mm2": 9.174295,
+          "centroid_mm": [
+            78.587146,
+            59.500001,
+            1.600051
+          ],
+          "bbox_mm": {
+            "xmin": 73.999998,
+            "ymin": 59.000001,
+            "zmin": 1.600051,
+            "xmax": 83.174294,
+            "ymax": 60.000001,
+            "zmax": 1.600051,
+            "width": 9.174295,
+            "height": 1.0,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 198,
+          "surface": "plane",
+          "area_mm2": 16.017148,
+          "centroid_mm": [
+            86.072662,
+            59.99679,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 86.072662,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 86.072662,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 199,
+          "surface": "cylinder",
+          "area_mm2": 10.772615,
+          "centroid_mm": [
+            84.430756,
+            60.12464,
+            2.130868
+          ],
+          "bbox_mm": {
+            "xmin": 82.28885,
+            "ymin": 59.000001,
+            "zmin": 1.19281,
+            "xmax": 86.572662,
+            "ymax": 61.000001,
+            "zmax": 3.334716,
+            "width": 4.283812,
+            "height": 2.0,
+            "depth": 2.141906
+          },
+          "radius_mm": 2.141906,
+          "axis_origin_mm": [
+            84.430756,
+            61.000001,
+            3.334716
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 200,
+          "surface": "plane",
+          "area_mm2": 16.017148,
+          "centroid_mm": [
+            82.28885,
+            59.99679,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 82.28885,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 82.28885,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 201,
+          "surface": "plane",
+          "area_mm2": 1.035899,
+          "centroid_mm": [
+            82.53885,
+            59.896057,
+            11.334716
+          ],
+          "bbox_mm": {
+            "xmin": 82.28885,
+            "ymin": 58.860158,
+            "zmin": 11.334716,
+            "xmax": 82.78885,
+            "ymax": 60.931956,
+            "zmax": 11.334716,
+            "width": 0.5,
+            "height": 2.071798,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 202,
+          "surface": "plane",
+          "area_mm2": 16.017165,
+          "centroid_mm": [
+            82.78885,
+            59.996789,
+            7.338804
+          ],
+          "bbox_mm": {
+            "xmin": 82.78885,
+            "ymin": 58.860158,
+            "zmin": 3.334716,
+            "xmax": 82.78885,
+            "ymax": 61.000001,
+            "zmax": 11.334716,
+            "width": 0.0,
+            "height": 2.139843,
+            "depth": 8.0
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 203,
+          "surface": "plane",
+          "area_mm2": 189.006348,
+          "centroid_mm": [
+            65.000001,
+            60.000001,
+            0.886784
+          ],
+          "bbox_mm": {
+            "xmin": 10.0,
+            "ymin": 60.000001,
+            "zmin": 5.1e-05,
+            "xmax": 120.000002,
+            "ymax": 60.000001,
+            "zmax": 2.4,
+            "width": 110.000002,
+            "height": 0.0,
+            "depth": 2.399949
+          },
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        {
+          "id": 204,
+          "surface": "cylinder",
+          "area_mm2": 150.231252,
+          "centroid_mm": [
+            6.176488,
+            6.176326,
+            7.077331
+          ],
+          "bbox_mm": {
+            "xmin": 1.772148,
+            "ymin": 1.771991,
+            "zmin": 1.600051,
+            "xmax": 8.500132,
+            "ymax": 8.499916,
+            "zmax": 12.600051,
+            "width": 6.727984,
+            "height": 6.727925,
+            "depth": 11.0
+          },
+          "radius_mm": 3.500003,
+          "axis_origin_mm": [
+            5.00013,
+            4.999914,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 205,
+          "surface": "cylinder",
+          "area_mm2": 47.12397,
+          "centroid_mm": [
+            5.00013,
+            4.999914,
+            4.100051
+          ],
+          "bbox_mm": {
+            "xmin": 3.500127,
+            "ymin": 3.499911,
+            "zmin": 1.600051,
+            "xmax": 6.500132,
+            "ymax": 6.499916,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 5.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            5.00013,
+            4.999914,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 206,
+          "surface": "cylinder",
+          "area_mm2": 47.12397,
+          "centroid_mm": [
+            5.00001,
+            55.000109,
+            4.100051
+          ],
+          "bbox_mm": {
+            "xmin": 3.500008,
+            "ymin": 53.500107,
+            "zmin": 1.600051,
+            "xmax": 6.500013,
+            "ymax": 56.500112,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 5.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            5.00001,
+            55.000109,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 207,
+          "surface": "cylinder",
+          "area_mm2": 47.12397,
+          "centroid_mm": [
+            125.000287,
+            4.999914,
+            4.100051
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 3.499911,
+            "zmin": 1.600051,
+            "xmax": 126.50029,
+            "ymax": 6.499916,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 5.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            125.000287,
+            4.999914,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 208,
+          "surface": "cylinder",
+          "area_mm2": 47.12397,
+          "centroid_mm": [
+            125.000287,
+            55.000251,
+            4.100051
+          ],
+          "bbox_mm": {
+            "xmin": 123.500284,
+            "ymin": 53.500249,
+            "zmin": 1.600051,
+            "xmax": 126.50029,
+            "ymax": 56.500254,
+            "zmax": 6.600051,
+            "width": 3.000005,
+            "height": 3.000005,
+            "depth": 5.0
+          },
+          "radius_mm": 1.500003,
+          "axis_origin_mm": [
+            125.000287,
+            55.000251,
+            14.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 209,
+          "surface": "plane",
+          "area_mm2": 6877.778311,
+          "centroid_mm": [
+            66.899463,
+            30.19959,
+            12.600051
+          ],
+          "bbox_mm": {
+            "xmin": 1.0,
+            "ymin": 1.0,
+            "zmin": 12.600051,
+            "xmax": 129.000002,
+            "ymax": 59.000001,
+            "zmax": 12.600051,
+            "width": 128.000002,
+            "height": 58.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 210,
+          "surface": "cylinder",
+          "area_mm2": 25.132741,
+          "centroid_mm": [
+            126.3662,
+            56.366199,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": 50.000001,
+            "zmin": 5.1e-05,
+            "xmax": 130.000002,
+            "ymax": 60.000001,
+            "zmax": 1.600051,
+            "width": 10.0,
+            "height": 10.0,
+            "depth": 1.6
+          },
+          "radius_mm": 10.0,
+          "axis_origin_mm": [
+            120.000002,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 211,
+          "surface": "plane",
+          "area_mm2": 64.000001,
+          "centroid_mm": [
+            130.000002,
+            30.0,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": 130.000002,
+            "ymin": 10.0,
+            "zmin": 5.1e-05,
+            "xmax": 130.000002,
+            "ymax": 50.000001,
+            "zmax": 1.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 1.6
+          },
+          "normal": [
+            -1.0,
+            -0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 212,
+          "surface": "cylinder",
+          "area_mm2": 25.132741,
+          "centroid_mm": [
+            126.3662,
+            3.633802,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": 120.000002,
+            "ymin": -0.0,
+            "zmin": 5.1e-05,
+            "xmax": 130.000002,
+            "ymax": 10.0,
+            "zmax": 1.600051,
+            "width": 10.0,
+            "height": 10.0,
+            "depth": 1.6
+          },
+          "radius_mm": 10.0,
+          "axis_origin_mm": [
+            120.000002,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 213,
+          "surface": "cylinder",
+          "area_mm2": 25.132741,
+          "centroid_mm": [
+            3.633802,
+            3.633802,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": -0.0,
+            "ymin": -0.0,
+            "zmin": 5.1e-05,
+            "xmax": 10.0,
+            "ymax": 10.0,
+            "zmax": 1.600051,
+            "width": 10.0,
+            "height": 10.0,
+            "depth": 1.6
+          },
+          "radius_mm": 10.0,
+          "axis_origin_mm": [
+            10.0,
+            10.0,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 214,
+          "surface": "plane",
+          "area_mm2": 64.000001,
+          "centroid_mm": [
+            0.0,
+            30.0,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": -0.0,
+            "ymin": 10.0,
+            "zmin": 5.1e-05,
+            "xmax": 0.0,
+            "ymax": 50.000001,
+            "zmax": 1.600051,
+            "width": 0.0,
+            "height": 40.000001,
+            "depth": 1.6
+          },
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": 215,
+          "surface": "cylinder",
+          "area_mm2": 25.132741,
+          "centroid_mm": [
+            3.633802,
+            56.366199,
+            0.800051
+          ],
+          "bbox_mm": {
+            "xmin": -0.0,
+            "ymin": 50.000001,
+            "zmin": 5.1e-05,
+            "xmax": 10.0,
+            "ymax": 60.000001,
+            "zmax": 1.600051,
+            "width": 10.0,
+            "height": 10.0,
+            "depth": 1.6
+          },
+          "radius_mm": 10.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        {
+          "id": 216,
+          "surface": "plane",
+          "area_mm2": 365.973451,
+          "centroid_mm": [
+            65.000001,
+            30.0,
+            5.1e-05
+          ],
+          "bbox_mm": {
+            "xmin": -1.0,
+            "ymin": -1.0,
+            "zmin": 5.1e-05,
+            "xmax": 131.000002,
+            "ymax": 61.000001,
+            "zmax": 5.1e-05,
+            "width": 132.000002,
+            "height": 62.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 217,
+          "surface": "plane",
+          "area_mm2": 6368.767707,
+          "centroid_mm": [
+            66.864416,
+            30.142477,
+            14.600051
+          ],
+          "bbox_mm": {
+            "xmin": 3.0,
+            "ymin": 3.0,
+            "zmin": 14.600051,
+            "xmax": 127.000002,
+            "ymax": 57.000001,
+            "zmax": 14.600051,
+            "width": 124.000002,
+            "height": 54.000001,
+            "depth": 0.0
+          },
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 218,
+          "surface": "cylinder",
+          "area_mm2": 36.939509,
+          "centroid_mm": [
+            8.100054,
+            58.730802,
+            6.529713
+          ],
+          "bbox_mm": {
+            "xmin": 6.353069,
+            "ymin": 58.227995,
+            "zmin": 1.600051,
+            "xmax": 10.0,
+            "ymax": 59.000001,
+            "zmax": 12.178614,
+            "width": 3.646931,
+            "height": 0.772006,
+            "depth": 10.578564
+          },
+          "radius_mm": 9.0,
+          "axis_origin_mm": [
+            10.0,
+            50.000001,
+            1.600051
+          ],
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "id": 219,
+          "surface": "plane",
+          "area_mm2": 19.623353,
+          "centroid_mm": [
+            84.430756,
+            61.000001,
+            7.600921
+          ],
+          "bbox_mm": {
+            "xmin": 82.78885,
+            "ymin": 61.000001,
+            "zmin": 3.334716,
+            "xmax": 86.072662,
+            "ymax": 61.000001,
+            "zmax": 10.600051,
+            "width": 3.283812,
+            "height": 0.0,
+            "depth": 7.265335
+          },
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  },
+  "curated_features": [
+    {
+      "id": "pcb_coordinate_frame",
+      "classification": "derived_from_pcb_and_step_alignment",
+      "confidence": "high",
+      "geometry": {
+        "pcb_outline_mm": [
+          130.0,
+          60.0
+        ],
+        "interface_plane_z_mm": 0.0
+      },
+      "evidence": "Four STEP screw axes exactly match the PCB centers (5,5), (5,55), (125,5), (125,55)."
+    },
+    {
+      "id": "main_pcb_mounting_bosses",
+      "classification": "exact_geometry_function_confirmed_by_pcb_alignment",
+      "confidence": "high",
+      "geometry": {
+        "count": 4,
+        "centers_xy_mm": [
+          [
+            5.0,
+            5.0
+          ],
+          [
+            5.0,
+            55.0
+          ],
+          [
+            125.0,
+            5.0
+          ],
+          [
+            125.0,
+            55.0
+          ]
+        ],
+        "outer_radius_mm": 3.5,
+        "outer_diameter_mm": 7.0,
+        "outer_cylindrical_span_z_mm": [
+          1.6,
+          12.6
+        ],
+        "bore_radius_mm": 1.5,
+        "bore_diameter_mm": 3.0,
+        "bore_cylindrical_span_z_mm": [
+          1.6,
+          6.6
+        ],
+        "boss_end_face_z_mm": 6.6
+      },
+      "evidence": "Bottom STEP contains four coaxial r=3.5 and r=1.5 cylindrical face pairs at the PCB hole centers.",
+      "pending_verification": "STEP geometry shows nominal diameter only; intended screw standard, thread-forming fit and print shrink compensation are not encoded."
+    },
+    {
+      "id": "pcb_support_plane",
+      "classification": "geometric_inference",
+      "confidence": "medium",
+      "geometry": {
+        "z_mm": 1.6,
+        "nominal_pcb_thickness_mm": 1.6,
+        "cover_interface_z_mm": 0.0
+      },
+      "evidence": "The four mounting bosses terminate at z=1.6 while the cover mating plane is z=0; this equals the reference 1.6 mm PCB thickness.",
+      "pending_verification": "Confirm with a real assembled unit or CAD assembly; STEP has no named PCB datum."
+    },
+    {
+      "id": "bottom_inner_floor_and_depth",
+      "classification": "exact_geometry",
+      "confidence": "high",
+      "geometry": {
+        "inner_floor_z_mm": 12.6,
+        "outer_back_z_mm": 14.6,
+        "back_wall_thickness_mm": 2.0,
+        "nominal_empty_depth_from_pcb_support_to_floor_mm": 11.0,
+        "inner_wall_nominal_bounds_xy_mm": [
+          1.0,
+          1.0,
+          129.0,
+          59.0
+        ]
+      },
+      "evidence": "Dominant planar faces occur at z=12.6 and z=14.6; the support plane is z=1.6."
+    },
+    {
+      "id": "candidate_battery_retention_volume",
+      "classification": "functional_interpretation_of_exact_ribs",
+      "confidence": "medium",
+      "geometry": {
+        "candidate_box_mm": {
+          "xmin": 38.0,
+          "ymin": 9.0,
+          "zmin": 6.6,
+          "xmax": 114.0,
+          "ymax": 55.0,
+          "zmax": 12.6,
+          "width": 76.0,
+          "height": 46.0,
+          "depth": 6.0
+        },
+        "candidate_size_mm": [
+          76.0,
+          46.0,
+          6.0
+        ],
+        "surrounding_rib_groups_xy_mm": [
+          [
+            35.0,
+            6.0,
+            38.0,
+            9.0
+          ],
+          [
+            35.0,
+            55.0,
+            38.0,
+            58.0
+          ],
+          [
+            114.0,
+            6.0,
+            117.0,
+            9.0
+          ],
+          [
+            114.0,
+            55.0,
+            117.0,
+            58.0
+          ]
+        ],
+        "rib_span_z_mm": [
+          6.6,
+          12.6
+        ]
+      },
+      "evidence": "Four 3x3 mm rib groups bound a 76x46 mm central-right rectangle and rise 6 mm from the inner floor.",
+      "pending_verification": "The STEP has no feature name. Treat 76x46x6 mm only as a candidate battery envelope, not a selected cell size; wire exit, adhesive, protection PCB and swelling allowance remain unknown."
+    },
+    {
+      "id": "speaker_grille",
+      "classification": "exact_geometry_function_supported_by_assembly_image",
+      "confidence": "high",
+      "geometry": {
+        "overall_bbox_mm": {
+          "xmin": 5.0,
+          "ymin": 16.48,
+          "zmin": 12.6,
+          "xmax": 31.0,
+          "ymax": 42.5,
+          "zmax": 14.6,
+          "width": 26.0,
+          "height": 26.02,
+          "depth": 2.0
+        },
+        "center_xy_mm": [
+          18.5,
+          29.49
+        ],
+        "through_back_wall": true,
+        "slot_count": 7,
+        "rounded_slot_bboxes_xy_mm": [
+          [
+            12.77,
+            16.48,
+            24.0,
+            18.48
+          ],
+          [
+            9.5,
+            20.5,
+            27.5,
+            22.5
+          ],
+          [
+            7.0,
+            24.5,
+            30.0,
+            26.5
+          ],
+          [
+            5.0,
+            28.5,
+            31.0,
+            30.5
+          ],
+          [
+            7.0,
+            32.48,
+            30.0,
+            34.48
+          ],
+          [
+            9.5,
+            36.48,
+            27.5,
+            38.48
+          ],
+          [
+            12.77,
+            40.5,
+            24.0,
+            42.5
+          ]
+        ]
+      },
+      "evidence": "Seven 2 mm high rounded apertures traverse z=12.6..14.6; the reference assembly image shows the acoustic grille in this end region."
+    },
+    {
+      "id": "speaker_retention_posts",
+      "classification": "functional_interpretation_of_exact_geometry",
+      "confidence": "medium",
+      "geometry": {
+        "post_centers_xy_mm": [
+          [
+            6.38,
+            41.5
+          ],
+          [
+            30.34,
+            17.56
+          ]
+        ],
+        "post_outer_bboxes_xy_mm": [
+          [
+            4.38,
+            39.5,
+            8.38,
+            43.5
+          ],
+          [
+            28.34,
+            15.56,
+            32.34,
+            19.56
+          ]
+        ],
+        "post_span_z_mm": [
+          6.6,
+          12.6
+        ],
+        "central_cylindrical_radius_mm": 1.0
+      },
+      "evidence": "Two diagonally opposed 4x4 mm post groups flank the grille and contain r=1 mm cylindrical faces.",
+      "pending_verification": "No speaker model is embedded. The geometry suggests a roughly 25 mm class speaker region and does not establish fit for the planned 40 mm speaker."
+    },
+    {
+      "id": "usb1_aligned_back_aperture",
+      "classification": "functional_interpretation_confirmed_by_xy_alignment",
+      "confidence": "medium",
+      "geometry": {
+        "overall_bbox_mm": {
+          "xmin": 59.68,
+          "ymin": 1.17,
+          "zmin": 11.42,
+          "xmax": 70.32,
+          "ymax": 6.03,
+          "zmax": 14.6,
+          "width": 10.64,
+          "height": 4.86,
+          "depth": 3.18
+        },
+        "center_xy_mm": [
+          65.0,
+          3.6
+        ],
+        "nominal_obround_radius_mm": 2.05,
+        "flat_span_x_mm": [
+          61.73,
+          68.27
+        ],
+        "aligned_pcb_usb1_center_xy_mm": [
+          65.0,
+          3.6039
+        ]
+      },
+      "evidence": "A rounded opening is centered at x=65,y≈3.6 and aligns with PCB USB1 after the PCB Y axis is mapped into enclosure coordinates.",
+      "pending_verification": "Confirm the actual connector insertion direction and accessible clearance with the assembled reference or a fit print."
+    },
+    {
+      "id": "sw1_edge_aperture",
+      "classification": "exact_geometry_function_confirmed_by_xy_alignment",
+      "confidence": "high",
+      "geometry": {
+        "bbox_mm": {
+          "xmin": 91.34,
+          "ymin": 59.0,
+          "zmin": 2.8,
+          "xmax": 96.45,
+          "ymax": 61.0,
+          "zmax": 5.8,
+          "width": 5.11,
+          "height": 2.0,
+          "depth": 3.0
+        },
+        "aperture_size_xz_mm": [
+          5.11,
+          3.0
+        ],
+        "center_xz_mm": [
+          93.895,
+          4.3
+        ],
+        "aligned_pcb_sw1_center_xy_mm": [
+          93.8968,
+          55.8001
+        ]
+      },
+      "evidence": "The bottom STEP rectangular edge opening aligns in X with SW1 and crosses the y=59..61 wall."
+    },
+    {
+      "id": "microsd_edge_aperture",
+      "classification": "functional_interpretation_confirmed_by_component_alignment",
+      "confidence": "high",
+      "geometry": {
+        "full_beveled_bbox_mm": {
+          "xmin": 32.67,
+          "ymin": -1.0,
+          "zmin": 0.65,
+          "xmax": 46.37,
+          "ymax": 1.0,
+          "zmax": 4.2,
+          "width": 13.7,
+          "height": 2.0,
+          "depth": 3.55
+        },
+        "main_flat_span_x_mm": [
+          33.87,
+          45.17
+        ],
+        "aligned_pcb_card1_center_xy_mm": [
+          40.4489,
+          10.6977
+        ]
+      },
+      "evidence": "The beveled long-edge opening is centered near CARD1 in X and is distinct from the USB1-aligned aperture."
+    },
+    {
+      "id": "top_screen_window",
+      "classification": "exact_geometry",
+      "confidence": "high",
+      "geometry": {
+        "bbox_xy_mm": [
+          27.63,
+          3.07,
+          102.37,
+          56.93
+        ],
+        "size_mm": [
+          74.74,
+          53.86
+        ],
+        "through_span_z_mm": [
+          -3.0,
+          0.0
+        ]
+      },
+      "evidence": "Four planar aperture walls span the full 3 mm cover thickness."
+    },
+    {
+      "id": "top_control_apertures",
+      "classification": "exact_geometry_function_confirmed_by_pcb_alignment",
+      "confidence": "high",
+      "geometry": {
+        "round_holes_diameter_mm": 7.41,
+        "round_hole_centers_xy_mm": [
+          [
+            10.375,
+            36.05
+          ],
+          [
+            20.875,
+            29.5
+          ],
+          [
+            13.2,
+            56.0
+          ],
+          [
+            22.4,
+            56.0
+          ],
+          [
+            107.6,
+            56.0
+          ],
+          [
+            116.8,
+            56.0
+          ]
+        ],
+        "sw2_rectangular_hole_xy_mm": [
+          109.0,
+          24.0,
+          122.5,
+          36.0
+        ],
+        "sw2_rectangular_hole_size_mm": [
+          13.5,
+          12.0
+        ],
+        "led2_hole_xy_mm": [
+          114.8,
+          11.94,
+          117.0,
+          14.3
+        ],
+        "led2_hole_size_mm": [
+          2.2,
+          2.36
+        ]
+      },
+      "evidence": "Cylinder/plane centers coincide with KEY1..KEY6, SW2 and LED2 after PCB-to-case Y conversion."
+    },
+    {
+      "id": "top_corner_fastener_holes",
+      "classification": "exact_geometry",
+      "confidence": "high",
+      "geometry": {
+        "count": 4,
+        "centers_xy_mm": [
+          [
+            5.0,
+            5.0
+          ],
+          [
+            5.0,
+            55.0
+          ],
+          [
+            125.0,
+            5.0
+          ],
+          [
+            125.0,
+            55.0
+          ]
+        ],
+        "diameter_mm": 3.0,
+        "through_span_z_mm": [
+          -3.0,
+          0.0
+        ]
+      },
+      "evidence": "Four r=1.5 cylindrical faces traverse the top cover."
+    },
+    {
+      "id": "dedicated_microphone_aperture",
+      "classification": "not_identified",
+      "confidence": "medium",
+      "geometry": null,
+      "evidence": "No aperture in either STEP was found directly aligned to PCB microphone U7 at enclosure x=15.968,y=11.2722.",
+      "pending_verification": "Inspect the real unit and acoustic path; the design may intentionally couple the microphone through another cavity or shared opening."
+    }
+  ]
+}

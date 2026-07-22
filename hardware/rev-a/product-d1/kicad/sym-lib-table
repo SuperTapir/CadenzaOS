@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name "Cadenza_D1")(type "Legacy")(uri "${KIPRJMOD}/Cadenza_D1.lib")(options "")(descr "Cadenza generated symbols"))
-)

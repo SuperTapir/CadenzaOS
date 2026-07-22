@@ -1,0 +1,51 @@
+{
+  "failures": [],
+  "orientation_frozen": false,
+  "pdf": {
+    "page_details": [
+      {
+        "height_mm": 297.0000127777777,
+        "page": 1,
+        "width_mm": 210.00000333333332
+      },
+      {
+        "height_mm": 297.0000127777777,
+        "page": 2,
+        "width_mm": 210.00000333333332
+      },
+      {
+        "height_mm": 297.0000127777777,
+        "page": 3,
+        "width_mm": 210.00000333333332
+      },
+      {
+        "height_mm": 297.0000127777777,
+        "page": 4,
+        "width_mm": 210.00000333333332
+      }
+    ],
+    "pages_checked": 4,
+    "path": "output/pdf/cadenza-physical-fit-sheets-a4.pdf"
+  },
+  "record_svg": {
+    "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-caliper-record-a4.svg",
+    "record_sections_checked": 3
+  },
+  "schema_version": 1,
+  "source_footprints_checked": 3,
+  "status": "PASS",
+  "svg": [
+    {
+      "pads_checked": 12,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12_bottom-a4.svg"
+    },
+    {
+      "pads_checked": 12,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh12a_top-a4.svg"
+    },
+    {
+      "pads_checked": 12,
+      "path": "hardware/cadenza/validation/physical-evidence/fit-sheets/fit-sheet-fh34srj_dual-a4.svg"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "fixture": "q-pwr1-wrong-libsource",
+  "mutation": {"kind": "set_libsource", "reference": "Q_PWR1", "value": "Transistor_FET:Q_NMOS_GSD"},
+  "expected_status": "FAIL"
+}

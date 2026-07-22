@@ -1,0 +1,67 @@
+* Cadenza L2 input RC candidate -- reproducible transient testbench
+* run_spice.py replaces the three .param values for tolerance corners.
+.param RPU=10100
+.param RSER=1050
+.param CDEB=4.29e-08
+
+VDD vdd 0 3.3
+
+* A representative bouncing contact: three 20/30 us chatter pulses, then stable low.
+RPU_B vdd bounce_gpio {RPU}
+RS_B bounce_gpio bounce_contact {RSER}
+C_B bounce_gpio 0 {CDEB}
+CIN_B bounce_gpio 0 10p
+VCTRL_B ctrl_b 0 PWL(0 0 100u 0 100.001u 3.3 120u 3.3 120.001u 0 140u 0 140.001u 3.3 170u 3.3 170.001u 0 190u 0 190.001u 3.3 500u 3.3 500.001u 0)
+S_B bounce_contact 0 ctrl_b 0 CONTACT
+
+* Independent one-shot low pulses determine the shortest pulse retained by the RC.
+RPU_20 vdd g20 {RPU}
+C_20 g20 0 {CDEB}
+RS_20 g20 contact20 {RSER}
+CIN_20 g20 0 10p
+VP_20 c20 0 PULSE(0 3.3 700u 1n 1n 20u 2m)
+S_20 contact20 0 c20 0 CONTACT
+
+RPU_50 vdd g50 {RPU}
+C_50 g50 0 {CDEB}
+RS_50 g50 contact50 {RSER}
+CIN_50 g50 0 10p
+VP_50 c50 0 PULSE(0 3.3 700u 1n 1n 50u 2m)
+S_50 contact50 0 c50 0 CONTACT
+
+RPU_75 vdd g75 {RPU}
+C_75 g75 0 {CDEB}
+RS_75 g75 contact75 {RSER}
+CIN_75 g75 0 10p
+VP_75 c75 0 PULSE(0 3.3 700u 1n 1n 75u 2m)
+S_75 contact75 0 c75 0 CONTACT
+
+RPU_100 vdd g100 {RPU}
+C_100 g100 0 {CDEB}
+RS_100 g100 contact100 {RSER}
+CIN_100 g100 0 10p
+VP_100 c100 0 PULSE(0 3.3 700u 1n 1n 100u 2m)
+S_100 contact100 0 c100 0 CONTACT
+
+RPU_200 vdd g200 {RPU}
+C_200 g200 0 {CDEB}
+RS_200 g200 contact200 {RSER}
+CIN_200 g200 0 10p
+VP_200 c200 0 PULSE(0 3.3 700u 1n 1n 200u 2m)
+S_200 contact200 0 c200 0 CONTACT
+
+.model CONTACT SW(Ron=0.1 Roff=1e12 Vt=1.65 Vh=0.05)
+
+.tran 0.05u 1.2m
+
+.measure tran bounce_min_chatter MIN v(bounce_gpio) FROM=100u TO=190u
+.measure tran bounce_v_after_stable FIND v(bounce_gpio) AT=300u
+.measure tran bounce_fall_to_vil WHEN v(bounce_gpio)=0.825 FALL=1
+.measure tran bounce_rise_to_vih WHEN v(bounce_gpio)=2.475 RISE=1 TD=500u
+.measure tran vmin_20us MIN v(g20) FROM=700u TO=720u
+.measure tran vmin_50us MIN v(g50) FROM=700u TO=750u
+.measure tran vmin_75us MIN v(g75) FROM=700u TO=775u
+.measure tran vmin_100us MIN v(g100) FROM=700u TO=800u
+.measure tran vmin_200us MIN v(g200) FROM=700u TO=900u
+
+.end

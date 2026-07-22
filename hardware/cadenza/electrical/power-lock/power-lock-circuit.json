@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-22",
+  "status": "candidate_requires_physical_gate",
+  "reference_evidence": {
+    "ip5306": "U1/C181692",
+    "key_pin": 5,
+    "key_reference_state": "no_connect",
+    "vout_pin": 8,
+    "slide_switch": "SW1/SK12D07VG4-BF/C49451756",
+    "slide_switch_connections": {
+      "pin_2": "/VOUT",
+      "pin_3": "+5V"
+    }
+  },
+  "default_topology": {
+    "D_PWR": {
+      "part": "BAT54C",
+      "lcsc": "C916424",
+      "package": "SOT-23",
+      "pin_1": "anode_1_to_U1_KEY",
+      "pin_2": "anode_2_to_PWR_KEY_SENSE_via_1k",
+      "pin_3": "common_cathode_to_button_node"
+    },
+    "SW_PWR": {
+      "type": "normally_open_momentary",
+      "connections": ["button_node", "GND"],
+      "mechanical_part": {
+        "status": "candidate_not_frozen",
+        "preferred_for_current_edge_push_geometry": {
+          "mpn": "GT-TC020A-H035-L1",
+          "lcsc": "C17179533",
+          "actuation": "side_push",
+          "jlc_basic": false
+        },
+        "alternate": {
+          "mpn": "TS24CA 250gf 013",
+          "lcsc": "C5373430",
+          "actuation": "side_push",
+          "jlc_basic": false
+        },
+        "freeze_gate": "sample_measurement_plus_printed_actuator_fit_check"
+      }
+    },
+    "Q_OFF": {
+      "preferred_part": "AO3400A",
+      "preferred_lcsc": "C20917",
+      "alternate_part": "2N7002",
+      "alternate_lcsc": "C8545",
+      "package": "SOT-23",
+      "pin_1_gate": "PWR_FORCE_OFF_via_100R_and_100k_pulldown",
+      "pin_2_source": "GND",
+      "pin_3_drain": "U1_KEY"
+    },
+    "sense_pullup": "10k_to_3V3M",
+    "sense_series": "1k",
+    "force_gate_series": "100R",
+    "force_gate_pulldown": "100k",
+    "vout_bridge": "high_current_0R_or_cuttable_copper_bridge_TBD"
+  },
+  "mandatory_escape_option": {
+    "name": "D_PWR_KEY_branch_bypass",
+    "default": "DNP/open",
+    "purpose": "bypass BAT54C KEY-path forward drop if physical validation fails",
+    "consequence": "must_retest_KEY_torch_mux_false_press_behavior"
+  },
+  "datasheet_confirmed": {
+    "ip5306_short_press": ">30ms_and_<2s",
+    "ip5306_long_press": ">2s",
+    "ip5306_ignore": "<30ms",
+    "ip5306_double_press": "two_short_presses_within_1s_toggle_flashlight",
+    "ip5306_typ_wakeup_debounce_ms": 50,
+    "ip5306_light_load_typ_mA": 45,
+    "ip5306_light_load_timer_s": 32,
+    "bat54c_pinout": {"1": "A1", "2": "A2", "3": "K_common"},
+    "2n7002_c8545_pinout": {"1": "G", "2": "S", "3": "D"},
+    "ao3400a_c20917_pinout": {"1": "G", "2": "S", "3": "D"}
+  },
+  "unknowns": [
+    "IP5306_KEY_VIL_max",
+    "IP5306_KEY_idle_voltage",
+    "IP5306_KEY_internal_bias_resistance_or_current",
+    "IP5306_KEY_flashlight_mux_electrical_behavior",
+    "USB_present_shutdown_behavior",
+    "lock_state_light_load_auto_shutdown",
+    "final_switch_mechanics",
+    "final_GPIO_assignment",
+    "vout_bridge_current_rating"
+  ],
+  "freeze_gate": {
+    "battery_test_voltages_V": [4.2, 3.7, 3.0],
+    "short_press_trials_per_voltage": 100,
+    "allowed_missed_wakeups": 0,
+    "must_test_double_press_mux": true,
+    "must_test_reverse_power": true,
+    "must_test_usb_present": true,
+    "must_test_firmware_hang_long_press": true
+  }
+}

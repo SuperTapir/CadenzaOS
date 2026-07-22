@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-22T00:45:18Z",
+  "sources": [
+    {
+      "id": "wch_product_page",
+      "authority": "manufacturer_official",
+      "url": "https://www.wch.cn/products/CH340.html",
+      "local_file": null,
+      "role": "official product identity and manufacturer guidance"
+    },
+    {
+      "id": "wch_product_api",
+      "authority": "manufacturer_official_api",
+      "url": "https://api1.wch.cn/api/official/website/articles/getArticle?alias=CH340.html",
+      "local_file": "wch-ch340-product-api.json",
+      "sha256": "d0bb78d2d0ceec74f903b9fe3d8601c4b7ae18811781a26512c66a866ef65ec2",
+      "role": "official product content and file-list snapshot"
+    },
+    {
+      "id": "wch_file_record",
+      "authority": "manufacturer_official_api",
+      "url": "https://api1.wch.cn/api/official/website/files/getFilesById?id=79",
+      "local_file": "wch-ch340ds1-file-api.json",
+      "sha256": "2939187c06d0bcc67506f5a1138dd2ce40bbd57a0ee33584e085d36cf6afd456",
+      "version": "3.4",
+      "upload_date": "2025-03-03",
+      "role": "official datasheet version lock"
+    },
+    {
+      "id": "ch340ds1_v3c_lcsc_copy",
+      "authority": "distributor_hosted_manufacturer_marked_copy",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/e2f14e51aaa60c793f1f0cbc8a5d5faa.pdf?productCode=C84681",
+      "local_file": "CH340DS1-V3C-lcsc-mirror.pdf",
+      "sha256": "5cb6dc879dd59ee50464e45f9cda081fa675fbe34e443220d7d5acd2d7618967",
+      "version_in_document": "3C",
+      "pdf_pages": 16,
+      "pdf_author": "WCH",
+      "role": "page-level extraction copy; not a hash-equivalent of official v3.4"
+    },
+    {
+      "id": "reference_jlcsearch_snapshot",
+      "authority": "community_inventory_api_snapshot",
+      "original_path": "hardware/reference/oshwhub-project_jofcnupz/sourcing/ch340c.json",
+      "local_file": "reference-ch340c-jlcsearch.json",
+      "sha256": "2f3dcea98b23e4c14ec7c15cf25accabb97b0446e89234abc06e2b35db773ffd",
+      "role": "existing reference sourcing context only; not electrical evidence"
+    },
+    {
+      "id": "usb_if_usb_2_specification",
+      "authority": "standards_body_primary",
+      "url": "https://www.usb.org/document-library/usb-20-specification",
+      "local_file": null,
+      "role": "Full-Speed rate classification and generic USB electrical context"
+    },
+    {
+      "id": "current_candidate_netlist",
+      "authority": "local_generated_design_evidence",
+      "original_path": "hardware/cadenza/derived/l1-candidate/candidate.netlist.xml",
+      "local_file": null,
+      "sha256": "40a5f97f77034897099e21b31176b486de2ea824a5a7987637af299a406d32db",
+      "role": "read-only U3 endpoint observation"
+    }
+  ],
+  "limitations": [
+    "The official WCH v3.4 PDF binary was not directly downloaded because the download endpoint rejected the non-interactive request.",
+    "The local V3C PDF is a distributor-hosted WCH-marked extraction copy and must not be represented as the official v3.4 binary.",
+    "Inventory snapshots are not electrical evidence and become stale.",
+    "No PCB routing, stackup or physical hardware was validated by this evidence task."
+  ]
+}

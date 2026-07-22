@@ -1,0 +1,292 @@
+{
+  "schema_version": 2,
+  "status": "current L1 screen-only fit-check; not production frozen",
+  "production_ready": false,
+  "reference_top": "/Users/tapir/Development/CadenzaOS/hardware/reference/oshwhub-project_jofcnupz/顶盖V7.step",
+  "reference_preserved": true,
+  "candidate_pcb_evidence": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/mechanical/l1-fit-check/generated/candidate-pcb-mechanical.json",
+  "candidate_pcb_sha256": "8aa99d03a21dfcb8926d6cdb0cf773a8a9d5a99e0044450145ebda28027e093d",
+  "coordinate_mapping": {
+    "x_enclosure": "x_kicad - 88.125",
+    "y_enclosure": "139.725 - y_kicad",
+    "note": "KiCad -Y (up) maps to enclosure +Y."
+  },
+  "screen_shift_from_prior_center_enclosure_xy_mm": [
+    1.5,
+    1.5
+  ],
+  "screen_shift_from_prior_center_kicad_xy_mm": [
+    1.5,
+    -1.5
+  ],
+  "original_window_xy": [
+    27.63,
+    3.07,
+    102.37,
+    56.93
+  ],
+  "sharp_panel_xy": [
+    35.1,
+    10.09,
+    97.9,
+    52.91
+  ],
+  "sharp_view_xy": [
+    37.1,
+    13.86,
+    95.9,
+    49.14
+  ],
+  "new_window_xy": [
+    36.5,
+    13.26,
+    96.5,
+    49.74
+  ],
+  "view_clearance_each_edge": 0.6,
+  "gasket_proxy_thickness": 0.4,
+  "screen_front_z": -5.040264307085095,
+  "screen_rear_z": -3.4002643070850946,
+  "retainer_thickness": 1.0,
+  "fpc_flat_xy": [
+    62.18,
+    4.03,
+    70.82,
+    10.09
+  ],
+  "fpc_relief_xy": [
+    61.68,
+    3.5300000000000002,
+    71.32,
+    10.7
+  ],
+  "front_fpc_pass_through_slot_xy": [
+    61.68,
+    9.14,
+    71.32,
+    13.36
+  ],
+  "front_fpc_pass_through_slot_status": "candidate; real fold and exposed-lip appearance pending",
+  "fpc_bend_keepout_xy": [
+    62.18,
+    4.09,
+    70.82,
+    9.29
+  ],
+  "j_disp1": {
+    "reference": "J_DISP1",
+    "value": "FH34SRJ-10S-0.5SH(50)",
+    "footprint": "Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact",
+    "side": "front",
+    "position_kicad_mm": [
+      154.625,
+      128.5
+    ],
+    "position_enclosure_mm": [
+      66.5,
+      11.225
+    ],
+    "rotation_deg": 0.0,
+    "courtyard_xy_enclosure_mm": [
+      62.475,
+      7.4,
+      70.525,
+      12.25
+    ]
+  },
+  "usb1": {
+    "reference": "USB1",
+    "value": "",
+    "footprint": "USB-C-TH_HX-TYPE-C-16P-180LC-BH15.0",
+    "side": "front",
+    "position_kicad_mm": [
+      153.125,
+      136.121
+    ],
+    "position_enclosure_mm": [
+      65.0,
+      3.604
+    ],
+    "rotation_deg": 0.0,
+    "courtyard_xy_enclosure_mm": [
+      58.669567,
+      0.8035,
+      71.3005,
+      6.434433
+    ]
+  },
+  "j_disp1_to_usb1_courtyard_gap_y_mm": 0.965567,
+  "pcb_front_courtyard_screen_projection_overlap_count": 31,
+  "pcb_front_courtyard_screen_projection_overlaps": [
+    {
+      "reference": "C1",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C10",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C11",
+      "overlap_area_mm2": 5.792895
+    },
+    {
+      "reference": "C12",
+      "overlap_area_mm2": 5.792895
+    },
+    {
+      "reference": "C13",
+      "overlap_area_mm2": 5.152135
+    },
+    {
+      "reference": "C14",
+      "overlap_area_mm2": 5.152135
+    },
+    {
+      "reference": "C15",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C20",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C21",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C22",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C23",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C24",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C8",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "C9",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "CARD1",
+      "overlap_area_mm2": 97.573455
+    },
+    {
+      "reference": "C_DISP1",
+      "overlap_area_mm2": 7.6428
+    },
+    {
+      "reference": "J_DISP1",
+      "overlap_area_mm2": 17.388
+    },
+    {
+      "reference": "L2",
+      "overlap_area_mm2": 16.520745
+    },
+    {
+      "reference": "Q1",
+      "overlap_area_mm2": 8.634346
+    },
+    {
+      "reference": "R10",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R11",
+      "overlap_area_mm2": 5.146434
+    },
+    {
+      "reference": "R17",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R18",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R19",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R3",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R6",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R8",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "R9",
+      "overlap_area_mm2": 7.635085
+    },
+    {
+      "reference": "U2",
+      "overlap_area_mm2": 15.006465
+    },
+    {
+      "reference": "U3",
+      "overlap_area_mm2": 77.907061
+    },
+    {
+      "reference": "U4",
+      "overlap_area_mm2": 375.84875
+    }
+  ],
+  "courtyard_coverage": {
+    "with_f_courtyard": 66,
+    "footprint_count": 74,
+    "missing_references": [
+      "KEY1",
+      "KEY2",
+      "KEY3",
+      "KEY4",
+      "KEY5",
+      "KEY6",
+      "LED2",
+      "SW2"
+    ]
+  },
+  "z_stack_proxy": {
+    "status": "visualisation only; PCB-to-cover seating datum not verified",
+    "pcb_component_face_z_mm": 2.4,
+    "pcb_thickness_mm": 1.6,
+    "fh34_height_mm": 1.0,
+    "usb1_height_mm": 4.0,
+    "usb1_height_status": "conservative unverified proxy"
+  },
+  "hard_collision_common_volume_mm3": {
+    "front_vs_gasket": 0.0,
+    "front_vs_screen": 0.0,
+    "gasket_vs_screen": 0.0,
+    "screen_vs_retainer": 0.0,
+    "front_vs_retainer": 0.0,
+    "fh34_vs_usb1": 0.0,
+    "screen_vs_fh34_at_provisional_z": 0.0,
+    "screen_vs_usb1_at_provisional_z": 0.0
+  },
+  "routing_keepout_overlap_mm3": {
+    "fpc_bend_keepout_vs_fh34_mm3": 13.693049999999994,
+    "fpc_bend_keepout_vs_usb1_mm3": 78.99801436799996,
+    "fpc_bend_keepout_vs_front_outside_candidate_slot_mm3": 130.92349751357452
+  },
+  "pending": [
+    "physical screen FPC exit/contact/Pin-1 confirmation",
+    "1:1 paper or real-part confirmation of folded Pin-1 mapping into J_DISP1",
+    "exact FPC fold route and latch-access test around USB1",
+    "measured PCB component face to front-cover Z datum",
+    "verified USB1 body height and full 74-footprint component heights",
+    "retainer fastening/compression method",
+    "printed dimensional compensation and powered closed-shell test"
+  ]
+}

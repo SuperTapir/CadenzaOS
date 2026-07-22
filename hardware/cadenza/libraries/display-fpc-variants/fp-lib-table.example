@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Cadenza_Display_FPC_Variants")(type "KiCad")(uri "${KIPRJMOD}/hardware/cadenza/libraries/display-fpc-variants/Cadenza_Display_FPC_Variants.pretty")(options "")(descr "Cadenza Sharp 10P FPC candidate footprints; not frozen"))
+)

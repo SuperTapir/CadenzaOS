@@ -1,0 +1,25 @@
+{
+  "origin_xy_mm": [
+    128.85,
+    18.0
+  ],
+  "outward_global": "+X",
+  "press_global": "-X",
+  "rotation_deg": -90,
+  "body_nominal_xyz_mm": [
+    4.6,
+    2.3,
+    1.8
+  ],
+  "overall_Y_H035_mm": 3.5,
+  "actuator_nominal_width_X_mm": 1.85,
+  "actuator_height_Z_mm": 0.85,
+  "actuator_centre_height_CH_Z_mm": 0.95,
+  "hard_collision_common_volume_mm3": {
+    "screen": 0.0,
+    "fpc": 0.0,
+    "mount_keepouts": 0.0,
+    "l2_controls": 0.0,
+    "front_shell": 0.0
+  }
+}

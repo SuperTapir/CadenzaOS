@@ -1,0 +1,90 @@
+{
+  "status": "candidate-only; dimensions-not-frozen",
+  "selection_frozen": false,
+  "production_ready": false,
+  "units": "mm",
+  "source": {
+    "layout_manifest": "hardware/cadenza/mechanical/l2-input-candidates/generated/l2-input-candidates.json",
+    "coordinate_system": "PCB XY from existing L2 candidates; front-shell exterior is negative Z"
+  },
+  "print_process_assumption": {
+    "process": "FDM test coupon / fit-check only",
+    "nominal_nozzle_diameter": 0.4,
+    "nominal_layer_height": 0.2,
+    "xy_fit_clearance_per_side": 0.1,
+    "recommended_orientation": "outer labelled face on bed; stem/hub upward; verify first-layer label quality",
+    "material": "not selected"
+  },
+  "buttons": {
+    "B": {
+      "cap_d": 10.5,
+      "cap_h": 2.8,
+      "stem_od": 7.7,
+      "stem_h": 2.2,
+      "shell_hole_d_inherited": 8.4,
+      "actuator_nominal_d_assumption": 3.5,
+      "actuator_socket_d": 3.75,
+      "actuator_socket_depth": 1.7,
+      "unpressed_shell_gap": 0.65,
+      "press_travel_proxy": 0.35
+    },
+    "Menu": {
+      "cap_d": 8.0,
+      "cap_h": 2.2,
+      "stem_od": 6.1,
+      "stem_h": 2.0,
+      "shell_hole_d_inherited": 6.8,
+      "actuator_nominal_d_assumption": 3.5,
+      "actuator_socket_d": 3.75,
+      "actuator_socket_depth": 1.5,
+      "unpressed_shell_gap": 0.65,
+      "press_travel_proxy": 0.35
+    }
+  },
+  "knob": {
+    "shell_hole_d_inherited": 7.8,
+    "hub_od": 7.1,
+    "hub_h": 2.8,
+    "unpressed_shell_gap": 0.8,
+    "press_travel_proxy": 0.5,
+    "top_solid_thickness": 1.25,
+    "a_mark_recess_depth": 0.45,
+    "press_interface": "the entire A-marked encoder knob moves axially with the EC12 push switch"
+  },
+  "shaft_interface_candidates": {
+    "round": {
+      "intent": "friction-fit coupon for an assumed round shaft",
+      "shaft_nominal_d_assumption": 6.0,
+      "bore_d": 6.25
+    },
+    "d-shaft": {
+      "intent": "friction-fit coupon for an assumed D shaft; flat angle remains replaceable",
+      "shaft_nominal_d_assumption": 6.0,
+      "bore_d": 6.25,
+      "flat_depth_from_circle_assumption": 0.8,
+      "flat_angle_deg": 0.0
+    },
+    "knurled-adapter": {
+      "intent": "knob accepts a separately printable keyed insert; only the insert changes after shaft measurement",
+      "socket_d": 8.4,
+      "insert_od": 8.15,
+      "key_width": 2.0,
+      "socket_key_extension": 1.0,
+      "insert_key_extension": 0.8,
+      "insert_length": 3.5,
+      "knurled_proxy_polygon_sides": 12,
+      "knurled_proxy_across_flats_assumption": 5.75
+    }
+  },
+  "mandatory_measurements_before_freeze": [
+    "EC12 shaft type: round, D-flat or knurled",
+    "shaft maximum/minimum diameter at several heights",
+    "D-flat depth and angular index, if present",
+    "knurl major/minor diameter and tooth count, if present",
+    "usable shaft length above bushing and bushing diameter/height",
+    "EC12 axial push travel and knob clearance at full press",
+    "B/Menu tactile-switch actuator diameter, height and travel",
+    "assembled PCB-to-front-shell distance",
+    "printer/material hole shrink and first-layer compensation"
+  ]
+}

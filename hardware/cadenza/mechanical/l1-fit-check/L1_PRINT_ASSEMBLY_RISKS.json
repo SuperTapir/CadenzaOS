@@ -1,0 +1,181 @@
+{
+  "schema_version": 2,
+  "status": "PASS_NON_FROZEN_AUDIT",
+  "production_ready": false,
+  "selection_frozen": false,
+  "checks": {
+    "fitcheck_audit_pass_non_frozen": true,
+    "production_false": true,
+    "inherited_boss_faces_found": true,
+    "inherited_floor_face_pair_found": true,
+    "route_conflicts_explicit": true,
+    "photo_exit_and_contact_face_confirmed": true,
+    "all_risks_pending_real_validation": true
+  },
+  "geometry_evidence": {
+    "inherited_bottom_sections": {
+      "bottom_step_sha256": "c3636deb59fdeafd3ed45d4dca8393170574e873677a9b8ff70b88e26512eb80",
+      "four_m3_boss_face_pairs_found": true,
+      "mounting_bore_diameter_mm": 3.0,
+      "boss_outer_diameter_mm": 7.0,
+      "boss_radial_wall_mm": 2.0,
+      "nominal_floor_section_mm": 1.6,
+      "large_horizontal_plane_z_mm": [
+        0.0,
+        1.6,
+        12.6,
+        14.6
+      ],
+      "floor_section_face_pair_found": true,
+      "interpretation_limit": "Nominal STEP face sections, not global minimum-thickness or PCB seating proof."
+    },
+    "screen_window_overlap_left_right_bottom_top_mm": [
+      1.4,
+      1.4,
+      3.17,
+      3.17
+    ],
+    "j_disp1_to_usb1_courtyard_gap_y_mm": 0.965567,
+    "fpc_route_keepout_overlap_mm3": {
+      "fpc_bend_keepout_vs_fh34_mm3": 13.693049999999994,
+      "fpc_bend_keepout_vs_usb1_mm3": 78.99801436799996,
+      "fpc_bend_keepout_vs_front_outside_candidate_slot_mm3": 130.92349751357452
+    },
+    "screen_projection_overlap_count": 31,
+    "courtyard_coverage": {
+      "with_f_courtyard": 66,
+      "footprint_count": 74,
+      "missing_references": [
+        "KEY1",
+        "KEY2",
+        "KEY3",
+        "KEY4",
+        "KEY5",
+        "KEY6",
+        "LED2",
+        "SW2"
+      ]
+    },
+    "physical_photo_evidence": {
+      "schema_version": 1,
+      "captured_on": "2026-07-22",
+      "user_labels": {
+        "front.HEIC": "正",
+        "back.HEIC": "反"
+      },
+      "confirmed": {
+        "fpc_exits_at_display_six_oclock": true,
+        "gold_contacts_are_on_display_rear_side": true,
+        "ten_conductors_visible": true,
+        "fpc_untwisted_in_photos": true
+      },
+      "pending": {
+        "photo_independent_pin1_marking": true,
+        "folded_global_pin1_mapping": true,
+        "fh34_latch_access": true,
+        "usb_clearance_after_fold": true,
+        "closed_shell_fit": true
+      },
+      "source_hashes_sha256": {
+        "back.HEIC": "fc40e2c1bf169ce9e2421497427f60b4367554af3d026a87c9f2c04f0a13937d",
+        "back.png": "5cd84e89fca4fce0f1108437f493ff1438df5b175ffc8e4a731a9153ade188c4",
+        "front.HEIC": "26cf0989fd7354c0a80671c13de9ff04712fc2ffdedf69d53f39353ca25f4ceb",
+        "front.png": "099196333607d4a1f2e0583b50f4a7ea3a1a269ab78b404033cfc964c518005c"
+      }
+    }
+  },
+  "risks": [
+    {
+      "id": "MECH-FPC-01",
+      "severity": "critical",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Current FPC bend keepout intersects both the selected FH34 envelope and USB1 envelope; exact folded route and latch access are not proven.",
+      "evidence": "J-to-USB courtyard gap=0.965567 mm; front pass-through=[61.68, 9.14, 71.32, 13.36]; overlaps={'fpc_bend_keepout_vs_fh34_mm3': 13.693049999999994, 'fpc_bend_keepout_vs_usb1_mm3': 78.99801436799996, 'fpc_bend_keepout_vs_front_outside_candidate_slot_mm3': 130.92349751357452}",
+      "release_gate": "Use the photo-confirmed rear contact face in a 1:1 fold mock-up, then confirm Pin 1 and pass repeated insertion and closed-shell powered test without touching USB1."
+    },
+    {
+      "id": "MECH-PIN1-02",
+      "severity": "critical",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The PCB connector rotation is fixed in the candidate, but the 180-degree fold can reverse the apparent left/right pin order; physical mapping is not closed.",
+      "evidence": "User front/back photos confirm 6-o'clock exit and contacts on the display rear; no unambiguous physical Pin 1 mark is visible. J_DISP1 KiCad centre=(154.625,128.500), rotation=0.",
+      "release_gate": "Photograph front/back, continuity-check all ten pins and compare a printed 1:1 pin-number overlay before ordering."
+    },
+    {
+      "id": "MECH-ZSTACK-03",
+      "severity": "critical",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The imported PCB does not provide a trustworthy board-to-front-cover Z datum or complete verified component heights.",
+      "evidence": "31 front courtyards project into the screen panel; coverage 66/74.",
+      "release_gate": "Measure PCB seating Z and critical component heights, model all screen-overlap parts, then pass a closed-shell section/collision audit."
+    },
+    {
+      "id": "MECH-USB-04",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "USB1 XY is authoritative but its body height is still a conservative proxy, so FPC-to-USB clearance is not verified.",
+      "evidence": "USB1=[58.669567, 0.8035, 71.3005, 6.434433]; height proxy=4.0 mm.",
+      "release_gate": "Identify exact USB MPN or caliper-measure the mounted connector including solder protrusion and repeat the bend audit."
+    },
+    {
+      "id": "MECH-SCREEN-05",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The 0.40 mm gasket is only geometry; compression, adhesive creep and glass stress are untested.",
+      "evidence": "window-to-panel overlap L/R/B/T=[1.4, 1.4, 3.17, 3.17] mm",
+      "release_gate": "Select actual gasket/adhesive, print a sacrificial front, and inspect powered pixels after repeated close/open cycles."
+    },
+    {
+      "id": "MECH-RETAINER-06",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The loose 1.00 mm rear frame has no fastening or preload feature and is not a production retainer.",
+      "evidence": "current fit-check exports a separated frame at the cover interior datum",
+      "release_gate": "Choose screws/snaps/adhesive and verify retention, glass load and service sequence in a real print."
+    },
+    {
+      "id": "MECH-SCREW-07",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Inherited cover Ø3.0 mm bores and PCB Ø2.0 mm holes do not select a screw or printed pilot-hole compensation.",
+      "evidence": "four inherited boss face pairs found; current PCB mounting centres unchanged",
+      "release_gate": "Print a hole/boss coupon, select screw or inserts, and inspect after three assembly cycles."
+    },
+    {
+      "id": "MECH-WALL-08",
+      "severity": "medium",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "medium",
+      "finding": "Nominal inherited floor/boss sections do not prove local minimum wall or print anisotropy.",
+      "evidence": "bottom STEP nominal floor 1.60 mm, boss radial wall 2.00 mm",
+      "release_gate": "Run slicer thin-wall inspection and a material-specific dimensional coupon."
+    },
+    {
+      "id": "MECH-PRINT-09",
+      "severity": "medium",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "medium",
+      "finding": "Shrinkage, supports, warping and surface finish remain printer/material/orientation dependent.",
+      "evidence": "no printer/material/coupon result recorded",
+      "release_gate": "Print one sacrificial fit shell and record XY hole and Z-stack deviations before release."
+    }
+  ],
+  "risk_counts": {
+    "critical": 3,
+    "high": 4,
+    "medium": 2,
+    "low": 0
+  },
+  "limits": [
+    "No real assembly evidence is created by this audit.",
+    "The visual PCB Z datum and USB height are explicit proxies.",
+    "FPC exit and contact face are photo-confirmed; folded Pin 1 mapping and latch operation remain physical gates."
+  ]
+}

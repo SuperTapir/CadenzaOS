@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "candidate_not_frozen": true,
+  "footprint_count": 3,
+  "checks": [
+    {
+      "footprint": "Hirose_FH12-10S-0.5SH_55_1x10_P0.50mm_BottomContact",
+      "mpn": "FH12-10S-0.5SH(55)",
+      "contact_side": "bottom",
+      "pin1_x": -2.25,
+      "pad_numbering": [
+        "-2.250",
+        "-1.750",
+        "-1.250",
+        "-0.750",
+        "-0.250",
+        "0.250",
+        "0.750",
+        "1.250",
+        "1.750",
+        "2.250"
+      ],
+      "model_kind": "manufacturer-specific KiCad standard model",
+      "sha256": "75e32b44d55ac0d5cea8b2e5c30c0238cc6ff3120757211078e018ce545e61cd",
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "footprint": "Hirose_FH12A-10S-0.5SH_55_1x10_P0.50mm_TopContact",
+      "mpn": "FH12A-10S-0.5SH(55)",
+      "contact_side": "top",
+      "pin1_x": -2.25,
+      "pad_numbering": [
+        "-2.250",
+        "-1.750",
+        "-1.250",
+        "-0.750",
+        "-0.250",
+        "0.250",
+        "0.750",
+        "1.250",
+        "1.750",
+        "2.250"
+      ],
+      "model_kind": "conservative envelope proxy, not production-exact",
+      "sha256": "a33fb423e63c76ef9155e1bc04fc0807d95b9c7625a4e2f955cf62ae0989dc2d",
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "footprint": "Hirose_FH34SRJ-10S-0.5SH_50_1x10_P0.50mm_DualContact",
+      "mpn": "FH34SRJ-10S-0.5SH(50)",
+      "contact_side": "top_and_bottom",
+      "pin1_x": 2.25,
+      "pad_numbering": [
+        "2.250",
+        "1.750",
+        "1.250",
+        "0.750",
+        "0.250",
+        "-0.250",
+        "-0.750",
+        "-1.250",
+        "-1.750",
+        "-2.250"
+      ],
+      "model_kind": "conservative envelope proxy, not production-exact",
+      "sha256": "8cf1bfc189d0d1e45b7c0064edfe8c953a8b9106147de23506f2f6ac8e1a6c4b",
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "model_paths": [
+    "${CADENZA_DISPLAY_FPC_3D_DIR}/Hirose_FH12A-10S-0.5SH_55_PROXY.step",
+    "${CADENZA_DISPLAY_FPC_3D_DIR}/Hirose_FH34SRJ-10S-0.5SH_50_PROXY.step",
+    "${KICAD10_3DMODEL_DIR}/Connector_FFC-FPC.3dshapes/Hirose_FH12-10S-0.5SH_1x10-1MP_P0.50mm_Horizontal.step"
+  ],
+  "note": "Geometry check only; does not replace physical FPC direction and 1:1 print verification."
+}

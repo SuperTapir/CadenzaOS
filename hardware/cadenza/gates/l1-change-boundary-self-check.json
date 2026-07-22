@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "baseline": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+  "candidate": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+  "checks": {
+    "board_edge_bbox_unchanged": true,
+    "mounting_holes_unchanged": true,
+    "all_locked_footprints_present": true,
+    "locked_footprints_placement_footprint_and_pad_nets_unchanged": true,
+    "locked_net_endpoints_unchanged": true,
+    "new_components_connect_only_to_display_allowed_nets": true,
+    "repurposed_display_refs_connect_only_to_allowed_or_legacy_nets": true
+  },
+  "details": {
+    "missing_locked_refs": [],
+    "changed_locked_refs": [],
+    "mounting_changes": [],
+    "locked_net_changes": [],
+    "new_refs": [],
+    "unexpected_new_connections": [],
+    "unexpected_repurposed_connections": []
+  },
+  "verdict": "PASS",
+  "scope_note": "This gate protects the inherited PCB boundary; it does not prove the new display circuit, routing, EMC, DFM, or physical FPC direction."
+}

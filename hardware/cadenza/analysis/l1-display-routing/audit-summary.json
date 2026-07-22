@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "PASS_FEASIBILITY_ONLY",
+  "scope": "read-only Sharp display routing feasibility on current local-routing boards",
+  "routing_complete": false,
+  "drc_passed": false,
+  "selection_frozen": false,
+  "production_ready": false,
+  "preferred_routing_variant": "rotation-180-slight-preference-not-frozen",
+  "inputs": {
+    "rotation_0_sha256": "4318ec5804cfa7cb5b46568ffd82505d05a58b6f828432104e52762f63226d38",
+    "rotation_180_sha256": "c51111ebfb90cb11827098b2cdc856fa098e15070f754e9d0cc6642c6b8e7bdf",
+    "rotation_0_drc_sha256": "a7c9f37d65ae71757c41eda2c1fb58c5056ba2ce5a8e2374703388a932e538b9",
+    "rotation_180_drc_sha256": "cd68e412a7a9a08810b9d8864c6f1c06e8b694a58677bee07b2878d03e61d8fb"
+  },
+  "current_drc": {
+    "rotation_0": {"violations": 203, "unconnected": 37, "tracks_crossing": 1, "shorting_items": 2},
+    "rotation_180": {"violations": 204, "unconnected": 37, "tracks_crossing": 1, "shorting_items": 2},
+    "interpretation": "current verification is FAIL 24/28; LED/VBUS/TP_PWR_BUTTON conflicts must be fixed before using this as the Sharp DRC baseline"
+  },
+  "recommendation": {
+    "signal_escape_width_mm": 0.2,
+    "signal_main_width_mm": 0.254,
+    "power_main_width_mm": 0.508,
+    "candidate_via_diameter_mm": 0.61,
+    "candidate_via_drill_mm": 0.305,
+    "primary_signal_layer_after_escape": "F.Cu",
+    "j_fanout_corridor_xy_mm": [149.5, 130.0, 156.5, 133.3],
+    "main_top_corridor_xy_mm": [150.5, 112.0, 162.5, 130.0]
+  },
+  "traceability_warning": "snapshot hashes match routing-report.json at 09:16, but the directory changed repeatedly during audit and verification-report.json is FAIL 24/28",
+  "next_gate": "temporary-copy route experiment followed by DRC delta requiring no new shorting_items, tracks_crossing, or clearance violations"
+}

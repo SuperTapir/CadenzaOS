@@ -1,0 +1,2 @@
+Fontconfig error: Cannot load default config file: No such file: (null)
+警告: 原理图存在批注错误, 请使用原理图编辑器修复它们

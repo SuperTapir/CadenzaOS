@@ -1,0 +1,46 @@
+{
+  "queried_at": "2026-07-22",
+  "source": "jlcsearch.tscircuit.com community API; classifications and stock require recheck at BOM freeze",
+  "parts": [
+    {
+      "function": "dual_schottky_isolation",
+      "manufacturer": "JSMSEMI",
+      "mpn": "BAT54C",
+      "lcsc": "C916424",
+      "package": "SOT-23",
+      "basic": false,
+      "stock_snapshot": 375971,
+      "role": "preferred_if_KEY_threshold_gate_passes"
+    },
+    {
+      "function": "force_off_nmos",
+      "manufacturer": "Alpha & Omega Semiconductor",
+      "mpn": "AO3400A",
+      "lcsc": "C20917",
+      "package": "SOT-23",
+      "basic": true,
+      "stock_snapshot": 1345927,
+      "role": "preferred"
+    },
+    {
+      "function": "force_off_nmos",
+      "manufacturer": "JSCJ",
+      "mpn": "2N7002",
+      "lcsc": "C8545",
+      "package": "SOT-23",
+      "basic": true,
+      "stock_snapshot": 1842138,
+      "role": "alternate_requires_3V3_KEY_sink_test"
+    },
+    {
+      "function": "force_off_nmos",
+      "manufacturer": "Leshan Radio Company",
+      "mpn": "L2N7002SLLT1G",
+      "lcsc": "C22446827",
+      "package": "SOT-23",
+      "basic": false,
+      "stock_snapshot": 12704503,
+      "role": "second_alternate"
+    }
+  ]
+}

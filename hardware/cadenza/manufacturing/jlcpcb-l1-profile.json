@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "candidate_not_frozen",
+  "checked_date": "2026-07-22",
+  "board": {
+    "layers": 2,
+    "material": "FR-4",
+    "thickness_mm": 1.6,
+    "outer_copper_oz": 1
+  },
+  "design_targets_mm": {
+    "minimum_signal_track_width": 0.2,
+    "preferred_signal_track_width": 0.254,
+    "minimum_power_track_width_subject_to_current_review": 0.5,
+    "minimum_copper_clearance": 0.2,
+    "minimum_via_diameter": 0.55,
+    "minimum_via_drill": 0.3,
+    "minimum_copper_to_board_edge": 0.5,
+    "minimum_silkscreen_line_width": 0.15,
+    "preferred_silkscreen_line_width": 0.2,
+    "minimum_silkscreen_text_height": 1.0
+  },
+  "reference_board_observed": {
+    "track_widths_mm": [0.254, 0.508],
+    "via_diameter_mm": 0.61,
+    "via_drill_mm": 0.305,
+    "track_segments": 506,
+    "vias": 78,
+    "project_min_clearance_mm": 0.0,
+    "project_min_copper_edge_clearance_mm": 0.5
+  },
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities",
+    "https://jlcpcb.com/help/article/instructions-for-ordering"
+  ],
+  "order_ready": false
+}

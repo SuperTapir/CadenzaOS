@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+*-backups/
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*.lck
+~*.kicad_*

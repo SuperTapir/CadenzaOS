@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "gate": "cadenza_l1_erc_error_regression",
+  "status": "PASS_NO_NEW_ERRORS",
+  "scope": "KiCad ERC error-level regression only; warnings and electrical validity still require review",
+  "production_ready": false,
+  "baseline": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/evidence/baseline.erc.json",
+    "total": 691,
+    "by_severity": {
+      "error": 18,
+      "warning": 673
+    },
+    "by_type": {
+      "pin_not_driven": 14,
+      "power_pin_not_driven": 4,
+      "endpoint_off_grid": 389,
+      "pin_to_pin": 187,
+      "lib_symbol_mismatch": 33,
+      "footprint_link_issues": 3,
+      "unconnected_wire_endpoint": 61
+    }
+  },
+  "candidate": {
+    "path": "/Users/tapir/Development/CadenzaOS/hardware/cadenza/derived/l1-screen-only/generated/evidence/candidate-self-contained.erc.json",
+    "total": 617,
+    "by_severity": {
+      "error": 14,
+      "warning": 603
+    },
+    "by_type": {
+      "pin_not_driven": 11,
+      "power_pin_not_driven": 3,
+      "endpoint_off_grid": 350,
+      "pin_to_pin": 175,
+      "lib_symbol_mismatch": 30,
+      "unconnected_wire_endpoint": 46,
+      "footprint_link_issues": 2
+    }
+  },
+  "error_delta": {
+    "baseline": 18,
+    "candidate": 14,
+    "new": 0,
+    "removed": 4,
+    "new_signatures": [],
+    "removed_signatures": [
+      [
+        "pin_not_driven",
+        [
+          "5417ad7e-b62e-4fb8-9c03-c35f9c4cbfdc"
+        ]
+      ],
+      [
+        "pin_not_driven",
+        [
+          "7af4863d-6579-4ded-969c-debf3a002a93"
+        ]
+      ],
+      [
+        "pin_not_driven",
+        [
+          "e1a6c02f-27d5-4d4b-9871-c4c7b4598e35"
+        ]
+      ],
+      [
+        "power_pin_not_driven",
+        [
+          "0ecabf9a-db65-465e-ae5f-0044a1962543"
+        ]
+      ]
+    ]
+  },
+  "interpretation": "No new error-level ERC signature was introduced by the L1 delta. Remaining errors are inherited reference/import debt, not waived production findings."
+}

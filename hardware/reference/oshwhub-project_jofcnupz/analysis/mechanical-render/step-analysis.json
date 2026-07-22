@@ -1,0 +1,56 @@
+[
+  {
+    "source": "/Users/tapir/Development/CadenzaOS/hardware/reference/oshwhub-project_jofcnupz/顶盖V7.step",
+    "read_ok": true,
+    "transferred_roots": 1,
+    "solids": 1,
+    "shells": 1,
+    "faces": 40,
+    "bbox_mm": {
+      "xmin": -1.0003151071871053,
+      "ymin": -1.0003151071871055,
+      "zmin": -3.0002643070850947,
+      "xmax": 131.00031704433815,
+      "ymax": 62.78745414742305,
+      "zmax": 0.0003659072890944156,
+      "width": 132.00063215152525,
+      "height": 63.787769254610154,
+      "depth": 3.000630214374189
+    },
+    "volume_mm3": 10727.756181276367,
+    "centroid_mm": [
+      63.931113296491944,
+      28.578457628547927,
+      -1.4919156027924607
+    ],
+    "mesh_vertices": 4594,
+    "mesh_triangles": 6892
+  },
+  {
+    "source": "/Users/tapir/Development/CadenzaOS/hardware/reference/oshwhub-project_jofcnupz/底盒V7.step",
+    "read_ok": true,
+    "transferred_roots": 1,
+    "solids": 1,
+    "shells": 1,
+    "faces": 219,
+    "bbox_mm": {
+      "xmin": -1.9063190237905536,
+      "ymin": -1.906319023790566,
+      "zmin": 4.5979527778696365e-05,
+      "xmax": 131.90632096094154,
+      "ymax": 62.00000571464392,
+      "zmax": 14.600055620676223,
+      "width": 133.8126399847321,
+      "height": 63.906324738434485,
+      "depth": 14.600009641148445
+    },
+    "volume_mm3": 24494.187101027845,
+    "centroid_mm": [
+      65.777844037531,
+      30.115296342858592,
+      10.858369093352042
+    ],
+    "mesh_vertices": 5604,
+    "mesh_triangles": 5682
+  }
+]

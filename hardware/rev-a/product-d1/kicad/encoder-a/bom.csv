@@ -1,5 +1,0 @@
-Reference,Qty,Value,MPN,LCSC,Assembly
-SW1,1,30 detent / 15 pulse encoder with push,EC12D1524403,C112349,Hand/THT
-J1,1,JST-SH 6 pin horizontal,SM06B-SRSS-TB,C160404,JLC SMT
-"R1,R2,R3",3,10k 1% 0603,generic,TBD basic,JLC SMT
-"C1,C2,C3",3,10nF 16V X7R 0603,generic,TBD basic,JLC SMT

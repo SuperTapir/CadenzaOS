@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "PASS_PROVISIONAL_DFM",
+  "production_ready": false,
+  "scope": "JLC prototype geometry/file gate; placement preview, stock and physical FPC confirmation remain pending",
+  "limits": {
+    "min_trace_spacing_mm": 0.127,
+    "min_trace_width_mm": 0.127,
+    "min_via_drill_mm": 0.2,
+    "min_via_diameter_mm": 0.45,
+    "nominal_copper_to_edge_mm": 0.3,
+    "edge_numeric_tolerance_mm": 0.001
+  },
+  "measurements": {
+    "copper_layers": 2,
+    "board_edges_bbox_mm": [
+      130.254,
+      60.254
+    ],
+    "min_track_width_mm": 0.2,
+    "min_reported_clearance_mm": 0.152,
+    "min_via_drill_mm": 0.3,
+    "min_via_diameter_mm": 0.61,
+    "min_reported_copper_edge_mm": 0.2995,
+    "mounting_holes": {
+      "SCREW1": {
+        "attribute": 3,
+        "drill_mm": 2.0,
+        "x_mm": 93.125,
+        "y_mm": 84.725
+      },
+      "SCREW2": {
+        "attribute": 3,
+        "drill_mm": 2.0,
+        "x_mm": 213.125,
+        "y_mm": 84.725
+      },
+      "SCREW3": {
+        "attribute": 3,
+        "drill_mm": 2.0,
+        "x_mm": 93.125,
+        "y_mm": 134.725
+      },
+      "SCREW4": {
+        "attribute": 3,
+        "drill_mm": 2.0,
+        "x_mm": 213.125,
+        "y_mm": 134.725
+      }
+    },
+    "raw_drc_violations": 95,
+    "raw_drc_unconnected": 0
+  },
+  "checks": {
+    "two_copper_layers": true,
+    "board_bbox_matches_130x60_outline_with_stroke": true,
+    "no_unconnected_items": true,
+    "no_shorting_items": true,
+    "actual_clearances_meet_jlc_minimum": true,
+    "actual_track_widths_meet_jlc_minimum": true,
+    "actual_vias_meet_jlc_minimum": true,
+    "copper_edge_meets_nominal_with_numeric_tolerance": true,
+    "four_mounting_holes_are_2mm_npth_at_frozen_coordinates": true,
+    "required_gerber_and_drill_extensions_present": true,
+    "bom_cpl_designator_gate_passes": true
+  },
+  "remaining_manual_gates": [
+    "JLC Gerber viewer board outline/drill preview",
+    "JLC BOM/CPL component match and rotation preview",
+    "C324723 stock/extended-part confirmation at upload time",
+    "physical Sharp FPC Pin 1/contact face/fold/latch/closed-shell confirmation"
+  ]
+}

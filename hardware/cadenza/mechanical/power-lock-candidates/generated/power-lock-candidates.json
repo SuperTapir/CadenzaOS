@@ -1,0 +1,135 @@
+{
+  "status": "candidate only; selection_frozen=false; production_ready=false",
+  "coordinate_system": "shared PCB XY: x=0..130 left-to-right, y=0..60 bottom-to-top; L1 front z≈-3..0",
+  "inherited_datums": {
+    "pcb_xy_mm": [
+      0.0,
+      0.0,
+      130.0,
+      60.0
+    ],
+    "mount_holes_xy_mm": [
+      [
+        5.0,
+        5.0
+      ],
+      [
+        5.0,
+        55.0
+      ],
+      [
+        125.0,
+        5.0
+      ],
+      [
+        125.0,
+        55.0
+      ]
+    ],
+    "screen_panel_xy_mm": [
+      33.6,
+      8.59,
+      96.4,
+      51.41
+    ],
+    "fpc_relief_xy_mm": [
+      60.18,
+      50.8,
+      69.82,
+      58.0
+    ]
+  },
+  "proxy_dimensions_not_component_selection": {
+    "cap_diameter_mm": 5.6,
+    "cap_axial_length_mm": 5.2,
+    "cap_to_guide_radial_clearance_mm": 0.4,
+    "guide_wall_mm": 1.0,
+    "guard_side_clearance_mm": 0.75,
+    "guard_outer_recess_mm": 0.8,
+    "assumed_travel_mm": 1.0,
+    "switch_body_xyz_mm": [
+      6.6,
+      6.6,
+      5.4
+    ],
+    "switch_body_to_wall_clearance_mm": 0.6,
+    "sidewall_proxy_z_mm": [
+      -3.0,
+      6.8
+    ],
+    "button_axis_z_mm": 2.7,
+    "pcb_component_side_z_mm": 0.4
+  },
+  "variants": {
+    "a-top-edge": {
+      "intent": "顶边右侧，食指容易找到；避开 Sharp FPC 与右上安装孔",
+      "axis": "+Y",
+      "centre_xy_mm": [
+        105.0,
+        61.0
+      ],
+      "body_centre_xy_mm": [
+        105.0,
+        55.6
+      ],
+      "rest_axis_range_mm": [
+        59.0,
+        64.2
+      ],
+      "guard_outer_axis_mm": 65.0,
+      "metrics": {
+        "screen_panel_xy_clearance_mm": 5.374,
+        "fpc_relief_xy_clearance_mm": 31.88,
+        "guard_protrudes_beyond_cap_mm": 0.8
+      },
+      "hard_collision_common_volume_mm3": {
+        "screen_vs_switch_keepout_mm3": 0.0,
+        "fpc_relief_vs_switch_keepout_mm3": 0.0,
+        "mount_keepouts_vs_switch_keepout_mm3": 0.0,
+        "l2_controls_vs_switch_keepout_mm3": 0.0,
+        "enclosure_interface_vs_rest_cap_mm3": 0.0,
+        "enclosure_interface_vs_pressed_cap_mm3": 0.0,
+        "guard_vs_rest_cap_mm3": 0.0
+      }
+    },
+    "b-right-edge": {
+      "intent": "右侧偏下，拇指/食指可触达；与右侧编码器候选错开",
+      "axis": "+X",
+      "centre_xy_mm": [
+        129.0,
+        18.0
+      ],
+      "body_centre_xy_mm": [
+        124.1,
+        18.0
+      ],
+      "rest_axis_range_mm": [
+        127.4,
+        132.6
+      ],
+      "guard_outer_axis_mm": 133.4,
+      "metrics": {
+        "screen_panel_xy_clearance_mm": 24.4,
+        "fpc_relief_xy_clearance_mm": 58.9,
+        "guard_protrudes_beyond_cap_mm": 0.8
+      },
+      "hard_collision_common_volume_mm3": {
+        "screen_vs_switch_keepout_mm3": 0.0,
+        "fpc_relief_vs_switch_keepout_mm3": 0.0,
+        "mount_keepouts_vs_switch_keepout_mm3": 0.0,
+        "l2_controls_vs_switch_keepout_mm3": 0.0,
+        "enclosure_interface_vs_rest_cap_mm3": 0.0,
+        "enclosure_interface_vs_pressed_cap_mm3": 0.0,
+        "guard_vs_rest_cap_mm3": 0.0
+      }
+    }
+  },
+  "verification_limits": [
+    "真实开关型号、封装和 JLCPCB/LCSC 可采购性未确认",
+    "真实执行头形状、总行程、操作力和寿命未确认",
+    "PCB 元件面到完整外壳侧壁/顶边的装配距离未实测",
+    "这里只继承 L1 前壳；后壳、分模线、螺柱和装配顺序尚未冻结",
+    "按帽配合、打印材料收缩和导向间隙必须用实物样件验证",
+    "Power/Lock 电气长按关机行为不由本机械候选证明"
+  ]
+}

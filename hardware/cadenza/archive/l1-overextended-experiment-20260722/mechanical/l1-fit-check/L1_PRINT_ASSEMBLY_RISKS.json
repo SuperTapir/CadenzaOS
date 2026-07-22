@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "status": "PASS_NON_FROZEN_AUDIT",
+  "production_ready": false,
+  "selection_frozen": false,
+  "checks": {
+    "base_fitcheck_audit_pass": true,
+    "fpc_candidate_gate_pass": true,
+    "fpc_selection_not_frozen": true,
+    "inherited_boss_faces_found": true,
+    "inherited_floor_face_pair_found": true,
+    "all_risks_keep_real_validation_pending": true
+  },
+  "geometry_evidence": {
+    "inherited_bottom_sections": {
+      "bottom_step_sha256": "c3636deb59fdeafd3ed45d4dca8393170574e873677a9b8ff70b88e26512eb80",
+      "four_m3_boss_face_pairs_found": true,
+      "mounting_bore_diameter_mm": 3.0,
+      "boss_outer_diameter_mm": 7.0,
+      "boss_radial_wall_mm": 2.0,
+      "boss_cylindrical_span_mm": 11.0,
+      "nominal_floor_section_mm": 1.6,
+      "large_horizontal_plane_z_mm": [
+        0.0,
+        1.6,
+        12.6,
+        14.6
+      ],
+      "floor_section_face_pair_found": true,
+      "interpretation_limit": "These are nominal STEP face sections, not a global minimum-thickness proof."
+    },
+    "screen_window_overlap_left_right_bottom_top_mm": [
+      1.4,
+      1.4,
+      3.17,
+      3.17
+    ],
+    "retainer_capture_overlap_left_right_bottom_top_mm": [
+      1.6,
+      1.6,
+      3.41,
+      3.41
+    ],
+    "retainer_thickness_mm": 1.0,
+    "gasket_proxy_thickness_mm": 0.4,
+    "l2_control_candidate_minima": {
+      "screen_panel_clearance_mm": 6.6,
+      "pcb_edge_clearance_mm": 9.0,
+      "mount_keepout_clearance_mm": 8.692,
+      "b_menu_edge_clearance_mm": 2.75
+    },
+    "power_lock_candidate_minima": {
+      "screen_clearance_mm": 5.374,
+      "fpc_relief_clearance_mm": 31.88,
+      "guard_overhang_mm": 0.8
+    }
+  },
+  "provisional_print_guidance_not_design_facts": [
+    "Do not scale the whole model to compensate shrinkage; calibrate XY holes and Z separately with the actual process.",
+    "Treat the glass as a no-press-fit part; use a compliant gasket and process-specific clearance coupon.",
+    "For FDM, confirm every retained wall has enough slicer perimeters; the 1.00 mm retainer is specifically unresolved.",
+    "Do not derive a screw pilot diameter from the nominal M3 label; use the selected screw/insert supplier rule plus a printed coupon."
+  ],
+  "risks": [
+    {
+      "id": "MECH-FPC-01",
+      "severity": "critical",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Sharp p.23 resolves the screen-local 6-o'clock exit, rear flat-contact face, Pin 1 side and allowed rear fold; enclosure +Y/-Y rotation, adapter mapping, exact connector latch and folded route remain unknown.",
+      "evidence": "two datasheet-backed enclosure rotations present; selection_frozen=false; routing_frozen=false",
+      "release_gate": "Photograph the real display/adapter, continuity-check all ten adapter pins, choose enclosure rotation, then validate connector latch and folded route in a closed enclosure."
+    },
+    {
+      "id": "MECH-SCREEN-02",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The 0.40 mm gasket is a geometric proxy; compression, adhesive creep and glass stress are untested.",
+      "evidence": "window-to-panel overlap L/R/B/T=[1.4, 1.4, 3.17, 3.17] mm",
+      "release_gate": "Choose actual gasket material from supplier data and pass repeated close/open plus powered display inspection without pressure artefacts or glass damage."
+    },
+    {
+      "id": "MECH-RETAINER-03",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "The 1.00 mm retainer has no fastener or snap geometry and is thinner than the inherited 1.60 mm nominal floor section.",
+      "evidence": "generated retainer thickness=1.00 mm; inherited floor section=1.60 mm",
+      "release_gate": "Select material/process, add fastening, print and pass flex/retention testing."
+    },
+    {
+      "id": "MECH-SCREW-04",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Inherited exact Ø3.0 mm bores may print undersize; screw type and pilot-hole rule are not selected.",
+      "evidence": "four Ø3.0 bores and Ø7.0 bosses found in bottom STEP",
+      "release_gate": "Print a hole/boss coupon, select screw/inserts and record final compensated bore; inspect bosses after three assembly cycles."
+    },
+    {
+      "id": "MECH-WALL-05",
+      "severity": "medium",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "medium",
+      "finding": "Nominal inherited sections are 1.60 mm floor and 2.00 mm boss radial wall, but local global minimum and print anisotropy are not proven.",
+      "evidence": "direct STEP plane/cylinder face audit",
+      "release_gate": "Run slicer thin-wall preview for the chosen nozzle/resin and physically inspect all walls/bosses; thicken only derived enclosure if needed."
+    },
+    {
+      "id": "MECH-INPUT-06",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Button bodies, keycaps, EC12 body/shaft and press travel remain proxies.",
+      "evidence": "candidate minima={'screen_panel_clearance_mm': 6.6, 'pcb_edge_clearance_mm': 9.0, 'mount_keepout_clearance_mm': 8.692, 'b_menu_edge_clearance_mm': 2.75}",
+      "release_gate": "Measure the purchased EC12 and switches with calipers; validate axial press at full travel and rotation in a 1:1 print."
+    },
+    {
+      "id": "MECH-POWER-07",
+      "severity": "high",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "Power/Lock placements clear current proxies but switch body, cap travel and accidental-press force are unverified.",
+      "evidence": "candidate minima={'screen_clearance_mm': 5.374, 'fpc_relief_clearance_mm': 31.88, 'guard_overhang_mm': 0.8}",
+      "release_gate": "Select the real switch and pass reach, guard, full-travel and closed-shell tests."
+    },
+    {
+      "id": "MECH-ZSTACK-08",
+      "severity": "critical",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "high",
+      "finding": "PCB components, solder joints, battery, speaker, connector latch and wiring are not included in a closed-shell Z-stack.",
+      "evidence": "current assembly contains front, gasket, screen and retainer only",
+      "release_gate": "Build a complete component-envelope assembly and pass closed-shell collision/clearance audit."
+    },
+    {
+      "id": "MECH-PRINT-09",
+      "severity": "medium",
+      "status": "PENDING_REAL_VALIDATION",
+      "confidence": "medium",
+      "finding": "Shrinkage, hole compensation, support scars and warping depend on the chosen printer/material/orientation.",
+      "evidence": "no printer/material/coupon result recorded",
+      "release_gate": "Print a dimensional coupon and one sacrificial fit shell; record measured compensation before final STL export."
+    }
+  ],
+  "risk_counts": {
+    "critical": 2,
+    "high": 5,
+    "medium": 2,
+    "low": 0
+  },
+  "reproducibility": {
+    "command": "PYTHONPATH=/Users/tapir/.cache/cadenza-cad-tools-py313 /opt/homebrew/bin/python3.13 hardware/cadenza/mechanical/l1-fit-check/generate_l1_risk_register.py",
+    "inputs": [
+      "generated/l1-front-fitcheck-parameters.json",
+      "L1_FITCHECK_AUDIT.json",
+      "variants/generated/verification-report.json",
+      "../l2-input-candidates/generated/l2-input-candidates.json",
+      "../power-lock-candidates/generated/power-lock-candidates.json",
+      "hardware/reference/oshwhub-project_jofcnupz/底盒V7.step"
+    ]
+  },
+  "limits": [
+    "No real assembly evidence is created by this audit.",
+    "Nominal STEP sections are not a proof of global minimum wall thickness.",
+    "No FPC direction/contact side/Pin 1, connector rotation, input placement or power-button placement is selected."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "status": "candidate_not_order_frozen",
+  "snapshot_date": "2026-07-22",
+  "stock_source": "https://jlcsearch.tscircuit.com/api/search",
+  "stock_source_authority": "community_api_recheck_in_jlcpcb_before_order",
+  "manufacturer_sources": {
+    "CC0805KRX7R9BB104": "https://www.yageogroup.com/download/specsheet/CC0805KRX7R9BB104",
+    "CL21B105KBFNNNE": "https://product.samsungsem.com/mlcc/CL21B105KBFNNN.do"
+  },
+  "parts": [
+    {"function":"display_100nF","mpn":"CC0805KRX7R9BB104","lcsc":"C49678","value":"100nF","tolerance_pct":10,"rated_voltage_v":50,"dielectric":"X7R","package":"0805","jlc_basic":true,"stock":15768009},
+    {"function":"display_1uF","mpn":"CL21B105KBFNNNE","lcsc":"C28323","value":"1uF","tolerance_pct":10,"rated_voltage_v":50,"dielectric":"X7R","package":"0805","jlc_basic":true,"stock":5331021},
+    {"function":"usb_series_22R","mpn":"0805W8F220JT5E","lcsc":"C17561","value":"22R","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":1236224},
+    {"function":"logic_series_100R","mpn":"0805W8F1000T5E","lcsc":"C17408","value":"100R","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":5280115},
+    {"function":"power_sense_1k","mpn":"0805W8F1001T5E","lcsc":"C17513","value":"1k","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":7961494},
+    {"function":"logic_pullup_10k","mpn":"0805W8F1002T5E","lcsc":"C17414","value":"10k","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":15457503},
+    {"function":"logic_pulldown_or_vbus_bottom_100k","mpn":"0805W8F1003T5E","lcsc":"C149504","value":"100k","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":1778254},
+    {"function":"vbus_top_single_75k","mpn":"0805W8F7502T5E","lcsc":"C17819","value":"75k","tolerance_pct":1,"package":"0805","jlc_basic":false,"stock":103337,"assembly":"alternative_to_two_parallel_150k"},
+    {"function":"vbus_top_parallel_150k_each","mpn":"0805W8F1503T5E","lcsc":"C17470","value":"150k","quantity":2,"equivalent_value":"75k","tolerance_pct":1,"package":"0805","jlc_basic":true,"stock":506046,"assembly":"preferred_if_board_area_allows"}
+  ],
+  "vbus_divider": {
+    "input_v": 5.0,
+    "top_equivalent_ohm": 75000,
+    "bottom_ohm": 100000,
+    "nominal_output_v": 2.857142857,
+    "mutually_exclusive_top_options": true,
+    "frozen": false
+  }
+}

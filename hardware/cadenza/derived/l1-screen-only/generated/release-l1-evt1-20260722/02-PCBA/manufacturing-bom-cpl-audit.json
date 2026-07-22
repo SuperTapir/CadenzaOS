@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "format/designator gate only; JLC placement preview and stock checks remain mandatory",
+  "checks": {
+    "unique_bom_designators": true,
+    "unique_cpl_designators": true,
+    "all_assembled_parts_have_positions": true,
+    "no_unexpected_position_only_parts": true,
+    "all_assembled_parts_have_valid_lcsc_numbers": true,
+    "only_mounting_screws_are_omitted": true,
+    "minimum_centroid_spacing_exceeds_jlc_0_2mm": true
+  },
+  "counts": {
+    "schematic_rows": 74,
+    "pcb_position_rows": 74,
+    "assembled_rows": 70,
+    "omitted_mechanical_rows": 4
+  },
+  "omitted_mechanical_designators": [
+    "SCREW1",
+    "SCREW2",
+    "SCREW3",
+    "SCREW4"
+  ],
+  "missing_positions": [],
+  "extra_positions": [],
+  "invalid_lcsc_designators": [],
+  "minimum_centroid_spacing_mm": 2.0065000000000026,
+  "minimum_centroid_spacing_pair": [
+    "C8",
+    "C9"
+  ]
+}

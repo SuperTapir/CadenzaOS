@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name "Cadenza_Encoder")(type "Legacy")(uri "${KIPRJMOD}/cadenza-encoder-a.lib")(options "")(descr ""))
-)

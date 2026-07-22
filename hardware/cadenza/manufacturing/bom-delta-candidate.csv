@@ -1,0 +1,36 @@
+Stage,Action,Reference_or_Function,Qty,Value_or_Function,Candidate_MPN,Candidate_LCSC,Assembly,Status,Notes
+L1,REMOVE,FPC1,1,12P TFT FPC,,,Reference PCBA,planned,Replaced by Sharp 10P connector
+L1,REMOVE,U6,1,3V3LCD LDO,,,Reference PCBA,planned,Sharp requires 5V VDD and VDDA
+L1,REMOVE,C20/C21,2,old LCD rail capacitors,,,Reference PCBA,planned,Do not reuse values blindly
+L1,REMOVE,Q2/R13/R14,3,TFT backlight driver,,,Reference PCBA,planned,Sharp has no backlight
+L1,ADD,LCD_FPC,1,10P 0.5mm FPC,TBD after physical direction,TBD,SMT,pending_physical,Top bottom or dual contact not frozen
+L1,ADD,C_DISP,1,0.1uF 50V X7R 0805,CC0805KRX7R9BB104,C49678,SMT,candidate_basic,Place at connector DISP to GND
+L1,ADD,C_VDDA,1,0.1uF 50V X7R 0805,CC0805KRX7R9BB104,C49678,SMT,candidate_basic,Place at connector VDDA to GND
+L1,ADD,C_VDD,1,1uF 50V X7R 0805,CL21B105KBFNNNE,C28323,SMT,candidate_basic,Place at connector VDD to GND
+L1,ADD,DISPLAY_TEST_POINTS,7,+5V GND SCLK SI SCS EXTCOMIN DISP,PCB pads,,Bare PCB,planned,Not BOM placed parts unless loop terminals selected
+L1,ADD,POWER_LOCK_SW,1,normally-open side-push momentary switch,GT-TC020A-H035-L1,C17179533,SMT,candidate_extended,Alternate C5373430; sample and actuator fit-check required
+L1,ADD,D_POWER_KEY,1,common-cathode dual Schottky,BAT54C,C916424,SMT,candidate,Verify KEY low threshold and diode drop
+L1,ADD,Q_FORCE_OFF,1,logic-level N-MOSFET,AO3400A,C20917,SMT,candidate,2N7002 C8545 alternate
+L1,ADD,R_PWR_SENSE_SERIES,1,1k 1% 0805,0805W8F1001T5E,C17513,SMT,candidate_basic,Power key GPIO isolation network
+L1,ADD,R_PWR_SENSE_PULLUP,1,10k 1% 0805,0805W8F1002T5E,C17414,SMT,candidate_basic,Pull up to 3V3M
+L1,ADD,R_FORCE_GATE,1,100R 1% 0805,0805W8F1000T5E,C17408,SMT,candidate_basic,GPIO to force-off MOS gate
+L1,ADD,R_FORCE_GATE_PULLDOWN,1,100k 1% 0805,0805W8F1003T5E,C149504,SMT,candidate_basic,Keep force-off MOS disabled during reset
+L1,ADD,SJ_KEY_BYPASS,1,default-open solder jumper or 0R option,TBD,TBD,Bare PCB/DNP,candidate,Bypass KEY-side diode only after test
+L1,ADD,R_PWR6,1,4x2mm top-copper net-tie,KiCad NetTie-2_SMD_Pad2.0mm,,Bare PCB,candidate_no_bom_cpl,Nominal 1oz 2.1A estimate 0.985mOhm 2.07mV 4.34mW; final neck-down and thermal check pending
+L2,REMOVE,SW2,1,reference joystick,,,Reference PCBA,planned,Frees GPIO19 GPIO20 and control area
+L2,REMOVE,U3/Q1,2,CH340C and UMH3N,,,Reference PCBA,candidate_after_L1,Only for native USB L2 route
+L2,REMOVE,DTR_RTS_ROUTE,0,CH340 auto-reset support passives/nets,,,Reference PCBA,candidate_after_L1,Delete only parts proven exclusive to U3
+L2,ADD,ENCODER_A,1,two-phase EC12 with push,TBD,TBD,Manual/THT,pending_physical,Shaft and mounting tabs unknown
+L2,ADD,SW_B,1,normally-open tactile switch,TBD,TBD,TBD,pending_physical,Could reuse measured 6x6x5mm part
+L2,ADD,SW_MENU,1,normally-open tactile switch,TBD,TBD,TBD,pending_physical,Could reuse measured 6x6x5mm part
+L2,ADD,R_INPUT_PULLUP,5,10k 1% 0805,0805W8F1002T5E,C17414,SMT,candidate_basic,One per encoder phase center A B and Menu
+L2,ADD,R_INPUT_SERIES,5,1k 1% 0805,0805W8F1001T5E,C17513,SMT,candidate_basic,One per input between contact and filtered GPIO node
+L2,ADD,C_INPUT_FILTER_DNP,5,39nF candidate 0805,TBD,TBD,DNP,pending_physical,Optional RC value must follow real EC12 pulse and bounce measurement
+L2,ADD,D_USB_ESD,1,USB2 dual-line low-capacitance ESD,USBLC6-2SC6,C7519,SMT,candidate,Recheck stock and exact footprint before order
+L2,ADD,R_USB_DP_DM,2,22R 1% 0805 same MPN,0805W8F220JT5E,C17561,SMT,candidate_basic,Place symmetrically close to ESP32 GPIO20 GPIO19
+L2,ADD,C_USB_DP_DM_DNP,2,optional shunt capacitor pads,TBD,TBD,DNP,candidate,Do not populate without SI or EMC evidence
+L2,ADD,R_VBUS_TOP,2,150k 1% 0805 each in parallel,0805W8F1503T5E,C17470,SMT,candidate_basic_preferred,Equivalent 75k; alternate single 75k C17819 is Extended and mutually exclusive
+L2,ADD,R_VBUS_BOTTOM,1,100k 1% 0805,0805W8F1003T5E,C149504,SMT,candidate_basic,Measure 3ms disconnect requirement
+L2,ADD,R_USB_SHIELD,1,0R,TBD,TBD,SMT,candidate,USB shield to local GND candidate
+L2,ADD,C_USB_SHIELD_DNP,1,optional shield capacitor,TBD,TBD,DNP,candidate,Populate only after ESD EMC evaluation
+L2,ADD,RECOVERY1,1,6-pad pogo recovery interface,custom PCB pads,,Bare PCB,planned,GND TX RX IO0 EN 3V3 sense

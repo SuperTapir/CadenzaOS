@@ -1,0 +1,5 @@
+{
+  "fixture": "sharp-pin-swap",
+  "mutation": {"kind": "swap_pins", "reference": "J_DISP1", "pins": [1, 2]},
+  "expected_status": "FAIL"
+}

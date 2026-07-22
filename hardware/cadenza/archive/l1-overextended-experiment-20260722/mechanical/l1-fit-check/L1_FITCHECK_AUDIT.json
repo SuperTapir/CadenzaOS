@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "checks": {
+    "reference_input_hash_unchanged": true,
+    "outer_bbox_xy_preserved": true,
+    "four_mounting_holes_preserved": true,
+    "sharp_window_is_60_by_36_48": true,
+    "gasket_retainer_relief_declared": true,
+    "base_step_stl_complete": true,
+    "four_direction_contact_candidates_present": true,
+    "two_datasheet_orientation_candidates_present": true,
+    "variant_step_stl_complete": true,
+    "all_hard_collision_volumes_zero": true,
+    "datasheet_relative_orientation_resolved": true,
+    "enclosure_rotation_and_route_not_frozen": true,
+    "route_overlap_explicitly_pending": true,
+    "selection_not_frozen": true
+  },
+  "semantic_signature_sha256": "dabebec857af1b02c8bf6606a8b1f29e24625e07076d7115006e873b893f9057",
+  "semantic_evidence": {
+    "reference_sha256": "41a991f288e6c38a120f876404848cc09c7c30d14df6e56ff053dea67efe9bee",
+    "reference_bbox": [
+      -1.000315,
+      -1.000315,
+      -3.000264,
+      131.000317,
+      62.787454,
+      0.000366
+    ],
+    "front_bbox": [
+      -1.000315,
+      -1.000315,
+      -3.000579,
+      131.000317,
+      62.787454,
+      0.000681
+    ],
+    "mount_holes": [
+      [
+        5.0,
+        55.0001,
+        3.0
+      ],
+      [
+        5.0001,
+        4.9999,
+        3.0
+      ],
+      [
+        125.0003,
+        4.9999,
+        3.0
+      ],
+      [
+        125.0003,
+        55.0003,
+        3.0
+      ]
+    ],
+    "window_xy": [
+      35.0,
+      11.76,
+      95.0,
+      48.24
+    ],
+    "sharp_panel_xy": [
+      33.6,
+      8.59,
+      96.4,
+      51.41
+    ],
+    "sharp_view_xy": [
+      35.6,
+      12.36,
+      94.4,
+      47.64
+    ],
+    "gasket_proxy_thickness": 0.4,
+    "retainer_thickness": 1.0,
+    "variant_ids": [
+      "fpc-minus-y-bottom-contact",
+      "fpc-minus-y-top-contact",
+      "fpc-plus-y-bottom-contact",
+      "fpc-plus-y-top-contact"
+    ],
+    "base_collision_max_mm3": 0.0,
+    "variant_collision_max_mm3": 0.0,
+    "orientation_candidate_ids": [
+      "datasheet-minus-y-folded-top-contact",
+      "datasheet-plus-y-folded-top-contact"
+    ],
+    "orientation_collision_max_mm3": 0.0,
+    "routing_keepout_overlap_min_mm3": 28.071359999999984,
+    "valid_step_count": 18
+  },
+  "stable_artifact_hashes": {
+    "stl_bundle_sha256": "6dd50ed6d85807a629cab4bef9ebe4e33d334fa72196855a8b23d32812e59e29",
+    "note": "STEP byte hashes are intentionally excluded because the exporter writes timestamps; STEP geometry is covered by semantic checks and BREP validity."
+  },
+  "missing_outputs": [],
+  "limits": [
+    "STEP has no parametric feature history; hole preservation is checked from exact cylindrical faces.",
+    "Outer preservation means the inherited XY envelope and four PCB mounting bores are unchanged; the screen window region is intentionally modified.",
+    "Datasheet-relative 6-o'clock exit, rear flat-contact face, Pin 1 side and allowed fold direction are resolved; enclosure +Y/-Y mapping, adapter mapping, connector placement, latch travel and folded route are not frozen."
+  ]
+}

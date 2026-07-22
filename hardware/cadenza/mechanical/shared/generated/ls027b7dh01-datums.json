@@ -1,0 +1,76 @@
+{
+  "coordinate_system": {
+    "units": "mm",
+    "origin": "inherited PCB top-left (0, 0); display centered at (65, 30)",
+    "x_positive": "right",
+    "y_positive": "toward the display FPC edge",
+    "z_zero": "front polarizer outer surface",
+    "z_positive": "toward viewer/front enclosure"
+  },
+  "panel": {
+    "bbox": {
+      "xmin": 33.6,
+      "xmax": 96.4,
+      "ymin": 8.59,
+      "ymax": 51.41,
+      "zmin": -1.64,
+      "zmax": 0.0
+    },
+    "size": [
+      62.8,
+      42.82,
+      1.64
+    ],
+    "datasheet_tolerance_xy": 0.2
+  },
+  "view_area": {
+    "bbox_xy": {
+      "xmin": 35.6,
+      "xmax": 94.4,
+      "ymin": 12.36,
+      "ymax": 47.64
+    },
+    "size": [
+      58.8,
+      35.28
+    ]
+  },
+  "fpc_flat_datasheet_envelope": {
+    "bbox": {
+      "xmin": 60.68,
+      "xmax": 69.32,
+      "ymin": 51.41,
+      "ymax": 57.47,
+      "zmin": -1.64,
+      "zmax": -1.3399999999999999
+    },
+    "width": 8.64,
+    "pitch": 0.5,
+    "contact_count": 10,
+    "nominal_thickness_at_stiffener": 0.3
+  },
+  "bend_constraints": {
+    "recommended_distance_from_glass_edge": [
+      0.8,
+      6.0
+    ],
+    "minimum_inner_radius": 0.45,
+    "reverse_bend_toward_polarizer": "forbidden",
+    "maximum_repeat_bends": 3
+  },
+  "connector": {
+    "status": "placeholder_not_modeled",
+    "reason": "Final top/bottom contact orientation and purchasable MPN require physical FPC inspection",
+    "datasheet_examples": [
+      "SMK CFP-4610-0150F bottom contact",
+      "Molex 51441-1093 bottom contact",
+      "SMK CFP-4510-0150F top contact"
+    ]
+  },
+  "evidence": {
+    "datasheet": "LS027B7DH01 Sharp LCY-1210401A",
+    "outline": "PDF page 23, Figure 8-1",
+    "bend": "PDF page 23, Figure 8-2",
+    "status": "datasheet geometry; orientation relative to real device pending physical confirmation"
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "status": "PASS_SYNC_CANDIDATE",
+  "selection_frozen": false,
+  "production_ready": false,
+  "routed": false,
+  "drc_passed": false,
+  "source": {
+    "board": "hardware/cadenza/working-base/Cadenza-reference-ESP32-S3-game-console-original-v2-20260722.kicad_pcb",
+    "board_sha256": "70a46bd100ed8184edcd2e90d3dbd21fff676999e0f3fa71cad1121c8c7b4101",
+    "netlist": "hardware/cadenza/derived/l1-candidate/candidate.netlist.xml",
+    "netlist_sha256": "40a5f97f77034897099e21b31176b486de2ea824a5a7987637af299a406d32db",
+    "placement": "hardware/cadenza/derived/l1-pcb-placement/placement-feasibility.json",
+    "placement_sha256": "e789f03211d57aaef8bbe32ea5956ca7554dd027d549e07c605502984fd217da"
+  },
+  "policy": {
+    "reference_board_modified_in_place": false,
+    "deleted_refs": [
+      "C20",
+      "C21",
+      "FPC1",
+      "KEY1",
+      "Q2",
+      "R13",
+      "R14",
+      "SW1",
+      "U6"
+    ],
+    "new_refs": [
+      "C_DISP1",
+      "C_DISP2",
+      "C_DISP3",
+      "D_PWR1",
+      "J_DISP1",
+      "Q_PWR1",
+      "R_PWR1",
+      "R_PWR2",
+      "R_PWR3",
+      "R_PWR4",
+      "R_PWR5",
+      "R_PWR6",
+      "SW_PWR1",
+      "TP_DISP_5V",
+      "TP_DISP_ENABLE",
+      "TP_DISP_EXTCOMIN",
+      "TP_DISP_GND",
+      "TP_DISP_SCLK",
+      "TP_DISP_SCS",
+      "TP_DISP_SI",
+      "TP_PWR_5V",
+      "TP_PWR_BUTTON",
+      "TP_PWR_FORCE",
+      "TP_PWR_KEY",
+      "TP_PWR_SENSE",
+      "TP_PWR_VOUT"
+    ],
+    "moved_reference_refs": [
+      "USB1",
+      "R1",
+      "R2"
+    ],
+    "j_disp1_footprint": "Hirose FH34SRJ dual-contact provisional",
+    "j_disp1_pin1_frozen": false,
+    "sw_pwr1_footprint": "GT-TC020A-H035-L1 candidate",
+    "sw_pwr1_frozen": false
+  },
+  "text_prune": {
+    "removed_footprints": 9,
+    "removed_track_via_arc_items": 142,
+    "removed_teardrop_zones": 81,
+    "removed_old_net_count": 16
+  },
+  "variants": [
+    {
+      "name": "fpc-pin1-rotation-0",
+      "j_disp1_rotation_deg_before_bottom_flip": 0.0,
+      "output": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-0.kicad_pcb",
+      "sha256": "edc886259bd1c50683d27843962ce36ea2a920e3a78cf4da8ea3c5458517d3d6",
+      "footprints": 94,
+      "nets": 97,
+      "expected_nets": 97,
+      "net_names_exact": true,
+      "tracks_remaining": 442,
+      "tracks_removed_for_changed_or_orphan_nets": 142,
+      "tracks_remapped": 442,
+      "zones_remapped": 318,
+      "zones_refilled_after_l1_sync": true,
+      "regular_zones_refilled": 4,
+      "missing_netlist_endpoints": [],
+      "board_pads_without_netlist_endpoint": [
+        [
+          "J_DISP1",
+          "MP"
+        ],
+        [
+          "J_DISP1",
+          "MP"
+        ]
+      ],
+      "deterministic_uuid_and_footprint_order": true
+    },
+    {
+      "name": "fpc-pin1-rotation-180",
+      "j_disp1_rotation_deg_before_bottom_flip": 180.0,
+      "output": "hardware/cadenza/derived/l1-pcb-candidate/Cadenza-L1-fpc-pin1-rotation-180.kicad_pcb",
+      "sha256": "71fb4b26e1757cc5561ffb23b7bf7d3ca1457bfa5eb05bc86e0698f206f0c019",
+      "footprints": 94,
+      "nets": 97,
+      "expected_nets": 97,
+      "net_names_exact": true,
+      "tracks_remaining": 442,
+      "tracks_removed_for_changed_or_orphan_nets": 142,
+      "tracks_remapped": 442,
+      "zones_remapped": 318,
+      "zones_refilled_after_l1_sync": true,
+      "regular_zones_refilled": 4,
+      "missing_netlist_endpoints": [],
+      "board_pads_without_netlist_endpoint": [
+        [
+          "J_DISP1",
+          "MP"
+        ],
+        [
+          "J_DISP1",
+          "MP"
+        ]
+      ],
+      "deterministic_uuid_and_footprint_order": true
+    }
+  ],
+  "next_required": [
+    "independently verify board endpoint topology against the real candidate netlist",
+    "inspect footprint XY/Z and courtyard collisions",
+    "route all changed display, Power/Lock and relocated USB nets",
+    "remove shared-power copper stubs left by deleted display components",
+    "run DRC/EMC/DFM and combined PCB-enclosure STEP checks",
+    "freeze FPC Pin 1/contact/rotation and Power/Lock physical fit before fabrication"
+  ]
+}
