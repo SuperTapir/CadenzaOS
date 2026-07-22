@@ -22,8 +22,9 @@ button_gray = [0.816, 0.816, 0.808]; // screen approximation: PANTONE Cool Gray 
 button_highlight = [0.86, 0.86, 0.85];
 graphite = [0.10, 0.105, 0.10];
 display_gray = [0.55, 0.57, 0.52];
-label_gray = [0.325, 0.337, 0.345]; // screen approximation: PANTONE Cool Gray 11 C
+label_gray = [0.245, 0.245, 0.225]; // screen approximation: PANTONE Black 7 C
 metal_silver = [0.62, 0.64, 0.65];
+ring_silver_blue = [0.53, 0.60, 0.64]; // muted cool silver-blue; PANTONE 7544 C direction
 
 module pebble(size = [106, 50, 16], plan_r = 12, edge_r = 3.4) {
     core = [size[0] - 2 * plan_r, size[1] - 2 * plan_r, size[2] - 2 * edge_r];
@@ -46,9 +47,33 @@ module capsule_slot(width, height, depth) {
     }
 }
 
-module face_label(value, size, at) {
+// Instrument-like keycap: a broad, nearly flat crown with a small continuous
+// shoulder radius. This avoids both a raw cylinder and an over-soft pillow.
+module softened_round_button(diameter, core_h, edge_r) {
+    minkowski() {
+        cylinder(h = core_h, d = diameter - 2 * edge_r, center = true);
+        sphere(r = edge_r, $fn = 36);
+    }
+}
+
+module softened_capsule_button(width, height, core_h, edge_r) {
+    minkowski() {
+        capsule_slot(width - 2 * edge_r, height - 2 * edge_r, core_h);
+        sphere(r = edge_r, $fn = 36);
+    }
+}
+
+// Rounded annular section for a jewellery-like bezel instead of a sharp,
+// stacked cylindrical ring.
+module rounded_control_ring(outer_d, inner_d, rise) {
+    rotate_extrude(convexity = 10)
+        translate([(outer_d + inner_d) / 4, 0, 0])
+            scale([(outer_d - inner_d) / 4, rise]) circle(r = 1);
+}
+
+module face_label(value, size, at, z) {
     color(label_gray)
-        translate([at[0], at[1], body_d / 2 + 1.48])
+        translate([at[0], at[1], z])
             linear_extrude(height = 0.22)
                 text(value, size = size, halign = "center", valign = "center",
                      font = "Arial:style=Regular");
@@ -75,7 +100,10 @@ module enclosure() {
             translate([-32, body_h / 2 - 0.35, -1.0])
                 rotate([90, 0, 0]) capsule_slot(10, 3.4, 2.4);
 
-            for (x = [-12.25 : 3.5 : 12.25]) {
+            // Nine visually identical top slots: the centre slot is the mic
+            // inlet, while the four slots on either side serve the speaker.
+            // Their internal acoustic chambers remain fully separated.
+            for (x = [-14 : 3.5 : 14]) {
                 hull() {
                     for (z = [-0.9, 2.1]) {
                         translate([x, body_h / 2 - 0.35, z])
@@ -83,10 +111,6 @@ module enclosure() {
                     }
                 }
             }
-            // Tiny microphone port above the screen on the front centreline.
-            translate([0, 21.6, body_d / 2 - 0.25])
-                cylinder(h = 2.4, d = 1.15, center = true);
-
             // MicroSD sits alone at the bottom-right corner.
             translate([42.5, -body_h / 2 + 0.4, -0.8])
                 rotate([90, 0, 0]) cube([13.5, 1.5, 3.0], center = true);
@@ -122,44 +146,58 @@ module display() {
 }
 
 module left_buttons() {
-    // B remains the secondary action key.
+    // B remains the secondary action key. Only a shallow ellipsoidal dome is
+    // exposed; a broad flat crown keeps it precise rather than pillow-like.
     color(button_gray)
-        translate([-45.7, 9.0, body_d / 2 + 0.65])
-            cylinder(h = 1.45, d = 10.5, center = true);
+        translate([-45.7, 9.0, body_d / 2 + 0.15])
+            softened_round_button(10.5, 0.35, 0.45);
 
     // Menu is deliberately smaller and quieter: a low horizontal capsule,
     // not another action button competing with B or A.
     color(button_gray)
-        translate([-45.7, -8.0, body_d / 2 + 0.62])
-            capsule_slot(8.5, 3.4, 1.30);
+        translate([-45.7, -8.0, body_d / 2 + 0.10])
+            softened_capsule_button(8.5, 3.4, 0.20, 0.35);
 
     // Three quiet dots identify Menu directly on the keycap.
     for (x = [-48.0, -45.7, -43.4]) {
         color(pearl_highlight)
-            translate([x, -8.0, body_d / 2 + 1.30])
-                sphere(d = 0.72);
+            translate([x, -8.0, body_d / 2 + 0.55])
+                sphere(d = 0.58);
     }
 
-    face_label("B", 3.7, [-45.7, 9.0]);
+    face_label("B", 3.7, [-45.7, 9.0], body_d / 2 + 0.78);
 }
 
 module a_controller() {
     controller_x = 45.7;
+
+    // A restrained cool silver-blue rounded bezel adds identity while keeping
+    // the active face matte and visually quiet.
+    color(ring_silver_blue)
+        translate([controller_x, 0, body_d / 2 + 0.16])
+            rounded_control_ring(22.6, 20.8, 0.40);
+
     color(button_gray)
-        translate([controller_x, 0, body_d / 2 + 0.75])
-            cylinder(h = 1.7, d = 20.5, center = true);
-    color(button_gray)
-        translate([controller_x, 0, body_d / 2 + 1.67])
-            cylinder(h = 0.55, d = 8.0, center = true);
+        translate([controller_x, 0, body_d / 2 + 0.55])
+            softened_round_button(20.5, 1.20, 0.50);
+
+    // A faint centre ring marks the press zone without stacking another
+    // cylindrical button on top of the rotary surface.
+    color(button_highlight)
+        translate([controller_x, 0, body_d / 2 + 1.66])
+            difference() {
+                cylinder(h = 0.08, d = 8.2, center = true);
+                cylinder(h = 0.10, d = 7.7, center = true);
+            }
 
     // Tactile dot ring on the rotary face.
-    for (a = [0 : 30 : 330]) {
+    for (a = [0 : 36 : 324]) {
         color(button_highlight)
             translate([controller_x + 7.5 * cos(a), 7.5 * sin(a), body_d / 2 + 1.68])
-                sphere(d = 0.80);
+                sphere(d = 0.72);
     }
     color(label_gray)
-        translate([controller_x, 0, body_d / 2 + 2.02])
+        translate([controller_x, 0, body_d / 2 + 1.66])
             linear_extrude(height = 0.22)
                 text("A", size = 4.3, halign = "center", valign = "center",
                      font = "Arial:style=Regular");
@@ -167,13 +205,15 @@ module a_controller() {
 
 module speaker_and_mic() {
     // A continuous recessed acoustic dust mesh sits behind the complete slot
-    // array. It does not cover the separate front microphone port.
+    // array. Externally it reads as one ordered Braun/Sony-like grille; inside,
+    // the centre mic inlet must use a sealed side channel isolated from the
+    // left/right speaker chambers.
     color([0.16, 0.17, 0.16])
         translate([0, body_h / 2 - 1.05, 0.6])
             rotate([90, 0, 0]) rounded_plate([30, 5.2, 0.28], 1.1);
 
-    // Dark acoustic cavity directly behind the open top-edge pill slots.
-    for (x = [-12.25 : 3.5 : 12.25]) {
+    // Dark acoustic cavities directly behind the open top-edge pill slots.
+    for (x = [-14 : 3.5 : 14]) {
         color(graphite)
             hull() {
                 for (z = [-0.9, 2.1]) {
@@ -182,11 +222,6 @@ module speaker_and_mic() {
                 }
             }
     }
-    // Microphone sits above the display on the front centreline, preserving
-    // strict left/right symmetry.
-    color(graphite)
-        translate([0, 21.6, body_d / 2 - 1.30])
-            cylinder(h = 0.30, d = 1.35, center = true);
 }
 
 module power_lock() {
@@ -219,7 +254,7 @@ module rear_service_details() {
         translate([0, -3.0, outer_z - 0.25])
             rotate([180, 0, 0])
                 linear_extrude(height = 0.42)
-                    text("Cadenza", size = 8.0, halign = "center", valign = "center",
+                    text("Cadenza", size = 6.2, halign = "center", valign = "center",
                          font = "Snell Roundhand:style=Bold");
 
     for (x = [-30 : 2 : -24]) {
