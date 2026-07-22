@@ -1,5 +1,0 @@
-{
-  "fixture": "protected-endpoint-drift",
-  "mutation": {"kind": "set_pin_net", "reference": "U5", "pin": "1", "net": "GPIO48"},
-  "expected_status": "FAIL"
-}

@@ -1,9 +1,0 @@
-d07d6dcb8e4ef5f49767453106af0d0146c1c5b67c896584339df64e4fbaeded  ./01-PCB/Cadenza-L1-Gerber.zip
-64cb0d1174b80830496b641ad76eb830d6fb421253d3488627df7b3784f8286c  ./01-PCB/drill-report.txt
-fd1f94c350a6f8cd0acba81d9e96b6671a3f27a38b1bed020dab85c63c9850c3  ./02-PCBA/Cadenza-L1-JLCPCB-BOM.csv
-704ed1a0e91f14b6588bcb70737f5cd7973f66e406cd20b9c9f71f66244ba039  ./02-PCBA/Cadenza-L1-JLCPCB-CPL.csv
-41d691a8d9303f22e64b71ca691552b6b54e0dbc5fd26ab0d60e64fdff7e356f  ./02-PCBA/jlc-provisional-dfm-audit.json
-a8ce2fd7ca7b48cab500074836ae7337f5465c6819b99495a3380852f758fc79  ./02-PCBA/manufacturing-bom-cpl-audit.json
-0c02586128fbe02f1dcbf5e66d7f050eec96141b2eb6f9b7c6f6d5e847215a05  ./03-3D-PRINT/Cadenza-L1-3D-print-package.zip
-75ae670ef99fc8899e1335be777cda3de0520b5cbb6d07ec9a4aeb4bf4d92414  ./04-SOURCE/Cadenza-L1-KiCad-source.zip
-1f1d01c674210ee8913efa078545b6947fd52a59fe64a64e79186c3cda0e0747  ./READ_ME_FIRST.md

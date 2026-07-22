@@ -1,5 +1,0 @@
-{
-  "fixture": "bat54c-pinfunction-swap",
-  "mutation": {"kind": "set_pinfunction", "reference": "D_PWR1", "pin": "1", "value": "A2"},
-  "expected_status": "FAIL"
-}

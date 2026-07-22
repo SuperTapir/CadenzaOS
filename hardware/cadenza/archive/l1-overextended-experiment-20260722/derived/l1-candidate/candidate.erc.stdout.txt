@@ -1,3 +1,0 @@
-Fontconfig error: Cannot load default config file: No such file: (null)
-发现 599 条违规项
-已将 ERC 报告保存到文件 hardware/cadenza/derived/l1-candidate/candidate.erc.json

@@ -1,5 +1,0 @@
-{
-  "fixture": "r-pwr3-wrong-value",
-  "mutation": {"kind": "set_value", "reference": "R_PWR3", "value": "100k"},
-  "expected_status": "FAIL"
-}

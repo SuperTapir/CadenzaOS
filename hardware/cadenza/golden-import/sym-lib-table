@@ -1,4 +1,0 @@
-(sym_lib_table
-	(version 7)
-	(lib (name "Cadenza-re-easyedapro") (type "KiCad") (uri "${KIPRJMOD}/Cadenza-re-easyedapro.kicad_sym") (options "") (descr ""))
-)

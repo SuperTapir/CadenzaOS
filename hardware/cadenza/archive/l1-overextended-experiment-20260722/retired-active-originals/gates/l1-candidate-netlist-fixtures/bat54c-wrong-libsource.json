@@ -1,5 +1,0 @@
-{
-  "fixture": "bat54c-wrong-libsource",
-  "mutation": {"kind": "set_libsource", "reference": "D_PWR1", "value": "Diode:BAT54A"},
-  "expected_status": "FAIL"
-}

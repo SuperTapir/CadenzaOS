@@ -1,6 +1,0 @@
-{
-  "fixture": "valid",
-  "mutation": null,
-  "expected_status": "PASS_CANDIDATE",
-  "note": "Synthetic netlist generated from the frozen baseline and contract; not a real KiCad candidate."
-}
