@@ -71,6 +71,18 @@ module rounded_control_ring(outer_d, inner_d, rise) {
             scale([(outer_d - inner_d) / 4, rise]) circle(r = 1);
 }
 
+// Capsule cut/insert on the left short end. The long axis follows the body
+// thickness (Z), matching the quiet horizontal window seen on handheld IR
+// remotes; shallow cylinder depth follows the body X axis.
+module left_end_capsule(length, height, depth, x) {
+    hull() {
+        for (z = [-(length - height) / 2, (length - height) / 2]) {
+            translate([x, 0, z])
+                rotate([0, 90, 0]) cylinder(h = depth, d = height, center = true);
+        }
+    }
+}
+
 module face_label(value, size, at, z) {
     color(label_gray)
         translate([at[0], at[1], z])
@@ -114,6 +126,10 @@ module enclosure() {
             // MicroSD sits alone at the bottom-right corner.
             translate([42.5, -body_h / 2 + 0.4, -0.8])
                 rotate([90, 0, 0]) cube([13.5, 1.5, 3.0], center = true);
+
+            // Shallow pocket for a flush smoked IR transmit/receive window on
+            // the left short end. No emitter package is exposed externally.
+            left_end_capsule(10.0, 3.0, 2.2, -body_w / 2 + 0.45);
         }
 
     // Dark recesses immediately behind the USB-C and MicroSD openings.
@@ -122,6 +138,22 @@ module enclosure() {
             rotate([90, 0, 0]) capsule_slot(8.6, 2.3, 0.5);
         translate([42.5, -body_h / 2 + 1.25, -0.8])
             rotate([90, 0, 0]) cube([12, 0.7, 0.5], center = true);
+    }
+
+    // Closed deep-wine smoke optical lens, slightly crowned rather than cut
+    // through like a connector. The production resin must pass the selected
+    // IR wavelength while still hiding the electronics in normal light.
+    color([0.16, 0.045, 0.035])
+        left_end_capsule(9.6, 2.6, 0.34, -body_w / 2 - 0.08);
+
+    // Two extremely restrained optical ghosts behind the smoked cover make
+    // its purpose legible: a larger emitter optic and a smaller receiver eye.
+    // They are visual concept cues, not exposed packages.
+    color([0.31, 0.055, 0.040]) {
+        translate([-body_w / 2 - 0.265, 0, -2.15])
+            rotate([0, 90, 0]) cylinder(h = 0.035, d = 1.45, center = true);
+        translate([-body_w / 2 - 0.265, 0, 2.15])
+            rotate([0, 90, 0]) cylinder(h = 0.035, d = 1.10, center = true);
     }
 
     // Two tiny moulded shell ridges create the bottom footprint. They are not
